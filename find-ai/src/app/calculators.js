@@ -146,6 +146,20 @@ const L = {
     navStep: 'Step', navAction: 'What to do', navWarning: 'Warning',
     navDocument: 'Document Template', navCopyDoc: 'Copy Template',
     navBack: 'Back to situations',
+    // Module E — Legal Bridge
+    bridgeTitle: 'Legal Bridge', bridgeDesc: 'CN vs MY property law — know before you sign',
+    bridgePick: 'What type of property?',
+    bridgeResidential: 'Residential', bridgeResidentialDesc: 'Condo, apartment, house',
+    bridgeCommercial: 'Commercial', bridgeCommercialDesc: 'Office, shop lot, retail',
+    bridgeIndustrial: 'Industrial', bridgeIndustrialDesc: 'Factory, warehouse, workshop',
+    bridgeLand: 'Land', bridgeLandDesc: 'Agricultural, development, vacant',
+    bridgeCNLaw: 'China Law', bridgeMYLaw: 'Malaysia Law',
+    bridgeClash: 'Key Difference', bridgeRisk: 'Risk if Ignored',
+    bridgeClause: 'Protective Clause', bridgeCopyClause: 'Copy Clause',
+    bridgeBack: 'Back to property types',
+    bridgeNote: 'Advisory comparison only. Consult a cross-border property lawyer before signing.',
+    bridgeCNExpects: 'What Chinese tenants/buyers expect',
+    bridgeMYReality: 'How it actually works in Malaysia',
   },
   bm: {
     tools: 'Alat Hartanah',
@@ -244,6 +258,20 @@ const L = {
     navStep: 'Langkah', navAction: 'Apa perlu buat', navWarning: 'Amaran',
     navDocument: 'Templat Dokumen', navCopyDoc: 'Salin Templat',
     navBack: 'Kembali ke situasi',
+    // Module E — Legal Bridge
+    bridgeTitle: 'Jambatan Undang-undang', bridgeDesc: 'Undang-undang CN vs MY — tahu sebelum tandatangan',
+    bridgePick: 'Jenis hartanah apa?',
+    bridgeResidential: 'Kediaman', bridgeResidentialDesc: 'Kondo, apartmen, rumah',
+    bridgeCommercial: 'Komersial', bridgeCommercialDesc: 'Pejabat, lot kedai, runcit',
+    bridgeIndustrial: 'Perindustrian', bridgeIndustrialDesc: 'Kilang, gudang, bengkel',
+    bridgeLand: 'Tanah', bridgeLandDesc: 'Pertanian, pembangunan, kosong',
+    bridgeCNLaw: 'Undang-undang China', bridgeMYLaw: 'Undang-undang Malaysia',
+    bridgeClash: 'Perbezaan Utama', bridgeRisk: 'Risiko Jika Diabaikan',
+    bridgeClause: 'Klausa Perlindungan', bridgeCopyClause: 'Salin Klausa',
+    bridgeBack: 'Kembali ke jenis hartanah',
+    bridgeNote: 'Perbandingan nasihat sahaja. Rujuk peguam hartanah rentas sempadan sebelum tandatangan.',
+    bridgeCNExpects: 'Apa yang penyewa/pembeli China jangka',
+    bridgeMYReality: 'Bagaimana ia sebenarnya berfungsi di Malaysia',
   },
   zh: {
     tools: '房产工具',
@@ -342,6 +370,20 @@ const L = {
     navStep: '步骤', navAction: '该怎么做', navWarning: '警告',
     navDocument: '文件模板', navCopyDoc: '复制模板',
     navBack: '返回情况列表',
+    // Module E — Legal Bridge
+    bridgeTitle: '法律桥梁', bridgeDesc: '中国vs马来西亚房产法 — 签约前必知',
+    bridgePick: '什么类型的房产？',
+    bridgeResidential: '住宅', bridgeResidentialDesc: '公寓、套房、别墅',
+    bridgeCommercial: '商业', bridgeCommercialDesc: '办公室、店铺、零售',
+    bridgeIndustrial: '工业', bridgeIndustrialDesc: '工厂、仓库、车间',
+    bridgeLand: '土地', bridgeLandDesc: '农业、开发、空地',
+    bridgeCNLaw: '中国法律', bridgeMYLaw: '马来西亚法律',
+    bridgeClash: '关键差异', bridgeRisk: '忽视的风险',
+    bridgeClause: '保护条款', bridgeCopyClause: '复制条款',
+    bridgeBack: '返回房产类型',
+    bridgeNote: '仅供参考的法律比较。签约前请咨询跨境房产律师。',
+    bridgeCNExpects: '中国租户/买家的预期',
+    bridgeMYReality: '马来西亚的实际情况',
   },
 };
 
@@ -1574,6 +1616,645 @@ function SituationNavigator({ lang, onClose }) {
   );
 }
 
+// ===== LEGAL BRIDGE DATA =====
+const LEGAL_BRIDGE = {
+  residential: {
+    en: {
+      title: 'Residential Property',
+      subtitle: 'Condo, apartment, landed house',
+      items: [
+        {
+          concept: 'Termination Rights (解除权)',
+          cnExpect: 'Under Chinese Civil Code Art. 563, tenants can terminate unilaterally for cause (e.g. landlord fails repairs). Art. 730 gives tenant right to terminate indefinite leases anytime with reasonable notice.',
+          myReality: 'Malaysia follows British common law — termination only as agreed in the tenancy agreement. No statutory unilateral termination right. Breaking lease = forfeiting deposit.',
+          risk: 'Chinese tenant may walk out mid-lease believing they have legal right. Landlord left with empty unit and no deposit claim.',
+          clause: 'TERMINATION: This tenancy may only be terminated in accordance with this Agreement. The Tenant acknowledges that Malaysian law does not provide statutory unilateral termination rights. Early termination by either party requires [2] months written notice and forfeiture of security deposit as liquidated damages.'
+        },
+        {
+          concept: 'Earnest Money (定金)',
+          cnExpect: 'China\'s "定金" (earnest money) rule: if buyer defaults, seller keeps 定金. If seller defaults, seller returns DOUBLE. Max 20% of contract value (Civil Code Art. 586-587).',
+          myReality: 'Malaysia has no "double return" rule. Booking deposit / earnest deposit is governed by the contract terms. Seller keeping deposit is subject to Contracts Act 1950 — must prove actual loss.',
+          risk: 'Chinese buyer pays booking deposit expecting double-return protection if deal falls through. Malaysian seller has no such obligation — dispute guaranteed.',
+          clause: 'EARNEST DEPOSIT: The Buyer pays RM[___] as earnest deposit. If Buyer defaults, Seller may forfeit this deposit. If Seller defaults, Seller shall refund the earnest deposit in full. Both parties acknowledge that the Chinese "double return" (双倍返还) principle does NOT apply under Malaysian law.'
+        },
+        {
+          concept: 'Foreign Ownership Threshold',
+          cnExpect: 'In China, locals and foreigners generally have similar purchase rights in most cities (with some Hukou restrictions). No minimum price threshold for foreigners.',
+          myReality: 'Foreigners CANNOT buy property below state-set minimum thresholds. Most states: RM1,000,000 minimum. Some states: RM2,000,000 (Penang island). Strata titles need State Authority consent.',
+          risk: 'Chinese buyer finds RM600K condo, pays booking — then discovers foreigners are barred from purchasing. Money stuck in legal limbo.',
+          clause: 'FOREIGN PURCHASE ELIGIBILITY: The Buyer declares they are a [Malaysian / Foreign] national. If Foreign, the Buyer acknowledges minimum purchase price of RM[___] per state guidelines and that State Authority consent is required. This agreement is conditional upon such approval.'
+        },
+        {
+          concept: 'Renovation Rights (装修权)',
+          cnExpect: 'In China, tenants commonly do full renovations — new flooring, walls, even structural changes. Civil Code Art. 715 allows modifications with landlord consent; Art. 716 requires landlord compensation for "useful improvements".',
+          myReality: 'Malaysian tenancy agreements typically prohibit alterations. Tenant must restore to original condition. No statutory right to compensation for improvements. Landlord can deduct from deposit for unauthorized changes.',
+          risk: 'Chinese tenant spends RM50K renovating rented condo, expects landlord to compensate. Landlord demands restoration at tenant\'s cost.',
+          clause: 'ALTERATIONS: The Tenant shall not make any alterations, additions or improvements without prior written consent. Any approved alterations become the property of the Landlord upon lease expiry. The Tenant acknowledges no right to compensation for improvements under Malaysian law.'
+        },
+        {
+          concept: 'Right of First Refusal (优先购买权)',
+          cnExpect: 'Chinese Civil Code Art. 726: tenant has statutory right of first refusal if landlord sells the property. Landlord MUST notify tenant first and offer same terms.',
+          myReality: 'No statutory right of first refusal for tenants in Malaysia. Landlord can sell to anyone without notifying tenant. Tenancy survives sale only if registered.',
+          risk: 'Chinese tenant learns property is sold to third party, claims they should have been offered first. No legal standing in Malaysia.',
+          clause: 'SALE OF PROPERTY: The Landlord may sell the property at any time. The Landlord shall give the Tenant [30] days notice of sale. The Tenant has no statutory right of first refusal under Malaysian law. This tenancy shall be binding on the new owner for the remaining term.'
+        }
+      ]
+    },
+    bm: {
+      title: 'Hartanah Kediaman',
+      subtitle: 'Kondo, apartmen, rumah',
+      items: [
+        {
+          concept: 'Hak Penamatan (解除权)',
+          cnExpect: 'Di bawah Kod Sivil China Art. 563, penyewa boleh menamatkan secara unilateral atas sebab (cth. tuan rumah gagal membaiki). Art. 730 memberi hak penyewa menamatkan sewa tidak tetap pada bila-bila masa.',
+          myReality: 'Malaysia mengikut undang-undang common law British — penamatan hanya mengikut perjanjian sewa. Tiada hak penamatan unilateral berkanun. Pecah sewa = kehilangan deposit.',
+          risk: 'Penyewa China mungkin keluar sebelum tamat sewa kerana percaya mereka ada hak undang-undang.',
+          clause: 'PENAMATAN: Sewaan ini hanya boleh ditamatkan mengikut Perjanjian ini. Penyewa mengakui bahawa undang-undang Malaysia tidak memperuntukkan hak penamatan unilateral berkanun. Penamatan awal memerlukan notis bertulis [2] bulan dan pelucutan deposit keselamatan.'
+        },
+        {
+          concept: 'Wang Cagaran (定金)',
+          cnExpect: 'Peraturan "定金" China: jika pembeli mungkir, penjual simpan 定金. Jika penjual mungkir, penjual pulang BERGANDA. Maksimum 20% nilai kontrak.',
+          myReality: 'Malaysia tiada peraturan "pulangan berganda". Deposit tempahan tertakluk kepada terma kontrak dan Akta Kontrak 1950.',
+          risk: 'Pembeli China bayar deposit mengharapkan perlindungan pulangan berganda. Penjual Malaysia tiada obligasi sedemikian.',
+          clause: 'DEPOSIT CAGARAN: Pembeli membayar RM[___] sebagai deposit. Jika Pembeli mungkir, Penjual boleh melucutkan deposit. Jika Penjual mungkir, Penjual memulangkan deposit sepenuhnya. Prinsip "pulangan berganda" China TIDAK terpakai di Malaysia.'
+        },
+        {
+          concept: 'Had Pemilikan Asing',
+          cnExpect: 'Di China, warganegara tempatan dan asing secara amnya mempunyai hak pembelian yang serupa. Tiada ambang harga minimum untuk warga asing.',
+          myReality: 'Warga asing TIDAK boleh membeli hartanah di bawah ambang minimum negeri. Kebanyakan negeri: RM1,000,000. Sesetengah negeri: RM2,000,000. Hakmilik strata perlu kelulusan Pihak Berkuasa Negeri.',
+          risk: 'Pembeli China jumpa kondo RM600K, bayar tempahan — kemudian dapati warga asing dilarang membeli.',
+          clause: 'KELAYAKAN PEMBELIAN ASING: Pembeli mengisytiharkan mereka warganegara [Malaysia / Asing]. Jika Asing, pembeli mengakui harga pembelian minimum RM[___] dan kelulusan Pihak Berkuasa Negeri diperlukan.'
+        },
+        {
+          concept: 'Hak Pengubahsuaian (装修权)',
+          cnExpect: 'Di China, penyewa biasa melakukan pengubahsuaian penuh. Kod Sivil Art. 715 membenarkan pengubahsuaian dengan persetujuan; Art. 716 memerlukan pampasan tuan rumah untuk "penambahbaikan berguna".',
+          myReality: 'Perjanjian sewa Malaysia biasanya melarang pengubahsuaian. Penyewa mesti pulihkan ke keadaan asal. Tiada hak berkanun untuk pampasan.',
+          risk: 'Penyewa China habiskan RM50K mengubahsuai kondo, harap tuan rumah memberi pampasan. Tuan rumah tuntut pemulihan.',
+          clause: 'PENGUBAHSUAIAN: Penyewa tidak boleh membuat sebarang perubahan tanpa kebenaran bertulis. Sebarang pengubahsuaian yang diluluskan menjadi hak milik Tuan Rumah. Penyewa tiada hak pampasan di bawah undang-undang Malaysia.'
+        },
+        {
+          concept: 'Hak Penolakan Pertama (优先购买权)',
+          cnExpect: 'Kod Sivil China Art. 726: penyewa ada hak berkanun untuk penolakan pertama jika tuan rumah menjual hartanah.',
+          myReality: 'Tiada hak berkanun penolakan pertama untuk penyewa di Malaysia. Tuan rumah boleh jual kepada sesiapa.',
+          risk: 'Penyewa China dapati hartanah dijual kepada pihak ketiga, tuntut mereka patut ditawarkan dahulu. Tiada kedudukan undang-undang.',
+          clause: 'PENJUALAN HARTANAH: Tuan Rumah boleh menjual hartanah pada bila-bila masa. Tuan Rumah memberi notis [30] hari. Penyewa tiada hak penolakan pertama berkanun di Malaysia.'
+        }
+      ]
+    },
+    zh: {
+      title: '住宅房产',
+      subtitle: '公寓、套房、别墅',
+      items: [
+        {
+          concept: '解除权',
+          cnExpect: '根据《中国民法典》第563条，承租人可因出租人违约（如未修缮）单方解除合同。第730条赋予不定期租赁承租人随时解除的权利。',
+          myReality: '马来西亚遵循英国普通法——终止仅按租约协议执行。无法定单方终止权。违约退租=没收押金。',
+          risk: '中国租户认为有法定解除权而中途退租。房东面临空置和无法扣押金的困境。',
+          clause: '终止条款：本租约仅可按本协议终止。租户确认马来西亚法律不提供法定单方终止权。任何一方提前终止需提前[2]个月书面通知并没收押金作为违约赔偿。'
+        },
+        {
+          concept: '定金规则',
+          cnExpect: '中国"定金"规则：买方违约，卖方没收定金；卖方违约，双倍返还。最高不超过合同金额的20%（民法典第586-587条）。',
+          myReality: '马来西亚没有"双倍返还"规则。订金受合同条款和《1950年合同法》约束。卖方没收订金须证明实际损失。',
+          risk: '中国买家支付订金，期望享受双倍返还保护。马来西亚卖方无此义务——纠纷必然发生。',
+          clause: '定金条款：买方支付RM[___]作为订金。若买方违约，卖方可没收该订金。若卖方违约，卖方全额退还订金。双方确认中国"双倍返还"原则不适用于马来西亚法律。'
+        },
+        {
+          concept: '外国人购买门槛',
+          cnExpect: '在中国，本地人和外国人在大多数城市有类似的购买权（部分城市有户口限制）。外国人无最低价格门槛。',
+          myReality: '外国人不能购买低于各州最低限额的房产。大多数州：RM1,000,000。部分州：RM2,000,000（如槟城岛）。分层地契需州政府批准。',
+          risk: '中国买家看中RM60万公寓并支付订金——随后发现外国人被禁止购买。资金陷入法律纠纷。',
+          clause: '外国人购买资格：买方声明为[马来西亚/外国]公民。若为外国公民，买方确认最低购买价格为RM[___]，且需获得州政府批准。本协议以获得批准为前提条件。'
+        },
+        {
+          concept: '装修权',
+          cnExpect: '在中国，租户通常进行全面装修——更换地板、墙壁甚至结构改造。民法典第715条允许经同意后改造；第716条要求出租人补偿"有益改良"。',
+          myReality: '马来西亚租约通常禁止改造。租户必须恢复原状。无法定补偿权。房东可从押金中扣除未经授权的改造费用。',
+          risk: '中国租户花费RM5万装修公寓，期望房东补偿。房东要求租户自费恢复原状。',
+          clause: '改造条款：未经书面同意，租户不得进行任何改造、添加或改进。任何经批准的改造在租期届满后归房东所有。租户确认在马来西亚法律下无改造补偿权。'
+        },
+        {
+          concept: '优先购买权',
+          cnExpect: '中国民法典第726条：出租人出售房屋时，承租人享有法定优先购买权。出租人必须先通知承租人并以同等条件出售。',
+          myReality: '马来西亚租户无法定优先购买权。房东可自由出售给任何人，无需通知租户。租约仅在已登记的情况下对新业主有约束力。',
+          risk: '中国租户得知房产被出售给第三方，声称自己应享有优先购买权。在马来西亚无法律依据。',
+          clause: '房产出售：房东可随时出售房产。房东应提前[30]天通知租户。租户在马来西亚法律下无法定优先购买权。本租约在剩余期限内对新业主有约束力。'
+        }
+      ]
+    }
+  },
+  commercial: {
+    en: {
+      title: 'Commercial Property',
+      subtitle: 'Office, shop lot, retail space',
+      items: [
+        {
+          concept: 'Liquidated Damages vs Penalty (违约金)',
+          cnExpect: 'China allows contractual penalty clauses (违约金). Court can adjust if "obviously too high" (>130% of actual loss per judicial interpretation). Penalty functions as both compensation AND punishment.',
+          myReality: 'Malaysia follows English common law — penalty clauses are VOID and unenforceable. Only "liquidated damages" (genuine pre-estimate of loss) are valid. Courts will strike down amounts that are punitive.',
+          risk: 'Chinese landlord puts 3x rent as "penalty" for breach. Malaysian court strikes it out. Landlord gets nothing beyond actual provable loss.',
+          clause: 'LIQUIDATED DAMAGES: In the event of breach, the defaulting party shall pay RM[___] as liquidated damages, being a genuine pre-estimate of loss. This is NOT a penalty. Both parties acknowledge that penalty clauses (违约金 as punishment) are void under Malaysian law (Contracts Act 1950, Section 75).'
+        },
+        {
+          concept: 'Lease Registration (租赁登记)',
+          cnExpect: 'China: leases over 1 year SHOULD be registered, but unregistered leases are still valid between parties. Registration mainly protects against third-party claims.',
+          myReality: 'Malaysia: leases over 3 years MUST be registered under National Land Code. Unregistered leases beyond 3 years are not binding on purchasers. Stamp duty is MANDATORY for all leases.',
+          risk: 'Chinese company signs 5-year unregistered lease. Property sold. New owner not bound by the lease — tenant faces eviction with no legal recourse.',
+          clause: 'REGISTRATION: This lease of [X] years shall be registered at the relevant Land Office within [60] days of execution. The Landlord shall cooperate in registration. Costs of registration borne by [Tenant/shared]. Failure to register does not invalidate this lease between the parties, but may affect enforceability against third parties.'
+        },
+        {
+          concept: 'Force Majeure (不可抗力)',
+          cnExpect: 'Chinese Civil Code has detailed force majeure provisions (Art. 180, 590). COVID-19 was widely accepted as force majeure in China. Rent reduction/exemption during force majeure is common.',
+          myReality: 'Malaysia has no statutory force majeure. Depends entirely on contract terms. If no force majeure clause = frustrated contract doctrine applies (much harder to invoke). COVID cases in Malaysia had mixed results.',
+          risk: 'Pandemic or MCO happens. Chinese tenant stops paying rent citing "不可抗力". Without a clause, Malaysian court says: "pay up or breach."',
+          clause: 'FORCE MAJEURE: Neither party shall be liable for failure to perform due to events beyond reasonable control, including but not limited to: natural disasters, government orders (MCO/EMCO), pandemic, war, or civil unrest. The affected party must notify the other within [7] days. Rent shall be [reduced proportionally / suspended] during the force majeure period.'
+        },
+        {
+          concept: 'Business Scope Restrictions',
+          cnExpect: 'In China, business scope (经营范围) is strictly defined on the business license. Operating outside scope can void contracts. Landlords typically verify scope matches intended use.',
+          myReality: 'Malaysia uses SSM registration with broader categories. Local council (PBT) zoning and business license determine permissible use. A shop lot zoned "commercial" may still prohibit certain businesses (e.g. F&B needs additional licenses).',
+          risk: 'Chinese company leases shop for F&B based on "commercial" zoning. PBT denies food license due to specific restrictions. Lease signed, fit-out done, business cannot operate.',
+          clause: 'PERMITTED USE: The premises shall be used solely for [___]. The Tenant warrants they have verified with [Local Council/PBT] that this use is permitted at this location. The Landlord warrants the premises are zoned for commercial use. If the Tenant fails to obtain necessary licenses, this agreement may be terminated with [30] days notice.'
+        },
+        {
+          concept: 'Goodwill & Key Money (转让费)',
+          cnExpect: 'In China, "转让费" (transfer/key money) is common — outgoing tenant charges incoming tenant for location goodwill, existing fit-out, and customer base. Widely accepted practice.',
+          myReality: 'In Malaysia, key money is not standard and not legally required. Any transfer fee is purely a private arrangement. Landlord can refuse to consent to assignment. New tenant has no obligation to pay outgoing tenant.',
+          risk: 'Chinese tenant pays RM100K "转让费" to outgoing tenant. Landlord refuses to approve the assignment. Money lost, no legal recourse.',
+          clause: 'ASSIGNMENT: The Tenant shall not assign this lease without the Landlord\'s prior written consent. Any "key money" or "transfer fee" between outgoing and incoming tenants is a private matter and the Landlord bears no responsibility. Assignment consent shall not be unreasonably withheld.'
+        }
+      ]
+    },
+    bm: {
+      title: 'Hartanah Komersial',
+      subtitle: 'Pejabat, lot kedai, runcit',
+      items: [
+        {
+          concept: 'Ganti Rugi Tertentu vs Penalti (违约金)',
+          cnExpect: 'China membenarkan klausa penalti kontrak (违约金). Mahkamah boleh laraskan jika "jelas terlalu tinggi" (>130% kerugian sebenar).',
+          myReality: 'Malaysia mengikut common law Inggeris — klausa penalti adalah TERBATAL. Hanya "ganti rugi tertentu" (anggaran kerugian tulen) sah.',
+          risk: 'Tuan rumah China letak 3x sewa sebagai "penalti". Mahkamah Malaysia batalkan. Tuan rumah dapat tiada apa.',
+          clause: 'GANTI RUGI: Pihak yang mungkir membayar RM[___] sebagai ganti rugi tertentu. Ini BUKAN penalti. Klausa penalti (违约金) adalah terbatal di bawah undang-undang Malaysia (Akta Kontrak 1950, Seksyen 75).'
+        },
+        {
+          concept: 'Pendaftaran Sewa (租赁登记)',
+          cnExpect: 'China: sewa melebihi 1 tahun PATUT didaftarkan, tetapi sewa tidak berdaftar masih sah antara pihak.',
+          myReality: 'Malaysia: sewa melebihi 3 tahun MESTI didaftarkan di bawah Kanun Tanah Negara. Sewa tidak berdaftar tidak mengikat pembeli baru.',
+          risk: 'Syarikat China tandatangan sewa 5 tahun tanpa daftar. Hartanah dijual. Pemilik baru tidak terikat.',
+          clause: 'PENDAFTARAN: Sewa [X] tahun ini hendaklah didaftarkan di Pejabat Tanah dalam [60] hari. Kos pendaftaran ditanggung oleh [Penyewa/dikongsi].'
+        },
+        {
+          concept: 'Force Majeure (不可抗力)',
+          cnExpect: 'China ada peruntukan force majeure terperinci. COVID-19 diterima sebagai force majeure. Pengurangan sewa semasa force majeure adalah biasa.',
+          myReality: 'Malaysia tiada force majeure berkanun. Bergantung sepenuhnya pada terma kontrak. Tanpa klausa = doktrin kontrak kecewa terpakai (lebih sukar).',
+          risk: 'Pandemik berlaku. Penyewa China berhenti bayar sewa. Tanpa klausa, mahkamah kata: bayar atau mungkir.',
+          clause: 'FORCE MAJEURE: Mana-mana pihak tidak bertanggungjawab atas kegagalan melaksanakan akibat peristiwa di luar kawalan. Sewa hendaklah [dikurangkan / digantung] semasa tempoh force majeure.'
+        },
+        {
+          concept: 'Sekatan Skop Perniagaan',
+          cnExpect: 'Di China, skop perniagaan (经营范围) ditakrifkan ketat pada lesen. Beroperasi di luar skop boleh membatalkan kontrak.',
+          myReality: 'Malaysia guna pendaftaran SSM. Kegunaan ditentukan oleh zon PBT dan lesen perniagaan. Lot "komersial" masih mungkin melarang perniagaan tertentu.',
+          risk: 'Syarikat China sewa kedai untuk F&B berdasarkan zon "komersial". PBT tolak lesen makanan. Sewa ditandatangani, ubahsuai siap, perniagaan tak boleh beroperasi.',
+          clause: 'KEGUNAAN DIBENARKAN: Premis hanya untuk [___]. Penyewa telah sahkan dengan PBT bahawa kegunaan ini dibenarkan. Jika gagal mendapat lesen, perjanjian boleh ditamatkan dengan notis [30] hari.'
+        },
+        {
+          concept: 'Nama Baik & Wang Kunci (转让费)',
+          cnExpect: 'Di China, "转让费" (wang pemindahan) biasa — penyewa keluar mengenakan bayaran kepada penyewa masuk untuk nama baik lokasi.',
+          myReality: 'Di Malaysia, wang kunci tidak standard. Tuan rumah boleh menolak penyerahan hak. Penyewa baru tiada obligasi membayar penyewa lama.',
+          risk: 'Penyewa China bayar RM100K "转让费". Tuan rumah tolak penyerahan. Wang hilang, tiada pembelaan undang-undang.',
+          clause: 'PENYERAHAN HAK: Penyewa tidak boleh menyerahkan sewa tanpa kebenaran bertulis Tuan Rumah. Sebarang "wang kunci" antara penyewa adalah urusan persendirian.'
+        }
+      ]
+    },
+    zh: {
+      title: '商业房产',
+      subtitle: '办公室、店铺、零售空间',
+      items: [
+        {
+          concept: '违约金 vs 预定损害赔偿',
+          cnExpect: '中国允许合同违约金条款。法院可在"明显过高"时调整（超过实际损失130%）。违约金具有补偿和惩罚双重功能。',
+          myReality: '马来西亚遵循英国普通法——惩罚性条款无效且不可执行。仅"预定损害赔偿"（对损失的真实预估）有效。法院将否决惩罚性金额。',
+          risk: '中国房东设定3倍租金作为"违约金"。马来西亚法院将其废除。房东仅能获得可证明的实际损失赔偿。',
+          clause: '违约赔偿：违约方应支付RM[___]作为预定损害赔偿，系对损失的真实预估。这不是惩罚性条款。双方确认惩罚性违约金在马来西亚法律下无效（《1950年合同法》第75条）。'
+        },
+        {
+          concept: '租赁登记',
+          cnExpect: '中国：超过1年的租赁应当登记，但未登记的租赁在双方之间仍然有效。登记主要用于对抗第三方。',
+          myReality: '马来西亚：超过3年的租赁必须根据《国家土地法》登记。超过3年未登记的租赁对购买人不具约束力。所有租赁必须缴纳印花税。',
+          risk: '中国公司签订5年未登记租约。房产被出售。新业主不受租约约束——租户面临被驱逐且无法律救济。',
+          clause: '登记条款：本[X]年租约应在签署后[60]天内在相关土地局登记。房东应配合登记。登记费用由[租户/双方共担]承担。'
+        },
+        {
+          concept: '不可抗力',
+          cnExpect: '中国民法典有详细的不可抗力条款（第180、590条）。COVID-19在中国被广泛认定为不可抗力。不可抗力期间减免租金很常见。',
+          myReality: '马来西亚没有法定不可抗力制度。完全取决于合同条款。若无不可抗力条款=适用合同受挫原则（更难援引）。',
+          risk: '疫情或MCO发生。中国租户以"不可抗力"为由停付租金。没有条款，马来西亚法院会说："付款否则违约。"',
+          clause: '不可抗力条款：任何一方不对因不可控事件导致的履约失败承担责任，包括但不限于自然灾害、政府命令（MCO/EMCO）、疫情、战争或内乱。受影响方须在[7]天内通知对方。不可抗力期间租金应[按比例减少/暂停]。'
+        },
+        {
+          concept: '经营范围限制',
+          cnExpect: '在中国，经营范围在营业执照上严格定义。超范围经营可使合同无效。房东通常会核实经营范围是否匹配。',
+          myReality: '马来西亚使用SSM注册，类别更宽泛。地方议会（PBT）分区和营业执照决定允许的用途。标注"商业"的店铺仍可能禁止某些业务（如餐饮需额外许可）。',
+          risk: '中国公司基于"商业"分区租下店铺做餐饮。PBT因具体限制拒绝食品许可证。租约已签，装修已完成，但无法经营。',
+          clause: '许可用途：该场所仅用于[___]。租户保证已向PBT核实该地点允许此用途。房东保证该场所属于商业用途分区。若租户未能获得必要许可证，可提前[30]天通知终止本协议。'
+        },
+        {
+          concept: '转让费/顶手费',
+          cnExpect: '在中国，"转让费"很常见——退租方向新租户收取地段商誉、现有装修和客户基础的费用。广泛接受的做法。',
+          myReality: '在马来西亚，顶手费不是标准做法，也无法律强制要求。任何转让费纯属私人安排。房东可拒绝同意转让。新租户无义务向退租方付费。',
+          risk: '中国租户向退租方支付RM10万"转让费"。房东拒绝批准转让。钱打了水漂，无法律追索权。',
+          clause: '转让条款：未经房东书面同意，租户不得转让本租约。退租方与新租户之间的任何"转让费"属私人事务，房东不承担任何责任。房东不应无理拒绝转让同意。'
+        }
+      ]
+    }
+  },
+  industrial: {
+    en: {
+      title: 'Industrial Property',
+      subtitle: 'Factory, warehouse, workshop',
+      items: [
+        {
+          concept: 'Environmental Liability (环保责任)',
+          cnExpect: 'China has strict environmental laws but enforcement is handled by local EPB. Tenant liability is usually tied to the operating license. Remediation obligations follow the "polluter pays" principle.',
+          myReality: 'Malaysia\'s Environmental Quality Act 1974 holds BOTH landlord and occupier liable. DOE can issue fines and closure orders. Landlord can be held responsible for contamination even if caused by tenant.',
+          risk: 'Chinese manufacturer causes chemical spill. Landlord assumes tenant handles it. DOE fines and cleanup order hits LANDLORD. Cost: RM500K+.',
+          clause: 'ENVIRONMENTAL: The Tenant shall comply with the Environmental Quality Act 1974 and all DOE regulations. The Tenant shall indemnify the Landlord against all environmental claims, fines, remediation costs, and liabilities arising from the Tenant\'s operations. The Tenant shall maintain environmental liability insurance of at least RM[___].'
+        },
+        {
+          concept: 'Workers & Foreign Labor (外劳管理)',
+          cnExpect: 'In China, factories manage workers through labor contracts regulated by labor bureaus. Housing workers on-site is common and regulated by local fire/safety codes.',
+          myReality: 'Malaysia has strict foreign worker rules — need Immigration approval, levy payment, SOCSO registration. Housing workers in factory premises requires compliance with Minimum Housing Act (Act 446). Overcrowding = criminal offense.',
+          risk: 'Chinese factory operator houses 50 workers in factory without proper housing standards. Immigration raid + Housing Act violation = factory shutdown + deportation + fines.',
+          clause: 'WORKERS ACCOMMODATION: If workers are housed on premises, Tenant shall comply with Workers Minimum Standards of Housing Act (Act 446). Maximum occupancy: [X] persons. The Tenant holds all necessary Immigration permits and SOCSO registrations for foreign workers. Any violation resulting in penalties shall be the Tenant\'s sole liability.'
+        },
+        {
+          concept: 'Machinery & Fixtures (机器设备)',
+          cnExpect: 'China\'s Civil Code Art. 715-716: tenant installations (machines, fixtures) remain tenant\'s property. Landlord must compensate for "inseparable improvements" that add value.',
+          myReality: 'Malaysian law distinguishes "fixtures" (attached to land = become landlord\'s) from "trade fixtures" (tenant can remove during lease). After lease ends, anything left behind becomes landlord\'s property.',
+          risk: 'Chinese manufacturer installs RM2M production line bolted to factory floor. Lease ends. Landlord claims machinery as "fixtures" — now part of the building.',
+          clause: 'TRADE FIXTURES: All machinery, equipment, and production lines installed by the Tenant are "trade fixtures" and remain the Tenant\'s property. The Tenant may remove them during or within [30] days after the lease term, provided any damage from removal is repaired. Items not removed within this period become the Landlord\'s property.'
+        },
+        {
+          concept: 'Utilities & Infrastructure (水电基础)',
+          cnExpect: 'In China, industrial utilities (power, water, gas) are typically supplied by state companies at regulated rates. Factory tenants usually connect directly to grid.',
+          myReality: 'In Malaysia, utility deposits are required (TNB, SAJ/SYABAS). Industrial power may need separate TNB application with high deposits. Some industrial parks have their own utility supply at premium rates.',
+          risk: 'Chinese factory needs 3-phase power. Signs lease expecting immediate connection. TNB application takes 3-6 months + RM200K deposit. Factory sits idle paying rent.',
+          clause: 'UTILITIES: The Landlord warrants that [3-phase / industrial] power supply is available at the premises with capacity of [___] kVA. If utilities are not connected, the Landlord shall assist with applications. Rent commencement shall be deferred until [utilities connected / certificate of completion obtained].'
+        },
+        {
+          concept: 'Subletting to Sub-contractors',
+          cnExpect: 'In China, it is common for factories to sublet portions to related sub-contractors or partners. This is usually regulated by the original lease and local industrial zone rules.',
+          myReality: 'Subletting industrial premises requires landlord consent AND may require additional fire safety certification. Industrial zones (like MIDA/FTZ) may have specific restrictions on subletting and on the type of activities allowed.',
+          risk: 'Chinese company sublets half the factory to a related company without landlord consent. Fire breaks out in sublet area. Insurance claim denied — unauthorized occupant. Landlord terminates lease.',
+          clause: 'SUBLETTING: The Tenant shall not sublet any portion of the premises without prior written consent of the Landlord and compliance with all fire safety requirements. Any authorized sub-tenant must maintain separate insurance coverage. Unauthorized subletting is grounds for immediate termination.'
+        }
+      ]
+    },
+    bm: {
+      title: 'Hartanah Perindustrian',
+      subtitle: 'Kilang, gudang, bengkel',
+      items: [
+        {
+          concept: 'Liabiliti Alam Sekitar (环保责任)',
+          cnExpect: 'China ada undang-undang alam sekitar ketat. Liabiliti penyewa biasanya terikat kepada lesen operasi.',
+          myReality: 'Akta Kualiti Alam Sekeliling 1974 menjadikan KEDUA-DUA tuan rumah dan penghuni bertanggungjawab. JAS boleh kenakan denda dan perintah penutupan.',
+          risk: 'Pengilang China sebabkan tumpahan kimia. Tuan rumah kena denda dan kos pembersihan RM500K+.',
+          clause: 'ALAM SEKITAR: Penyewa hendaklah mematuhi Akta Kualiti Alam Sekeliling 1974. Penyewa menanggung rugi Tuan Rumah terhadap semua tuntutan dan kos alam sekitar. Penyewa perlu insurans liabiliti alam sekitar sekurang-kurangnya RM[___].'
+        },
+        {
+          concept: 'Pekerja & Buruh Asing (外劳管理)',
+          cnExpect: 'Di China, kilang mengurus pekerja melalui kontrak buruh. Menginapkan pekerja di tapak adalah biasa.',
+          myReality: 'Malaysia ada peraturan ketat pekerja asing — perlu kelulusan Imigresen, bayaran levi, pendaftaran PERKESO. Penginapan pekerja di kilang perlu patuhi Akta 446.',
+          risk: 'Pengendali kilang China menempatkan 50 pekerja tanpa standard perumahan. Serbuan Imigresen + pelanggaran Akta Perumahan = penutupan.',
+          clause: 'PENGINAPAN PEKERJA: Jika pekerja ditempatkan di premis, Penyewa mesti patuhi Akta Perumahan Pekerja (Akta 446). Penyewa memiliki semua permit Imigresen dan pendaftaran PERKESO.'
+        },
+        {
+          concept: 'Jentera & Lekapan (机器设备)',
+          cnExpect: 'Kod Sivil China: pemasangan penyewa (mesin) kekal hak milik penyewa. Tuan rumah perlu membayar pampasan untuk penambahbaikan.',
+          myReality: 'Undang-undang Malaysia bezakan "lekapan" (dipasang ke tanah = milik tuan rumah) dari "lekapan perdagangan" (penyewa boleh buka semasa sewa).',
+          risk: 'Pengilang China pasang barisan pengeluaran RM2J. Sewa tamat. Tuan rumah tuntut jentera sebagai "lekapan".',
+          clause: 'LEKAPAN PERDAGANGAN: Semua jentera yang dipasang Penyewa adalah "lekapan perdagangan" dan kekal hak milik Penyewa. Boleh dibuka dalam [30] hari selepas tamat sewa.'
+        },
+        {
+          concept: 'Utiliti & Infrastruktur (水电基础)',
+          cnExpect: 'Di China, utiliti perindustrian dibekalkan oleh syarikat negeri pada kadar terkawal.',
+          myReality: 'Di Malaysia, deposit utiliti diperlukan (TNB, SAJ). Kuasa industri mungkin perlu permohonan TNB berasingan dengan deposit tinggi. Sesetengah taman perindustrian ada bekalan sendiri.',
+          risk: 'Kilang China perlukan kuasa 3 fasa. Tandatangan sewa harapkan sambungan segera. Permohonan TNB ambil 3-6 bulan + deposit RM200K.',
+          clause: 'UTILITI: Tuan Rumah menjamin bekalan kuasa [3 fasa / industri] tersedia. Jika utiliti belum disambung, sewa bermula selepas sambungan siap.'
+        },
+        {
+          concept: 'Sewa Kecil kepada Sub-kontraktor',
+          cnExpect: 'Di China, kilang biasa menyewa kecil bahagian kepada sub-kontraktor. Biasanya diatur oleh sewa asal.',
+          myReality: 'Sewa kecil premis perindustrian perlukan kebenaran tuan rumah DAN mungkin pensijilan keselamatan kebakaran tambahan.',
+          risk: 'Syarikat China sewa kecil separuh kilang tanpa kebenaran. Kebakaran di kawasan sewa kecil. Tuntutan insurans ditolak.',
+          clause: 'SEWA KECIL: Penyewa tidak boleh menyewa kecil tanpa kebenaran bertulis Tuan Rumah dan pematuhan semua keperluan keselamatan kebakaran. Sewa kecil tanpa kebenaran = penamatan serta-merta.'
+        }
+      ]
+    },
+    zh: {
+      title: '工业房产',
+      subtitle: '工厂、仓库、车间',
+      items: [
+        {
+          concept: '环保责任',
+          cnExpect: '中国有严格的环保法律，但执法由地方环保局处理。租户责任通常与经营许可证挂钩。修复义务遵循"谁污染谁治理"原则。',
+          myReality: '马来西亚《1974年环境质量法》规定房东和租户双方均承担责任。环境局可开罚单和下达关闭令。即使污染由租户造成，房东也可能被追责。',
+          risk: '中国制造商造成化学品泄漏。房东以为租户会处理。环境局的罚款和清理令打到房东头上。费用：RM50万以上。',
+          clause: '环保条款：租户应遵守《1974年环境质量法》及环境局所有规定。租户应就其经营活动产生的所有环保索赔、罚款、修复费用和责任向房东作出赔偿。租户应维持不低于RM[___]的环境责任保险。'
+        },
+        {
+          concept: '外劳管理',
+          cnExpect: '在中国，工厂通过劳动合同管理工人，受劳动局监管。在厂区内提供工人住宿很常见，受当地消防/安全法规管理。',
+          myReality: '马来西亚有严格的外劳规定——需要移民局批准、缴纳人头税、注册SOCSO。在工厂内安置工人须遵守《最低住房标准法》（第446号法令）。过度拥挤=刑事犯罪。',
+          risk: '中国工厂经营者在工厂内安置50名工人但未达住房标准。移民局突击检查+违反住房法=工厂停工+遣返+罚款。',
+          clause: '工人住宿：若工人住在厂区内，租户须遵守《工人最低住房标准法》（第446号法令）。最大容纳人数：[X]人。租户持有所有外劳所需的移民局许可和SOCSO注册。任何违规导致的处罚由租户单独承担。'
+        },
+        {
+          concept: '机器设备与固定装置',
+          cnExpect: '中国民法典第715-716条：租户安装的设备（机器、装置）仍属租户财产。出租人须对增加价值的"不可分离改良"给予补偿。',
+          myReality: '马来西亚法律区分"固定装置"（附着于土地=归房东）和"营业固定装置"（租户可在租期内拆除）。租约结束后遗留的物品归房东所有。',
+          risk: '中国制造商安装价值RM200万的生产线并用螺栓固定在工厂地面。租约到期。房东声称机器为"固定装置"——已成为建筑物的一部分。',
+          clause: '营业固定装置：租户安装的所有机器、设备和生产线均为"营业固定装置"，仍属租户财产。租户可在租期内或租期结束后[30]天内拆除，前提是修复拆除造成的损坏。逾期未拆除的物品归房东所有。'
+        },
+        {
+          concept: '水电基础设施',
+          cnExpect: '在中国，工业用水电气通常由国有公司按管制价格供应。工厂租户通常直接接入电网。',
+          myReality: '在马来西亚，需要缴纳公用事业押金（TNB、SAJ/SYABAS）。工业用电可能需要单独向TNB申请，押金高昂。部分工业园区有自有供应系统，价格较高。',
+          risk: '中国工厂需要三相电源。签约后期待立即接通。TNB申请需3-6个月+RM20万押金。工厂闲置却要支付租金。',
+          clause: '公用事业：房东保证场所可使用[三相/工业]电力供应，容量为[___]kVA。若公用事业未接通，房东应协助申请。租金起算日应推迟至[公用事业接通/竣工证书获取]之日。'
+        },
+        {
+          concept: '转租给分包商',
+          cnExpect: '在中国，工厂将部分场地转租给关联分包商或合作伙伴很常见。通常由原始租约和当地工业区规定管理。',
+          myReality: '转租工业场所需要房东同意，并可能需要额外的消防安全认证。工业区（如MIDA/自由贸易区）可能对转租和允许的活动类型有特定限制。',
+          risk: '中国公司未经房东同意将一半工厂转租给关联公司。转租区域发生火灾。保险索赔被拒——未经授权的占用者。房东终止租约。',
+          clause: '转租条款：未经房东书面同意并符合所有消防安全要求，租户不得转租任何部分场所。任何经授权的次租户须维持单独的保险。未经授权的转租构成立即终止租约的理由。'
+        }
+      ]
+    }
+  },
+  land: {
+    en: {
+      title: 'Land',
+      subtitle: 'Agricultural, development, vacant',
+      items: [
+        {
+          concept: 'Land Ownership (土地所有权)',
+          cnExpect: 'In China, ALL land is state-owned. You only buy "land use rights" (土地使用权) — residential 70 years, commercial 40 years, industrial 50 years. This is NORMAL and expected.',
+          myReality: 'Malaysia has FREEHOLD and LEASEHOLD titles. Freehold = own forever. Leasehold = typically 99 years (can extend). Foreigners CAN own land (freehold or leasehold) above state thresholds, subject to State Authority consent.',
+          risk: 'Chinese buyer assumes all Malaysian land is leasehold like China. Misses opportunity to buy freehold. Or assumes "leasehold" means government will auto-renew — not guaranteed.',
+          clause: 'LAND TITLE: This land is [FREEHOLD / LEASEHOLD (expiring ______)]. The Buyer acknowledges that freehold title confers permanent ownership, while leasehold requires extension application before expiry. Extension is NOT automatic and is at the State Authority\'s discretion.'
+        },
+        {
+          concept: 'Land Use Conversion (土地用途变更)',
+          cnExpect: 'In China, changing land use (e.g. agricultural to commercial) requires government approval and payment of land premium. Process is bureaucratic but well-defined with clear timelines.',
+          myReality: 'In Malaysia, land category change requires State Authority approval under National Land Code Section 124. Process can take 12-24 months. Costs include premium + development charges. Agricultural land used for non-agricultural purposes without conversion = criminal offense.',
+          risk: 'Chinese investor buys agricultural land planning to build factory. Assumes conversion is straightforward. 18 months later, still no approval. Land sitting idle, investment frozen.',
+          clause: 'LAND USE: This land is classified as [AGRICULTURE / BUILDING / INDUSTRY]. If the Buyer intends a different use, conversion under NLC Section 124 is REQUIRED. The Seller makes no warranty that conversion will be approved. This sale is [conditional / not conditional] upon successful land use conversion.'
+        },
+        {
+          concept: 'Malay Reserved Land (马来保留地)',
+          cnExpect: 'China has no equivalent concept. Land ownership is not restricted by ethnicity.',
+          myReality: 'In Peninsular Malaysia, "Malay Reserved Land" can ONLY be owned/transferred to Malays. Under the Malay Reservations Enactment, non-Malay (including all foreigners) purchase is VOID. This is constitutional and non-negotiable.',
+          risk: 'Chinese investor identifies cheap land, enters deal. Land turns out to be Malay Reserved. Transaction is legally void. Deposit and legal fees lost.',
+          clause: 'LAND STATUS: The Seller warrants this land is NOT Malay Reserved Land under any State Malay Reservations Enactment. The Seller further warrants there are no caveats, restrictions, or encumbrances preventing transfer to a foreign purchaser. If this warranty proves false, Seller shall refund all monies paid plus costs.'
+        },
+        {
+          concept: 'Native Customary Land — Sabah/Sarawak',
+          cnExpect: 'China has no equivalent. Land rights in China are uniform (state-owned).',
+          myReality: 'Sabah and Sarawak have Native Customary Rights (NCR) land — land used by indigenous communities under customary law. NCR land cannot be sold to non-natives. Even state-granted titles on former NCR land may face legal challenges.',
+          risk: 'Chinese investor buys "titled" land in Sarawak. Natives file NCR claim. Court freezes the title. Investment stuck for years in litigation.',
+          clause: 'NATIVE RIGHTS: The Seller warrants this land is free from any Native Customary Rights (NCR) claims under the Sabah Land Ordinance / Sarawak Land Code. The Seller shall indemnify the Buyer against any NCR claims arising after transfer.'
+        },
+        {
+          concept: 'Foreign Acquisition Rules',
+          cnExpect: 'In China, foreign land acquisition follows specific investment zone rules (e.g. Free Trade Zones). Process is centralized through MOFCOM.',
+          myReality: 'Foreign acquisition of Malaysian land requires: (1) State Authority consent, (2) Minimum price threshold (varies by state), (3) EPU approval for transactions above RM20M or involving government interest. Foreigners generally CANNOT buy Malay Reserved, agricultural under certain sizes, or low-cost residential.',
+          risk: 'Chinese company buys 100 acres for plantation. Discovers foreigners cannot hold agricultural land under 5 acres in some states, or state sets unique restrictions. Deal collapses after months of due diligence.',
+          clause: 'FOREIGN ACQUISITION: The Buyer is a [foreign individual / foreign company]. This transaction requires State Authority consent under NLC Section 433B. The Buyer shall bear all costs of application. This agreement is conditional upon State Authority approval within [6] months, failing which either party may rescind with full refund of all monies.'
+        }
+      ]
+    },
+    bm: {
+      title: 'Tanah',
+      subtitle: 'Pertanian, pembangunan, kosong',
+      items: [
+        {
+          concept: 'Pemilikan Tanah (土地所有权)',
+          cnExpect: 'Di China, SEMUA tanah milik negara. Anda hanya beli "hak guna tanah" — kediaman 70 tahun, komersial 40 tahun, perindustrian 50 tahun.',
+          myReality: 'Malaysia ada hakmilik KEKAL dan PAJAKAN. Kekal = milik selama-lamanya. Pajakan = biasanya 99 tahun (boleh dilanjut). Warga asing BOLEH memiliki tanah melebihi ambang negeri.',
+          risk: 'Pembeli China anggap semua tanah Malaysia pajakan seperti China. Terlepas peluang beli hakmilik kekal.',
+          clause: 'HAKMILIK TANAH: Tanah ini adalah [KEKAL / PAJAKAN (tamat ______)]. Pembeli mengakui hakmilik kekal memberi pemilikan kekal, manakala pajakan perlu permohonan lanjutan.'
+        },
+        {
+          concept: 'Tukar Guna Tanah (土地用途变更)',
+          cnExpect: 'Di China, tukar guna tanah memerlukan kelulusan kerajaan dan bayaran premium. Proses birokrasi tetapi jelas.',
+          myReality: 'Di Malaysia, tukar kategori tanah perlu kelulusan Pihak Berkuasa Negeri di bawah KTN Seksyen 124. Boleh ambil 12-24 bulan. Guna tanah pertanian tanpa tukar = kesalahan jenayah.',
+          risk: 'Pelabur China beli tanah pertanian untuk bina kilang. Anggap tukar guna mudah. 18 bulan kemudian, masih tiada kelulusan.',
+          clause: 'GUNA TANAH: Tanah ini dikategorikan sebagai [PERTANIAN / BANGUNAN / PERINDUSTRIAN]. Jika Pembeli hasrat guna berbeza, tukar di bawah KTN Seksyen 124 DIPERLUKAN.'
+        },
+        {
+          concept: 'Tanah Simpanan Melayu (马来保留地)',
+          cnExpect: 'China tiada konsep setara. Pemilikan tanah tidak dihadkan oleh etnik.',
+          myReality: 'Di Semenanjung Malaysia, "Tanah Simpanan Melayu" HANYA boleh dimiliki/dipindah milik kepada orang Melayu. Pembelian bukan Melayu adalah BATAL. Ini berperlembagaan.',
+          risk: 'Pelabur China kenal pasti tanah murah. Tanah adalah Simpanan Melayu. Transaksi terbatal. Deposit dan yuran guaman hilang.',
+          clause: 'STATUS TANAH: Penjual menjamin tanah ini BUKAN Tanah Simpanan Melayu. Jika jaminan ini tidak benar, Penjual memulangkan semua wang ditambah kos.'
+        },
+        {
+          concept: 'Tanah Adat — Sabah/Sarawak',
+          cnExpect: 'China tiada setara. Hak tanah di China seragam (milik negara).',
+          myReality: 'Sabah dan Sarawak ada Tanah Hak Adat Bumiputera (NCR). Tanah NCR tidak boleh dijual kepada bukan bumiputera.',
+          risk: 'Pelabur China beli tanah "berhakmilik" di Sarawak. Bumiputera fail tuntutan NCR. Mahkamah bekukan hakmilik.',
+          clause: 'HAK ADAT: Penjual menjamin tanah ini bebas daripada sebarang tuntutan Hak Adat Bumiputera (NCR). Penjual menanggung rugi Pembeli terhadap sebarang tuntutan NCR.'
+        },
+        {
+          concept: 'Peraturan Pemerolehan Asing',
+          cnExpect: 'Di China, pemerolehan tanah asing mengikut zon pelaburan tertentu. Proses melalui MOFCOM.',
+          myReality: 'Pemerolehan asing tanah Malaysia memerlukan: (1) kelulusan Pihak Berkuasa Negeri, (2) ambang harga minimum, (3) kelulusan EPU untuk transaksi melebihi RM20J.',
+          risk: 'Syarikat China beli 100 ekar untuk ladang. Dapati warga asing tak boleh pegang tanah pertanian tertentu. Urusan gagal.',
+          clause: 'PEMEROLEHAN ASING: Pembeli adalah [individu / syarikat] asing. Transaksi ini memerlukan kelulusan Pihak Berkuasa Negeri di bawah KTN Seksyen 433B. Perjanjian ini bersyarat kelulusan dalam [6] bulan.'
+        }
+      ]
+    },
+    zh: {
+      title: '土地',
+      subtitle: '农业、开发、空地',
+      items: [
+        {
+          concept: '土地所有权',
+          cnExpect: '在中国，所有土地归国家所有。您购买的仅是"土地使用权"——住宅70年，商业40年，工业50年。这是正常的。',
+          myReality: '马来西亚有永久产权和租赁产权。永久产权=永久拥有。租赁产权=通常99年（可续期）。外国人可以在超过各州最低限额的条件下拥有土地（永久或租赁），需经州政府批准。',
+          risk: '中国买家认为马来西亚所有土地都像中国一样是租赁性质。错失购买永久产权的机会。或者认为"租赁"意味着政府会自动续期——不一定。',
+          clause: '土地产权：本土地为[永久产权/租赁产权（到期日______）]。买方确认永久产权赋予永久所有权，而租赁产权需在到期前申请续期。续期不是自动的，由州政府酌情决定。'
+        },
+        {
+          concept: '土地用途变更',
+          cnExpect: '在中国，变更土地用途（如农业转商业）需要政府批准和缴纳土地出让金。过程虽然繁琐但流程明确、时间表清晰。',
+          myReality: '在马来西亚，土地类别变更需根据《国家土地法》第124条获得州政府批准。过程可能需要12-24个月。费用包括溢价+发展费。农业用地用于非农业目的而未转换=刑事犯罪。',
+          risk: '中国投资者购买农业用地计划建厂。以为转换很简单。18个月后，仍未获批。土地闲置，投资冻结。',
+          clause: '土地用途：本土地归类为[农业/建筑/工业]。若买方拟作他用，必须根据《国家土地法》第124条申请转换。卖方不保证转换申请一定获批。本交易[以/不以]成功完成土地用途转换为前提条件。'
+        },
+        {
+          concept: '马来保留地',
+          cnExpect: '中国没有相当的概念。土地所有权不受民族限制。',
+          myReality: '在西马，"马来保留地"只能由马来人拥有/转让。根据《马来保留地法》，非马来人（包括所有外国人）的购买无效。这是宪法规定，不可协商。',
+          risk: '中国投资者看中便宜的地块并开始交易。结果发现是马来保留地。交易在法律上无效。定金和律师费全部损失。',
+          clause: '土地状态：卖方保证本土地不属于任何州《马来保留地法》下的马来保留地。卖方进一步保证没有禁止向外国买家转让的限制或附带条件。若此保证不实，卖方应退还所有已付款项及费用。'
+        },
+        {
+          concept: '原住民习惯地——沙巴/砂拉越',
+          cnExpect: '中国没有相当的概念。中国的土地权利是统一的（国有）。',
+          myReality: '沙巴和砂拉越有原住民习惯权利（NCR）土地——原住民社区根据习惯法使用的土地。NCR土地不能出售给非原住民。即使国家在前NCR土地上颁发的产权也可能面临法律挑战。',
+          risk: '中国投资者在砂拉越购买"有产权"的土地。原住民提出NCR索赔。法院冻结产权。投资困在多年诉讼中。',
+          clause: '原住民权利：卖方保证本土地不受《沙巴土地法令》/《砂拉越土地法》下的任何原住民习惯权利（NCR）索赔影响。卖方应就转让后出现的任何NCR索赔向买方作出赔偿。'
+        },
+        {
+          concept: '外国人收购规则',
+          cnExpect: '在中国，外国人土地收购遵循特定投资区域规则（如自由贸易区）。流程通过商务部集中处理。',
+          myReality: '外国人收购马来西亚土地需要：(1)州政府批准，(2)最低价格门槛（各州不同），(3)超过RM2000万或涉及政府利益的交易需EPU批准。外国人一般不能购买马来保留地、一定面积以下的农业用地或低价住宅。',
+          risk: '中国公司购买100英亩种植园用地。发现外国人在某些州不能持有5英亩以下的农业用地，或各州有独特限制。数月尽职调查后交易告吹。',
+          clause: '外国人收购：买方为[外国个人/外国公司]。本交易需根据《国家土地法》第433B条获得州政府批准。买方承担所有申请费用。本协议以[6]个月内获得州政府批准为前提条件，否则任何一方可撤销并全额退款。'
+        }
+      ]
+    }
+  }
+};
+
+// ===== LEGAL BRIDGE COMPONENT =====
+function LegalBridge({ lang, onClose }) {
+  const t = L[lang];
+  const [selected, setSelected] = useState(null);
+  const [expanded, setExpanded] = useState(null);
+  const [copied, setCopied] = useState(null);
+
+  const types = [
+    { id: 'residential', icon: '🏠', gradient: 'linear-gradient(135deg, #3b82f6, #60a5fa)', title: t.bridgeResidential, desc: t.bridgeResidentialDesc },
+    { id: 'commercial', icon: '🏢', gradient: 'linear-gradient(135deg, #8b5cf6, #a78bfa)', title: t.bridgeCommercial, desc: t.bridgeCommercialDesc },
+    { id: 'industrial', icon: '🏭', gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)', title: t.bridgeIndustrial, desc: t.bridgeIndustrialDesc },
+    { id: 'land', icon: '🌍', gradient: 'linear-gradient(135deg, #16a34a, #4ade80)', title: t.bridgeLand, desc: t.bridgeLandDesc },
+  ];
+
+  const copyClause = (clause, idx) => {
+    navigator.clipboard.writeText(clause);
+    setCopied(idx);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  // Property type selector
+  if (!selected) {
+    return (
+      <Modal>
+        <ToolHeader icon="⚖️" gradient="linear-gradient(135deg, #dc2626, #3b82f6)" title={t.bridgeTitle} desc={t.bridgeDesc} onClose={onClose} />
+        <p className="text-[13px] mb-4 font-medium" style={{ color: '#475569' }}>{t.bridgePick}</p>
+        <div className="space-y-2.5">
+          {types.map(tp => (
+            <button key={tp.id} onClick={() => setSelected(tp.id)}
+              className="w-full flex items-center gap-3 text-left px-4 py-4 rounded-[14px] bg-white card-hover"
+              style={{ border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(15,23,42,0.03)' }}>
+              <div className="w-10 h-10 rounded-[12px] flex items-center justify-center" style={{ background: tp.gradient }}>
+                <span className="text-lg">{tp.icon}</span>
+              </div>
+              <div>
+                <div className="text-[14px] font-semibold" style={{ color: '#1e293b' }}>{tp.title}</div>
+                <div className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{tp.desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center justify-center gap-1.5 mt-4 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
+          <span className="text-[10px]" style={{ color: '#94a3b8' }}>{t.bridgeNote}</span>
+        </div>
+      </Modal>
+    );
+  }
+
+  // Legal comparison view
+  const data = LEGAL_BRIDGE[selected][lang];
+
+  return (
+    <Modal>
+      <ToolHeader icon="⚖️" gradient="linear-gradient(135deg, #dc2626, #3b82f6)" title={data.title} desc={data.subtitle} onClose={() => setSelected(null)} />
+
+      <div className="space-y-3">
+        {data.items.map((item, idx) => (
+          <div key={idx} className="rounded-[14px] overflow-hidden" style={{ border: '1px solid #e2e8f0' }}>
+            {/* Concept header — tap to expand */}
+            <button onClick={() => setExpanded(expanded === idx ? null : idx)}
+              className="w-full flex items-center justify-between px-4 py-3 text-left"
+              style={{ background: expanded === idx ? '#f8fafc' : 'white' }}>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded" style={{ background: 'linear-gradient(135deg, #dc2626, #3b82f6)', color: 'white' }}>⚡</span>
+                <span className="text-[13px] font-semibold" style={{ color: '#1e293b' }}>{item.concept}</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"
+                style={{ transform: expanded === idx ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+
+            {expanded === idx && (
+              <div className="px-4 pb-4 space-y-3 fade-in">
+                {/* CN expects */}
+                <div className="rounded-lg p-3" style={{ background: '#fef2f2', border: '1px solid #fecaca' }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: '#dc2626', color: 'white' }}>🇨🇳</span>
+                    <span className="text-[11px] font-semibold" style={{ color: '#991b1b' }}>{t.bridgeCNExpects}</span>
+                  </div>
+                  <p className="text-[12px] leading-relaxed" style={{ color: '#7f1d1d' }}>{item.cnExpect}</p>
+                </div>
+
+                {/* MY reality */}
+                <div className="rounded-lg p-3" style={{ background: '#eff6ff', border: '1px solid #bfdbfe' }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: '#2563eb', color: 'white' }}>🇲🇾</span>
+                    <span className="text-[11px] font-semibold" style={{ color: '#1e3a8a' }}>{t.bridgeMYReality}</span>
+                  </div>
+                  <p className="text-[12px] leading-relaxed" style={{ color: '#1e40af' }}>{item.myReality}</p>
+                </div>
+
+                {/* Risk */}
+                <div className="rounded-lg p-3" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="text-[11px] font-semibold" style={{ color: '#92400e' }}>⚠️ {t.bridgeRisk}</span>
+                  </div>
+                  <p className="text-[12px] leading-relaxed" style={{ color: '#78350f' }}>{item.risk}</p>
+                </div>
+
+                {/* Protective clause */}
+                <div className="rounded-lg overflow-hidden" style={{ border: '1px solid #e2e8f0' }}>
+                  <div className="flex items-center justify-between px-3 py-2" style={{ background: '#f8fafc' }}>
+                    <span className="text-[11px] font-semibold" style={{ color: '#334155' }}>📋 {t.bridgeClause}</span>
+                    <button onClick={() => copyClause(item.clause, idx)}
+                      className="text-[10px] px-2.5 py-1 rounded-lg font-semibold transition"
+                      style={copied === idx
+                        ? { background: '#0f172a', color: 'white' }
+                        : { background: 'white', border: '1px solid #e2e8f0', color: '#334155' }
+                      }>{copied === idx ? '✓ Copied!' : t.bridgeCopyClause}</button>
+                  </div>
+                  <div className="px-3 py-2">
+                    <p className="text-[11px] leading-relaxed font-mono" style={{ color: '#475569' }}>{item.clause}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Back button */}
+      <button onClick={() => { setSelected(null); setExpanded(null); }}
+        className="w-full mt-4 py-2.5 rounded-xl text-[12px] font-medium transition"
+        style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b' }}>
+        ← {t.bridgeBack}
+      </button>
+
+      <div className="flex items-center justify-center gap-1.5 mt-3">
+        <span className="text-[10px]" style={{ color: '#94a3b8' }}>{t.bridgeNote}</span>
+      </div>
+    </Modal>
+  );
+}
+
 // ===== MAIN EXPORT =====
 export default function Calculators({ lang, onClose }) {
   const [active, setActive] = useState(null);
@@ -1586,6 +2267,7 @@ export default function Calculators({ lang, onClose }) {
   if (active === 'vault') return <EvidenceVault lang={lang} onClose={() => setActive(null)} />;
   if (active === 'trust') return <CNMYTrustLink lang={lang} onClose={() => setActive(null)} />;
   if (active === 'navigator') return <SituationNavigator lang={lang} onClose={() => setActive(null)} />;
+  if (active === 'bridge') return <LegalBridge lang={lang} onClose={() => setActive(null)} />;
 
   const tools = [
     { id: 'stamp', icon: '📄', gradient: 'linear-gradient(135deg, #f59e0b, #eab308)', title: t.stampTitle, desc: t.stampDesc },
@@ -1595,6 +2277,7 @@ export default function Calculators({ lang, onClose }) {
     { id: 'vault', icon: '🔒', gradient: 'linear-gradient(135deg, #0ea5e9, #0284c7)', title: t.vaultTitle, desc: t.vaultDesc },
     { id: 'trust', icon: '🇨🇳', gradient: 'linear-gradient(135deg, #dc2626, #f59e0b)', title: t.trustTitle, desc: t.trustDesc },
     { id: 'navigator', icon: '🧭', gradient: 'linear-gradient(135deg, #0f172a, #334155)', title: t.navTitle, desc: t.navDesc },
+    { id: 'bridge', icon: '⚖️', gradient: 'linear-gradient(135deg, #dc2626, #3b82f6)', title: t.bridgeTitle, desc: t.bridgeDesc },
   ];
 
   return (

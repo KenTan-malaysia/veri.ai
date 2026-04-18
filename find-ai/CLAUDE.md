@@ -154,6 +154,39 @@ find-ai/
 
 ---
 
+### MODULE E: Legal Bridge [BUILT]
+**Status:** Complete — 4 property types with CN vs MY legal comparisons in EN/BM/中文.
+
+**What it does:** Chinese investors/tenants coming to Malaysia select a property type (residential, commercial, industrial, land) and get a comprehensive comparison of Chinese law expectations vs Malaysian legal reality, with risk warnings and ready-to-copy protective clauses.
+
+**Property types covered:**
+1. **Residential** — Termination rights (解除权), earnest money (定金), foreign ownership thresholds, renovation rights (装修权), right of first refusal (优先购买权)
+2. **Commercial** — Liquidated damages vs penalty (违约金), lease registration (租赁登记), force majeure (不可抗力), business scope restrictions, goodwill & key money (转让费)
+3. **Industrial** — Environmental liability (环保责任), workers & foreign labor (外劳管理), machinery & fixtures (机器设备), utilities & infrastructure, subletting to sub-contractors
+4. **Land** — Land ownership (freehold vs leasehold vs China's land use rights), land use conversion, Malay Reserved Land, NCR land (Sabah/Sarawak), foreign acquisition rules
+
+**Key legal references:**
+- Chinese Civil Code 2021 (Art. 180, 563, 586-587, 590, 715-716, 726, 730)
+- Contracts Act 1950 (Section 75 — liquidated damages)
+- National Land Code 1965 (Section 124 — land use conversion, Section 433B — foreign acquisition)
+- Environmental Quality Act 1974
+- Workers Minimum Standards of Housing Act (Act 446)
+- Evidence Act 1950 (Section 90A)
+- Malay Reservations Enactment
+- Sabah Land Ordinance / Sarawak Land Code
+
+**Outputs:**
+- Property type selector (4 types)
+- Expandable comparison cards for each legal concept
+- CN expectation (red) vs MY reality (blue) side-by-side
+- Risk warning (amber) for each concept
+- Ready-to-copy protective clauses
+- All in EN/BM/中文
+
+**Files:** `src/app/calculators.js` (LegalBridge component, LEGAL_BRIDGE data object)
+
+---
+
 ### CONSUMER Q&A (Original Unbelievebe) [BUILT]
 **Status:** Complete — all Phase 1 features shipped.
 
@@ -220,6 +253,7 @@ A. SDSAS 2026 Calculator → "Tax Accuracy Certificate" for audit protection [BU
 B. CN-MY Enterprise Trust Link → Manual USCC + risk scoring, Trust Grade A-D report [BUILT]
 C. Digital Evidence Vault → SHA-256 hashed photos, Section 90A court-ready report [BUILT]
 D. Situation Navigator → 3 dispute flows, step-by-step guides + LOD/notice templates [BUILT]
+E. Legal Bridge → CN vs MY property law comparison for 4 property types + protective clauses [BUILT]
 
 **Design Direction — "Mature Minimalism":**
 - NOT startup green vibes. Bank-level trust.
