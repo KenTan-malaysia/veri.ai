@@ -61,15 +61,15 @@ const L = {
     sdsasNote: 'Self-assessment system (SDSAS) effective Jan 2026. RM2,400 exemption removed. You calculate and pay via MyTax.',
     oldDuty: 'Old Rules (Pre-2026)', dutyIncrease: 'Increase',
     wasExempt: 'This rental was previously EXEMPT (under RM2,400/yr). Under 2026 rules, stamp duty now applies.',
-    vaultTitle: 'Evidence Vault', vaultDesc: 'Court-ready photo evidence with SHA-256',
-    vaultAddress: 'Property Address', vaultAddressHint: 'e.g. Lakefront Residence, Cyberjaya',
-    vaultUnit: 'Unit Number', vaultType: 'Record Type', vaultSelectType: 'Select type',
-    vaultCheckIn: 'Check-in', vaultCheckOut: 'Check-out', vaultDamage: 'Damage Report', vaultGeneral: 'General',
-    vaultUpload: 'Upload or Take Photos', vaultUploadHint: 'Each photo is SHA-256 hashed for court admissibility',
-    vaultHashing: 'Hashing photos...', vaultPhotos: 'Evidence Photos', vaultHash: 'Algorithm',
-    vaultGenerate: 'Generate Section 90A Certificate', vaultVerified: 'HASH VERIFIED',
-    vaultCertId: 'Certificate ID', vaultDownload: 'Download Certificate',
-    vaultLegalNote: 'This certificate is produced under Section 90A, Evidence Act 1950. Keep original photos unmodified. Present this certificate together with originals in any legal proceeding.',
+    vaultTitle: 'Photo Proof', vaultDesc: 'Protect yourself — snap, lock, done',
+    vaultAddress: 'Property / Condo Name', vaultAddressHint: 'e.g. Lakefront Residence, Cyberjaya',
+    vaultUnit: 'Unit Number', vaultType: 'What is this for?', vaultSelectType: 'Select one',
+    vaultCheckIn: 'Tenant moving in', vaultCheckOut: 'Tenant moving out', vaultDamage: 'Recording damage', vaultGeneral: 'Other',
+    vaultUpload: 'Add Photos', vaultUploadHint: 'Take photos or choose from gallery — we lock each one so it can\'t be disputed',
+    vaultHashing: 'Locking your photos...', vaultPhotos: 'Your Photos', vaultHash: 'Protection',
+    vaultGenerate: 'Create Proof Certificate', vaultVerified: 'LOCKED & PROTECTED',
+    vaultCertId: 'Certificate No.', vaultDownload: 'Download Your Certificate',
+    vaultLegalNote: 'This certificate proves your photos are original and untampered. It\'s accepted in Malaysian courts under the Evidence Act. Keep your original photos safe — don\'t edit or rename them.',
     annualRent: 'Annual Rent', purchasePrice: 'Purchase Price (RM)',
     monthlyExpenses: 'Monthly Expenses (RM)', expensesHint: 'Maintenance, insurance, assessment, quit rent',
     grossYield: 'Gross Yield', netYield: 'Net Yield',
@@ -133,15 +133,15 @@ const L = {
     sdsasNote: 'Sistem taksiran sendiri (SDSAS) berkuat kuasa Jan 2026. Pengecualian RM2,400 dimansuhkan. Anda kira dan bayar melalui MyTax.',
     oldDuty: 'Kadar Lama (Sebelum 2026)', dutyIncrease: 'Kenaikan',
     wasExempt: 'Sewa ini sebelum ini DIKECUALIKAN (bawah RM2,400/thn). Di bawah peraturan 2026, duti setem kini dikenakan.',
-    vaultTitle: 'Peti Bukti', vaultDesc: 'Bukti foto sah mahkamah dengan SHA-256',
-    vaultAddress: 'Alamat Hartanah', vaultAddressHint: 'cth. Lakefront Residence, Cyberjaya',
-    vaultUnit: 'Nombor Unit', vaultType: 'Jenis Rekod', vaultSelectType: 'Pilih jenis',
-    vaultCheckIn: 'Daftar Masuk', vaultCheckOut: 'Daftar Keluar', vaultDamage: 'Laporan Kerosakan', vaultGeneral: 'Umum',
-    vaultUpload: 'Muat Naik atau Ambil Gambar', vaultUploadHint: 'Setiap gambar di-hash SHA-256 untuk kebolehterimaan mahkamah',
-    vaultHashing: 'Menghash gambar...', vaultPhotos: 'Gambar Bukti', vaultHash: 'Algoritma',
-    vaultGenerate: 'Jana Sijil Seksyen 90A', vaultVerified: 'HASH DISAHKAN',
-    vaultCertId: 'ID Sijil', vaultDownload: 'Muat Turun Sijil',
-    vaultLegalNote: 'Sijil ini dikeluarkan di bawah Seksyen 90A, Akta Keterangan 1950. Simpan gambar asal tanpa ubah suai. Kemukakan sijil ini bersama gambar asal dalam mana-mana prosiding undang-undang.',
+    vaultTitle: 'Bukti Foto', vaultDesc: 'Lindungi diri — tangkap, kunci, siap',
+    vaultAddress: 'Nama Hartanah / Kondo', vaultAddressHint: 'cth. Lakefront Residence, Cyberjaya',
+    vaultUnit: 'Nombor Unit', vaultType: 'Untuk apa ini?', vaultSelectType: 'Pilih satu',
+    vaultCheckIn: 'Penyewa masuk', vaultCheckOut: 'Penyewa keluar', vaultDamage: 'Rakam kerosakan', vaultGeneral: 'Lain-lain',
+    vaultUpload: 'Tambah Gambar', vaultUploadHint: 'Ambil gambar atau pilih dari galeri — kami kunci setiap satu supaya tak boleh dipertikaikan',
+    vaultHashing: 'Mengunci gambar anda...', vaultPhotos: 'Gambar Anda', vaultHash: 'Perlindungan',
+    vaultGenerate: 'Cipta Sijil Bukti', vaultVerified: 'DIKUNCI & DILINDUNGI',
+    vaultCertId: 'No. Sijil', vaultDownload: 'Muat Turun Sijil Anda',
+    vaultLegalNote: 'Sijil ini membuktikan gambar anda asli dan tidak diubah. Ia diterima di mahkamah Malaysia di bawah Akta Keterangan. Simpan gambar asal — jangan edit atau tukar nama.',
     annualRent: 'Sewa Tahunan', purchasePrice: 'Harga Belian (RM)',
     monthlyExpenses: 'Perbelanjaan Bulanan (RM)', expensesHint: 'Penyelenggaraan, insurans, cukai taksiran',
     grossYield: 'Pulangan Kasar', netYield: 'Pulangan Bersih',
@@ -203,15 +203,15 @@ const L = {
     sdsasNote: '自我评估系统（SDSAS）2026年1月生效。RM2,400豁免已取消。您需通过MyTax自行计算和缴付。',
     oldDuty: '旧规则（2026年前）', dutyIncrease: '涨幅',
     wasExempt: '此租金之前获豁免（低于RM2,400/年）。2026年新规下，现需缴纳印花税。',
-    vaultTitle: '证据保险库', vaultDesc: '法庭级SHA-256照片证据',
-    vaultAddress: '房产地址', vaultAddressHint: '例：Lakefront Residence, Cyberjaya',
-    vaultUnit: '单位号', vaultType: '记录类型', vaultSelectType: '选择类型',
-    vaultCheckIn: '入住检查', vaultCheckOut: '退房检查', vaultDamage: '损坏报告', vaultGeneral: '一般',
-    vaultUpload: '上传或拍摄照片', vaultUploadHint: '每张照片使用SHA-256哈希以确保法庭可采纳性',
-    vaultHashing: '正在哈希处理...', vaultPhotos: '证据照片', vaultHash: '算法',
-    vaultGenerate: '生成第90A条证书', vaultVerified: '哈希已验证',
-    vaultCertId: '证书编号', vaultDownload: '下载证书',
-    vaultLegalNote: '本证书依据1950年证据法第90A条出具。请保留原始照片不做修改。在任何法律程序中，请将本证书与原始照片一并提交。',
+    vaultTitle: '照片证明', vaultDesc: '保护自己 — 拍照、锁定、完成',
+    vaultAddress: '房产/公寓名称', vaultAddressHint: '例：Lakefront Residence, Cyberjaya',
+    vaultUnit: '单位号', vaultType: '这是用于什么？', vaultSelectType: '选择一个',
+    vaultCheckIn: '租客入住', vaultCheckOut: '租客退房', vaultDamage: '记录损坏', vaultGeneral: '其他',
+    vaultUpload: '添加照片', vaultUploadHint: '拍照或从相册选择 — 我们会锁定每张照片，确保无法被争议',
+    vaultHashing: '正在锁定您的照片...', vaultPhotos: '您的照片', vaultHash: '保护方式',
+    vaultGenerate: '创建证明证书', vaultVerified: '已锁定和保护',
+    vaultCertId: '证书编号', vaultDownload: '下载您的证书',
+    vaultLegalNote: '本证书证明您的照片为原始照片且未被篡改。它依据马来西亚证据法在法庭上被接受。请妥善保管原始照片 — 不要编辑或重命名。',
     annualRent: '年租金', purchasePrice: '购买价格 (RM)',
     monthlyExpenses: '每月支出 (RM)', expensesHint: '管理费、保险、门牌税、地税',
     grossYield: '毛回报率', netYield: '净回报率',
@@ -762,13 +762,15 @@ ${d.property.type ? `<div class="field"><span class="label">Type</span><span cla
 
       {/* Photo upload */}
       <div className="mb-4">
-        <label className="w-full flex flex-col items-center gap-2 py-6 rounded-[14px] border-2 border-dashed border-sky-200 bg-sky-50 cursor-pointer hover:bg-sky-100 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
-          </svg>
-          <span className="text-[13px] font-medium text-sky-700">{t.vaultUpload}</span>
-          <span className="text-[10px] text-sky-500">{t.vaultUploadHint}</span>
-          <input type="file" accept="image/*" multiple onChange={handlePhotos} className="hidden" />
+        <label className="w-full flex flex-col items-center gap-2.5 py-8 rounded-[14px] border-2 border-dashed border-sky-200 bg-sky-50 cursor-pointer hover:bg-sky-100 active:bg-sky-150 transition">
+          <div className="w-14 h-14 rounded-full bg-sky-100 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <span className="text-[14px] font-semibold text-sky-700">{t.vaultUpload}</span>
+          <span className="text-[11px] text-sky-500 text-center px-4 leading-relaxed">{t.vaultUploadHint}</span>
+          <input type="file" accept="image/*" multiple capture="environment" onChange={handlePhotos} className="hidden" />
         </label>
       </div>
 
@@ -788,7 +790,10 @@ ${d.property.type ? `<div class="field"><span class="label">Type</span><span cla
               <img src={p.preview} alt={p.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="text-[12px] font-medium text-gray-800 truncate">{p.name}</div>
-                <div className="text-[10px] text-gray-400 font-mono truncate">SHA-256: {p.hash.substring(0, 16)}...{p.hash.substring(48)}</div>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span className="text-[10px] text-green-600 font-medium">{t.vaultVerified}</span>
+                </div>
                 <div className="text-[10px] text-gray-400">{new Date(p.timestamp).toLocaleString()}</div>
               </div>
               <button onClick={() => removePhoto(i)} className="text-gray-300 hover:text-red-500 p-1 flex-shrink-0">
@@ -809,15 +814,14 @@ ${d.property.type ? `<div class="field"><span class="label">Type</span><span cla
       {/* Certificate result */}
       {certificate && (
         <div className="mt-3 space-y-3 fade-in">
-          <div className="p-4 rounded-[14px] bg-sky-50 border border-sky-200">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 font-bold">SECTION 90A</span>
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">{t.vaultVerified}</span>
+          <div className="p-4 rounded-[14px] bg-green-50 border border-green-200 text-center">
+            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div className="text-[12px] text-gray-600 space-y-1">
-              <div><span className="text-gray-400">{t.vaultCertId}:</span> <span className="font-mono font-medium">{certificate.id}</span></div>
-              <div><span className="text-gray-400">{t.vaultPhotos}:</span> <span className="font-medium">{certificate.totalPhotos}</span></div>
-              <div><span className="text-gray-400">{t.vaultHash}:</span> <span className="font-mono">SHA-256</span></div>
+            <div className="text-[15px] font-bold text-green-800 mb-1">{t.vaultVerified}</div>
+            <div className="text-[12px] text-green-700 mb-3">{certificate.totalPhotos} {t.vaultPhotos.toLowerCase()}</div>
+            <div className="inline-flex items-center gap-2">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">{t.vaultCertId}: {certificate.id}</span>
             </div>
           </div>
 
