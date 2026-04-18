@@ -195,26 +195,47 @@ find-ai/
 
 ---
 
-## Business Strategy
+## Strategic Blueprint — "The Compliance Shield"
 
-**Pivot path:** Start as Consultancy/Utility Tool (solve high-friction legal/tax problems) → capture data and trust → evolve into Direct-Search/Advertisement Marketplace.
+**Core concept:** Find.ai is NOT a property app. It is a Risk Mitigation Engine.
+- Problem: Landlords in 2026 are legally liable for tax math (SDSAS) and face heavy fines for self-help evictions and deposit mismanagement (RTA).
+- Solution: Automate legal compliance, digitize physical evidence, verify international tenants before a single ringgit is exchanged.
 
-**Monetisation (planned):**
-- Free tier: Consumer Q&A, basic stamp duty calculator
-- Premium tier: Evidence Vault, Cross-Border Verification, full agreement generator, rent tracker
-- Enterprise: API access for property agencies, bulk verification
+**The "Trojan Horse" 3-Phase Roadmap:**
 
-**Competitive moat:**
+Phase I — THE TOOL (Utility First):
+Solve the "Tax Headache." Every landlord needs the SDSAS Calculator. Once they use it, they're in our ecosystem.
+
+Phase II — THE MANAGER (Data Lock-in):
+Provide the Evidence Vault. By storing their property's digital history (photos/leases) with us, switching cost becomes too high.
+
+Phase III — THE GIANT (Platform Pivot):
+Once we manage thousands of units, open the Direct Advertisement marketplace. Landlords "Auto-List" properties the moment a lease expires.
+
+**End Game Vision (end of 2026):**
+Find.ai = the only platform where a tenant from Shanghai can find a factory in Penang that is "Pre-Verified."
+- Tenant sees a "Compliance Score" for the landlord.
+- Landlord sees a "Trust Grade" for the tenant.
+- Marketplace = "Closed-Loop" of high-trust individuals = most valuable real estate dataset in Southeast Asia.
+
+**Killer Features:**
+A. SDSAS 2026 Calculator → "Tax Accuracy Certificate" for audit protection [BUILT]
+B. CN-MY Enterprise Trust Link → NECIPS query via 18-digit USCC, tells landlord if company is Grade A taxpayer or shell company [NOT BUILT]
+C. Digital Evidence Vault → SHA-256 hashed photos, Section 90A court-ready report [BUILT]
+D. Situation Navigator → Decision trees, pre-filled LOD + Form 198 [NOT BUILT]
+
+**Design Direction — "Mature Minimalism":**
+- NOT startup green vibes. Bank-level trust.
+- Deep navies, charcoal greys, crisp white space.
+- "Thumb Zone" design: all high-stakes buttons (Submit, Verify, Pay) at bottom for one-handed pro use.
+- Security icons (shield) throughout — remind users sensitive data (TIN, credit scores) is encrypted.
+- No cartoonish elements. Professional. Serious. Trustworthy.
+
+**Competitive positioning:**
 - Zero direct competition in Malaysia for this niche
-- Malaysian-law-specific (not generic AI)
-- Bilingual + dialect understanding
-- Compliance tools (SDSAS, Section 90A) that no competitor has
-- China-MY corridor focus (unique positioning)
-
-**Distribution gaps to close:**
-- TikTok/Reels content about landlord problems
-- Property Facebook groups
-- Agent referral network
+- Don't compete with PropertyGuru on day one — infiltrate with utility, expand to marketplace
+- China-MY corridor = unique positioning no one else has
+- Compliance tools (SDSAS, Section 90A) = moat no listing site can copy quickly
 
 ---
 
