@@ -2,22 +2,20 @@
 
 import { useState } from 'react';
 
-// ===== SHARED =====
+// ===== SHARED — Banking-app components =====
 const CloseBtn = ({ onClick }) => (
-  <button onClick={onClick} className="p-1 transition" style={{ color: '#94a3b8' }}>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <button onClick={onClick} className="w-10 h-10 flex items-center justify-center rounded-xl transition active:scale-90" style={{ background: '#f8fafc' }}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
 );
 
-const ToolHeader = ({ icon, gradient, title, desc, onClose }) => (
-  <div className="flex items-center justify-between mb-6">
+const ToolHeader = ({ icon, title, desc, onClose }) => (
+  <div className="flex items-center justify-between mb-6 pb-4" style={{ borderBottom: '1px solid #f1f5f9' }}>
     <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-[12px] flex items-center justify-center" style={{ background: gradient }}>
-        <span className="text-lg">{icon}</span>
-      </div>
+      <span className="text-2xl">{icon}</span>
       <div>
-        <h3 className="text-base font-bold" style={{ color: '#0f172a' }}>{title}</h3>
-        <p className="text-[11px]" style={{ color: '#94a3b8' }}>{desc}</p>
+        <h3 className="text-[16px] font-bold" style={{ color: '#0f172a', letterSpacing: '-0.01em' }}>{title}</h3>
+        <p className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{desc}</p>
       </div>
     </div>
     <CloseBtn onClick={onClose} />
@@ -25,8 +23,12 @@ const ToolHeader = ({ icon, gradient, title, desc, onClose }) => (
 );
 
 const Modal = ({ children }) => (
-  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.5)' }}>
-    <div className="bg-white w-full max-w-lg rounded-t-[20px] sm:rounded-[20px] p-6 max-h-[90vh] overflow-y-auto fade-in">
+  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}>
+    <div className="bg-white w-full max-w-lg rounded-t-[24px] sm:rounded-[20px] px-6 pt-5 pb-6 max-h-[92vh] overflow-y-auto fade-in" style={{ boxShadow: '0 -8px 40px rgba(15,23,42,0.12)' }}>
+      {/* Drag handle */}
+      <div className="flex justify-center mb-3 sm:hidden">
+        <div className="w-10 h-1 rounded-full" style={{ background: '#e2e8f0' }} />
+      </div>
       {children}
     </div>
   </div>
@@ -34,13 +36,21 @@ const Modal = ({ children }) => (
 
 const RMInput = ({ value, onChange, placeholder, label }) => (
   <div>
-    <label className="text-[11px] font-semibold uppercase tracking-wider mb-1.5 block" style={{ color: '#64748b' }}>{label}</label>
-    <div className="flex items-center gap-2 rounded-xl px-4 py-3" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-      <span className="text-sm font-medium" style={{ color: '#94a3b8' }}>RM</span>
+    <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{label}</label>
+    <div className="flex items-center gap-2 rounded-xl px-4 py-3.5" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+      <span className="text-[13px] font-bold" style={{ color: '#94a3b8' }}>RM</span>
       <input type="number" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
-        className="flex-1 bg-transparent text-lg font-semibold focus:outline-none" style={{ color: '#0f172a' }} />
+        className="flex-1 bg-transparent text-[16px] font-semibold focus:outline-none" style={{ color: '#0f172a' }} />
     </div>
   </div>
+);
+
+const ActionBtn = ({ onClick, disabled, label, color = '#0f172a' }) => (
+  <button onClick={onClick} disabled={disabled}
+    className="w-full py-4 rounded-xl text-[14px] font-bold text-white disabled:opacity-30 transition active:scale-[0.98]"
+    style={{ background: color, boxShadow: `0 4px 16px ${color}40` }}>
+    {label}
+  </button>
 );
 
 // ===== LABELS =====
@@ -462,66 +472,69 @@ function StampDutyCalc({ lang, onClose }) {
 
   return (
     <Modal>
-      <ToolHeader icon="📄" gradient="linear-gradient(135deg, #f59e0b, #eab308)" title={t.stampTitle} desc={t.stampDesc} onClose={onClose} />
-      <div className="space-y-4">
+      <ToolHeader icon="📄" title={t.stampTitle} desc={t.stampDesc} onClose={onClose} />
+      <div className="space-y-5">
         <RMInput value={rent} onChange={(v) => { setRent(v); setResult(null); }} placeholder="2500" label={t.monthlyRent} />
         <div>
-          <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.leaseDuration}</label>
+          <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.leaseDuration}</label>
           <div className="flex gap-2">
             {yv.map((y, i) => (
               <button key={y} onClick={() => { setYears(y); setResult(null); }}
-                className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium transition border ${years === y ? 'bg-amber-50 border-amber-300 text-amber-700' : 'bg-white border-gray-200 text-gray-500'}`}>
+                className="flex-1 py-3 rounded-xl text-[13px] font-semibold transition active:scale-95"
+                style={years === y
+                  ? { background: '#0f172a', color: '#fff', boxShadow: '0 2px 8px rgba(15,23,42,0.2)' }
+                  : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+                }>
                 {t.years[i]}
               </button>
             ))}
           </div>
         </div>
-        <button onClick={calc} disabled={!rent} className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40" style={{ background: 'linear-gradient(135deg, #f59e0b, #eab308)' }}>{t.calculate}</button>
+        <ActionBtn onClick={calc} disabled={!rent} label={t.calculate} />
       </div>
       {result && (
-        <div className="mt-5 space-y-3 fade-in">
+        <div className="mt-6 space-y-3 fade-in">
           {/* Main duty result */}
-          <div className="p-4 rounded-[14px] border" style={{ background: '#fffbeb', borderColor: '#fde68a' }}>
-            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">{t.stampResult}</div>
-            <div className="text-2xl font-bold" style={{ color: '#92400e' }}>RM {result.duty.toFixed(2)}</div>
-            <div className="text-[12px] text-gray-500 mt-2">{t.annualRent}: RM {result.annual.toLocaleString()}</div>
-            <div className="text-[11px] text-gray-400 mt-1">{result.units} × RM{result.rate} {t.stampPerUnit}</div>
+          <div className="p-5 rounded-2xl" style={{ background: '#0f172a' }}>
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>{t.stampResult}</div>
+            <div className="text-3xl font-bold text-white">RM {result.duty.toFixed(2)}</div>
+            <div className="flex items-center gap-3 mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{t.annualRent}: RM {result.annual.toLocaleString()}</span>
+              <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.3)' }}>•</span>
+              <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{result.units} × RM{result.rate}</span>
+            </div>
           </div>
 
           {/* SDSAS 2026 badge */}
-          <div className="p-3 rounded-[12px] bg-blue-50 border border-blue-100">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold">SDSAS 2026</span>
-            </div>
-            <p className="text-[11px] text-blue-800">{t.sdsasNote}</p>
+          <div className="p-3.5 rounded-xl flex items-start gap-3" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+            <span className="text-[9px] px-2 py-1 rounded-md font-bold flex-shrink-0" style={{ background: '#0f172a', color: '#fff' }}>SDSAS 2026</span>
+            <p className="text-[11px] leading-relaxed" style={{ color: '#64748b' }}>{t.sdsasNote}</p>
           </div>
 
           {/* Old vs New comparison */}
           {result.oldDuty > 0 && (
-            <div className="p-3 rounded-[12px] bg-gray-50 border border-gray-100">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-[10px] font-semibold text-gray-400 uppercase">{t.oldDuty}</div>
-                  <div className="text-sm font-semibold text-gray-500 line-through">RM {result.oldDuty.toFixed(2)}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[10px] font-semibold text-gray-400 uppercase">{t.dutyIncrease}</div>
-                  <div className="text-sm font-bold text-red-600">+RM {result.increase.toFixed(2)}</div>
-                </div>
+            <div className="p-3.5 rounded-xl flex justify-between items-center" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+              <div>
+                <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.oldDuty}</div>
+                <div className="text-[14px] font-semibold line-through" style={{ color: '#94a3b8' }}>RM {result.oldDuty.toFixed(2)}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.dutyIncrease}</div>
+                <div className="text-[14px] font-bold" style={{ color: '#dc2626' }}>+RM {result.increase.toFixed(2)}</div>
               </div>
             </div>
           )}
           {result.oldDuty === 0 && (
-            <div className="p-3 rounded-[12px] bg-red-50 border border-red-100">
-              <p className="text-[11px] text-red-700 font-medium">{t.wasExempt}</p>
+            <div className="p-3.5 rounded-xl" style={{ background: '#fef2f2', border: '1px solid #fecaca' }}>
+              <p className="text-[11px] font-medium" style={{ color: '#991b1b' }}>{t.wasExempt}</p>
             </div>
           )}
 
           {/* Warnings */}
-          <div className="pt-2 space-y-1.5">
-            <p className="text-[11px] text-gray-500">⚠️ {t.stampNote}</p>
-            <p className="text-[11px] text-gray-500">💡 {t.stampWho}</p>
-            <p className="text-[11px] text-gray-500">📅 {t.stampDeadline}</p>
+          <div className="pt-1 space-y-2">
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>⚠️ {t.stampNote}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>💡 {t.stampWho}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>📅 {t.stampDeadline}</p>
           </div>
         </div>
       )}
@@ -548,40 +561,43 @@ function RentalYieldCalc({ lang, onClose }) {
 
   return (
     <Modal>
-      <ToolHeader icon="📊" gradient="linear-gradient(135deg, #16a34a, #22c55e)" title={t.yieldTitle} desc={t.yieldDesc} onClose={onClose} />
-      <div className="space-y-4">
+      <ToolHeader icon="📊" title={t.yieldTitle} desc={t.yieldDesc} onClose={onClose} />
+      <div className="space-y-5">
         <RMInput value={price} onChange={(val) => { setPrice(val); setResult(null); }} placeholder="500000" label={t.purchasePrice} />
         <RMInput value={rent} onChange={(val) => { setRent(val); setResult(null); }} placeholder="2500" label={t.monthlyRent} />
         <div>
           <RMInput value={expenses} onChange={(val) => { setExpenses(val); setResult(null); }} placeholder="350" label={t.monthlyExpenses} />
-          <p className="text-[10px] text-gray-400 mt-1 pl-1">{t.expensesHint}</p>
+          <p className="text-[10px] mt-1.5 pl-1" style={{ color: '#cbd5e1' }}>{t.expensesHint}</p>
         </div>
-        <button onClick={calc} disabled={!price || !rent} className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40" style={{ background: 'linear-gradient(135deg, #16a34a, #22c55e)' }}>{t.calculate}</button>
+        <ActionBtn onClick={calc} disabled={!price || !rent} label={t.calculate} />
       </div>
       {result && (
-        <div className="mt-5 space-y-3 fade-in">
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="p-3.5 rounded-[12px] bg-gray-50 text-center">
-              <div className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t.grossYield}</div>
-              <div className="text-xl font-bold text-gray-900">{result.gross.toFixed(2)}%</div>
-            </div>
-            <div className="p-3.5 rounded-[12px] text-center" style={{ background: v(result.net).bg }}>
-              <div className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t.netYield}</div>
-              <div className="text-xl font-bold" style={{ color: v(result.net).color }}>{result.net.toFixed(2)}%</div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="p-3 rounded-[12px] bg-gray-50">
-              <div className="text-[10px] font-semibold text-gray-400 uppercase mb-0.5">{t.annualProfit}</div>
-              <div className="text-base font-bold">RM {result.annualProfit.toLocaleString()}</div>
-            </div>
-            <div className="p-3 rounded-[12px] bg-gray-50">
-              <div className="text-[10px] font-semibold text-gray-400 uppercase mb-0.5">{t.monthlyProfit}</div>
-              <div className="text-base font-bold">RM {result.monthlyProfit.toLocaleString()}</div>
+        <div className="mt-6 space-y-3 fade-in">
+          {/* Hero result — net yield */}
+          <div className="p-5 rounded-2xl" style={{ background: '#0f172a' }}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>{t.grossYield}</div>
+                <div className="text-2xl font-bold text-white mt-1">{result.gross.toFixed(2)}%</div>
+              </div>
+              <div>
+                <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>{t.netYield}</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: v(result.net).color === '#16a34a' ? '#4ade80' : v(result.net).color === '#d97706' ? '#fbbf24' : '#f87171' }}>{result.net.toFixed(2)}%</div>
+              </div>
             </div>
           </div>
-          <div className="p-3.5 rounded-[12px] border" style={{ background: v(result.net).bg, borderColor: v(result.net).color + '30' }}>
-            <div className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t.verdict}</div>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="p-3.5 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+              <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.annualProfit}</div>
+              <div className="text-[16px] font-bold mt-1" style={{ color: '#0f172a' }}>RM {result.annualProfit.toLocaleString()}</div>
+            </div>
+            <div className="p-3.5 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+              <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.monthlyProfit}</div>
+              <div className="text-[16px] font-bold mt-1" style={{ color: '#0f172a' }}>RM {result.monthlyProfit.toLocaleString()}</div>
+            </div>
+          </div>
+          <div className="p-3.5 rounded-xl" style={{ background: v(result.net).bg, border: `1px solid ${v(result.net).color}25` }}>
+            <div className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: '#94a3b8' }}>{t.verdict}</div>
             <div className="text-[13px] font-semibold" style={{ color: v(result.net).color }}>{v(result.net).text}</div>
           </div>
         </div>
@@ -647,17 +663,21 @@ function TenantScreen({ lang, onClose }) {
 
   return (
     <Modal>
-      <ToolHeader icon="🔍" gradient="linear-gradient(135deg, #6366f1, #8b5cf6)" title={t.screenTitle} desc={t.screenDesc} onClose={onClose} />
-      <div className="space-y-4">
+      <ToolHeader icon="🔍" title={t.screenTitle} desc={t.screenDesc} onClose={onClose} />
+      <div className="space-y-5">
         <RMInput value={salary} onChange={(v) => { setSalary(v); setResult(null); }} placeholder="5000" label={t.tenantSalary} />
         <RMInput value={rent} onChange={(v) => { setRent(v); setResult(null); }} placeholder="2500" label={t.rentAmount} />
 
         <div>
-          <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.jobType}</label>
+          <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.jobType}</label>
           <div className="grid grid-cols-2 gap-2">
             {['permanent', 'contract', 'selfEmployed', 'unemployed'].map(j => (
               <button key={j} onClick={() => { setJob(j); setResult(null); }}
-                className={`py-2 rounded-xl text-[12px] font-medium border transition ${job === j ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-gray-200 text-gray-500'}`}>
+                className="py-3 rounded-xl text-[12px] font-semibold transition active:scale-95"
+                style={job === j
+                  ? { background: '#0f172a', color: '#fff', boxShadow: '0 2px 8px rgba(15,23,42,0.2)' }
+                  : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+                }>
                 {t.jobs[j]}
               </button>
             ))}
@@ -666,23 +686,29 @@ function TenantScreen({ lang, onClose }) {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.occupants}</label>
+            <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.occupants}</label>
             <input type="number" value={occupants} onChange={(e) => { setOccupants(e.target.value); setResult(null); }} placeholder="2"
-              className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400" />
+              className="w-full py-3 px-4 rounded-xl text-[14px] font-medium focus:outline-none"
+              style={{ background: '#f8fafc', border: '1px solid #edf0f4', color: '#0f172a' }} />
           </div>
           <div>
-            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.bedrooms}</label>
+            <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.bedrooms}</label>
             <input type="number" value={bedrooms} onChange={(e) => { setBedrooms(e.target.value); setResult(null); }} placeholder="3"
-              className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400" />
+              className="w-full py-3 px-4 rounded-xl text-[14px] font-medium focus:outline-none"
+              style={{ background: '#f8fafc', border: '1px solid #edf0f4', color: '#0f172a' }} />
           </div>
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.moveReason}</label>
-          <div className="flex flex-wrap gap-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.moveReason}</label>
+          <div className="flex flex-wrap gap-2">
             {['leaseEnd', 'work', 'family', 'evicted', 'firstTime'].map(r => (
               <button key={r} onClick={() => { setReason(r); setResult(null); }}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-medium border transition ${reason === r ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-gray-200 text-gray-500'}`}>
+                className="px-3.5 py-2 rounded-xl text-[11px] font-semibold transition active:scale-95"
+                style={reason === r
+                  ? { background: '#0f172a', color: '#fff' }
+                  : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+                }>
                 {t.reasons[r]}
               </button>
             ))}
@@ -690,26 +716,36 @@ function TenantScreen({ lang, onClose }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.hasGuarantor}</label>
+          <label className="text-[11px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#94a3b8' }}>{t.hasGuarantor}</label>
           <div className="flex gap-2">
-            <button onClick={() => { setGuarantor(true); setResult(null); }} className={`flex-1 py-2 rounded-xl text-[13px] font-medium border transition ${guarantor === true ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-500'}`}>{t.yes}</button>
-            <button onClick={() => { setGuarantor(false); setResult(null); }} className={`flex-1 py-2 rounded-xl text-[13px] font-medium border transition ${guarantor === false ? 'bg-red-50 border-red-300 text-red-700' : 'bg-white border-gray-200 text-gray-500'}`}>{t.no}</button>
+            <button onClick={() => { setGuarantor(true); setResult(null); }}
+              className="flex-1 py-3 rounded-xl text-[13px] font-semibold transition active:scale-95"
+              style={guarantor === true
+                ? { background: '#0f172a', color: '#fff' }
+                : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+              }>{t.yes}</button>
+            <button onClick={() => { setGuarantor(false); setResult(null); }}
+              className="flex-1 py-3 rounded-xl text-[13px] font-semibold transition active:scale-95"
+              style={guarantor === false
+                ? { background: '#0f172a', color: '#fff' }
+                : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+              }>{t.no}</button>
           </div>
         </div>
 
-        <button onClick={screen} disabled={!salary || !rent || !job} className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>{t.checkTenant}</button>
+        <ActionBtn onClick={screen} disabled={!salary || !rent || !job} label={t.checkTenant} />
       </div>
 
       {result && (
-        <div className="mt-5 space-y-3 fade-in">
-          <div className="p-4 rounded-[14px] text-center" style={{ background: levelStyle[result.level].bg }}>
-            <div className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t.riskLevel}</div>
-            <div className="text-xl font-bold" style={{ color: levelStyle[result.level].color }}>{levelStyle[result.level].text}</div>
-            <div className="text-[12px] text-gray-500 mt-1">{t.affordability}: {result.ratio.toFixed(1)}x</div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-              <div className="h-2 rounded-full transition-all" style={{ width: `${result.score}%`, background: levelStyle[result.level].color }} />
+        <div className="mt-6 space-y-3 fade-in">
+          <div className="p-5 rounded-2xl text-center" style={{ background: '#0f172a' }}>
+            <div className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t.riskLevel}</div>
+            <div className="text-xl font-bold" style={{ color: levelStyle[result.level].color === '#16a34a' ? '#4ade80' : levelStyle[result.level].color === '#d97706' ? '#fbbf24' : '#f87171' }}>{levelStyle[result.level].text}</div>
+            <div className="text-[12px] mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{t.affordability}: {result.ratio.toFixed(1)}x</div>
+            <div className="w-full rounded-full h-1.5 mt-3" style={{ background: 'rgba(255,255,255,0.1)' }}>
+              <div className="h-1.5 rounded-full transition-all" style={{ width: `${result.score}%`, background: levelStyle[result.level].color === '#16a34a' ? '#4ade80' : levelStyle[result.level].color === '#d97706' ? '#fbbf24' : '#f87171' }} />
             </div>
-            <div className="text-[11px] text-gray-400 mt-1">{result.score}/100</div>
+            <div className="text-[11px] mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{result.score}/100</div>
           </div>
 
           {result.reds.length > 0 && (
@@ -759,28 +795,33 @@ function AgreementHealth({ lang, onClose }) {
 
   return (
     <Modal>
-      <ToolHeader icon="📋" gradient="linear-gradient(135deg, #ec4899, #f43f5e)" title={t.healthTitle} desc={t.healthDesc} onClose={onClose} />
+      <ToolHeader icon="📋" title={t.healthTitle} desc={t.healthDesc} onClose={onClose} />
 
-      <div className="space-y-2 mb-4">
+      <div className="space-y-2 mb-5">
         {t.clauses.map(c => (
           <button key={c.id} onClick={() => toggle(c.id)}
-            className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition ${answers[c.id] ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
-            <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${answers[c.id] ? 'bg-green-500' : 'bg-gray-200'}`}>
+            className="w-full flex items-center gap-3 text-left px-4 py-3.5 rounded-xl transition active:scale-[0.98]"
+            style={answers[c.id]
+              ? { background: '#f0fdf4', border: '1px solid #bbf7d0' }
+              : { background: '#f8fafc', border: '1px solid #edf0f4' }
+            }>
+            <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+              style={answers[c.id] ? { background: '#0f172a' } : { background: '#e2e8f0' }}>
               {answers[c.id] && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>}
             </div>
-            <span className="text-[13px] text-gray-700">{c.q}</span>
+            <span className="text-[13px] font-medium" style={{ color: answers[c.id] ? '#0f172a' : '#64748b' }}>{c.q}</span>
           </button>
         ))}
       </div>
 
-      <button onClick={check} className="w-full py-3 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #ec4899, #f43f5e)' }}>{t.checkAgreement}</button>
+      <ActionBtn onClick={check} label={t.checkAgreement} />
 
       {result && (
-        <div className="mt-5 space-y-3 fade-in">
-          <div className="p-4 rounded-[14px] text-center" style={{ background: levelStyle[result.level].bg }}>
-            <div className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t.score}</div>
-            <div className="text-2xl font-bold" style={{ color: levelStyle[result.level].color }}>{result.pct}%</div>
-            <div className="text-[12px] font-medium mt-1" style={{ color: levelStyle[result.level].color }}>{t[result.level]}</div>
+        <div className="mt-6 space-y-3 fade-in">
+          <div className="p-5 rounded-2xl text-center" style={{ background: '#0f172a' }}>
+            <div className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t.score}</div>
+            <div className="text-3xl font-bold text-white">{result.pct}%</div>
+            <div className="text-[12px] font-medium mt-1" style={{ color: levelStyle[result.level].color === '#16a34a' ? '#4ade80' : levelStyle[result.level].color === '#d97706' ? '#fbbf24' : '#f87171' }}>{t[result.level]}</div>
             <div className="text-[11px] text-gray-400 mt-1">{result.present}/{result.total} {t.present}</div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
               <div className="h-2 rounded-full transition-all" style={{ width: `${result.pct}%`, background: levelStyle[result.level].color }} />
@@ -904,7 +945,7 @@ ${d.property.type ? `<div class="field"><span class="label">Type</span><span cla
 
   return (
     <Modal>
-      <ToolHeader icon="🔒" gradient="linear-gradient(135deg, #0ea5e9, #0284c7)" title={t.vaultTitle} desc={t.vaultDesc} onClose={onClose} />
+      <ToolHeader icon="🔒" title={t.vaultTitle} desc={t.vaultDesc} onClose={onClose} />
 
       {/* Property details */}
       <div className="space-y-3 mb-4">
@@ -978,11 +1019,9 @@ ${d.property.type ? `<div class="field"><span class="label">Type</span><span cla
       )}
 
       {/* Generate certificate */}
-      <button onClick={generateCertificate} disabled={!photos.length || !property.address}
-        className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 mb-2"
-        style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)' }}>
-        {t.vaultGenerate}
-      </button>
+      <div className="mb-2">
+        <ActionBtn onClick={generateCertificate} disabled={!photos.length || !property.address} label={t.vaultGenerate} />
+      </div>
 
       {/* Certificate result */}
       {certificate && (
@@ -1111,7 +1150,7 @@ ${result.positives.length ? `<div class="section"><h3>Positive Factors</h3>${res
 
   return (
     <Modal>
-      <ToolHeader icon="🇨🇳" gradient="linear-gradient(135deg, #dc2626, #f59e0b)" title={t.trustTitle} desc={t.trustDesc} onClose={onClose} />
+      <ToolHeader icon="🇨🇳" title={t.trustTitle} desc={t.trustDesc} onClose={onClose} />
 
       {/* USCC Input */}
       <div className="space-y-3 mb-4">
@@ -1209,9 +1248,7 @@ ${result.positives.length ? `<div class="section"><h3>Positive Factors</h3>${res
           </div>
         </div>
 
-        <button onClick={generateTrust} disabled={!usccValid || !company.taxRating || !company.capital}
-          className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40"
-          style={{ background: 'linear-gradient(135deg, #dc2626, #f59e0b)' }}>{t.generateReport}</button>
+        <ActionBtn onClick={generateTrust} disabled={!usccValid || !company.taxRating || !company.capital} label={t.generateReport} />
       </div>
 
       {/* Result */}
@@ -1575,7 +1612,7 @@ function SituationNavigator({ lang, onClose }) {
   if (!active) {
     return (
       <Modal>
-        <ToolHeader icon="🧭" gradient="linear-gradient(135deg, #0f172a, #334155)" title={t.navTitle} desc={t.navDesc} onClose={onClose} />
+        <ToolHeader icon="🧭" title={t.navTitle} desc={t.navDesc} onClose={onClose} />
         <p className="text-[13px] font-medium mb-4" style={{ color: '#334155' }}>{t.navPick}</p>
         <div className="space-y-2.5">
           {[
@@ -2076,7 +2113,7 @@ function LegalBridge({ lang, onClose }) {
   if (!goal) {
     return (
       <Modal>
-        <ToolHeader icon="⚖️" gradient="linear-gradient(135deg, #dc2626, #3b82f6)" title={t.bridgeTitle} desc={t.bridgeDesc} onClose={onClose} />
+        <ToolHeader icon="⚖️" title={t.bridgeTitle} desc={t.bridgeDesc} onClose={onClose} />
         <p className="text-[13px] font-medium mb-1" style={{ color: '#334155' }}>{t.bridgePick}</p>
         <p className="text-[11px] mb-4" style={{ color: '#94a3b8' }}>{t.bridgePickSub}</p>
         {goals.map((group, gi) => (
@@ -2143,7 +2180,7 @@ function LegalBridge({ lang, onClose }) {
 
   return (
     <Modal>
-      <ToolHeader icon="⚖️" gradient="linear-gradient(135deg, #dc2626, #3b82f6)" title={t.bridgeTitle} desc={t.bridgeDesc} onClose={() => setGoal(null)} />
+      <ToolHeader icon="⚖️" title={t.bridgeTitle} desc={t.bridgeDesc} onClose={() => setGoal(null)} />
 
       {/* Verdict */}
       <div className="rounded-[14px] p-4 mb-3" style={{ background: verdictColor.bg, border: `1px solid ${verdictColor.border}` }}>
@@ -2271,43 +2308,68 @@ export default function Calculators({ lang, onClose }) {
   if (active === 'navigator') return <SituationNavigator lang={lang} onClose={() => setActive(null)} />;
   if (active === 'bridge') return <LegalBridge lang={lang} onClose={() => setActive(null)} />;
 
-  const tools = [
-    { id: 'stamp', icon: '📄', gradient: 'linear-gradient(135deg, #f59e0b, #eab308)', title: t.stampTitle, desc: t.stampDesc },
-    { id: 'yield', icon: '📊', gradient: 'linear-gradient(135deg, #16a34a, #22c55e)', title: t.yieldTitle, desc: t.yieldDesc },
-    { id: 'screen', icon: '🔍', gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)', title: t.screenTitle, desc: t.screenDesc },
-    { id: 'health', icon: '📋', gradient: 'linear-gradient(135deg, #ec4899, #f43f5e)', title: t.healthTitle, desc: t.healthDesc },
-    { id: 'vault', icon: '🔒', gradient: 'linear-gradient(135deg, #0ea5e9, #0284c7)', title: t.vaultTitle, desc: t.vaultDesc },
-    { id: 'trust', icon: '🇨🇳', gradient: 'linear-gradient(135deg, #dc2626, #f59e0b)', title: t.trustTitle, desc: t.trustDesc },
-    { id: 'navigator', icon: '🧭', gradient: 'linear-gradient(135deg, #0f172a, #334155)', title: t.navTitle, desc: t.navDesc },
-    { id: 'bridge', icon: '⚖️', gradient: 'linear-gradient(135deg, #dc2626, #3b82f6)', title: t.bridgeTitle, desc: t.bridgeDesc },
+  const categories = [
+    {
+      label: lang === 'en' ? 'Calculators' : lang === 'bm' ? 'Kalkulator' : '计算器',
+      tools: [
+        { id: 'stamp', icon: '📄', title: t.stampTitle, desc: t.stampDesc },
+        { id: 'yield', icon: '📊', title: t.yieldTitle, desc: t.yieldDesc },
+      ],
+    },
+    {
+      label: lang === 'en' ? 'Risk & Compliance' : lang === 'bm' ? 'Risiko & Pematuhan' : '风险与合规',
+      tools: [
+        { id: 'screen', icon: '🔍', title: t.screenTitle, desc: t.screenDesc },
+        { id: 'health', icon: '📋', title: t.healthTitle, desc: t.healthDesc },
+        { id: 'trust', icon: '🇨🇳', title: t.trustTitle, desc: t.trustDesc },
+      ],
+    },
+    {
+      label: lang === 'en' ? 'Protection & Legal' : lang === 'bm' ? 'Perlindungan & Undang-undang' : '保护与法律',
+      tools: [
+        { id: 'vault', icon: '🔒', title: t.vaultTitle, desc: t.vaultDesc },
+        { id: 'navigator', icon: '🧭', title: t.navTitle, desc: t.navDesc },
+        { id: 'bridge', icon: '⚖️', title: t.bridgeTitle, desc: t.bridgeDesc },
+      ],
+    },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.5)' }}>
-      <div className="bg-white w-full max-w-lg rounded-t-[20px] sm:rounded-[20px] p-6 fade-in">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}>
+      <div className="bg-white w-full max-w-lg rounded-t-[24px] sm:rounded-[20px] px-6 pt-5 pb-6 max-h-[88vh] overflow-y-auto fade-in" style={{ boxShadow: '0 -8px 40px rgba(15,23,42,0.12)' }}>
+        {/* Drag handle */}
+        <div className="flex justify-center mb-3 sm:hidden">
+          <div className="w-10 h-1 rounded-full" style={{ background: '#e2e8f0' }} />
+        </div>
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-base font-bold" style={{ color: '#0f172a' }}>{t.tools}</h3>
+          <h3 className="text-[18px] font-bold" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>{t.tools}</h3>
           <CloseBtn onClick={onClose} />
         </div>
-        <div className="space-y-2.5">
-          {tools.map(tool => (
-            <button key={tool.id} onClick={() => setActive(tool.id)}
-              className="w-full flex items-center gap-3 text-left px-4 py-4 rounded-[14px] bg-white card-hover"
-              style={{ border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(15,23,42,0.03)' }}>
-              <div className="w-10 h-10 rounded-[12px] flex items-center justify-center" style={{ background: tool.gradient }}>
-                <span className="text-lg">{tool.icon}</span>
-              </div>
-              <div>
-                <div className="text-[14px] font-semibold" style={{ color: '#1e293b' }}>{tool.title}</div>
-                <div className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{tool.desc}</div>
-              </div>
-            </button>
-          ))}
-        </div>
+
+        {categories.map((cat, ci) => (
+          <div key={ci} className={ci > 0 ? 'mt-5' : ''}>
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2.5 pl-1" style={{ color: '#cbd5e1' }}>{cat.label}</div>
+            <div className="space-y-2">
+              {cat.tools.map(tool => (
+                <button key={tool.id} onClick={() => setActive(tool.id)}
+                  className="w-full flex items-center gap-3.5 text-left px-4 py-3.5 rounded-2xl transition active:scale-[0.98]"
+                  style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
+                  <span className="text-2xl w-10 h-10 flex items-center justify-center rounded-xl flex-shrink-0" style={{ background: '#fff', border: '1px solid #edf0f4' }}>{tool.icon}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold" style={{ color: '#0f172a' }}>{tool.title}</div>
+                    <div className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{tool.desc}</div>
+                  </div>
+                  <svg className="flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+
         {/* Shield security strip */}
-        <div className="flex items-center justify-center gap-1.5 mt-4 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span className="text-[10px]" style={{ color: '#94a3b8' }}>All data encrypted & stored on your device</span>
+        <div className="flex items-center justify-center gap-1.5 mt-5 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span className="text-[9px] font-medium" style={{ color: '#cbd5e1' }}>All data encrypted & stored on your device</span>
         </div>
       </div>
     </div>
