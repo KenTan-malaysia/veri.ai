@@ -440,68 +440,93 @@ export default function Home() {
   if (!showChat && !showProfile)
     return <Landing onStart={startChat} lang={lang} setLang={setLang} hasSavedChat={hasSavedChat} onContinueChat={loadChat} />;
 
-  // Profile — charcoal/navy theme
+  // Profile — banking-app onboarding
   if (showProfile) {
     const t = UI[lang];
+    const roleIcons = { landlord: '🏠', tenant: '🔑', buyer: '🛒' };
+    const typeIcons = { condo: '🏢', landed: '🏡', shop: '🏪' };
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen px-6" style={{ background: '#f1f5f9' }}>
-        <Logo size={52} />
-        <h2 className="text-xl font-bold mt-5 mb-1" style={{ color: '#0f172a' }}>{t.profileTitle}</h2>
-        <p className="text-[13px] mb-8" style={{ color: '#64748b' }}>{t.profileDesc}</p>
-        <div className="w-full max-w-sm space-y-4">
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider mb-2 block" style={{ color: '#64748b' }}>{t.profileRole}</label>
-            <div className="flex gap-2">
-              {['landlord','tenant','buyer'].map(r => (
-                <button key={r} onClick={() => setProfile({...profile, role: r})}
-                  className={`flex-1 py-3 rounded-2xl text-[13px] font-semibold transition-all border-2 ${
-                    profile.role === r ? 'shadow-sm' : 'bg-white hover:border-gray-300'
-                  }`}
-                  style={profile.role === r
-                    ? { background: 'rgba(59,130,246,0.06)', borderColor: '#3b82f6', color: '#1d4ed8' }
-                    : { borderColor: '#e2e8f0', color: '#64748b' }
-                  }>{t.roles[r]}</button>
-              ))}
-            </div>
+      <div className="flex flex-col min-h-screen" style={{ background: '#0f172a' }}>
+        {/* Top section — navy with branding */}
+        <div className="flex flex-col items-center pt-14 pb-8 px-6">
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <span className="text-white font-bold text-xl">F</span>
           </div>
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider mb-2 block" style={{ color: '#64748b' }}>{t.profileState}</label>
-            <select value={profile.state} onChange={(e) => setProfile({...profile, state: e.target.value})}
-              className="w-full py-3 px-4 rounded-2xl border-2 text-sm focus:outline-none transition bg-white"
-              style={{ borderColor: '#e2e8f0', color: '#334155' }}>
-              <option value="">—</option>
-              {STATES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider mb-2 block" style={{ color: '#64748b' }}>{t.profileType}</label>
-            <div className="flex gap-2">
-              {['condo','landed','shop'].map(tp => (
-                <button key={tp} onClick={() => setProfile({...profile, type: tp})}
-                  className={`flex-1 py-3 rounded-2xl text-[12px] font-semibold transition-all border-2 ${
-                    profile.type === tp ? 'shadow-sm' : 'bg-white hover:border-gray-300'
-                  }`}
-                  style={profile.type === tp
-                    ? { background: 'rgba(59,130,246,0.06)', borderColor: '#3b82f6', color: '#1d4ed8' }
-                    : { borderColor: '#e2e8f0', color: '#64748b' }
-                  }>{t.types[tp]}</button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider mb-2 block" style={{ color: '#64748b' }}>{t.profileRent}</label>
-            <input type="number" value={profile.rent} onChange={(e) => setProfile({...profile, rent: e.target.value})}
-              placeholder="2500" className="w-full py-3 px-4 rounded-2xl border-2 text-sm focus:outline-none transition"
-              style={{ borderColor: '#e2e8f0', color: '#334155' }} />
-          </div>
+          <h2 className="text-[22px] font-bold mb-1.5 text-white" style={{ letterSpacing: '-0.02em' }}>{t.profileTitle}</h2>
+          <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{t.profileDesc}</p>
         </div>
-        <div className="flex gap-3 mt-10 w-full max-w-sm">
-          <button onClick={() => { setShowProfile(false); setShowChat(true); }}
-            className="flex-1 py-3.5 rounded-2xl text-sm font-medium transition"
-            style={{ background: '#e2e8f0', color: '#64748b' }}>{t.profileSkip}</button>
-          <button onClick={() => { save('fi_profile', profile); setShowProfile(false); setShowChat(true); }}
-            className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white transition hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)' }}>{t.profileSave}</button>
+
+        {/* Bottom card — white, rounded top */}
+        <div className="flex-1 bg-white px-6 pt-8 pb-6" style={{ borderRadius: '28px 28px 0 0' }}>
+          <div className="max-w-sm mx-auto space-y-6">
+            {/* Role — icon cards */}
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileRole}</label>
+              <div className="flex gap-2.5">
+                {['landlord','tenant','buyer'].map(r => (
+                  <button key={r} onClick={() => setProfile({...profile, role: r})}
+                    className="flex-1 flex flex-col items-center gap-1.5 py-4 rounded-2xl text-[12px] font-semibold transition-all active:scale-95"
+                    style={profile.role === r
+                      ? { background: '#0f172a', color: '#fff', boxShadow: '0 4px 16px rgba(15,23,42,0.25)' }
+                      : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+                    }>
+                    <span className="text-xl">{roleIcons[r]}</span>
+                    {t.roles[r]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* State — clean select */}
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileState}</label>
+              <select value={profile.state} onChange={(e) => setProfile({...profile, state: e.target.value})}
+                className="w-full py-3.5 px-4 rounded-xl text-[14px] font-medium focus:outline-none transition appearance-none"
+                style={{ background: '#f8fafc', border: '1px solid #edf0f4', color: profile.state ? '#0f172a' : '#94a3b8' }}>
+                <option value="">—</option>
+                {STATES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+
+            {/* Property type — icon cards */}
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileType}</label>
+              <div className="flex gap-2.5">
+                {['condo','landed','shop'].map(tp => (
+                  <button key={tp} onClick={() => setProfile({...profile, type: tp})}
+                    className="flex-1 flex flex-col items-center gap-1.5 py-4 rounded-2xl text-[12px] font-semibold transition-all active:scale-95"
+                    style={profile.type === tp
+                      ? { background: '#0f172a', color: '#fff', boxShadow: '0 4px 16px rgba(15,23,42,0.25)' }
+                      : { background: '#f8fafc', color: '#64748b', border: '1px solid #edf0f4' }
+                    }>
+                    <span className="text-xl">{typeIcons[tp]}</span>
+                    {t.types[tp]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Rent */}
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileRent}</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] font-bold" style={{ color: '#94a3b8' }}>RM</span>
+                <input type="number" value={profile.rent} onChange={(e) => setProfile({...profile, rent: e.target.value})}
+                  placeholder="2,500" className="w-full py-3.5 pl-12 pr-4 rounded-xl text-[14px] font-medium focus:outline-none transition"
+                  style={{ background: '#f8fafc', border: '1px solid #edf0f4', color: '#0f172a' }} />
+              </div>
+            </div>
+          </div>
+
+          {/* Actions — pinned to bottom */}
+          <div className="flex gap-3 mt-8 max-w-sm mx-auto">
+            <button onClick={() => { setShowProfile(false); setShowChat(true); }}
+              className="flex-1 py-4 rounded-xl text-[13px] font-semibold transition active:scale-[0.98]"
+              style={{ color: '#94a3b8' }}>{t.profileSkip}</button>
+            <button onClick={() => { save('fi_profile', profile); setShowProfile(false); setShowChat(true); }}
+              className="flex-[2] py-4 rounded-xl text-[14px] font-bold text-white transition active:scale-[0.98]"
+              style={{ background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.3)' }}>{t.profileSave}</button>
+          </div>
         </div>
       </div>
     );
