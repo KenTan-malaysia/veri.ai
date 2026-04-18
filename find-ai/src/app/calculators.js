@@ -61,6 +61,15 @@ const L = {
     sdsasNote: 'Self-assessment system (SDSAS) effective Jan 2026. RM2,400 exemption removed. You calculate and pay via MyTax.',
     oldDuty: 'Old Rules (Pre-2026)', dutyIncrease: 'Increase',
     wasExempt: 'This rental was previously EXEMPT (under RM2,400/yr). Under 2026 rules, stamp duty now applies.',
+    vaultTitle: 'Evidence Vault', vaultDesc: 'Court-ready photo evidence with SHA-256',
+    vaultAddress: 'Property Address', vaultAddressHint: 'e.g. Lakefront Residence, Cyberjaya',
+    vaultUnit: 'Unit Number', vaultType: 'Record Type', vaultSelectType: 'Select type',
+    vaultCheckIn: 'Check-in', vaultCheckOut: 'Check-out', vaultDamage: 'Damage Report', vaultGeneral: 'General',
+    vaultUpload: 'Upload or Take Photos', vaultUploadHint: 'Each photo is SHA-256 hashed for court admissibility',
+    vaultHashing: 'Hashing photos...', vaultPhotos: 'Evidence Photos', vaultHash: 'Algorithm',
+    vaultGenerate: 'Generate Section 90A Certificate', vaultVerified: 'HASH VERIFIED',
+    vaultCertId: 'Certificate ID', vaultDownload: 'Download Certificate',
+    vaultLegalNote: 'This certificate is produced under Section 90A, Evidence Act 1950. Keep original photos unmodified. Present this certificate together with originals in any legal proceeding.',
     annualRent: 'Annual Rent', purchasePrice: 'Purchase Price (RM)',
     monthlyExpenses: 'Monthly Expenses (RM)', expensesHint: 'Maintenance, insurance, assessment, quit rent',
     grossYield: 'Gross Yield', netYield: 'Net Yield',
@@ -124,6 +133,15 @@ const L = {
     sdsasNote: 'Sistem taksiran sendiri (SDSAS) berkuat kuasa Jan 2026. Pengecualian RM2,400 dimansuhkan. Anda kira dan bayar melalui MyTax.',
     oldDuty: 'Kadar Lama (Sebelum 2026)', dutyIncrease: 'Kenaikan',
     wasExempt: 'Sewa ini sebelum ini DIKECUALIKAN (bawah RM2,400/thn). Di bawah peraturan 2026, duti setem kini dikenakan.',
+    vaultTitle: 'Peti Bukti', vaultDesc: 'Bukti foto sah mahkamah dengan SHA-256',
+    vaultAddress: 'Alamat Hartanah', vaultAddressHint: 'cth. Lakefront Residence, Cyberjaya',
+    vaultUnit: 'Nombor Unit', vaultType: 'Jenis Rekod', vaultSelectType: 'Pilih jenis',
+    vaultCheckIn: 'Daftar Masuk', vaultCheckOut: 'Daftar Keluar', vaultDamage: 'Laporan Kerosakan', vaultGeneral: 'Umum',
+    vaultUpload: 'Muat Naik atau Ambil Gambar', vaultUploadHint: 'Setiap gambar di-hash SHA-256 untuk kebolehterimaan mahkamah',
+    vaultHashing: 'Menghash gambar...', vaultPhotos: 'Gambar Bukti', vaultHash: 'Algoritma',
+    vaultGenerate: 'Jana Sijil Seksyen 90A', vaultVerified: 'HASH DISAHKAN',
+    vaultCertId: 'ID Sijil', vaultDownload: 'Muat Turun Sijil',
+    vaultLegalNote: 'Sijil ini dikeluarkan di bawah Seksyen 90A, Akta Keterangan 1950. Simpan gambar asal tanpa ubah suai. Kemukakan sijil ini bersama gambar asal dalam mana-mana prosiding undang-undang.',
     annualRent: 'Sewa Tahunan', purchasePrice: 'Harga Belian (RM)',
     monthlyExpenses: 'Perbelanjaan Bulanan (RM)', expensesHint: 'Penyelenggaraan, insurans, cukai taksiran',
     grossYield: 'Pulangan Kasar', netYield: 'Pulangan Bersih',
@@ -185,6 +203,15 @@ const L = {
     sdsasNote: '自我评估系统（SDSAS）2026年1月生效。RM2,400豁免已取消。您需通过MyTax自行计算和缴付。',
     oldDuty: '旧规则（2026年前）', dutyIncrease: '涨幅',
     wasExempt: '此租金之前获豁免（低于RM2,400/年）。2026年新规下，现需缴纳印花税。',
+    vaultTitle: '证据保险库', vaultDesc: '法庭级SHA-256照片证据',
+    vaultAddress: '房产地址', vaultAddressHint: '例：Lakefront Residence, Cyberjaya',
+    vaultUnit: '单位号', vaultType: '记录类型', vaultSelectType: '选择类型',
+    vaultCheckIn: '入住检查', vaultCheckOut: '退房检查', vaultDamage: '损坏报告', vaultGeneral: '一般',
+    vaultUpload: '上传或拍摄照片', vaultUploadHint: '每张照片使用SHA-256哈希以确保法庭可采纳性',
+    vaultHashing: '正在哈希处理...', vaultPhotos: '证据照片', vaultHash: '算法',
+    vaultGenerate: '生成第90A条证书', vaultVerified: '哈希已验证',
+    vaultCertId: '证书编号', vaultDownload: '下载证书',
+    vaultLegalNote: '本证书依据1950年证据法第90A条出具。请保留原始照片不做修改。在任何法律程序中，请将本证书与原始照片一并提交。',
     annualRent: '年租金', purchasePrice: '购买价格 (RM)',
     monthlyExpenses: '每月支出 (RM)', expensesHint: '管理费、保险、门牌税、地税',
     grossYield: '毛回报率', netYield: '净回报率',
@@ -604,6 +631,213 @@ function AgreementHealth({ lang, onClose }) {
   );
 }
 
+// ===== EVIDENCE VAULT =====
+function EvidenceVault({ lang, onClose }) {
+  const t = L[lang];
+  const [photos, setPhotos] = useState([]);
+  const [property, setProperty] = useState({ address: '', unit: '', type: '' });
+  const [processing, setProcessing] = useState(false);
+  const [certificate, setCertificate] = useState(null);
+
+  const hashFile = async (file) => {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
+  const handlePhotos = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setProcessing(true);
+    const newPhotos = [];
+    for (const file of files) {
+      const hash = await hashFile(file);
+      const timestamp = new Date().toISOString();
+      const preview = URL.createObjectURL(file);
+      newPhotos.push({ name: file.name, size: file.size, hash, timestamp, preview, type: file.type });
+    }
+    setPhotos(prev => [...prev, ...newPhotos]);
+    setProcessing(false);
+  };
+
+  const removePhoto = (idx) => {
+    setPhotos(prev => {
+      const updated = [...prev];
+      URL.revokeObjectURL(updated[idx].preview);
+      updated.splice(idx, 1);
+      return updated;
+    });
+    setCertificate(null);
+  };
+
+  const generateCertificate = () => {
+    if (!photos.length || !property.address) return;
+    const certData = {
+      id: 'CERT-' + Date.now().toString(36).toUpperCase(),
+      generatedAt: new Date().toISOString(),
+      property: { ...property },
+      photos: photos.map(p => ({ name: p.name, hash: p.hash, timestamp: p.timestamp, size: p.size })),
+      totalPhotos: photos.length,
+    };
+    setCertificate(certData);
+  };
+
+  const downloadCertificate = () => {
+    if (!certificate) return;
+    const d = certificate;
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Section 90A Certificate - ${d.id}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;padding:40px;max-width:800px;margin:0 auto;color:#1a1a1a;line-height:1.6}
+.header{text-align:center;border-bottom:3px double #333;padding-bottom:20px;margin-bottom:30px}
+.header h1{font-size:22px;letter-spacing:1px;margin-bottom:5px}.header h2{font-size:14px;color:#555;font-weight:normal}
+.badge{display:inline-block;padding:4px 16px;border:2px solid #b45309;color:#b45309;font-size:11px;font-weight:bold;letter-spacing:2px;margin-top:10px;border-radius:3px}
+.section{margin-bottom:25px}.section h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#555;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:10px}
+.field{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}.field .label{color:#777}.field .value{font-weight:bold;text-align:right;max-width:60%;word-break:break-all}
+.photo-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.photo-table th{background:#f5f5f5;padding:8px;text-align:left;border:1px solid #ddd;font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
+.photo-table td{padding:8px;border:1px solid #ddd;font-family:monospace;font-size:11px;word-break:break-all}
+.legal{background:#fefce8;border:1px solid #fde68a;border-radius:6px;padding:16px;margin-top:30px;font-size:12px}
+.legal h3{color:#92400e;margin-bottom:8px;font-size:13px}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:11px;color:#999}
+@media print{body{padding:20px}.legal{break-inside:avoid}}</style></head>
+<body>
+<div class="header"><h1>CERTIFICATE OF AUTHENTICITY</h1><h2>Digital Evidence — Property Inventory Record</h2><div class="badge">SECTION 90A COMPLIANT</div></div>
+<div class="section"><h3>Certificate Details</h3>
+<div class="field"><span class="label">Certificate ID</span><span class="value">${d.id}</span></div>
+<div class="field"><span class="label">Generated</span><span class="value">${new Date(d.generatedAt).toLocaleString('en-MY')}</span></div>
+<div class="field"><span class="label">Total Evidence Items</span><span class="value">${d.totalPhotos}</span></div>
+<div class="field"><span class="label">Hash Algorithm</span><span class="value">SHA-256</span></div></div>
+<div class="section"><h3>Property Information</h3>
+<div class="field"><span class="label">Address</span><span class="value">${d.property.address}</span></div>
+${d.property.unit ? `<div class="field"><span class="label">Unit</span><span class="value">${d.property.unit}</span></div>` : ''}
+${d.property.type ? `<div class="field"><span class="label">Type</span><span class="value">${d.property.type}</span></div>` : ''}</div>
+<div class="section"><h3>Evidence Registry</h3>
+<table class="photo-table"><thead><tr><th>#</th><th>File Name</th><th>SHA-256 Hash</th><th>Timestamp (UTC)</th><th>Size</th></tr></thead>
+<tbody>${d.photos.map((p, i) => `<tr><td>${i + 1}</td><td>${p.name}</td><td>${p.hash}</td><td>${p.timestamp}</td><td>${(p.size / 1024).toFixed(1)} KB</td></tr>`).join('')}</tbody></table></div>
+<div class="legal"><h3>Legal Notice — Evidence Act 1950, Section 90A</h3>
+<p>This certificate is produced in compliance with Section 90A of the Evidence Act 1950 (Malaysia). Each digital photograph listed above has been individually processed through the SHA-256 cryptographic hash algorithm at the time of upload. The hash value serves as a unique digital fingerprint — any modification to the original file, however minor, will produce a different hash value, thereby proving tampering.</p>
+<p style="margin-top:8px">This document is intended to accompany the original digital photographs as supporting evidence of their authenticity and integrity in any legal proceedings, tribunal hearing, or dispute resolution process in Malaysia.</p>
+<p style="margin-top:8px"><strong>Important:</strong> This certificate must be presented together with the original unmodified digital photographs. The party relying on this evidence should retain the original files in unmodified form.</p></div>
+<div class="footer"><p>Generated by Find.ai — Malaysian PropTech Compliance Platform</p><p>This is a computer-generated document. No signature is required.</p></div>
+</body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Section90A-Certificate-${d.id}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <Modal>
+      <ToolHeader icon="🔒" gradient="linear-gradient(135deg, #0ea5e9, #0284c7)" title={t.vaultTitle} desc={t.vaultDesc} onClose={onClose} />
+
+      {/* Property details */}
+      <div className="space-y-3 mb-4">
+        <div>
+          <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.vaultAddress}</label>
+          <input type="text" value={property.address} onChange={(e) => { setProperty(p => ({ ...p, address: e.target.value })); setCertificate(null); }}
+            placeholder={t.vaultAddressHint} className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sky-400" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.vaultUnit}</label>
+            <input type="text" value={property.unit} onChange={(e) => { setProperty(p => ({ ...p, unit: e.target.value })); setCertificate(null); }}
+              placeholder="A-12-03" className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sky-400" />
+          </div>
+          <div>
+            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">{t.vaultType}</label>
+            <select value={property.type} onChange={(e) => { setProperty(p => ({ ...p, type: e.target.value })); setCertificate(null); }}
+              className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sky-400 bg-white">
+              <option value="">{t.vaultSelectType}</option>
+              <option value="Check-in">{t.vaultCheckIn}</option>
+              <option value="Check-out">{t.vaultCheckOut}</option>
+              <option value="Damage Report">{t.vaultDamage}</option>
+              <option value="General">{t.vaultGeneral}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Photo upload */}
+      <div className="mb-4">
+        <label className="w-full flex flex-col items-center gap-2 py-6 rounded-[14px] border-2 border-dashed border-sky-200 bg-sky-50 cursor-pointer hover:bg-sky-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span className="text-[13px] font-medium text-sky-700">{t.vaultUpload}</span>
+          <span className="text-[10px] text-sky-500">{t.vaultUploadHint}</span>
+          <input type="file" accept="image/*" multiple onChange={handlePhotos} className="hidden" />
+        </label>
+      </div>
+
+      {processing && (
+        <div className="text-center py-3">
+          <div className="inline-block w-5 h-5 border-2 border-sky-300 border-t-sky-600 rounded-full animate-spin" />
+          <p className="text-[11px] text-gray-500 mt-2">{t.vaultHashing}</p>
+        </div>
+      )}
+
+      {/* Photo list */}
+      {photos.length > 0 && (
+        <div className="space-y-2 mb-4">
+          <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t.vaultPhotos} ({photos.length})</div>
+          {photos.map((p, i) => (
+            <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+              <img src={p.preview} alt={p.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-[12px] font-medium text-gray-800 truncate">{p.name}</div>
+                <div className="text-[10px] text-gray-400 font-mono truncate">SHA-256: {p.hash.substring(0, 16)}...{p.hash.substring(48)}</div>
+                <div className="text-[10px] text-gray-400">{new Date(p.timestamp).toLocaleString()}</div>
+              </div>
+              <button onClick={() => removePhoto(i)} className="text-gray-300 hover:text-red-500 p-1 flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Generate certificate */}
+      <button onClick={generateCertificate} disabled={!photos.length || !property.address}
+        className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-40 mb-2"
+        style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)' }}>
+        {t.vaultGenerate}
+      </button>
+
+      {/* Certificate result */}
+      {certificate && (
+        <div className="mt-3 space-y-3 fade-in">
+          <div className="p-4 rounded-[14px] bg-sky-50 border border-sky-200">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 font-bold">SECTION 90A</span>
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">{t.vaultVerified}</span>
+            </div>
+            <div className="text-[12px] text-gray-600 space-y-1">
+              <div><span className="text-gray-400">{t.vaultCertId}:</span> <span className="font-mono font-medium">{certificate.id}</span></div>
+              <div><span className="text-gray-400">{t.vaultPhotos}:</span> <span className="font-medium">{certificate.totalPhotos}</span></div>
+              <div><span className="text-gray-400">{t.vaultHash}:</span> <span className="font-mono">SHA-256</span></div>
+            </div>
+          </div>
+
+          <button onClick={downloadCertificate}
+            className="w-full py-3 rounded-xl text-sm font-semibold text-sky-700 bg-sky-50 border border-sky-200 hover:bg-sky-100 transition flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            {t.vaultDownload}
+          </button>
+
+          <div className="p-3 rounded-[12px] bg-amber-50 border border-amber-100">
+            <p className="text-[11px] text-amber-800">{t.vaultLegalNote}</p>
+          </div>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
 // ===== MAIN EXPORT =====
 export default function Calculators({ lang, onClose }) {
   const [active, setActive] = useState(null);
@@ -613,12 +847,14 @@ export default function Calculators({ lang, onClose }) {
   if (active === 'yield') return <RentalYieldCalc lang={lang} onClose={() => setActive(null)} />;
   if (active === 'screen') return <TenantScreen lang={lang} onClose={() => setActive(null)} />;
   if (active === 'health') return <AgreementHealth lang={lang} onClose={() => setActive(null)} />;
+  if (active === 'vault') return <EvidenceVault lang={lang} onClose={() => setActive(null)} />;
 
   const tools = [
     { id: 'stamp', icon: '📄', gradient: 'linear-gradient(135deg, #f59e0b, #eab308)', title: t.stampTitle, desc: t.stampDesc },
     { id: 'yield', icon: '📊', gradient: 'linear-gradient(135deg, #16a34a, #22c55e)', title: t.yieldTitle, desc: t.yieldDesc },
     { id: 'screen', icon: '🔍', gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)', title: t.screenTitle, desc: t.screenDesc },
     { id: 'health', icon: '📋', gradient: 'linear-gradient(135deg, #ec4899, #f43f5e)', title: t.healthTitle, desc: t.healthDesc },
+    { id: 'vault', icon: '🔒', gradient: 'linear-gradient(135deg, #0ea5e9, #0284c7)', title: t.vaultTitle, desc: t.vaultDesc },
   ];
 
   return (

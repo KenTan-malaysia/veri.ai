@@ -187,8 +187,8 @@ find-ai/
 
 ## Deployment
 
-- **Current URL:** https://unbelievebe.vercel.app (rename to find.ai domain when ready)
-- **GitHub:** https://github.com/KenTan-malaysia/unbelievebe (rename repo when ready)
+- **Current URL:** https://find-ai-lovat.vercel.app (live, production)
+- **GitHub:** https://github.com/KenTan-malaysia/find.ai
 - **Workflow:** Zeus edits code → Ken pushes to GitHub → Vercel auto-deploys
 - **API key:** Set in Vercel env vars as ANTHROPIC_API_KEY
 - **Model:** claude-haiku-4-5-20251001
