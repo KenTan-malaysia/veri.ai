@@ -154,36 +154,30 @@ find-ai/
 
 ---
 
-### MODULE E: Legal Bridge [BUILT]
-**Status:** Complete — 4 property types with CN vs MY legal comparisons in EN/BM/中文.
+### MODULE E: "Can I Do This?" Compliance Checker [BUILT]
+**Status:** Complete — 7 goals with full compliance roadmaps in EN/BM/中文.
 
-**What it does:** Chinese investors/tenants coming to Malaysia select a property type (residential, commercial, industrial, land) and get a comprehensive comparison of Chinese law expectations vs Malaysian legal reality, with risk warnings and ready-to-copy protective clauses.
+**What it does:** Chinese investors/tenants pick what they want to do in Malaysia → system tells them exactly what licenses, permits, and approvals they need, which departments to contact, estimated timeline, cost, and warns about "China Assumption Traps" (things that work differently than in China).
 
-**Property types covered:**
-1. **Residential** — Termination rights (解除权), earnest money (定金), foreign ownership thresholds, renovation rights (装修权), right of first refusal (优先购买权)
-2. **Commercial** — Liquidated damages vs penalty (违约金), lease registration (租赁登记), force majeure (不可抗力), business scope restrictions, goodwill & key money (转让费)
-3. **Industrial** — Environmental liability (环保责任), workers & foreign labor (外劳管理), machinery & fixtures (机器设备), utilities & infrastructure, subletting to sub-contractors
-4. **Land** — Land ownership (freehold vs leasehold vs China's land use rights), land use conversion, Malay Reserved Land, NCR land (Sabah/Sarawak), foreign acquisition rules
+**Goals covered (7 total):**
+1. **Rent a House/Condo** — Visa requirements, stamped tenancy agreement, deposit (2+1), Evidence Vault integration
+2. **Rent an Office/Shop** — SSM company registration, stamped lease, PBT license, lease registration (>3 years)
+3. **Rent a Factory/Warehouse** — Land use conversion (NLC S.124), DOE license, DOSH registration, PBT, Bomba, foreign worker permits, MIDA license
+4. **Buy a House/Condo** — Foreign price thresholds (per state), State Authority consent, stamp duty (SDSAS), RPGT awareness, title search, timeline view
+5. **Buy Land** — Land status verification (Malay Reserved/NCR), State Authority consent, land use conversion, survey, environmental assessment
+6. **Open a Restaurant/F&B** — SSM, PBT premise license, food handler cert (MOH), food premise license, Bomba, signboard license, halal cert, liquor license
+7. **Set Up a Factory** — MIDA license, SSM, DOE (EIA), DOSH, PBT, Bomba, TNB industrial power, foreign workers, customs/FTZ
 
-**Key legal references:**
-- Chinese Civil Code 2021 (Art. 180, 563, 586-587, 590, 715-716, 726, 730)
-- Contracts Act 1950 (Section 75 — liquidated damages)
-- National Land Code 1965 (Section 124 — land use conversion, Section 433B — foreign acquisition)
-- Environmental Quality Act 1974
-- Workers Minimum Standards of Housing Act (Act 446)
-- Evidence Act 1950 (Section 90A)
-- Malay Reservations Enactment
-- Sabah Land Ordinance / Sarawak Land Code
+**Each goal shows:**
+- Verdict: YES / CONDITIONALLY YES / NOT ALLOWED
+- China Assumption Trap warning (key differences from China's system)
+- Required licenses checklist (numbered, with department, detail, timeline, cost, warnings)
+- Recommended licenses (additional safeguards)
+- Timeline view (for buy scenarios)
+- Summary (total licenses, total time, total cost)
+- Download full checklist as text file
 
-**Outputs:**
-- Property type selector (4 types)
-- Expandable comparison cards for each legal concept
-- CN expectation (red) vs MY reality (blue) side-by-side
-- Risk warning (amber) for each concept
-- Ready-to-copy protective clauses
-- All in EN/BM/中文
-
-**Files:** `src/app/calculators.js` (LegalBridge component, LEGAL_BRIDGE data object)
+**Files:** `src/app/calculators.js` (LegalBridge component, COMPLIANCE_GOALS data object)
 
 ---
 
@@ -253,7 +247,7 @@ A. SDSAS 2026 Calculator → "Tax Accuracy Certificate" for audit protection [BU
 B. CN-MY Enterprise Trust Link → Manual USCC + risk scoring, Trust Grade A-D report [BUILT]
 C. Digital Evidence Vault → SHA-256 hashed photos, Section 90A court-ready report [BUILT]
 D. Situation Navigator → 3 dispute flows, step-by-step guides + LOD/notice templates [BUILT]
-E. Legal Bridge → CN vs MY property law comparison for 4 property types + protective clauses [BUILT]
+E. "Can I Do This?" Compliance Checker → 7 goals, full license/permit roadmaps, China Trap warnings [BUILT]
 
 **Design Direction — "Mature Minimalism":**
 - NOT startup green vibes. Bank-level trust.
