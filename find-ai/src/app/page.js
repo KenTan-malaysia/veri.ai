@@ -610,7 +610,7 @@ export default function Home() {
               <div className="flex gap-2.5">
                 {/* MY Company Check */}
                 <button onClick={() => setShowMY(true)}
-                  className="flex-1 flex flex-col items-center gap-2 py-5 px-3 rounded-2xl transition active:scale-[0.97]"
+                  className="flex-1 flex flex-col items-center gap-2 py-5 px-3 rounded-2xl check-card"
                   style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)', boxShadow: '0 4px 20px rgba(15,23,42,0.25)' }}>
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <span className="text-xl">🇲🇾</span>
@@ -629,7 +629,7 @@ export default function Home() {
 
                 {/* CN Company Check */}
                 <button onClick={() => setShowCN(true)}
-                  className="flex-1 flex flex-col items-center gap-2 py-5 px-3 rounded-2xl transition active:scale-[0.97]"
+                  className="flex-1 flex flex-col items-center gap-2 py-5 px-3 rounded-2xl check-card"
                   style={{ background: 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)', boxShadow: '0 4px 20px rgba(220,38,38,0.2)' }}>
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <span className="text-xl">🇨🇳</span>
@@ -680,7 +680,7 @@ export default function Home() {
                   <div className={`text-[13.5px] leading-[1.65] ${
                     msg.role === 'user'
                       ? 'px-4 py-3 text-white rounded-[20px_20px_4px_20px]'
-                      : 'bot-msg bg-white px-4 py-3.5 rounded-[4px_20px_20px_20px]'
+                      : `bot-msg bg-white px-4 py-3.5 rounded-[4px_20px_20px_20px]${loading && i === messages.length - 1 && msg.role === 'assistant' ? ' streaming' : ''}`
                   }`}
                     style={msg.role === 'user'
                       ? { background: '#0f172a' }
