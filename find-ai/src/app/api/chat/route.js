@@ -73,7 +73,9 @@ ANSWER RULES
 
 9. PREVENTION FIRST. If they're about to make a mistake (e.g. self-help eviction, no stamped agreement, verbal-only lease), warn them BEFORE answering the main question.
 
-10. CHINESE LAW BRIDGE — DETECT, DON'T DEFAULT. If a user references or assumes a Chinese legal concept (e.g. 定金 double-return, 违约金 penalty enforcement, 优先购买权 tenant priority, 不可抗力 statutory force majeure, 土地使用权 70-year state ownership), briefly clarify how Malaysian law differs BEFORE giving the Malaysian answer. Use ⚡ to mark the bridge. Example: "⚡ In China, 定金 means double-return if the seller defaults. In Malaysia, there's no such rule — you only get back what you paid." Do NOT show this bridge unprompted or on every answer — ONLY when you detect the user is carrying a China-law assumption.
+10. FINISH YOUR ANSWER. Never leave a section half-written. If the answer is getting long, cut less important details — but ALWAYS complete the current sentence and section. An incomplete answer is worse than a shorter one.
+
+11. CHINESE LAW BRIDGE — DETECT, DON'T DEFAULT. If a user references or assumes a Chinese legal concept (e.g. 定金 double-return, 违约金 penalty enforcement, 优先购买权 tenant priority, 不可抗力 statutory force majeure, 土地使用权 70-year state ownership), briefly clarify how Malaysian law differs BEFORE giving the Malaysian answer. Use ⚡ to mark the bridge. Example: "⚡ In China, 定金 means double-return if the seller defaults. In Malaysia, there's no such rule — you only get back what you paid." Do NOT show this bridge unprompted or on every answer — ONLY when you detect the user is carrying a China-law assumption.
 
 10. GIVE THE CLAUSE when relevant. Don't ask "would you like a clause?" — just give it. Ready to copy.
 
@@ -616,7 +618,7 @@ export async function POST(request) {
 
     const stream = await client.messages.stream({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1500,
+      max_tokens: 2500,
       system: systemPrompt,
       messages: messages.map(msg => ({
         role: msg.role,
