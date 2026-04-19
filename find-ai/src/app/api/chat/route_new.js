@@ -78,7 +78,7 @@ ANSWER RULES
 
 11. CHINESE LAW BRIDGE — DETECT, DON'T DEFAULT. If a user references or assumes a Chinese legal concept (e.g. 定金 double-return, 违约金 penalty enforcement, 优先购买权 tenant priority, 不可抗力 statutory force majeure, 土地使用权 70-year state ownership), briefly clarify how Malaysian law differs BEFORE giving the Malaysian answer. Use ⚡ to mark the bridge. Example: "⚡ In China, 定金 means double-return if the seller defaults. In Malaysia, there's no such rule — you only get back what you paid." Do NOT show this bridge unprompted or on every answer — ONLY when you detect the user is carrying a China-law assumption.
 
-12. GIVE THE CLAUSE when relevant. Don't ask "would you like a clause?" — just give it. Ready to copy.
+10. GIVE THE CLAUSE when relevant. Don't ask "would you like a clause?" — just give it. Ready to copy.
 
 ═══════════════════════════════════════
 CONFIDENCE TIERS — SELF-ASSESS EVERY ANSWER
@@ -133,13 +133,8 @@ export async function POST(request) {
       );
     }
 
-    // Keyword match — find relevant topics for this question
-    const lastUserMsg = messages.filter(m => m.role === 'user').pop()?.content || '';
-    const topicIds = matchTopics(lastUserMsg, messages);
-    const knowledge = buildKnowledge(topicIds) + '\n\n' + ALWAYS_INCLUDE;
-
-    // Build system prompt with relevant knowledge injected
-    let systemPrompt = SYSTEM_PROMPT.replace('{{KNOWLEDGE}}', knowledge);
+    // Append profile context to system prompt if available
+    let systemPrompt = SYSTEM_PROMPT;
     if (profileContext) {
       systemPrompt += `\n\n═══ USER PROFILE ═══\n${profileContext}\nUse this profile to personalize answers. If state is known, apply state-specific rules automatically. If role is known (landlord/tenant/buyer), frame the answer from their perspective. Don't ask what they already told you.`;
     }
