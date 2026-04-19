@@ -513,16 +513,16 @@ const MessageBubble = memo(function MessageBubble({ id, content, role, isStreami
     <>
       <div
         ref={sRef || null}
-        className={`text-[13.5px] leading-[1.65] ${
+        className={`text-[13.5px] leading-[1.7] ${
           role === 'user'
-            ? 'px-4 py-3 text-white rounded-[18px_18px_4px_18px]'
-            : `bot-msg bg-white px-4 py-3.5 rounded-[4px_18px_18px_18px]${isStreaming ? ' streaming' : ''}`
+            ? 'px-4 py-3 text-white rounded-[20px_20px_4px_20px]'
+            : `bot-msg px-4 py-3.5 rounded-[4px_20px_20px_20px]${isStreaming ? ' streaming' : ''}`
         }`}
         style={role === 'user'
-          ? { background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 2px 8px rgba(15,23,42,0.1)' }
+          ? { background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', boxShadow: '0 2px 12px rgba(15,23,42,0.12), 0 1px 3px rgba(15,23,42,0.08)' }
           : isError
             ? { boxShadow: '0 1px 6px rgba(15,23,42,0.04)', color: '#991b1b', background: '#fef2f2', border: '1px solid #fecaca' }
-            : { boxShadow: '0 1px 6px rgba(15,23,42,0.04)', color: '#334155', border: '1px solid #edf0f4' }
+            : { background: '#ffffff', boxShadow: '0 1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.02)', color: '#334155', border: '1px solid #f0f2f5' }
         }
         dangerouslySetInnerHTML={{ __html: html }}
       />
@@ -602,6 +602,40 @@ function buildConversationMemory(messages) {
   return { memory: topics.join('\n'), recentMessages: recent };
 }
 
+// Chat history helpers
+const generateChatId = () => `chat_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+const getChatTitle = (messages) => {
+  const firstUser = messages.find(m => m.role === 'user');
+  if (!firstUser) return 'New conversation';
+  const text = firstUser.content.replace(/[*#]/g, '').trim();
+  return text.length > 50 ? text.substring(0, 50) + '...' : text;
+};
+
+const HistoryIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+  </svg>
+);
+
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -622,6 +656,11 @@ export default function Home() {
   const [showFeedbackToast, setShowFeedbackToast] = useState(false);
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
+  // Chat history state
+  const [chatHistory, setChatHistory] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [historySearch, setHistorySearch] = useState('');
   const chatRef = useRef(null);
   const inputRef = useRef(null);
   const recRef = useRef(null);
@@ -660,6 +699,7 @@ export default function Home() {
     setLang(load('fi_lang', 'en'));
     setProfile(load('fi_profile', { role: '', state: '', type: '', rent: '' }));
     setFeedbackMap(load('fi_feedback', {}));
+    setChatHistory(load('fi_chat_history', []));
     if (load('fi_messages', []).length > 0) setHasSavedChat(true);
     setReady(true);
   }, []);
@@ -668,9 +708,23 @@ export default function Home() {
   useEffect(() => {
     if (ready && messages.length > 0) {
       const real = messages.filter(m => m.content !== '');
-      if (real.length > 0) save('fi_messages', real);
+      if (real.length > 0) {
+        save('fi_messages', real);
+        // Auto-save to chat history
+        if (activeChatId) {
+          setChatHistory(prev => {
+            const updated = prev.map(ch =>
+              ch.id === activeChatId
+                ? { ...ch, messages: real, title: getChatTitle(real), updatedAt: Date.now() }
+                : ch
+            );
+            save('fi_chat_history', updated);
+            return updated;
+          });
+        }
+      }
     }
-  }, [messages, ready]);
+  }, [messages, ready, activeChatId]);
   useEffect(() => { if (ready) save('fi_profile', profile); }, [profile, ready]);
 
   // Scroll detection
@@ -856,7 +910,18 @@ export default function Home() {
     // Track topic for learning + increment session
     trackTopic(text.trim());
     const sc = load('fi_session_count', 0);
-    if (messages.length === 0) save('fi_session_count', sc + 1);
+    if (messages.length === 0) {
+      save('fi_session_count', sc + 1);
+      // Create new chat in history on first message
+      if (activeChatId) {
+        const newChat = { id: activeChatId, title: text.trim().substring(0, 50), messages: [], createdAt: Date.now(), updatedAt: Date.now() };
+        setChatHistory(prev => {
+          const updated = [newChat, ...prev.filter(ch => ch.id !== activeChatId)];
+          save('fi_chat_history', updated);
+          return updated;
+        });
+      }
+    }
 
     // Build smart context (profile + time + topic intelligence + feedback)
     const smartCtx = buildSmartContext();
@@ -949,7 +1014,7 @@ export default function Home() {
     }
     setLoading(false);
     inputRef.current?.focus();
-  }, [messages, loading, profile, parseFollowUps, lang, buildSmartContext, trackTopic]);
+  }, [messages, loading, profile, parseFollowUps, lang, buildSmartContext, trackTopic, activeChatId]);
 
   const handleRetry = useCallback(() => {
     if (!lastFailedMsg || loading) return;
@@ -979,8 +1044,84 @@ export default function Home() {
     a.click();
   };
 
-  const clearChat = () => { setMessages([]); save('fi_messages', []); setHasSavedChat(false); setSuggestions([]); };
-  const loadChat = () => { setMessages(load('fi_messages', [])); setHasSavedChat(false); setShowChat(true); };
+  const startNewChat = useCallback(() => {
+    // Save current chat to history before starting new one
+    if (messages.length > 0 && activeChatId) {
+      const real = messages.filter(m => m.content !== '');
+      if (real.length > 0) {
+        setChatHistory(prev => {
+          const exists = prev.find(ch => ch.id === activeChatId);
+          let updated;
+          if (exists) {
+            updated = prev.map(ch => ch.id === activeChatId ? { ...ch, messages: real, title: getChatTitle(real), updatedAt: Date.now() } : ch);
+          } else {
+            updated = [{ id: activeChatId, title: getChatTitle(real), messages: real, createdAt: Date.now(), updatedAt: Date.now() }, ...prev];
+          }
+          save('fi_chat_history', updated);
+          return updated;
+        });
+      }
+    }
+    const newId = generateChatId();
+    setActiveChatId(newId);
+    setMessages([]);
+    save('fi_messages', []);
+    setSuggestions([]);
+    setLastFailedMsg(null);
+    setShowSidebar(false);
+  }, [messages, activeChatId]);
+
+  const loadHistoryChat = useCallback((chatId) => {
+    const chat = chatHistory.find(ch => ch.id === chatId);
+    if (!chat) return;
+    // Save current first
+    if (messages.length > 0 && activeChatId && activeChatId !== chatId) {
+      const real = messages.filter(m => m.content !== '');
+      if (real.length > 0) {
+        setChatHistory(prev => {
+          const updated = prev.map(ch => ch.id === activeChatId ? { ...ch, messages: real, title: getChatTitle(real), updatedAt: Date.now() } : ch);
+          save('fi_chat_history', updated);
+          return updated;
+        });
+      }
+    }
+    setActiveChatId(chatId);
+    setMessages(chat.messages);
+    save('fi_messages', chat.messages);
+    setSuggestions([]);
+    setShowSidebar(false);
+  }, [chatHistory, messages, activeChatId]);
+
+  const deleteHistoryChat = useCallback((chatId) => {
+    setChatHistory(prev => {
+      const updated = prev.filter(ch => ch.id !== chatId);
+      save('fi_chat_history', updated);
+      return updated;
+    });
+    if (activeChatId === chatId) {
+      setMessages([]);
+      save('fi_messages', []);
+      setActiveChatId(generateChatId());
+    }
+  }, [activeChatId]);
+
+  const clearChat = () => { startNewChat(); setHasSavedChat(false); };
+  const loadChat = () => {
+    const saved = load('fi_messages', []);
+    const newId = generateChatId();
+    setActiveChatId(newId);
+    setMessages(saved);
+    setHasSavedChat(false);
+    setShowChat(true);
+    // Add to history if not already there
+    if (saved.length > 0) {
+      setChatHistory(prev => {
+        const updated = [{ id: newId, title: getChatTitle(saved), messages: saved, createdAt: Date.now(), updatedAt: Date.now() }, ...prev];
+        save('fi_chat_history', updated);
+        return updated;
+      });
+    }
+  };
 
   const shareWA = (text) => {
     const clean = text.replace(/\*\*/g, '*').replace(/<[^>]*>/g, '').substring(0, 2000);
@@ -996,6 +1137,7 @@ export default function Home() {
 
   const startChat = () => {
     const sp = load('fi_profile', { role: '', state: '', type: '', rent: '' });
+    if (!activeChatId) setActiveChatId(generateChatId());
     sp.role ? setShowChat(true) : setShowProfile(true);
   };
 
@@ -1120,16 +1262,97 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-lg mx-auto" style={{ background: '#ffffff' }}>
+    <div className="flex flex-col h-screen max-w-lg mx-auto relative" style={{ background: '#ffffff' }}>
+      {/* Sidebar overlay */}
+      {showSidebar && (
+        <div className="fixed inset-0 z-50 flex" style={{ maxWidth: '32rem', margin: '0 auto' }}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/30 sidebar-backdrop" onClick={() => setShowSidebar(false)} />
+          {/* Sidebar panel */}
+          <div className="relative w-[280px] h-full bg-white sidebar-slide flex flex-col" style={{ boxShadow: '4px 0 24px rgba(15,23,42,0.1)' }}>
+            {/* Sidebar header */}
+            <div className="flex items-center justify-between px-4 pt-5 pb-3">
+              <div className="flex items-center gap-2.5">
+                <Logo size={26} />
+                <span className="text-[14px] font-bold" style={{ color: '#0f172a' }}>{lang === 'en' ? 'Conversations' : lang === 'bm' ? 'Perbualan' : '对话'}</span>
+              </div>
+              <button onClick={() => setShowSidebar(false)} className="touch-target rounded-xl transition active:scale-95" style={{ color: '#94a3b8' }}>
+                <CloseIcon />
+              </button>
+            </div>
+            {/* Search */}
+            <div className="px-3 pb-2">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: '#f1f5f9', border: '1px solid #e2e8f0' }}>
+                <SearchIcon />
+                <input type="text" value={historySearch} onChange={(e) => setHistorySearch(e.target.value)}
+                  placeholder={lang === 'en' ? 'Search chats...' : lang === 'bm' ? 'Cari perbualan...' : '搜索对话...'}
+                  className="flex-1 text-[12px] bg-transparent focus:outline-none" style={{ color: '#334155' }} />
+              </div>
+            </div>
+            {/* New chat button */}
+            <div className="px-3 pb-2">
+              <button onClick={startNewChat}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-[12px] font-semibold transition active:scale-[0.98]"
+                style={{ background: '#0f172a', color: '#fff', boxShadow: '0 2px 8px rgba(15,23,42,0.15)' }}>
+                <NewChatIcon />{lang === 'en' ? 'New Chat' : lang === 'bm' ? 'Chat Baru' : '新对话'}
+              </button>
+            </div>
+            {/* Chat list */}
+            <div className="flex-1 overflow-y-auto px-2 pb-4">
+              {chatHistory.length === 0 ? (
+                <div className="text-center py-10">
+                  <div className="text-[28px] mb-2">💬</div>
+                  <div className="text-[12px] font-medium" style={{ color: '#94a3b8' }}>
+                    {lang === 'en' ? 'No conversations yet' : lang === 'bm' ? 'Belum ada perbualan' : '暂无对话'}
+                  </div>
+                </div>
+              ) : (
+                chatHistory
+                  .filter(ch => !historySearch || ch.title.toLowerCase().includes(historySearch.toLowerCase()))
+                  .sort((a, b) => b.updatedAt - a.updatedAt)
+                  .map(ch => (
+                    <div key={ch.id}
+                      className="group flex items-center gap-2 px-3 py-2.5 rounded-xl mb-0.5 transition-all cursor-pointer history-item"
+                      style={{ background: ch.id === activeChatId ? '#f1f5f9' : 'transparent' }}
+                      onClick={() => loadHistoryChat(ch.id)}>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[12px] font-medium truncate" style={{ color: ch.id === activeChatId ? '#0f172a' : '#475569' }}>
+                          {ch.title}
+                        </div>
+                        <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>
+                          {ch.messages?.length || 0} {lang === 'en' ? 'messages' : lang === 'bm' ? 'mesej' : '条消息'}
+                          {' · '}
+                          {new Date(ch.updatedAt).toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'bm' ? 'ms-MY' : 'en-MY', { month: 'short', day: 'numeric' })}
+                        </div>
+                      </div>
+                      <button onClick={(e) => { e.stopPropagation(); deleteHistoryChat(ch.id); }}
+                        className="opacity-0 group-hover:opacity-100 touch-target rounded-lg transition active:scale-90"
+                        style={{ color: '#cbd5e1' }}>
+                        <TrashIcon />
+                      </button>
+                    </div>
+                  ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header — frosted glass */}
       <header className="no-print glass-header header-safe sticky top-0 z-10 flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid rgba(226,232,240,0.6)' }}>
-        <div className="flex items-center gap-3">
-          <Logo size={32} />
-          <div>
-            <h1 className="text-[15px] font-bold leading-tight" style={{ color: '#0f172a', letterSpacing: '-0.01em' }}>{t.title}</h1>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: loading ? '#3b82f6' : '#10b981', animation: loading ? 'pulseRing 1.5s infinite' : 'none' }} />
-              <span className="text-[10px] font-medium" style={{ color: '#94a3b8' }}>{loading ? t.analyzing : has ? t.subtitleActive : t.subtitle}</span>
+        <div className="flex items-center gap-2.5">
+          {/* History sidebar toggle */}
+          <button onClick={() => setShowSidebar(true)} className="touch-target rounded-xl transition active:scale-95 -ml-1" style={{ color: '#64748b' }}>
+            <HistoryIcon />
+          </button>
+          <div className="flex items-center gap-2.5">
+            <Logo size={30} />
+            <div>
+              <h1 className="text-[15px] font-bold leading-tight" style={{ color: '#0f172a', letterSpacing: '-0.01em' }}>{t.title}</h1>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: loading ? '#3b82f6' : '#10b981', animation: loading ? 'pulseRing 1.5s infinite' : 'none' }} />
+                <span className="text-[10px] font-medium" style={{ color: '#94a3b8' }}>{loading ? t.analyzing : has ? t.subtitleActive : t.subtitle}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1161,10 +1384,16 @@ export default function Home() {
       <div ref={chatRef} className="chat-area flex-1 overflow-y-auto px-4 py-5" style={{ background: has ? '#f8fafc' : 'white' }}>
         {!has ? (
           <div className="flex flex-col h-full">
-            {/* Welcome */}
-            <div className="mt-4 mb-6 card-up">
+            {/* Welcome — premium hero */}
+            <div className="mt-6 mb-6 card-up">
               <div className="text-center">
-                <h2 className="text-[22px] font-bold mb-2.5" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>
+                {/* Animated logo */}
+                <div className="flex justify-center mb-4 scale-in">
+                  <div className="w-16 h-16 rounded-[20px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)', boxShadow: '0 8px 32px rgba(15,23,42,0.18), 0 2px 8px rgba(15,23,42,0.1)' }}>
+                    <span className="text-white font-bold text-2xl">F</span>
+                  </div>
+                </div>
+                <h2 className="text-[24px] font-bold mb-2" style={{ color: '#0f172a', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
                   <span className="greeting-wave">👋</span> {getGreeting()}
                 </h2>
                 <p className="text-[13px] leading-relaxed max-w-[280px] mx-auto" style={{ color: '#94a3b8' }}>
@@ -1178,6 +1407,12 @@ export default function Home() {
                     {profile.rent && <span className="text-[10px] px-3 py-1.5 rounded-full font-medium" style={{ background: '#f1f5f9', color: '#475569' }}>RM{profile.rent}/mo</span>}
                   </div>
                 )}
+                {/* Powered by badge */}
+                <div className="flex justify-center mt-3 fade-in delay-2">
+                  <span className="text-[9px] px-3 py-1 rounded-full font-medium" style={{ background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>
+                    Powered by Claude Sonnet
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -1243,18 +1478,24 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5">
+            {/* Date separator */}
+            <div className="flex items-center justify-center py-1 fade-in">
+              <span className="text-[10px] font-medium px-3 py-1 rounded-full" style={{ background: '#f1f5f9', color: '#94a3b8' }}>
+                {new Date().toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'bm' ? 'ms-MY' : 'en-MY', { weekday: 'long', month: 'short', day: 'numeric' })}
+              </span>
+            </div>
             {messages.map((msg, i) => {
               const isLastAssistant = loading && i === messages.length - 1 && msg.role === 'assistant';
               const msgId = `msg-${i}`;
               return (
-                <div key={i} className={`msg-group flex ${msg.role === 'user' ? 'justify-end' : 'gap-2'} msg-in`}>
+                <div key={i} className={`msg-group flex ${msg.role === 'user' ? 'justify-end' : 'gap-2.5'} msg-in`}>
                   {msg.role === 'assistant' && (
                     <div className="flex-shrink-0 mt-1">
-                      <Logo size={26} />
+                      <Logo size={28} />
                     </div>
                   )}
-                  <div className={msg.role === 'assistant' ? 'max-w-[calc(100%-38px)]' : 'max-w-[82%]'}>
+                  <div className={msg.role === 'assistant' ? 'max-w-[calc(100%-42px)]' : 'max-w-[80%]'}>
                     <MessageBubble
                       id={msgId}
                       content={msg.content}
@@ -1319,9 +1560,9 @@ export default function Home() {
       </div>
 
       {/* Input bar */}
-      <div className="no-print input-elevated px-4 pt-2.5 pb-2 input-safe" style={{ borderTop: '1px solid rgba(226,232,240,0.4)' }}>
+      <div className="no-print input-elevated px-4 pt-3 pb-2.5 input-safe">
         <div className="input-area flex items-end gap-1 rounded-2xl px-3.5 pr-1.5 py-1 bg-white transition"
-          style={{ border: '1.5px solid #e2e8f0' }}>
+          style={{ border: '1.5px solid #e2e8f0', boxShadow: '0 1px 4px rgba(15,23,42,0.03)' }}>
           <textarea ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKey}
             placeholder={listening ? t.placeholderListening : (has ? t.placeholderActive : t.placeholder)}
             rows={1} className="flex-1 resize-none bg-transparent text-[16px] focus:outline-none py-2.5"

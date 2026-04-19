@@ -445,3 +445,53 @@ textarea::placeholder {
     transition-duration: 0.08s;
   }
 }
+
+/* ═══ SIDEBAR ═══ */
+
+.sidebar-backdrop {
+  animation: backdropIn 0.25s ease-out;
+}
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sidebar-slide {
+  animation: sidebarSlide 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes sidebarSlide {
+  from { transform: translateX(-100%); opacity: 0.5; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.history-item {
+  transition: background 0.15s ease;
+}
+.history-item:hover {
+  background: #f8fafc !important;
+}
+.history-item:active {
+  transform: scale(0.98);
+  transition-duration: 0.08s;
+}
+
+/* ═══ ENHANCED MESSAGE BUBBLES ═══ */
+
+.bot-msg {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  position: relative;
+}
+
+/* Subtle entrance for messages */
+.msg-in {
+  animation: msgIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* User message glow on hover */
+.user-bubble-glow {
+  transition: box-shadow 0.2s ease;
+}
+.user-bubble-glow:hover {
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15), 0 2px 4px rgba(15, 23, 42, 0.1);
+}

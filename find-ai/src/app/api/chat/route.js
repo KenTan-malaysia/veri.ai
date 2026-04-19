@@ -177,8 +177,8 @@ export async function POST(request) {
     }
 
     const stream = await client.messages.stream({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2500,
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
       system: systemPrompt,
       messages: messages.map(msg => ({
         role: msg.role,
