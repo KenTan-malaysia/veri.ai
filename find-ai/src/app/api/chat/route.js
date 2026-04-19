@@ -126,6 +126,14 @@ STAMP DUTY ON TENANCY (SDSAS 2026):
 - Formula: Math.ceil(annual_rent / 250) × rate. Minimum duty: RM10.
 - Must stamp within 30 days of execution. Late = penalty up to 100% of duty owed.
 - Unstamped agreement CANNOT be used as evidence in court (Stamp Act s.52).
+- BUT unstamped agreement is NOT void — it's still valid between parties. It just can't be presented in court/Tribunal as proof.
+- Deposit under unstamped agreement: landlord collected deposit but agreement unstamped → landlord CANNOT use the agreement to justify retention in court. Tenant can challenge deposit deductions citing s.52.
+- CURE: late stamping + penalty payment makes the agreement admissible again. Penalty rates:
+  * Within 3 months late: RM50 or 10% of deficient duty (whichever higher)
+  * 3-6 months late: RM100 or 20% of deficient duty (whichever higher)
+  * Beyond 6 months: case-by-case assessment by LHDN
+- Practical advice: if your agreement is unstamped and dispute arises → stamp it immediately with penalty BEFORE filing any claim. Once stamped, it becomes admissible.
+- Common mistake: landlord thinks "we both signed it so it's valid" — valid yes, but USELESS in court without stamping.
 
 STAMP DUTY ON PROPERTY PURCHASE (MOT):
 - Memorandum of Transfer stamp duty for Malaysian citizens/PRs:
@@ -153,6 +161,24 @@ EVICTION:
 - Timeline: 3-6 months typically.
 - Emergency cases (illegal activity, danger): can apply for interim injunction.
 - If landlord illegally changes locks or cuts utilities: tenant can make police report (criminal intimidation) + apply for emergency court injunction to restore access. Landlord may be liable for damages.
+- SELF-HELP EVICTION CONSEQUENCES (if landlord already did it):
+  * Criminal: Penal Code s.441 (criminal trespass) — up to 6 months jail OR RM3,000 fine OR both.
+  * Criminal: Disconnecting utilities may be "mischief" under Penal Code s.427-430.
+  * Civil: Tenant sues under Specific Relief Act s.8(1) for wrongful dispossession — damages include: deposit refund, renovation costs, loss of belongings, loss of business income, general damages. NO cap on amount.
+  * Court can ORDER landlord to restore tenant's possession AND pay damages.
+  * If landlord already changed locks: IMMEDIATELY restore access, do NOT touch tenant's belongings, consult lawyer, prepare for counterclaim.
+  * Proper eviction costs: RM8,000-RM12,000 legal fees, 6-8 months timeline. Cheaper than getting sued.
+
+LEASE EXPIRY & HOLDOVER TENANCY:
+- When fixed-term lease expires and tenant stays WITH landlord accepting rent → automatically converts to PERIODIC TENANCY (month-to-month).
+- If landlord accepts even one rent payment after expiry → creates periodic tenancy at the old rental rate.
+- Old contract terms (renewal clause, rent review, notice period) do NOT automatically carry forward to periodic tenancy.
+- Rent stays at old rate — landlord CANNOT unilaterally increase rent without tenant's agreement.
+- To increase rent: must negotiate new written agreement. If tenant refuses new rate → landlord gives one month notice to terminate periodic tenancy → tenant must vacate.
+- WhatsApp "ok lah renew" messages: may be admissible as evidence of terms (Evidence Act 1950 s.90A), but risky — courts interpret informal messages strictly.
+- Termination: either party can end periodic tenancy with ONE MONTH written notice.
+- If tenant refuses to vacate after notice → landlord must file for court order (Specific Relief Act s.7(2)). Self-help still illegal.
+- Common mistake: landlord assumes expired lease = tenant is trespasser. WRONG — if you accepted rent, you created a new periodic tenancy.
 
 REPAIRS & HABITABILITY:
 - Malaysia has NO specific "habitability" statute like some countries. Governed by tenancy agreement terms + implied terms under Contracts Act.
@@ -320,6 +346,15 @@ SUBLETTING & SHORT-TERM RENTAL (AIRBNB):
 - If unit is used for Airbnb: may need to register with local PBT, pay tourism tax (RM10/night for foreign tourists), and declare rental income to LHDN.
 - Condo rules: many MCs ban stays <30 days via house rules or by-law amendments. Violation = fine by MC + complaint to SMT.
 - Subletting without consent does NOT automatically make the sub-tenant trespasser — landlord must go through proper eviction for the head tenant.
+- HOW TO REMOVE UNAUTHORIZED SUBLETTER:
+  * Step 1: Evict the TENANT first (not subletter). Subletter's right derives from tenant — no privity with landlord.
+  * Step 2: Serve written notice to tenant citing unauthorized subletting as breach.
+  * Step 3: File for court eviction order against TENANT.
+  * Step 4: Once bailiff executes eviction → subletter's occupation automatically terminates. No separate eviction needed.
+  * If subletter refuses to leave after tenant evicted → bailiff removes them under same order. Police assist bailiff if resistance.
+  * Police alone CANNOT remove subletter without court order.
+  * Civil Law Act s.28(4): tenant liable for DOUBLE RENT for subletting without consent — landlord can claim this on top of eviction.
+  * Timeline: 6-8 months for full process. Legal costs: RM8,000-RM12,000.
 
 RENTAL INCOME TAX (LHDN):
 - ALL rental income must be declared under Section 4(d) of the Income Tax Act 1967.
@@ -331,6 +366,15 @@ RENTAL INCOME TAX (LHDN):
 - Penalty: failure to declare = 45% penalty on underreported tax + possible criminal prosecution.
 - Co-owners: each owner declares their share of rental income based on ownership proportion.
 - Residential rental is EXEMPT from service tax (only commercial rental attracts 8% service tax from July 2025).
+- LHDN AUDIT — WHAT LANDLORDS MUST KNOW:
+  * LHDN uses data analytics to select audit targets: mismatches between declared income and bank deposits, high deduction claims, lifestyle inconsistencies, third-party reports.
+  * LHDN cross-references: bank deposits, tenancy registrations at Pejabat Tanah, property agent records, utility bills, tenant complaints.
+  * Audit lookback: standard 5 years. Fraud/negligence: up to 7+ years (ITA s.91).
+  * Civil penalty: 100% of tax undercharged (standard). Up to 300% (treble penalty) for serious cases (ITA s.113(2)).
+  * Criminal penalty: intentional evasion = fine up to RM20,000 + imprisonment 1-5 years.
+  * VOLUNTARY DISCLOSURE (before audit starts): penalty reduced to 10-15% of unpaid tax. Much better than being caught.
+  * If audit notice received: gather all tenancy agreements, bank statements, receipts for deductions, renovation records. Consult tax advisor immediately.
+  * Cash rental payments without receipts: still taxable. LHDN can estimate income from lifestyle/assets if records missing.
 
 MM2H (MALAYSIA MY SECOND HOME) PROPERTY RULES:
 - MM2H is a long-term residency programme — NOT citizenship or PR.
