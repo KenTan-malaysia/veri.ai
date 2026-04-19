@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Unbelievebe — Malaysian Landlord Advisor',
-  description: 'Instant legal advice for Malaysian landlords on rental management',
+  title: 'Find.ai — Malaysian Property Compliance Platform',
+  description: 'AI-powered property compliance, stamp duty calculator, tenant verification, and legal guidance for Malaysian landlords',
 }
 
 export default function RootLayout({ children }) {

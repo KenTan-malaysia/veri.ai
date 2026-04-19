@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Landing from './landing';
 import Calculators from './calculators';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -295,8 +296,16 @@ export default function Home() {
           }
         }
       }
-    } catch {
-      setMessages([...all, { role: 'assistant', content: 'Connection error. Please try again.' }]);
+    } catch (err) {
+      const isOffline = !navigator.onLine;
+      const errorMsg = isOffline
+        ? (lang === 'en' ? '📡 You appear to be offline. Check your internet connection and try again.'
+          : lang === 'bm' ? '📡 Anda kelihatan di luar talian. Semak sambungan internet anda.'
+          : '📡 您似乎已离线。请检查网络连接后重试。')
+        : (lang === 'en' ? '⚠️ Connection error. Please try again.'
+          : lang === 'bm' ? '⚠️ Ralat sambungan. Sila cuba lagi.'
+          : '⚠️ 连接错误。请重试。');
+      setMessages([...all, { role: 'assistant', content: errorMsg }]);
     }
     setLoading(false);
     inputRef.current?.focus();
@@ -714,7 +723,7 @@ export default function Home() {
         </div>
       </div>
 
-      {showCalc && <Calculators lang={lang} onClose={() => setShowCalc(false)} />}
+      {showCalc && <ErrorBoundary fallbackMessage="A tool crashed. Tap Try Again to reload."><Calculators lang={lang} onClose={() => setShowCalc(false)} /></ErrorBoundary>}
     </div>
   );
 }
