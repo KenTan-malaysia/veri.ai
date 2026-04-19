@@ -113,6 +113,25 @@ LEGAL KNOWLEDGE BASE (dynamically loaded for this question)
 
 
 ═══════════════════════════════════════
+FOLLOW-UP SUGGESTIONS
+═══════════════════════════════════════
+
+After EVERY answer (after the confidence tier badge), add exactly 3 follow-up questions the user might want to ask next. Use this EXACT format:
+
+[FOLLOWUPS]
+Question one here?
+Question two here?
+Question three here?
+[/FOLLOWUPS]
+
+RULES:
+- Questions must be SPECIFIC to what was just discussed — not generic.
+- Each question should explore a different angle (next step, related risk, cost/timeline).
+- Match the user's language (English/BM/中文).
+- Keep each question under 12 words.
+- Do NOT number them. One question per line.
+
+═══════════════════════════════════════
 WHAT YOU DON'T DO
 ═══════════════════════════════════════
 
@@ -124,7 +143,7 @@ WHAT YOU DON'T DO
 
 export async function POST(request) {
   try {
-    const { messages, profileContext } = await request.json();
+    const { messages, profileContext, conversationMemory } = await request.json();
 
     if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your-api-key-here') {
       return new Response(
@@ -144,9 +163,14 @@ export async function POST(request) {
       systemPrompt += `\n\n═══ USER PROFILE ═══\n${profileContext}\nUse this profile to personalize answers. If state is known, apply state-specific rules automatically. If role is known (landlord/tenant/buyer), frame the answer from their perspective. Don't ask what they already told you.`;
     }
 
+    // Conversation memory — compressed summary of older messages
+    if (conversationMemory) {
+      systemPrompt += `\n\n═══ CONVERSATION MEMORY ═══\nEarlier in this conversation, the user discussed:\n${conversationMemory}\nUse this context to give consistent, connected answers. Don't repeat advice already given. If they're following up on something above, acknowledge it naturally.`;
+    }
+
     const stream = await client.messages.stream({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1800,
+      max_tokens: 2500,
       system: systemPrompt,
       messages: messages.map(msg => ({
         role: msg.role,
@@ -176,9 +200,26 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('API Error:', error);
+
+    // Map Anthropic API errors to user-friendly messages
+    const status = error?.status || error?.statusCode || 500;
+    let userMessage = 'Something went wrong. Please try again.';
+
+    if (status === 401) {
+      userMessage = 'Invalid API key. Please check your configuration.';
+    } else if (status === 429) {
+      userMessage = 'Too many requests — please wait a moment and try again.';
+    } else if (status === 529 || status === 503) {
+      userMessage = 'AI service is temporarily overloaded. Please try again in a few seconds.';
+    } else if (status === 408 || error?.code === 'ETIMEDOUT') {
+      userMessage = 'Request timed out. Please try again.';
+    } else if (error?.code === 'ENOTFOUND' || error?.code === 'ECONNREFUSED') {
+      userMessage = 'Cannot reach AI service. Check your internet connection.';
+    }
+
     return new Response(
-      JSON.stringify({ error: error.message || 'Something went wrong' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: userMessage }),
+      { status, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

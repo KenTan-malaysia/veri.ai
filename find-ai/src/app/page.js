@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import Landing from './landing';
 import ErrorBoundary from '../components/ErrorBoundary';
 import CNMYTrustLink from '../components/tools/CNMYTrustLink';
@@ -238,6 +238,210 @@ const NewChatIcon = () => (
   </svg>
 );
 
+// Format AI output icons into styled HTML cards
+const fmt = (text) => {
+  if (!text) return '';
+  let h = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br/>');
+
+  // Clean up raw markdown that leaks through
+  h = h.replace(/<br\/>---<br\/>/g, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0"/>');
+  h = h.replace(/<br\/>-{3,}<br\/>/g, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0"/>');
+  h = h.replace(/##\s+(.*?)(?=<br\/>|$)/g, '<div style="font-size:14px;font-weight:700;color:#0f172a;margin:14px 0 6px">$1</div>');
+
+  // ⚡ Legal Bridge — red/blue split card
+  h = h.replace(
+    /⚡(.*?)(?=<br\/><br\/>|<br\/>⚖️|<br\/>✅|$)/gs,
+    (match) => {
+      const content = match.replace(/^⚡\s*/, '');
+      return `<div style="margin:10px 0;padding:12px 14px;background:linear-gradient(135deg,#fef2f2,#eff6ff);border:1px solid #e2e8f0;border-left:3px solid #dc2626;border-right:3px solid #2563eb;border-radius:12px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#64748b;margin-bottom:6px">⚡ LEGAL BRIDGE</div>
+        <div style="font-size:12px;line-height:1.6;color:#334155">${content}</div></div>`;
+    }
+  );
+
+  // ⚖️ Law citation — subtle blue tag
+  h = h.replace(
+    /⚖️\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:8px 0;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px">
+      <span style="font-size:12px">⚖️</span><span style="font-size:12px;color:#1e40af;font-weight:500">${content}</span></div>`
+  );
+
+  // ✅ Action steps — with bold title
+  h = h.replace(
+    /✅\s*<strong>(.*?)<\/strong>(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>💰|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|$)/gs,
+    (_, title, steps) => {
+      const items = [];
+      const parts = steps.split(/<br\/>/);
+      for (const p of parts) {
+        const m = p.match(/^\s*(\d+)\.\s*(.*)/);
+        if (m) items.push({ num: m[1], text: m[2] });
+        else if (items.length > 0 && p.trim()) items[items.length - 1].text += ' ' + p.trim();
+      }
+      const stepsHtml = items.map(it =>
+        `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:6px">
+          <span style="min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;border-radius:6px;border:1px solid #bbf7d0;flex-shrink:0">${it.num}</span>
+          <span style="font-size:12px;color:#334155;line-height:1.5">${it.text}</span></div>`
+      ).join('');
+      return `<div style="margin:10px 0;padding:12px 14px;background:#f8fdf8;border:1px solid #dcfce7;border-radius:12px">
+        <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">✅ ${title}</div>${stepsHtml}</div>`;
+    }
+  );
+
+  // ✅ without bold title
+  h = h.replace(
+    /✅\s*(?!<strong>)(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>💰|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|$)/gs,
+    (_, steps) => {
+      if (steps.trim().length < 3) return `✅ ${steps}`;
+      const items = [];
+      const parts = steps.split(/<br\/>/);
+      let firstLine = '';
+      for (const p of parts) {
+        const m = p.match(/^\s*(\d+)\.\s*(.*)/);
+        if (m) items.push({ num: m[1], text: m[2] });
+        else if (items.length > 0 && p.trim()) items[items.length - 1].text += ' ' + p.trim();
+        else if (!firstLine && p.trim()) firstLine = p.trim();
+      }
+      const titleHtml = firstLine ? `<div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">✅ ${firstLine}</div>` : '';
+      const stepsHtml = items.map(it =>
+        `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:6px">
+          <span style="min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;border-radius:6px;border:1px solid #bbf7d0;flex-shrink:0">${it.num}</span>
+          <span style="font-size:12px;color:#334155;line-height:1.5">${it.text}</span></div>`
+      ).join('');
+      return `<div style="margin:10px 0;padding:12px 14px;background:#f8fdf8;border:1px solid #dcfce7;border-radius:12px">${titleHtml}${stepsHtml}</div>`;
+    }
+  );
+
+  // 🚫 Warning — red accent
+  h = h.replace(
+    /🚫\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:8px 0;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;display:flex;align-items:center;gap:6px">
+      <span style="font-size:12px">🚫</span><span style="font-size:12px;color:#991b1b;font-weight:500">${content}</span></div>`
+  );
+
+  // 💰 Cost — amber tag (handle multiline)
+  h = h.replace(
+    /💰\s*<strong>(.*?)<\/strong>(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|<br\/>✅|$)/gs,
+    (_, title, body) => {
+      const lines = body.split(/<br\/>/).filter(l => l.trim()).map(l =>
+        `<div style="font-size:12px;color:#92400e;margin-top:3px">• ${l.replace(/^-\s*/, '').trim()}</div>`
+      ).join('');
+      return `<div style="margin:8px 0;padding:10px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px">
+        <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:2px">💰 ${title}</div>${lines}</div>`;
+    }
+  );
+  // 💰 single line fallback
+  h = h.replace(
+    /💰\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:8px 0;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px">
+      <span style="font-size:12px">💰</span><span style="font-size:12px;color:#92400e;font-weight:500">${content}</span></div>`
+  );
+
+  // 📋 Clause blocks — safe rendering without inline onclick
+  h = h.replace(
+    /📋\s*(?:<strong>)?(.*?)(?:<\/strong>)?:?\s*<br\/>(?:```)?<br\/>([\s\S]*?)(?:```|(?=<br\/><br\/>)|$)/gs,
+    (_, title, clause) => {
+      const displayClause = clause.replace(/&gt;\s?/g, '').replace(/```/g, '').trim();
+      return `<div style="margin:10px 0;padding:14px;background:linear-gradient(135deg,#f1f5f9,#f8fafc);border:1px solid #e2e8f0;border-left:3px solid #3b82f6;border-radius:12px">
+        <div style="display:flex;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#1e293b">📋 ${title || 'Clause'}</span>
+        </div>
+        <div class="clause-text" style="font-size:12px;color:#334155;line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.7);border-radius:8px">${displayClause}</div></div>`;
+    }
+  );
+
+  // 📋 old-style with > quotes
+  h = h.replace(
+    /📋\s*(?:<strong>)?(.*?)(?:<\/strong>)?.*?<br\/>(&gt;.*?)(?=<br\/><br\/>|$)/gs,
+    (_, title, clause) => {
+      return `<div style="margin:10px 0;padding:14px;background:linear-gradient(135deg,#f1f5f9,#f8fafc);border:1px solid #e2e8f0;border-left:3px solid #3b82f6;border-radius:12px">
+        <div style="display:flex;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#1e293b">📋 ${title || 'Clause'}</span>
+        </div>
+        <div class="clause-text" style="font-size:12px;color:#334155;line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.7);border-radius:8px">${clause.replace(/&gt;\s?/g,'')}</div></div>`;
+    }
+  );
+
+  // 🔒 Verified — green confidence badge
+  h = h.replace(
+    /🔒\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:12px;display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:8px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-size:14px;color:white">🛡️</span></div>
+      <div><span style="font-size:11px;font-weight:700;color:#166534;letter-spacing:0.02em">VERIFIED</span>
+        <div style="font-size:12px;color:#15803d;margin-top:1px;font-weight:500">${content}</div></div></div>`
+  );
+
+  // ⚠️ General guidance — yellow confidence badge
+  h = h.replace(
+    /⚠️\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fde68a;border-radius:12px;display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:8px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-size:14px;color:white">⚠️</span></div>
+      <div><span style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:0.02em">GENERAL GUIDANCE</span>
+        <div style="font-size:12px;color:#b45309;margin-top:1px;font-weight:500">${content}</div></div></div>`
+  );
+
+  // 🔴 Needs professional advice — red confidence badge
+  h = h.replace(
+    /🔴\s*(.*?)(?=<br\/>|$)/g,
+    (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5;border-radius:12px;display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:8px;background:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-size:14px;color:white">⚖️</span></div>
+      <div><span style="font-size:11px;font-weight:700;color:#991b1b;letter-spacing:0.02em">CONSULT A LAWYER</span>
+        <div style="font-size:12px;color:#dc2626;margin-top:1px;font-weight:500">${content}</div></div></div>`
+  );
+
+  // Clean up any remaining dash-only list items (- text)
+  h = h.replace(/<br\/>\s*-\s+/g, '<br/>• ');
+
+  return h;
+};
+
+// Memoized message bubble — only re-renders when its own content changes
+const MessageBubble = memo(function MessageBubble({ content, role, isStreaming, isError, streamRef: sRef, onCopy, onShare, onSave, onRetry }) {
+  const html = useMemo(() => fmt(content), [content]);
+  return (
+    <>
+      <div
+        ref={sRef || null}
+        className={`text-[13.5px] leading-[1.65] ${
+          role === 'user'
+            ? 'px-4 py-3 text-white rounded-[20px_20px_4px_20px]'
+            : `bot-msg bg-white px-4 py-3.5 rounded-[4px_20px_20px_20px]${isStreaming ? ' streaming' : ''}`
+        }`}
+        style={role === 'user'
+          ? { background: '#0f172a' }
+          : isError
+            ? { boxShadow: '0 1px 4px rgba(15,23,42,0.03)', color: '#991b1b', background: '#fef2f2', border: '1px solid #fecaca' }
+            : { boxShadow: '0 1px 4px rgba(15,23,42,0.03)', color: '#334155', border: '1px solid #edf0f4' }
+        }
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+      {isError && onRetry && (
+        <button onClick={onRetry}
+          className="flex items-center gap-1.5 text-[11px] font-semibold mt-2 px-4 py-2 rounded-xl transition active:scale-95"
+          style={{ background: '#0f172a', color: '#fff' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Retry
+        </button>
+      )}
+      {role === 'assistant' && content && !isError && (
+        <div className="msg-actions flex items-center gap-1 mt-1.5 pl-0.5">
+          <button onClick={onCopy} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}><CopyIcon /> Copy</button>
+          <button onClick={onShare} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}><ShareIcon /> Share</button>
+          <button onClick={onSave} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Save</button>
+        </div>
+      )}
+    </>
+  );
+});
+
 // Helpers
 const load = (key, fb) => {
   if (typeof window === 'undefined') return fb;
@@ -247,6 +451,45 @@ const save = (key, v) => {
   if (typeof window === 'undefined') return;
   try { localStorage.setItem(key, JSON.stringify(v)); } catch {}
 };
+
+// Conversation memory — compress older messages into a summary
+const MEMORY_THRESHOLD = 8; // Start compressing after 8 messages (4 exchanges)
+const RECENT_KEEP = 6;      // Keep last 6 messages in full (3 exchanges)
+
+function buildConversationMemory(messages) {
+  if (messages.length <= MEMORY_THRESHOLD) return { memory: null, recentMessages: messages };
+
+  const older = messages.slice(0, messages.length - RECENT_KEEP);
+  const recent = messages.slice(messages.length - RECENT_KEEP);
+
+  // Extract key info from older messages
+  const topics = [];
+  for (let i = 0; i < older.length; i++) {
+    const msg = older[i];
+    if (msg.role === 'user') {
+      // User's question — keep it short
+      const q = msg.content.trim();
+      const short = q.length > 100 ? q.substring(0, 100) + '...' : q;
+      topics.push(`• User asked: "${short}"`);
+    } else if (msg.role === 'assistant') {
+      // Extract key facts from AI answer — first line + any law citations
+      const lines = msg.content.split('\n').filter(l => l.trim());
+      const firstLine = lines[0]?.trim();
+      if (firstLine) {
+        const short = firstLine.length > 120 ? firstLine.substring(0, 120) + '...' : firstLine;
+        topics.push(`  → Answer: ${short}`);
+      }
+      // Extract law citations
+      const laws = msg.content.match(/⚖️\s*(.+?)(?:\n|$)/g);
+      if (laws) {
+        laws.forEach(l => topics.push(`  → ${l.trim()}`));
+      }
+    }
+  }
+
+  const memory = topics.join('\n');
+  return { memory, recentMessages: recent };
+}
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -263,9 +506,13 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [lastFailedMsg, setLastFailedMsg] = useState(null);
   const chatRef = useRef(null);
   const inputRef = useRef(null);
   const recRef = useRef(null);
+  const streamRef = useRef(null);
+  const streamContentRef = useRef('');
+  const userScrolledRef = useRef(false);
 
   useEffect(() => {
     setLang(load('fi_lang', 'en'));
@@ -283,10 +530,39 @@ export default function Home() {
   }, [messages, ready]);
   useEffect(() => { if (ready) save('fi_profile', profile); }, [profile, ready]);
 
-  // Auto scroll
+  // Detect USER scroll (wheel/touch only — never fires from programmatic scroll)
   useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: 'smooth' });
+    const el = chatRef.current;
+    if (!el) return;
+
+    // User is actively scrolling — check if they moved away from bottom
+    const onUserInteraction = () => {
+      requestAnimationFrame(() => {
+        if (!el) return;
+        const { scrollTop, scrollHeight, clientHeight } = el;
+        const distFromBottom = scrollHeight - scrollTop - clientHeight;
+        if (distFromBottom > 80) {
+          userScrolledRef.current = true;
+        } else {
+          userScrolledRef.current = false;
+        }
+      });
+    };
+
+    el.addEventListener('wheel', onUserInteraction, { passive: true });
+    el.addEventListener('touchmove', onUserInteraction, { passive: true });
+    el.addEventListener('mousedown', onUserInteraction, { passive: true });
+    return () => {
+      el.removeEventListener('wheel', onUserInteraction);
+      el.removeEventListener('touchmove', onUserInteraction);
+      el.removeEventListener('mousedown', onUserInteraction);
+    };
+  }, [showChat]);
+
+  // Auto scroll on new messages — skip if user scrolled up
+  useEffect(() => {
+    if (chatRef.current && !userScrolledRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
@@ -327,97 +603,72 @@ export default function Home() {
     return c.trim();
   };
 
-  // Generate smart follow-up suggestions from AI response
-  const genFollowUps = useCallback((userQ, aiAnswer) => {
-    const q = userQ.toLowerCase();
-    const a = aiAnswer.toLowerCase();
-    const picks = [];
+  // Parse follow-up suggestions from Haiku's response
+  // Returns { cleanContent, followUps[] }
+  const parseFollowUps = useCallback((content) => {
+    const match = content.match(/\[FOLLOWUPS\]\n?([\s\S]*?)\[\/FOLLOWUPS\]/);
+    if (!match) return { cleanContent: content, followUps: [] };
 
-    // Topic-based follow-up mapping
-    const followUpMap = {
-      en: {
-        deposit: ['How do I write a demand letter for my deposit?', 'What counts as normal wear and tear?', 'Can I take this to tribunal?'],
-        rent: ['Can I use Distress Act to seize belongings?', 'How to write a Letter of Demand?', "What if tenant runs away owing rent?"],
-        evict: ['How long does court eviction take?', 'Can I claim damages after eviction?', 'What if tenant refuses to leave after notice?'],
-        stamp: ['What penalty if I stamp late?', 'Can unstamped agreement be used in court?', 'How to stamp via MyTax portal?'],
-        repair: ['Can I deduct repair costs from rent?', 'What if the issue is common property?', 'How to document defects properly?'],
-        buy: ['How much stamp duty will I pay?', 'What if my loan gets rejected?', 'How to do a land search?'],
-        subsale: ['What is the 3+1 completion timeline?', 'How to protect my earnest deposit?', 'What does the lawyer handle?'],
-        loan: ['What margin of finance can I get?', 'Conventional vs Islamic financing?', "What's the lock-in penalty?"],
-        auction: ['What risks should I check before bidding?', 'LACA vs Non-LACA — what\'s the difference?', 'Can I get financing for lelong property?'],
-        foreign: ['What is the minimum price in my state?', 'How much RPGT will I pay?', 'How long does state consent take?'],
-        defect: ['How to file at Homebuyer Tribunal?', 'What if developer goes bankrupt?', 'Can I claim LAD for late delivery?'],
-        strata: ['How to file at Strata Tribunal?', 'Can MC charge me extra?', 'What are my AGM voting rights?'],
-        agent: ['How to verify if agent is registered?', 'How much commission should I pay?', 'Can I deal directly without agent?'],
-        inherit: ['Do I need to pay stamp duty on inheritance?', 'Joint tenancy vs tenancy in common?', 'How to apply for Letter of Administration?'],
-      },
-      bm: {
-        deposit: ['Macam mana tulis surat tuntutan deposit?', 'Apa kira lusuh biasa?', 'Boleh bawa ke tribunal?'],
-        rent: ['Boleh guna Akta Distres untuk rampas barang?', 'Macam mana tulis surat tuntutan?', 'Kalau penyewa lari?'],
-        evict: ['Berapa lama proses mahkamah?', 'Boleh tuntut ganti rugi selepas usir?', 'Kalau penyewa enggan keluar?'],
-        default: ['Berapa duti setem untuk perjanjian sewa?', 'Apa hak saya sebagai tuan rumah?', 'Macam mana nak beli rumah subsale?'],
-      },
-      zh: {
-        deposit: ['怎么写押金催款信？', '什么算正常磨损？', '可以去消费者法庭吗？'],
-        rent: ['可以扣押租客物品吗？', '怎么写催款函？', '租客跑了怎么办？'],
-        default: ['租约印花税怎么算？', '我有什么权利？', '买二手房流程是什么？'],
-      },
-    };
-
-    const langMap = followUpMap[lang] || followUpMap.en;
-
-    // Match topic from question + answer
-    const topics = ['deposit', 'rent', 'evict', 'stamp', 'repair', 'buy', 'subsale', 'loan', 'auction', 'foreign', 'defect', 'strata', 'agent', 'inherit'];
-    const matched = topics.find(t => q.includes(t) || a.includes(t));
-
-    if (matched && langMap[matched]) {
-      picks.push(...langMap[matched]);
-    } else if (langMap.default) {
-      picks.push(...langMap.default);
-    } else {
-      // Fallback English
-      const fallbacks = followUpMap.en;
-      const fallbackMatch = topics.find(t => q.includes(t) || a.includes(t));
-      if (fallbackMatch && fallbacks[fallbackMatch]) picks.push(...fallbacks[fallbackMatch]);
-      else picks.push('How much stamp duty do I need to pay?', 'What are my rights as a tenant?', 'How to buy subsale property?');
-    }
-
-    // Filter out the question they just asked (fuzzy)
-    const filtered = picks.filter(p => {
-      const norm = p.toLowerCase().replace(/[?!.,]/g, '');
-      const qNorm = q.replace(/[?!.,]/g, '');
-      return !norm.includes(qNorm) && !qNorm.includes(norm);
-    });
-
-    setSuggestions(filtered.slice(0, 3));
-  }, [lang]);
+    const cleanContent = content.replace(/\[FOLLOWUPS\][\s\S]*?\[\/FOLLOWUPS\]/, '').trim();
+    const followUps = match[1].split('\n').map(l => l.trim()).filter(l => l.length > 0).slice(0, 3);
+    return { cleanContent, followUps };
+  }, []);
 
   const sendMessage = useCallback(async (text) => {
     if (!text.trim() || loading) return;
     const userMsg = { role: 'user', content: text.trim() };
     const all = [...messages, userMsg];
-    setMessages([...all, { role: 'assistant', content: '' }]);
+    setMessages(all);
     setInput('');
     setLoading(true);
     setSuggestions([]);
 
+    // Compress older messages into memory if conversation is long
+    const { memory, recentMessages } = buildConversationMemory(all);
+
+    let scrollInterval = null;
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: all, profileContext: profileCtx() }),
+        body: JSON.stringify({
+          messages: recentMessages,
+          profileContext: profileCtx(),
+          conversationMemory: memory,
+        }),
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        setMessages([...all, { role: 'assistant', content: `Error: ${err.error}` }]);
+        const err = await res.json().catch(() => ({ error: 'Server error' }));
+        const errorMsg = lang === 'en' ? `⚠️ ${err.error || 'Server error'}. Tap retry to try again.`
+          : lang === 'bm' ? `⚠️ ${err.error || 'Ralat pelayan'}. Tekan cuba semula.`
+          : `⚠️ ${err.error || '服务器错误'}。点击重试。`;
+        setMessages([...all, { role: 'assistant', content: errorMsg, isError: true }]);
+        setLastFailedMsg(text.trim());
         setLoading(false);
         return;
       }
 
+      // Add a placeholder assistant message ONCE, then update it via ref
+      setMessages([...all, { role: 'assistant', content: '' }]);
+      streamContentRef.current = '';
+
+      // Wait one frame so React renders the placeholder and streamRef attaches
+      await new Promise(r => requestAnimationFrame(r));
+
+      // Reset scroll tracking for new response
+      userScrolledRef.current = false;
+
+      // Auto-scroll during streaming — stops immediately if user scrolls up
+      scrollInterval = setInterval(() => {
+        if (chatRef.current && !userScrolledRef.current) {
+          chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+      }, 250);
+
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-      let full = '';
+      let rafPending = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -426,15 +677,42 @@ export default function Home() {
         for (const line of chunk.split('\n')) {
           if (line.startsWith('data: ') && line !== 'data: [DONE]') {
             try {
-              full += JSON.parse(line.slice(6)).text;
-              setMessages([...all, { role: 'assistant', content: full }]);
+              streamContentRef.current += JSON.parse(line.slice(6)).text;
+              // Throttle DOM updates to once per animation frame
+              if (!rafPending) {
+                rafPending = true;
+                requestAnimationFrame(() => {
+                  if (streamRef.current) {
+                    // Hide [FOLLOWUPS] block during streaming
+                    const display = streamContentRef.current.replace(/\[FOLLOWUPS\][\s\S]*?(\[\/FOLLOWUPS\]|$)/, '');
+                    streamRef.current.innerHTML = fmt(display);
+                  }
+                  rafPending = false;
+                });
+              }
             } catch {}
           }
         }
       }
 
-      // Generate follow-up suggestions after response complete
-      if (full) genFollowUps(text.trim(), full);
+      // Final DOM update to catch any tokens after last rAF
+      if (streamRef.current) {
+        streamRef.current.innerHTML = fmt(streamContentRef.current);
+      }
+
+      // Parse follow-ups from response, strip them from displayed content
+      const rawContent = streamContentRef.current;
+      const { cleanContent, followUps } = parseFollowUps(rawContent);
+
+      // Commit clean content (without [FOLLOWUPS] block) to React state
+      setMessages([...all, { role: 'assistant', content: cleanContent }]);
+      streamContentRef.current = '';
+
+      // Show Haiku-generated follow-up suggestions
+      if (followUps.length > 0) {
+        setSuggestions(followUps);
+      }
+      setLastFailedMsg(null);
 
     } catch (err) {
       const isOffline = !navigator.onLine;
@@ -442,14 +720,29 @@ export default function Home() {
         ? (lang === 'en' ? '📡 You appear to be offline. Check your internet connection and try again.'
           : lang === 'bm' ? '📡 Anda kelihatan di luar talian. Semak sambungan internet anda.'
           : '📡 您似乎已离线。请检查网络连接后重试。')
-        : (lang === 'en' ? '⚠️ Connection error. Please try again.'
-          : lang === 'bm' ? '⚠️ Ralat sambungan. Sila cuba lagi.'
-          : '⚠️ 连接错误。请重试。');
-      setMessages([...all, { role: 'assistant', content: errorMsg }]);
+        : (lang === 'en' ? '⚠️ Something went wrong. Tap retry to try again.'
+          : lang === 'bm' ? '⚠️ Sesuatu tidak kena. Tekan cuba semula.'
+          : '⚠️ 出了点问题。点击重试。');
+      setMessages([...all, { role: 'assistant', content: errorMsg, isError: true }]);
+      setLastFailedMsg(text.trim());
+    } finally {
+      if (scrollInterval) clearInterval(scrollInterval);
     }
     setLoading(false);
     inputRef.current?.focus();
-  }, [messages, loading, profile, genFollowUps]);
+  }, [messages, loading, profile, parseFollowUps]);
+
+  const handleRetry = useCallback(() => {
+    if (!lastFailedMsg || loading) return;
+    // Remove the error message from chat
+    const withoutError = messages.filter(m => !m.isError);
+    // Also remove the failed user message (last user msg)
+    const withoutLastUser = withoutError.slice(0, -1);
+    setMessages(withoutLastUser);
+    setLastFailedMsg(null);
+    // Resend after state update
+    setTimeout(() => sendMessage(lastFailedMsg), 50);
+  }, [lastFailedMsg, loading, messages, sendMessage]);
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); }
@@ -490,164 +783,7 @@ export default function Home() {
     sp.role ? setShowChat(true) : setShowProfile(true);
   };
 
-  const fmt = (text) => {
-    let h = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br/>');
-
-    // Clean up raw markdown that leaks through
-    h = h.replace(/<br\/>---<br\/>/g, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0"/>');
-    h = h.replace(/<br\/>-{3,}<br\/>/g, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0"/>');
-    h = h.replace(/##\s+(.*?)(?=<br\/>|$)/g, '<div style="font-size:14px;font-weight:700;color:#0f172a;margin:14px 0 6px">$1</div>');
-
-    // ⚡ Legal Bridge — red/blue split card
-    h = h.replace(
-      /⚡(.*?)(?=<br\/><br\/>|<br\/>⚖️|<br\/>✅|$)/gs,
-      (match) => {
-        const content = match.replace(/^⚡\s*/, '');
-        return `<div style="margin:10px 0;padding:12px 14px;background:linear-gradient(135deg,#fef2f2,#eff6ff);border:1px solid #e2e8f0;border-left:3px solid #dc2626;border-right:3px solid #2563eb;border-radius:12px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:#64748b;margin-bottom:6px">⚡ LEGAL BRIDGE</div>
-          <div style="font-size:12px;line-height:1.6;color:#334155">${content}</div></div>`;
-      }
-    );
-
-    // ⚖️ Law citation — subtle blue tag
-    h = h.replace(
-      /⚖️\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:8px 0;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px">
-        <span style="font-size:12px">⚖️</span><span style="font-size:12px;color:#1e40af;font-weight:500">${content}</span></div>`
-    );
-
-    // ✅ Action steps — with bold title
-    h = h.replace(
-      /✅\s*<strong>(.*?)<\/strong>(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>💰|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|$)/gs,
-      (_, title, steps) => {
-        const items = [];
-        const parts = steps.split(/<br\/>/);
-        for (const p of parts) {
-          const m = p.match(/^\s*(\d+)\.\s*(.*)/);
-          if (m) items.push({ num: m[1], text: m[2] });
-          else if (items.length > 0 && p.trim()) items[items.length - 1].text += ' ' + p.trim();
-        }
-        const stepsHtml = items.map(it =>
-          `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:6px">
-            <span style="min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;border-radius:6px;border:1px solid #bbf7d0;flex-shrink:0">${it.num}</span>
-            <span style="font-size:12px;color:#334155;line-height:1.5">${it.text}</span></div>`
-        ).join('');
-        return `<div style="margin:10px 0;padding:12px 14px;background:#f8fdf8;border:1px solid #dcfce7;border-radius:12px">
-          <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">✅ ${title}</div>${stepsHtml}</div>`;
-      }
-    );
-
-    // ✅ without bold title
-    h = h.replace(
-      /✅\s*(?!<strong>)(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>💰|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|$)/gs,
-      (_, steps) => {
-        if (steps.trim().length < 3) return `✅ ${steps}`;
-        const items = [];
-        const parts = steps.split(/<br\/>/);
-        let firstLine = '';
-        for (const p of parts) {
-          const m = p.match(/^\s*(\d+)\.\s*(.*)/);
-          if (m) items.push({ num: m[1], text: m[2] });
-          else if (items.length > 0 && p.trim()) items[items.length - 1].text += ' ' + p.trim();
-          else if (!firstLine && p.trim()) firstLine = p.trim();
-        }
-        const titleHtml = firstLine ? `<div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">✅ ${firstLine}</div>` : '';
-        const stepsHtml = items.map(it =>
-          `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:6px">
-            <span style="min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;border-radius:6px;border:1px solid #bbf7d0;flex-shrink:0">${it.num}</span>
-            <span style="font-size:12px;color:#334155;line-height:1.5">${it.text}</span></div>`
-        ).join('');
-        return `<div style="margin:10px 0;padding:12px 14px;background:#f8fdf8;border:1px solid #dcfce7;border-radius:12px">${titleHtml}${stepsHtml}</div>`;
-      }
-    );
-
-    // 🚫 Warning — red accent
-    h = h.replace(
-      /🚫\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:8px 0;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;display:flex;align-items:center;gap:6px">
-        <span style="font-size:12px">🚫</span><span style="font-size:12px;color:#991b1b;font-weight:500">${content}</span></div>`
-    );
-
-    // 💰 Cost — amber tag (handle multiline)
-    h = h.replace(
-      /💰\s*<strong>(.*?)<\/strong>(.*?)(?=<br\/><br\/>|<br\/>🚫|<br\/>📋|<br\/>⚠️|<br\/>🔒|<br\/>🔴|<br\/>✅|$)/gs,
-      (_, title, body) => {
-        const lines = body.split(/<br\/>/).filter(l => l.trim()).map(l =>
-          `<div style="font-size:12px;color:#92400e;margin-top:3px">• ${l.replace(/^-\s*/, '').trim()}</div>`
-        ).join('');
-        return `<div style="margin:8px 0;padding:10px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px">
-          <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:2px">💰 ${title}</div>${lines}</div>`;
-      }
-    );
-    // 💰 single line fallback
-    h = h.replace(
-      /💰\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:8px 0;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px">
-        <span style="font-size:12px">💰</span><span style="font-size:12px;color:#92400e;font-weight:500">${content}</span></div>`
-    );
-
-    // 📋 Clause blocks — safe rendering without inline onclick
-    h = h.replace(
-      /📋\s*(?:<strong>)?(.*?)(?:<\/strong>)?:?\s*<br\/>(?:```)?<br\/>([\s\S]*?)(?:```|(?=<br\/><br\/>)|$)/gs,
-      (_, title, clause) => {
-        const displayClause = clause.replace(/&gt;\s?/g, '').replace(/```/g, '').trim();
-        return `<div style="margin:10px 0;padding:14px;background:linear-gradient(135deg,#f1f5f9,#f8fafc);border:1px solid #e2e8f0;border-left:3px solid #3b82f6;border-radius:12px">
-          <div style="display:flex;align-items:center;margin-bottom:8px">
-            <span style="font-size:11px;font-weight:700;color:#1e293b">📋 ${title || 'Clause'}</span>
-          </div>
-          <div class="clause-text" style="font-size:12px;color:#334155;line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.7);border-radius:8px">${displayClause}</div></div>`;
-      }
-    );
-
-    // 📋 old-style with > quotes
-    h = h.replace(
-      /📋\s*(?:<strong>)?(.*?)(?:<\/strong>)?.*?<br\/>(&gt;.*?)(?=<br\/><br\/>|$)/gs,
-      (_, title, clause) => {
-        return `<div style="margin:10px 0;padding:14px;background:linear-gradient(135deg,#f1f5f9,#f8fafc);border:1px solid #e2e8f0;border-left:3px solid #3b82f6;border-radius:12px">
-          <div style="display:flex;align-items:center;margin-bottom:8px">
-            <span style="font-size:11px;font-weight:700;color:#1e293b">📋 ${title || 'Clause'}</span>
-          </div>
-          <div class="clause-text" style="font-size:12px;color:#334155;line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.7);border-radius:8px">${clause.replace(/&gt;\s?/g,'')}</div></div>`;
-      }
-    );
-
-    // 🔒 Verified — green confidence badge
-    h = h.replace(
-      /🔒\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:12px;display:flex;align-items:center;gap:8px">
-        <div style="width:28px;height:28px;border-radius:8px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <span style="font-size:14px;color:white">🛡️</span></div>
-        <div><span style="font-size:11px;font-weight:700;color:#166534;letter-spacing:0.02em">VERIFIED</span>
-          <div style="font-size:12px;color:#15803d;margin-top:1px;font-weight:500">${content}</div></div></div>`
-    );
-
-    // ⚠️ General guidance — yellow confidence badge
-    h = h.replace(
-      /⚠️\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fde68a;border-radius:12px;display:flex;align-items:center;gap:8px">
-        <div style="width:28px;height:28px;border-radius:8px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <span style="font-size:14px;color:white">⚠️</span></div>
-        <div><span style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:0.02em">GENERAL GUIDANCE</span>
-          <div style="font-size:12px;color:#b45309;margin-top:1px;font-weight:500">${content}</div></div></div>`
-    );
-
-    // 🔴 Needs professional advice — red confidence badge
-    h = h.replace(
-      /🔴\s*(.*?)(?=<br\/>|$)/g,
-      (_, content) => `<div style="margin:10px 0;padding:10px 14px;background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5;border-radius:12px;display:flex;align-items:center;gap:8px">
-        <div style="width:28px;height:28px;border-radius:8px;background:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <span style="font-size:14px;color:white">⚖️</span></div>
-        <div><span style="font-size:11px;font-weight:700;color:#991b1b;letter-spacing:0.02em">CONSULT A LAWYER</span>
-          <div style="font-size:12px;color:#dc2626;margin-top:1px;font-weight:500">${content}</div></div></div>`
-    );
-
-    // Clean up any remaining dash-only list items (- text)
-    h = h.replace(/<br\/>\s*-\s+/g, '<br/>• ');
-
-    return h;
-  };
+  // fmt is now defined outside the component (above) for memoization
 
   if (!ready) return null;
 
@@ -881,49 +1017,45 @@ export default function Home() {
         ) : (
           /* Messages — banking-clean spacing */
           <div className="space-y-4">
-            {messages.map((msg, i) => (
-              <div key={i} className={`msg-group flex ${msg.role === 'user' ? 'justify-end' : 'gap-2'} msg-in`}>
-                {msg.role === 'assistant' && (
-                  <div className="flex-shrink-0 mt-1">
-                    <Logo size={26} />
-                  </div>
-                )}
-                <div className={msg.role === 'assistant' ? 'max-w-[calc(100%-38px)]' : 'max-w-[82%]'}>
-                  <div className={`text-[13.5px] leading-[1.65] ${
-                    msg.role === 'user'
-                      ? 'px-4 py-3 text-white rounded-[20px_20px_4px_20px]'
-                      : `bot-msg bg-white px-4 py-3.5 rounded-[4px_20px_20px_20px]${loading && i === messages.length - 1 && msg.role === 'assistant' ? ' streaming' : ''}`
-                  }`}
-                    style={msg.role === 'user'
-                      ? { background: '#0f172a' }
-                      : { boxShadow: '0 1px 4px rgba(15,23,42,0.03)', color: '#334155', border: '1px solid #edf0f4' }
-                    }
-                    dangerouslySetInnerHTML={{ __html: fmt(msg.content) }}
-                  />
-                  {msg.role === 'assistant' && msg.content && (
-                    <div className="msg-actions flex items-center gap-1 mt-1.5 pl-0.5">
-                      <button onClick={() => copyMsg(msg.content)} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}><CopyIcon /> Copy</button>
-                      <button onClick={() => shareWA(msg.content)} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}><ShareIcon /> Share</button>
-                      <button onClick={handleSave} className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg transition active:scale-95 hover:bg-slate-50" style={{ color: '#94a3b8' }}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                        Save
-                      </button>
+            {messages.map((msg, i) => {
+              const isLastAssistant = loading && i === messages.length - 1 && msg.role === 'assistant';
+              return (
+                <div key={i} className={`msg-group flex ${msg.role === 'user' ? 'justify-end' : 'gap-2'} msg-in`}>
+                  {msg.role === 'assistant' && (
+                    <div className="flex-shrink-0 mt-1">
+                      <Logo size={26} />
                     </div>
                   )}
+                  <div className={msg.role === 'assistant' ? 'max-w-[calc(100%-38px)]' : 'max-w-[82%]'}>
+                    <MessageBubble
+                      content={msg.content}
+                      role={msg.role}
+                      isStreaming={isLastAssistant}
+                      isError={msg.isError}
+                      streamRef={isLastAssistant ? streamRef : null}
+                      onCopy={() => copyMsg(msg.content)}
+                      onShare={() => shareWA(msg.content)}
+                      onSave={handleSave}
+                      onRetry={msg.isError ? handleRetry : null}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
-            {/* Typing indicator */}
+            {/* Thinking indicator — shows before first token arrives */}
             {loading && messages[messages.length - 1]?.content === '' && (
               <div className="flex gap-2 msg-in">
                 <div className="flex-shrink-0 mt-1"><Logo size={26} /></div>
-                <div className="bg-white px-5 py-3.5 rounded-[4px_20px_20px_20px]" style={{ boxShadow: '0 1px 4px rgba(15,23,42,0.03)', border: '1px solid #edf0f4' }}>
-                  <div className="flex space-x-1.5">
+                <div className="bg-white px-4 py-3 rounded-[4px_20px_20px_20px] flex items-center gap-2.5" style={{ boxShadow: '0 1px 4px rgba(15,23,42,0.03)', border: '1px solid #edf0f4' }}>
+                  <div className="flex space-x-1">
                     <div className="w-1.5 h-1.5 rounded-full typing-dot" style={{ background: '#3b82f6' }} />
                     <div className="w-1.5 h-1.5 rounded-full typing-dot" style={{ background: '#3b82f6' }} />
                     <div className="w-1.5 h-1.5 rounded-full typing-dot" style={{ background: '#3b82f6' }} />
                   </div>
+                  <span className="text-[11px] font-medium thinking-fade" style={{ color: '#94a3b8' }}>
+                    {lang === 'en' ? 'Thinking...' : lang === 'bm' ? 'Sedang berfikir...' : '思考中...'}
+                  </span>
                 </div>
               </div>
             )}
