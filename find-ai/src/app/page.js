@@ -904,7 +904,6 @@ export default function Home() {
     // Build smart context (profile + time + topic intelligence + feedback)
     const smartCtx = buildSmartContext();
 
-    let scrollInterval = null;
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -931,17 +930,6 @@ export default function Home() {
       streamContentRef.current = '';
       await new Promise(r => requestAnimationFrame(r));
 
-      // Sticky-to-bottom during streaming: only scroll if user is near the bottom.
-      // If user scrolls up to read, we stop following — resumes when they scroll back down.
-      scrollInterval = setInterval(() => {
-        const el = chatRef.current;
-        if (!el) return;
-        const dist = el.scrollHeight - el.scrollTop - el.clientHeight;
-        if (dist < 200) {
-          el.scrollTop = el.scrollHeight;
-        }
-      }, 250);
-
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let rafPending = false;
@@ -960,6 +948,12 @@ export default function Home() {
                   if (streamRef.current) {
                     const display = streamContentRef.current.replace(/\[FOLLOWUPS\][\s\S]*?(\[\/FOLLOWUPS\]|$)/, '');
                     streamRef.current.innerHTML = fmt(display);
+                    // Stick-to-bottom on the SAME frame as the paint — no jitter.
+                    const el = chatRef.current;
+                    if (el) {
+                      const dist = el.scrollHeight - el.scrollTop - el.clientHeight;
+                      if (dist < 200) el.scrollTop = el.scrollHeight;
+                    }
                   }
                   rafPending = false;
                 });
@@ -991,8 +985,6 @@ export default function Home() {
           : '⚠️ 出了点问题。点击重试。');
       setMessages([...all, { role: 'assistant', content: errorMsg, isError: true }]);
       setLastFailedMsg(text.trim());
-    } finally {
-      if (scrollInterval) clearInterval(scrollInterval);
     }
     setLoading(false);
     inputRef.current?.focus();
