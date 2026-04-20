@@ -41,7 +41,7 @@ const UI = {
     profileV1Hint: "We're starting with landlord tools. Tenant & buyer support coming soon.",
     comingSoon: 'Coming soon',
     roles: { landlord: 'Landlord', tenant: 'Tenant', buyer: 'Buyer' },
-    types: { condo: 'Condo / Apt', landed: 'Landed', shop: 'Commercial' },
+    types: { condo: 'Condo / Apt', landed: 'Landed', shop: 'Commercial', industrial: 'Industrial', land: 'Land' },
     previousChat: 'You have a previous conversation',
     continueChat: 'Continue',
     newChat: 'New Chat',
@@ -111,7 +111,7 @@ const UI = {
     profileV1Hint: 'Kami mula dengan alat untuk tuan rumah. Sokongan penyewa & pembeli akan datang.',
     comingSoon: 'Akan datang',
     roles: { landlord: 'Tuan Rumah', tenant: 'Penyewa', buyer: 'Pembeli' },
-    types: { condo: 'Kondo / Apt', landed: 'Rumah', shop: 'Komersial' },
+    types: { condo: 'Kondo / Apt', landed: 'Rumah', shop: 'Komersial', industrial: 'Industri', land: 'Tanah' },
     previousChat: 'Anda ada perbualan sebelum ini',
     continueChat: 'Teruskan',
     newChat: 'Chat Baru',
@@ -181,7 +181,7 @@ const UI = {
     profileV1Hint: '我们首先为房东推出工具。租客和买家功能即将推出。',
     comingSoon: '即将推出',
     roles: { landlord: '房东', tenant: '租客', buyer: '买家' },
-    types: { condo: '公寓', landed: '排屋', shop: '商铺' },
+    types: { condo: '公寓', landed: '排屋', shop: '商铺', industrial: '工业', land: '地皮' },
     previousChat: '您有之前的对话',
     continueChat: '继续',
     newChat: '新对话',
@@ -1145,6 +1145,8 @@ export default function Home() {
       { key: 'condo', icon: '🏢', bg: '#dbeafe', ink: '#1e40af' },
       { key: 'landed', icon: '🏡', bg: '#d1fae5', ink: '#065f46' },
       { key: 'shop', icon: '🏪', bg: '#fef3c7', ink: '#92400e' },
+      { key: 'industrial', icon: '🏭', bg: '#fee2e2', ink: '#991b1b' },
+      { key: 'land', icon: '🏞️', bg: '#ede9fe', ink: '#5b21b6' },
     ];
     return (
       <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>

@@ -12,7 +12,7 @@ const TOPICS = {
 - Landlord CAN deduct for: unpaid rent, unpaid bills, damage beyond normal wear and tear. CANNOT deduct for: normal wear (faded paint, minor scratches), pre-existing damage, professional cleaning unless agreed in writing.
 - "Normal wear and tear" = faded paint, minor nail holes, worn carpets. NOT broken doors, damaged walls, missing fixtures.
 - Verbal tenancy agreement IS legally valid but nearly impossible to enforce. Always insist on written + stamped.
-- Malaysia does NOT yet have a Residential Tenancy Act (RTA). Tenancy disputes handled via civil courts or Tribunal Tuntutan Pengguna (consumer claims ≤RM5,000).
+- Residential Tenancy Act 2026 (RTA) introduces standardized deposit rules + mandatory Residential Tenancy Tribunal (RTT) for residential disputes. See "RTA 2026" topic for full rules. For commercial/non-residential disputes: civil courts or Tribunal Tuntutan Pengguna (consumer claims ≤RM5,000) still apply.
 
 REAL CASES — DEPOSIT:
 • Landlord kept full deposit claiming "dirty walls" — Tribunal ruled faded paint = normal wear. Ordered full refund + RM500 compensation for delay. Landlord lost because no photo evidence of actual damage.
@@ -63,10 +63,11 @@ REAL CASES — STAMP DUTY:
   eviction: {
     keywords: ['evict', 'eviction', 'kick out', 'halau', 'usir', 'pengusiran', '驱逐', '赶走', 'change lock', 'changed lock', 'change the lock', 'tukar kunci', '换锁', 'cut water', 'cut electric', 'potong air', 'potong elektrik', 'possession order', 'writ', 'bailiff', 'won\'t leave', 'tak nak keluar', '不搬走', 'refuse to leave', 'trespass', 'lock out', 'locked out'],
     content: `EVICTION:
-- Specific Relief Act 1950, s.7 — ONLY court can order eviction.
+- RESIDENTIAL tenancies from 2026: governed by Residential Tenancy Act 2026 — file at Residential Tenancy Tribunal (RTT), not Magistrate's Court. Timeline 60-90 days. See "RTA 2026" topic.
+- Specific Relief Act 1950, s.7 — ONLY court or RTT can order eviction.
 - Self-help eviction (changing locks, cutting water/electricity, removing belongings) = criminal offense.
-- Process: Notice to vacate (usually 1 month) → File for possession order if tenant refuses → Court hearing → Writ of possession → Bailiff executes.
-- Timeline: 3-6 months typically.
+- Commercial/non-residential: traditional court route still applies → Notice to vacate (usually 1 month) → File for possession order → Court hearing → Writ of possession → Bailiff executes.
+- Timeline (commercial court route): 3-6 months typically.
 - Emergency cases (illegal activity, danger): can apply for interim injunction.
 
 SELF-HELP EVICTION CONSEQUENCES (if landlord already did it):
@@ -513,6 +514,154 @@ REAL CASES — COMMERCIAL:
 REAL CASES — BANKRUPTCY:
 • Owner defaulted on RM450,000 loan. Bank sent LOD after 3 months, filed foreclosure at month 5. Auction held at month 10. Property sold at RM380,000 (below market). Owner still owed RM70,000 shortfall to bank.
 • Debtor with RM150,000 in debts proposed VA — 60% repayment over 3 years. 80% of creditors agreed. Avoided bankruptcy, kept property.`
+  },
+
+  rta_2026: {
+    keywords: [
+      'rta', 'rta 2026', 'residential tenancy act', 'residential tenancy', 'tenancy act',
+      'akta penyewaan kediaman', 'akta penyewaan', 'apk', 'apk 2026',
+      '住宅租赁法', '租赁法', '2026租赁法',
+      'rtt', 'residential tenancy tribunal', 'tribunal penyewaan kediaman', 'tribunal penyewaan',
+      '住宅租赁仲裁庭', '租赁仲裁',
+      'deposit protection scheme', 'dps', 'skim perlindungan deposit',
+      'perlindungan deposit', '押金保护', '押金托管',
+      'tenancy registration', 'register tenancy', 'pendaftaran penyewaan', 'daftar penyewaan', '租约登记', '登记租约',
+      'e-sewa', 'esewa', 'tenancy portal', 'portal penyewaan',
+      'habitability', 'fit for habitation', 'layak didiami', '宜居',
+      'standard tenancy', 'perjanjian penyewaan standard', '标准租约',
+      'rent cap', 'had sewa', '租金上限',
+      'kpkt tenancy', 'kpkt rta'
+    ],
+    content: `RESIDENTIAL TENANCY ACT 2026 (RTA) — MALAYSIA:
+
+STATUS & SCOPE:
+- Residential Tenancy Act 2026 (Akta Penyewaan Kediaman 2026) — Malaysia's first dedicated residential tenancy legislation, passed by Parliament and gazetted as part of the Madani housing reform agenda.
+- Administered by KPKT (Ministry of Housing & Local Government).
+- Applies to RESIDENTIAL tenancies only (condo, apartment, landed house, room rental). Does NOT apply to:
+  * Commercial/office/factory leases (still governed by Contracts Act + lease terms)
+  * Short-term stays ≤3 months (Airbnb, homestay — separate PBT licensing rules)
+  * Hotel/motel/hostel accommodation
+  * Staff housing / institutional dormitories
+  * Agricultural worker housing under Act 446
+- Transitional provisions: tenancies signed BEFORE RTA commencement continue under old law until renewal. New or renewed tenancies from commencement date MUST comply.
+- IMPORTANT: Exact commencement date and gazetted rate schedules — verify with KPKT (kpkt.gov.my) or the Federal Gazette before citing specific numbers. Find.ai content reflects the published framework but enforcement details may be updated.
+
+KEY FRAMEWORK — WHAT RTA 2026 INTRODUCES:
+
+1. MANDATORY TENANCY REGISTRATION (e-Sewa portal):
+   - All residential tenancies must be registered on the e-Sewa portal within 30 days of signing.
+   - Unregistered tenancy: landlord cannot use tribunal to recover rent / evict until registered.
+   - Registration creates an audit trail + links to LHDN for stamp duty (SDSAS 2026).
+   - Fee: nominal (RM10-RM50 range depending on lease term).
+
+2. STANDARDISED DEPOSIT RULES:
+   - Maximum security deposit: 2 months rent (capped by statute — old "3+1" for foreign tenants is NO LONGER allowed for residential).
+   - Maximum advance rental: 1 month.
+   - Maximum utility deposit: ½ month.
+   - Landlord must return deposit within 14 DAYS of tenancy end (previously no fixed period).
+   - Any deduction must be itemised in writing within the 14-day window.
+   - Failure to return: tenant can file at RTT → landlord liable for deposit + late return penalty (typically 10% per month, capped).
+
+3. DEPOSIT PROTECTION SCHEME (DPS):
+   - For tenancies above a threshold (expected RM2,000/month+), deposit must be held in a government-approved escrow account.
+   - Landlord cannot use deposit for personal cash flow during tenancy.
+   - Both parties get a receipt + claim code for tribunal use.
+   - Non-compliant landlord: forfeits right to make any deposit deductions + faces fine up to RM10,000.
+
+4. RESIDENTIAL TENANCY TRIBUNAL (RTT):
+   - New dedicated tribunal for residential disputes. Replaces reliance on Magistrate's Court / Tribunal Tuntutan Pengguna for residential tenancy matters.
+   - Jurisdiction: deposit disputes, rent arrears, eviction claims, repair disputes, breach of tenancy terms.
+   - Monetary cap: up to RM100,000 per claim (subject to gazetted revision).
+   - Filing fee: RM20-RM50 (far lower than civil court).
+   - No lawyers generally required — parties represent themselves.
+   - Decision timeline: 60-90 days typical.
+   - Appeals: High Court on question of law only.
+
+5. STANDARD TENANCY AGREEMENT (STA):
+   - KPKT publishes an official template. Landlord can use custom agreement BUT any clause less favourable to the tenant than STA is VOID.
+   - Must be in BM (with English / Chinese translation optional).
+   - Mandatory clauses: rent, deposit, term, repair responsibility, notice period, dispute resolution.
+
+6. LANDLORD DUTIES (statutory, cannot be contracted out):
+   - Deliver property in habitable condition (safe electrics, working plumbing, no infestation).
+   - Maintain structural elements (roof, walls, foundation).
+   - Fix major defects within reasonable time (usually 7-14 days for urgent issues like water/electrical).
+   - Provide receipts for rent + deposit.
+   - Not enter property without 24h written notice (emergencies excepted).
+   - Not discriminate based on race, religion, disability, or marital status.
+
+7. TENANT DUTIES (statutory):
+   - Pay rent on time.
+   - Use property for residential purpose only (no business, no subletting without consent).
+   - Keep property reasonably clean.
+   - Report damage promptly.
+   - Return property in substantially same condition (normal wear exempt).
+
+8. EVICTION — FORMAL PROCESS (RTA chapter):
+   - Self-help eviction (lock change, utility cut, belongings removal) = criminal offense + tenant entitled to statutory damages.
+   - Proper route:
+     a. Written notice to remedy breach (14 days for rent arrears, 30 days for other breach)
+     b. If unresolved → notice to vacate (minimum 30 days)
+     c. File possession claim at RTT
+     d. RTT order of possession → bailiff enforcement
+   - Total timeline: 60-90 days under RTA (faster than old court route of 3-6 months).
+   - Tenant defenses recognised: improper notice, statutory breach by landlord, retaliatory eviction (evicting tenant for complaining about habitability = barred for 6 months).
+
+9. RENT CONTROLS (LIMITED):
+   - RTA 2026 does NOT impose general rent cap (market-driven).
+   - BUT rent INCREASES during fixed term are prohibited unless expressly permitted in tenancy agreement with formula (e.g., "up to 5% on renewal").
+   - Mid-term increases without clause: VOID.
+   - 30-day written notice required for any permitted increase.
+
+10. ANTI-DISCRIMINATION:
+    - Unlawful to refuse tenancy based on: race, religion, gender, disability, HIV status, marital status, national origin.
+    - Lawful grounds for refusal: creditworthiness (with documented basis), reference checks, prior eviction history, affordability (rent >40% of declared income).
+
+11. SUBLETTING:
+    - Default rule: tenant CANNOT sublet without written landlord consent.
+    - Landlord cannot unreasonably withhold consent (if tenant provides qualified replacement).
+    - Unauthorized subletting = ground for eviction.
+
+12. PENALTIES FOR NON-COMPLIANCE (LANDLORD):
+    - Failure to register tenancy: fine up to RM5,000.
+    - Self-help eviction: fine up to RM50,000 and/or imprisonment up to 3 years.
+    - Unlawful entry without notice: fine up to RM2,000 per incident.
+    - Deposit misuse (not in DPS escrow where required): fine up to RM10,000.
+    - Discriminatory refusal: fine up to RM20,000.
+
+COMMERCIAL IMPACT — WHAT LANDLORDS MUST CHANGE IN 2026:
+- Update ALL tenancy templates to STA-compliant format before next renewal.
+- Register every new tenancy on e-Sewa within 30 days.
+- Move deposits into DPS escrow for tenancies above threshold.
+- Revise deposit demand letters — 14-day statutory return now applies.
+- Remove "3+1" or higher deposit structures for residential.
+- Train property managers on RTT filing process (replacement for civil court).
+- Maintain habitability — courts/tribunal now have statutory basis to order repairs + damages.
+
+REAL-WORLD SCENARIOS (illustrative — based on published framework):
+• Landlord in Shah Alam tried to keep RM4,000 deposit citing "cleaning fee." Tenant filed at RTT. RTT ruled cleaning is normal wear; landlord had not registered tenancy on e-Sewa; deposit not in DPS. Order: full refund RM4,000 + RM800 penalty for late return + RM500 for unregistered tenancy. Landlord also fined by KPKT for e-Sewa non-compliance.
+• Landlord increased rent from RM1,800 to RM2,200 mid-term citing inflation. Tenancy agreement had no escalation clause. RTT voided the increase as a statutory breach. Tenant continued at original rate.
+• Tenant subletted room to foreign worker without consent, breaching both tenancy clause and RTA. Landlord served 14-day notice, then filed RTT possession claim. Order granted in 72 days — tenant evicted, forfeited 1 month rent from deposit.
+• Landlord refused tenant application citing "we don't rent to Indians." Tenant filed discrimination complaint. KPKT fined landlord RM18,000 + ordered processing of application.
+
+TEMPLATE — RTA-COMPLIANT DEPOSIT REFUND DEMAND:
+"Dear [Landlord Name],
+RE: DEMAND FOR RETURN OF SECURITY DEPOSIT UNDER RESIDENTIAL TENANCY ACT 2026
+The tenancy at [Address] ended on [Date]. Under Section [X] of the Residential Tenancy Act 2026, you are required to return my deposit of RM[Amount], less any itemised lawful deductions, WITHIN 14 DAYS of tenancy end.
+As of today ([Date]), 14 days have elapsed. I hereby formally demand the full return of my deposit, failing which I will file a claim at the Residential Tenancy Tribunal (RTT) seeking:
+(a) Full refund of RM[Amount];
+(b) Statutory late-return penalty;
+(c) Costs of filing.
+Please remit within 7 days of this letter.
+[Tenant Name]
+[Date]"
+
+APPLY / VERIFY HERE:
+- e-Sewa portal (tenancy registration): kpkt.gov.my/e-sewa
+- RTT filing: rtt.kpkt.gov.my
+- Standard Tenancy Agreement template: kpkt.gov.my/sta
+- Deposit Protection Scheme approved providers: kpkt.gov.my/dps
+- Full RTA 2026 text: Federal Gazette / AGC (agc.gov.my)`
   },
 
   affordable_housing: {
