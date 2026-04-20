@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import Landing from './landing';
 import ErrorBoundary from '../components/ErrorBoundary';
+import { CaseMemoryModal, buildCaseMemoryContext, emptyMemory, hasPdpaConsent } from './caseMemory';
 
 const STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -681,6 +682,8 @@ export default function Home() {
   const [activeChatId, setActiveChatId] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
+  // Case-file memory (per-chat; extends chatHistory item shape)
+  const [showCaseMemory, setShowCaseMemory] = useState(false);
   // Voice state (Option C)
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
@@ -1111,6 +1114,59 @@ export default function Home() {
     setTimeout(() => setShowFeedbackToast(false), 1500);
   }, [messages]);
 
+  // ── Case-file memory helpers ────────────────────────────────────────
+  // Active chat's memory + case type (derived from chatHistory).
+  const activeChatEntry = useMemo(
+    () => chatHistory.find(ch => ch.id === activeChatId) || null,
+    [chatHistory, activeChatId]
+  );
+  const activeMemory   = activeChatEntry?.memory   || emptyMemory();
+  const activeCaseType = activeChatEntry?.caseType || 'general';
+
+  // Persist memory edits into the active chat entry (creating it if needed).
+  const saveCaseMemory = useCallback((nextMemory, nextCaseType) => {
+    if (!activeChatId) return;
+    setChatHistory(prev => {
+      const exists = prev.find(ch => ch.id === activeChatId);
+      let updated;
+      if (exists) {
+        updated = prev.map(ch =>
+          ch.id === activeChatId
+            ? { ...ch, memory: nextMemory, caseType: nextCaseType, updatedAt: Date.now() }
+            : ch
+        );
+      } else {
+        // No messages yet — seed an empty entry so memory survives.
+        updated = [{
+          id: activeChatId,
+          title: nextMemory?.property?.nickname || '',
+          messages: [],
+          memory: nextMemory,
+          caseType: nextCaseType,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        }, ...prev];
+      }
+      save('fi_chat_history', updated);
+      return updated;
+    });
+    setShowCaseMemory(false);
+  }, [activeChatId]);
+
+  const clearCaseMemory = useCallback(() => {
+    if (!activeChatId) { setShowCaseMemory(false); return; }
+    setChatHistory(prev => {
+      const updated = prev.map(ch =>
+        ch.id === activeChatId
+          ? { ...ch, memory: emptyMemory(), updatedAt: Date.now() }
+          : ch
+      );
+      save('fi_chat_history', updated);
+      return updated;
+    });
+    setShowCaseMemory(false);
+  }, [activeChatId]);
+
   const sendMessage = useCallback(async (text) => {
     if (!text.trim() || loading) return;
     const userMsg = { role: 'user', content: text.trim() };
@@ -1127,11 +1183,21 @@ export default function Home() {
     const sc = load('fi_session_count', 0);
     if (messages.length === 0) {
       save('fi_session_count', sc + 1);
-      // Create new chat in history on first message
+      // Create (or refresh) chat-history entry for this case on first message.
+      // IMPORTANT: preserve any memory/caseType the user already saved.
       if (activeChatId) {
-        const newChat = { id: activeChatId, title: text.trim().substring(0, 50), messages: [], createdAt: Date.now(), updatedAt: Date.now() };
         setChatHistory(prev => {
-          const updated = [newChat, ...prev.filter(ch => ch.id !== activeChatId)];
+          const existing = prev.find(ch => ch.id === activeChatId);
+          const entry = {
+            id: activeChatId,
+            title: text.trim().substring(0, 50),
+            messages: [],
+            memory:   existing?.memory   || activeMemory,
+            caseType: existing?.caseType || activeCaseType,
+            createdAt: existing?.createdAt || Date.now(),
+            updatedAt: Date.now(),
+          };
+          const updated = [entry, ...prev.filter(ch => ch.id !== activeChatId)];
           save('fi_chat_history', updated);
           return updated;
         });
@@ -1142,6 +1208,9 @@ export default function Home() {
     const smartCtx = buildSmartContext();
 
     try {
+      // Compile per-case memory into a compact context string (respects PDPA consent).
+      const caseCtx = buildCaseMemoryContext(activeMemory, { tenantConsent: hasPdpaConsent('tenantData') });
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1149,6 +1218,8 @@ export default function Home() {
           messages: recentMessages,
           profileContext: smartCtx,
           conversationMemory: memory,
+          caseMemory: caseCtx || undefined,
+          caseType: activeCaseType,
         }),
       });
 
@@ -1225,7 +1296,7 @@ export default function Home() {
     }
     setLoading(false);
     inputRef.current?.focus();
-  }, [messages, loading, profile, parseFollowUps, lang, buildSmartContext, trackTopic, activeChatId]);
+  }, [messages, loading, profile, parseFollowUps, lang, buildSmartContext, trackTopic, activeChatId, activeMemory, activeCaseType]);
 
   const handleRetry = useCallback(() => {
     if (!lastFailedMsg || loading) return;
@@ -1554,6 +1625,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen max-w-lg mx-auto relative" style={{ background: '#ffffff' }}>
+      {/* Case-file memory editor (per-chat) */}
+      <CaseMemoryModal
+        open={showCaseMemory}
+        lang={lang}
+        memory={activeMemory}
+        caseType={activeCaseType}
+        onSave={saveCaseMemory}
+        onClose={() => setShowCaseMemory(false)}
+        onClear={clearCaseMemory}
+      />
+
       {/* Sidebar overlay */}
       {showSidebar && (
         <div className="fixed inset-0 z-50 flex" style={{ maxWidth: '32rem', margin: '0 auto' }}>
@@ -1693,6 +1775,28 @@ export default function Home() {
               </svg>
             </button>
           )}
+          {/* Case memory — opens the per-case memory editor */}
+          <button
+            onClick={() => setShowCaseMemory(true)}
+            className="touch-target rounded-xl transition active:scale-95 relative"
+            style={{ color: '#94a3b8' }}
+            title={lang === 'en' ? 'Case memory' : lang === 'bm' ? 'Memori kes' : '案件记忆'}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="9" x2="15" y1="13" y2="13"/>
+              <line x1="9" x2="15" y1="17" y2="17"/>
+            </svg>
+            {(activeChatEntry?.memory && (
+              activeChatEntry.memory.property?.nickname ||
+              activeChatEntry.memory.property?.address ||
+              (activeChatEntry.memory.disputes || []).length > 0 ||
+              activeChatEntry.memory.taxDates?.lastStampDate ||
+              activeChatEntry.memory.tenant?.name
+            )) && (
+              <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: '#10b981' }} />
+            )}
+          </button>
         </div>
       </header>
 

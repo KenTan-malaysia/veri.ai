@@ -173,7 +173,7 @@ WHAT YOU DON'T DO
 
 export async function POST(request) {
   try {
-    const { messages, profileContext, conversationMemory } = await request.json();
+    const { messages, profileContext, conversationMemory, caseMemory, caseType } = await request.json();
 
     if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your-api-key-here') {
       return new Response(
@@ -196,6 +196,13 @@ export async function POST(request) {
     // Conversation memory — compressed summary of older messages
     if (conversationMemory) {
       systemPrompt += `\n\n═══ CONVERSATION MEMORY ═══\nEarlier in this conversation, the user discussed:\n${conversationMemory}\nUse this context to give consistent, connected answers. Don't repeat advice already given. If they're following up on something above, acknowledge it naturally.`;
+    }
+
+    // Case-file memory — user-curated facts for THIS dispute/case thread.
+    // Richer than profile (case-specific) but narrower than full history.
+    if (caseMemory && typeof caseMemory === 'string' && caseMemory.trim()) {
+      const typeLabel = caseType ? ` (${caseType})` : '';
+      systemPrompt += `\n\n═══ CASE FILE${typeLabel} ═══\nThe user has saved the following facts for this case. Treat them as ground truth unless the latest message contradicts them:\n${caseMemory.trim()}\n\nRules:\n- Personalize answers to this case. Do NOT ask for facts the user already recorded here.\n- If tenant details are marked REDACTED, never reference tenant identity — only general advice.\n- If the case type is set, frame answers in that context (e.g. industrial = CN-MY corridor rules, stamp_duty = SDSAS 2026).\n- If a saved fact looks stale or contradicts the user's latest message, flag it politely and ask them to update the case memory.`;
     }
 
     const stream = await client.messages.stream({
