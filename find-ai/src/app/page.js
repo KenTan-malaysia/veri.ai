@@ -37,6 +37,9 @@ const UI = {
     profileSkip: 'Skip for now',
     profileSave: 'Continue',
     profileEdit: 'Edit profile',
+    profileV1Badge: 'v1 · Landlords first',
+    profileV1Hint: "We're starting with landlord tools. Tenant & buyer support coming soon.",
+    comingSoon: 'Coming soon',
     roles: { landlord: 'Landlord', tenant: 'Tenant', buyer: 'Buyer' },
     types: { condo: 'Condo / Apt', landed: 'Landed', shop: 'Commercial' },
     previousChat: 'You have a previous conversation',
@@ -104,6 +107,9 @@ const UI = {
     profileSkip: 'Langkau',
     profileSave: 'Teruskan',
     profileEdit: 'Edit profil',
+    profileV1Badge: 'v1 · Tuan rumah dulu',
+    profileV1Hint: 'Kami mula dengan alat untuk tuan rumah. Sokongan penyewa & pembeli akan datang.',
+    comingSoon: 'Akan datang',
     roles: { landlord: 'Tuan Rumah', tenant: 'Penyewa', buyer: 'Pembeli' },
     types: { condo: 'Kondo / Apt', landed: 'Rumah', shop: 'Komersial' },
     previousChat: 'Anda ada perbualan sebelum ini',
@@ -171,6 +177,9 @@ const UI = {
     profileSkip: '跳过',
     profileSave: '继续',
     profileEdit: '编辑资料',
+    profileV1Badge: 'v1 · 房东优先',
+    profileV1Hint: '我们首先为房东推出工具。租客和买家功能即将推出。',
+    comingSoon: '即将推出',
     roles: { landlord: '房东', tenant: '租客', buyer: '买家' },
     types: { condo: '公寓', landed: '排屋', shop: '商铺' },
     previousChat: '您有之前的对话',
@@ -1112,7 +1121,14 @@ export default function Home() {
   const startChat = () => {
     const sp = load('fi_profile', { role: '', state: '', type: '', rent: '' });
     if (!activeChatId) setActiveChatId(generateChatId());
-    sp.role ? setShowChat(true) : setShowProfile(true);
+    // v1: auto-default role to landlord (we only ship landlord tools for now)
+    if (!sp.role) {
+      const seeded = { ...sp, role: 'landlord' };
+      setProfile(seeded);
+      setShowProfile(true);
+    } else {
+      setShowChat(true);
+    }
   };
 
   if (!ready) return null;
@@ -1121,92 +1137,164 @@ export default function Home() {
   if (!showChat && !showProfile)
     return <Landing onStart={startChat} lang={lang} setLang={setLang} hasSavedChat={hasSavedChat} onContinueChat={loadChat} />;
 
-  // Profile — Clean White onboarding
+  // Profile — Bento onboarding (v1: landlord-first)
   if (showProfile) {
     const t = UI[lang];
     const roleIcons = { landlord: '🏠', tenant: '🔑', buyer: '🛒' };
-    const typeIcons = { condo: '🏢', landed: '🏡', shop: '🏪' };
+    const typeTiles = [
+      { key: 'condo', icon: '🏢', bg: '#dbeafe', ink: '#1e40af' },
+      { key: 'landed', icon: '🏡', bg: '#d1fae5', ink: '#065f46' },
+      { key: 'shop', icon: '🏪', bg: '#fef3c7', ink: '#92400e' },
+    ];
     return (
-      <div className="flex flex-col min-h-screen" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>
-        {/* Top section — clean with branding */}
-        <div className="flex flex-col items-center pt-14 pb-8 px-6">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #0f172a, #334155)', boxShadow: '0 4px 16px rgba(15,23,42,0.15)' }}>
-            <span className="text-white font-bold text-xl">F</span>
+      <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>
+        {/* Header */}
+        <header className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
+          <button onClick={() => { setShowProfile(false); }}
+            className="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg transition active:scale-95"
+            style={{ color: '#64748b' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            {lang === 'en' ? 'Back' : lang === 'bm' ? 'Kembali' : '返回'}
+          </button>
+          <button onClick={() => setLang(lang === 'en' ? 'bm' : lang === 'bm' ? 'zh' : 'en')}
+            className="text-[11px] px-3.5 py-1.5 rounded-full font-semibold transition active:scale-95"
+            style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}>
+            {t.langToggle}
+          </button>
+        </header>
+
+        {/* Bento grid */}
+        <div className="px-4 pb-28 max-w-lg mx-auto space-y-3">
+
+          {/* Hero dark tile — greeting */}
+          <div className="rounded-[24px] p-6 text-white card-up"
+            style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.08)' }}>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3"
+              style={{ background: 'rgba(16,185,129,0.18)', color: '#6ee7b7' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
+              {t.profileV1Badge}
+            </div>
+            <h2 className="text-[26px] font-bold mb-2 leading-[1.1]" style={{ letterSpacing: '-0.03em' }}>{t.profileTitle}</h2>
+            <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{t.profileDesc}</p>
           </div>
-          <h2 className="text-[22px] font-bold mb-1.5" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>{t.profileTitle}</h2>
-          <p className="text-[13px]" style={{ color: '#94a3b8' }}>{t.profileDesc}</p>
+
+          {/* Role — Landlord locked tile */}
+          <div className="card-up delay-1">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2 pl-1" style={{ color: '#94a3b8' }}>{t.profileRole}</div>
+            <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.18)' }}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl" style={{ background: 'rgba(255,255,255,0.12)' }}>
+                {roleIcons.landlord}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[15px] font-bold text-white">{t.roles.landlord}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{t.profileV1Hint}</div>
+              </div>
+            </div>
+            {/* Coming soon roles */}
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {['tenant', 'buyer'].map(r => (
+                <div key={r} className="rounded-2xl p-3 flex items-center gap-2.5 relative overflow-hidden"
+                  style={{ background: 'white', border: '1px dashed #cbd5e1', opacity: 0.6 }}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-base" style={{ background: '#f1f5f9' }}>
+                    {roleIcons[r]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-bold" style={{ color: '#475569' }}>{t.roles[r]}</div>
+                    <div className="text-[9px]" style={{ color: '#94a3b8' }}>{t.comingSoon}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* State — bento select */}
+          <div className="card-up delay-2">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2 pl-1" style={{ color: '#94a3b8' }}>{t.profileState}</div>
+            <div className="rounded-2xl p-3 relative" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.03)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#ede9fe' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b21b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <select value={profile.state} onChange={(e) => setProfile({...profile, state: e.target.value})}
+                  className="flex-1 bg-transparent text-[14px] font-semibold focus:outline-none appearance-none py-2 pr-6 min-h-[40px]"
+                  style={{ color: profile.state ? '#0f172a' : '#94a3b8' }}>
+                  <option value="">{lang === 'en' ? 'Select state...' : lang === 'bm' ? 'Pilih negeri...' : '选择州属...'}</option>
+                  {STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" className="absolute right-4 pointer-events-none"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Property type — pastel bento tiles */}
+          <div className="card-up delay-3">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2 pl-1" style={{ color: '#94a3b8' }}>{t.profileType}</div>
+            <div className="grid grid-cols-3 gap-2.5">
+              {typeTiles.map(tp => {
+                const active = profile.type === tp.key;
+                return (
+                  <button key={tp.key} onClick={() => setProfile({...profile, type: tp.key})}
+                    className="rounded-2xl p-4 transition active:scale-[0.96] flex flex-col items-center gap-2"
+                    style={active
+                      ? { background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }
+                      : { background: tp.bg }
+                    }>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: active ? 'rgba(255,255,255,0.12)' : 'white' }}>{tp.icon}</div>
+                    <span className="text-[11px] font-bold" style={{ color: active ? '#fff' : tp.ink, letterSpacing: '-0.01em' }}>{t.types[tp.key]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Rent — bento input */}
+          <div className="card-up delay-4">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2 pl-1" style={{ color: '#94a3b8' }}>{t.profileRent}</div>
+            <div className="rounded-2xl p-3" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.03)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#d1fae5' }}>
+                  <span className="text-[13px] font-black" style={{ color: '#065f46' }}>RM</span>
+                </div>
+                <input type="number" value={profile.rent} onChange={(e) => setProfile({...profile, rent: e.target.value})}
+                  placeholder="2,500"
+                  className="flex-1 bg-transparent text-[16px] font-bold focus:outline-none py-2 min-h-[40px]"
+                  style={{ color: '#0f172a' }} />
+                <span className="text-[10px] font-semibold pr-1" style={{ color: '#94a3b8' }}>/ {lang === 'en' ? 'month' : lang === 'bm' ? 'bulan' : '月'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer chip */}
+          <div className="rounded-2xl p-3.5 flex items-center gap-2.5 card-up delay-5"
+            style={{ background: '#fef3c7', border: '1px solid #fde68a' }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <path d="M12 9v4"/><path d="M12 17h.01"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[11px] font-bold leading-tight" style={{ color: '#78350f' }}>
+                {lang === 'en' ? 'Support tool only — not legal advice' : lang === 'bm' ? 'Alat sokongan sahaja — bukan nasihat guaman' : '仅为辅助工具 — 非法律意见'}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Form card */}
-        <div className="flex-1 px-6 pt-2 pb-6">
-          <div className="max-w-sm mx-auto space-y-6">
-            {/* Role */}
-            <div>
-              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileRole}</label>
-              <div className="flex gap-2.5">
-                {['landlord','tenant','buyer'].map(r => (
-                  <button key={r} onClick={() => setProfile({...profile, role: r})}
-                    className="flex-1 flex flex-col items-center gap-1.5 py-4 rounded-2xl text-[12px] font-semibold transition-all active:scale-95"
-                    style={profile.role === r
-                      ? { background: '#0f172a', color: '#fff', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }
-                      : { background: '#ffffff', color: '#64748b', border: '1px solid #e2e8f0' }
-                    }>
-                    <span className="text-xl">{roleIcons[r]}</span>
-                    {t.roles[r]}
-                  </button>
-                ))}
-              </div>
+        {/* Sticky bottom actions */}
+        <div className="fixed bottom-0 left-0 right-0 z-20" style={{ background: 'linear-gradient(180deg, rgba(241,244,248,0) 0%, #f1f4f8 40%)' }}>
+          <div className="max-w-lg mx-auto px-4 pt-5 pb-5">
+            <div className="flex gap-2.5">
+              <button onClick={() => { setShowProfile(false); setShowChat(true); }}
+                className="flex-1 py-3.5 rounded-2xl text-[13px] font-semibold transition active:scale-[0.98]"
+                style={{ background: 'white', color: '#64748b', border: '1px solid #e2e8f0' }}>{t.profileSkip}</button>
+              <button onClick={() => { save('fi_profile', { ...profile, role: 'landlord' }); setShowProfile(false); setShowChat(true); }}
+                className="flex-[2] py-3.5 rounded-2xl text-[14px] font-bold text-white transition active:scale-[0.98]"
+                style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }}>{t.profileSave} →</button>
             </div>
-
-            {/* State */}
-            <div>
-              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileState}</label>
-              <select value={profile.state} onChange={(e) => setProfile({...profile, state: e.target.value})}
-                className="w-full py-3.5 px-4 rounded-xl text-[16px] font-medium focus:outline-none transition appearance-none min-h-[48px]"
-                style={{ background: '#ffffff', border: '1px solid #e2e8f0', color: profile.state ? '#0f172a' : '#94a3b8' }}>
-                <option value="">—</option>
-                {STATES.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-
-            {/* Property type */}
-            <div>
-              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileType}</label>
-              <div className="flex gap-2.5">
-                {['condo','landed','shop'].map(tp => (
-                  <button key={tp} onClick={() => setProfile({...profile, type: tp})}
-                    className="flex-1 flex flex-col items-center gap-1.5 py-4 rounded-2xl text-[12px] font-semibold transition-all active:scale-95"
-                    style={profile.type === tp
-                      ? { background: '#0f172a', color: '#fff', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }
-                      : { background: '#ffffff', color: '#64748b', border: '1px solid #e2e8f0' }
-                    }>
-                    <span className="text-xl">{typeIcons[tp]}</span>
-                    {t.types[tp]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Rent */}
-            <div>
-              <label className="text-[11px] font-bold uppercase tracking-widest mb-3 block" style={{ color: '#94a3b8' }}>{t.profileRent}</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] font-bold" style={{ color: '#94a3b8' }}>RM</span>
-                <input type="number" value={profile.rent} onChange={(e) => setProfile({...profile, rent: e.target.value})}
-                  placeholder="2,500" className="w-full py-3.5 pl-12 pr-4 rounded-xl text-[16px] font-medium focus:outline-none transition min-h-[48px]"
-                  style={{ background: '#ffffff', border: '1px solid #e2e8f0', color: '#0f172a' }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-3 mt-8 max-w-sm mx-auto">
-            <button onClick={() => { setShowProfile(false); setShowChat(true); }}
-              className="flex-1 py-4 rounded-xl text-[13px] font-semibold transition active:scale-[0.98]"
-              style={{ color: '#94a3b8' }}>{t.profileSkip}</button>
-            <button onClick={() => { save('fi_profile', profile); setShowProfile(false); setShowChat(true); }}
-              className="flex-[2] py-4 rounded-xl text-[14px] font-bold text-white transition active:scale-[0.98]"
-              style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }}>{t.profileSave}</button>
           </div>
         </div>
       </div>
