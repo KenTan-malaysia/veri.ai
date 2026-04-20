@@ -122,44 +122,219 @@ REAL CASES — STAMP DUTY + STAMPS PORTAL:
   },
 
   eviction: {
-    keywords: ['evict', 'eviction', 'kick out', 'halau', 'usir', 'pengusiran', '驱逐', '赶走', 'change lock', 'changed lock', 'change the lock', 'tukar kunci', '换锁', 'cut water', 'cut electric', 'potong air', 'potong elektrik', 'possession order', 'writ', 'bailiff', 'won\'t leave', 'tak nak keluar', '不搬走', 'refuse to leave', 'trespass', 'lock out', 'locked out'],
-    content: `EVICTION:
-- RESIDENTIAL tenancies from 2026: governed by Residential Tenancy Act 2026 — file at Residential Tenancy Tribunal (RTT), not Magistrate's Court. Timeline 60-90 days. See "RTA 2026" topic.
-- Specific Relief Act 1950, s.7 — ONLY court or RTT can order eviction.
-- Self-help eviction (changing locks, cutting water/electricity, removing belongings) = criminal offense.
-- Commercial/non-residential: traditional court route still applies → Notice to vacate (usually 1 month) → File for possession order → Court hearing → Writ of possession → Bailiff executes.
-- Timeline (commercial court route): 3-6 months typically.
-- Emergency cases (illegal activity, danger): can apply for interim injunction.
+    keywords: [
+      'evict', 'eviction', 'kick out', 'halau', 'usir', 'pengusiran', '驱逐', '赶走',
+      'change lock', 'changed lock', 'change the lock', 'tukar kunci', '换锁',
+      'cut water', 'cut electric', 'potong air', 'potong elektrik',
+      'possession order', 'writ of possession', 'writ', 'bailiff',
+      "won't leave", 'tak nak keluar', '不搬走', 'refuse to leave', 'refuses to leave', 'tenant refuse', 'tenant refuses',
+      'trespass', 'trespasser', 'trespassing', 'pencerobohan', '擅自占地',
+      'lock out', 'locked out',
+      'squatter', 'squatters', 'squatting', 'setinggan', '擅居者', '非法占用',
+      'changed the locks themselves', 'changed locks themselves', 'occupy without rent', 'occupying without paying',
+      'adverse possession', 'pemilikan secara merugikan', '逆权占有',
+      'empty shoplot', 'empty unit', 'vacant shoplot', 'vacant unit', 'occupied without my permission', 'broke in and stayed',
+      'non-tenant', 'not my tenant', 'never rented', 'no tenancy', 'no agreement',
+      'holdover eviction', 'overstayed',
+      'restraining order', 'protection order', 'dva', 'domestic violence act', 'remove from lease', 'remove from agreement', 'remove co-tenant', 'remove cotenant', 'abusive husband', 'abusive wife', 'abusive spouse', 'abusive partner',
+      'industrial eviction', 'factory tenant eviction', 'warehouse eviction', 'commercial eviction',
+      'self-help eviction', 'penyingkiran sendiri', 'forcibly evict'
+    ],
+    content: `EVICTION (deep reference — residential, commercial, squatters, co-tenants):
 
-SELF-HELP EVICTION CONSEQUENCES (if landlord already did it):
-- Criminal: Penal Code s.441 (criminal trespass) — up to 6 months jail OR RM3,000 fine OR both.
-- Criminal: Disconnecting utilities may be "mischief" under Penal Code s.427-430.
-- Civil: Tenant sues under Specific Relief Act s.8(1) for wrongful dispossession. Typical claims:
-  * Full deposit refund (RM3,000-15,000+)
-  * Replacement accommodation costs (hotel/temporary rental)
-  * Value of belongings damaged/lost
-  * Loss of business income if business operated from property
-  * General damages for distress (RM5,000-20,000 typical awards)
-  * Legal costs
-- Total exposure: easily RM20,000-100,000+ depending on property value and tenant's losses.
-- Tenant's belongings: landlord CANNOT dispose of, sell, or move. Doing so = potential theft charge.
-- If already changed locks: (1) IMMEDIATELY restore access, (2) do NOT touch belongings, (3) consult lawyer, (4) consider offering settlement.
-- Proper eviction costs: RM8,000-RM12,000 legal fees, 6-8 months. ALWAYS cheaper than getting sued.
+═══════════════════════════════════════════════════════════════════════════════
+PART 1 — LEGAL FRAMEWORK (who has the right to order removal?)
+═══════════════════════════════════════════════════════════════════════════════
+- Specific Relief Act 1950, s.7 — ONLY a court or statutory tribunal can order eviction. Period.
+- Residential Tenancy Act 2026 (RTA 2026) — covers RESIDENTIAL tenancies only. Dispute → Residential Tenancy Tribunal (RTT). Timeline 60-90 days. Jurisdictional cap generally RM100k per claim (monitor gazette).
+- Distress Act 1951 — lets landlord RECOVER RENT by seizing tenant's goods (Form D/Warrant of Distress). This is NOT an eviction tool — it does NOT end the tenancy. Many landlords confuse the two.
+- Commercial, industrial, agricultural tenancies → traditional court route (Magistrate / Sessions / High Court depending on claim value).
+- Contracts Act 1950, s.71 — quantum meruit / mesne profits claim for continued occupation after tenancy ends.
+- Penal Code s.441 & s.427-430 — criminalise self-help.
 
-REAL CASES — EVICTION:
-• *Er Eng Hong v New Kim Eng*: Court held self-help remedy is extinguished — landlord cannot forcibly evict. Tenant restored to possession + awarded damages.
-• Landlord in PJ changed locks while tenant was at work. Tenant filed police report (criminal trespass s.441) + emergency court injunction. Court restored access within 48 hours. Landlord later ordered to pay RM35,000 damages (deposit + temporary accommodation + distress).
-• Landlord cut electricity to force tenant out. Tenant stayed, documented everything, sued under s.8(1). Court awarded RM22,000 — RM12,000 general damages + RM10,000 for inconvenience over 3 months without power.
-• Landlord followed proper process: 1-month notice → court filing → 4 months later got possession order → bailiff executed. Total cost: RM9,500 legal fees. Clean, no counterclaim.
+═══════════════════════════════════════════════════════════════════════════════
+PART 2 — SELF-HELP IS A CRIME (the #1 landlord mistake)
+═══════════════════════════════════════════════════════════════════════════════
+Prohibited acts (ALL criminal, ALL expose landlord to civil damages):
+- Changing locks while tenant is away ⟶ s.441 trespass. 6 months jail / RM3,000 fine.
+- Cutting water/electricity ⟶ Penal Code s.427 "mischief". Up to 2 years jail + fine.
+- Removing tenant's belongings / disposing of goods ⟶ theft charge + conversion claim.
+- Threatening / physically removing tenant ⟶ criminal intimidation s.506 + assault charges.
+- Hiring "enforcement" / gangsters ⟶ abetment of all of the above + AMLA exposure if paid in cash.
+- Posting "eviction notice" on door then bolt-cutting lock ⟶ still illegal. The notice has no force.
 
-TEMPLATE — NOTICE TO VACATE:
+Civil exposure under Specific Relief Act s.8(1) for wrongful dispossession — tenant typically recovers:
+- Full deposit refund
+- Replacement accommodation (hotel + movers) for months until reinstated
+- Value of damaged / lost belongings (itemised)
+- Loss of business income (commercial tenants often claim RM50k-500k+ here)
+- General damages for distress (RM5,000-RM30,000 typical)
+- Aggravated / exemplary damages if conduct egregious
+- Full legal costs on indemnity basis
+
+If you ALREADY did self-help: (1) restore access TODAY, (2) do NOT touch belongings, (3) written apology NOT recommended without lawyer, (4) offer settlement before tenant files, (5) expect RM20k-100k+ settlement range.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 3 — RESIDENTIAL EVICTION (post-RTA 2026)
+═══════════════════════════════════════════════════════════════════════════════
+Grounds (must be one of these; lease-expiry alone may NOT suffice):
+- Rent arrears ≥ 2 months (most common)
+- Material breach (illegal use, nuisance, unauthorised sub-let, damage)
+- Landlord genuine own-occupation or sale (must prove)
+- Property uninhabitable (flood, fire) — see natural_disaster topic
+
+Procedure:
+1. Written notice specifying breach + cure period (typically 14-30 days).
+2. If no cure: file RTT-01 at Residential Tenancy Tribunal. Fee ~RM100-300.
+3. Mediation first (mandatory). 60-80% settle here.
+4. If no settlement: tribunal hearing (no lawyers required, saves cost).
+5. RTT issues Order of Possession. Tenant 14-30 days to vacate.
+6. Non-compliance → warrant executed by bailiff.
+
+Timeline: 60-120 days total. Cost: RM500-RM3,000 if self-represented.
+Advantages over old Magistrate route: faster, cheaper, specialised adjudicators, clearer rules on deposit, notice, and rent cap.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 4 — COMMERCIAL / INDUSTRIAL EVICTION (unchanged by RTA 2026)
+═══════════════════════════════════════════════════════════════════════════════
+Shops, factories, warehouses, offices, agricultural land → traditional civil courts.
+
+Standard procedure:
+1. Notice to Quit — typically 1 month (monthly tenancy) or per contract. Must comply strictly with notice formalities (served on correct party, correct expiry date, exact property description).
+2. Letter of Demand for arrears + vacant possession.
+3. File Writ of Summons + Statement of Claim → Magistrate (≤RM100k) / Sessions (≤RM1m) / High Court (>RM1m).
+4. Tenant has 14 days to enter Memorandum of Appearance, then 14 days for defence.
+5. Case Management, then trial. Many settle or go to Summary Judgment (O.14) if no defence.
+6. Judgment for possession + arrears + mesne profits.
+7. Writ of Possession → sheriff / bailiff executes.
+
+Timeline: 4-8 months uncontested, 12-24 months if defended. Cost: RM12,000-RM40,000 legal fees.
+
+Strategic tools:
+- Interim injunction if tenant causing ongoing damage / illegal use.
+- Summary Judgment (O.14 RC 2012) if tenant has "no arguable defence".
+- Joinder of guarantors / parent company (common for SME tenants).
+- Recovery of rent via Distress Warrant runs IN PARALLEL — tenancy continues but goods seized.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 5 — DISTRESS WARRANT vs POSSESSION ORDER (commonly confused)
+═══════════════════════════════════════════════════════════════════════════════
+Distress (rent recovery — TENANT STAYS):
+- Governed by Distress Act 1951. Apply to Sessions Court for Warrant of Distress.
+- Bailiff seizes tenant's moveable goods at the property. Goods held 7 days, then auctioned.
+- Cannot seize: tools of trade up to RM150, clothing, bedding, goods of third parties.
+- Does NOT terminate the tenancy — tenant can cure arrears and stay.
+- Useful when tenant has valuable goods (equipment, stock, vehicles).
+
+Possession Order (eviction — TENANT LEAVES):
+- Ends the tenancy. Issued by court or RTT.
+- Tenant must deliver vacant possession by deadline or bailiff enters + removes.
+- Used to recover the physical property.
+
+Most landlords only need Possession Order. Distress is useful when arrears are large and tenant has seizable assets but little cash.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 6 — SQUATTERS, TRESPASSERS, NON-TENANTS (no lease exists)
+═══════════════════════════════════════════════════════════════════════════════
+Scenarios:
+- Stranger moved into empty shoplot, changed locks.
+- Ex-tenant's relative refusing to leave after tenant already moved out.
+- Person claims to have "bought" the property from a fraudster.
+
+Legal position:
+- They are TRESPASSERS. Landlord (registered proprietor) has immediate right to possession.
+- National Land Code 1965 — registered title is INDEFEASIBLE (s.340). Only fraud / forgery / prior claim defeats it.
+- Adverse possession does NOT exist in Peninsular Malaysia or Sabah for Torrens titles. See Sidek v Government of Perak. (Sarawak has limited NCR exceptions — separate issue, see malay_reserved_land topic.)
+- No amount of occupation creates a right. Even 20 years of squatting gives NO title.
+
+What to do (correct sequence):
+1. DO NOT confront alone. Do NOT change locks back yourself — even though they changed them without right, you are still NOT allowed to self-help when physical occupation exists.
+2. Lodge POLICE REPORT for criminal trespass (s.441). Keep the report number.
+3. If squatter claims ownership: demand to see title. Conduct land search at PTG (RM50). Confirm you are registered proprietor.
+4. Apply for Order of Possession — originating summons (expedited procedure) under O.89 Rules of Court 2012 (Summary Procedure Against Persons in Occupation Without Licence or Consent of Owner).
+5. O.89 can give an order in 4-8 weeks — much faster than full writ. Court may order personal service OR service by affixing notice on the property if occupier's identity unknown.
+6. Writ of Possession → bailiff enters, removes persons + belongings (stored or disposed per court direction).
+7. Re-secure property with new locks + alarm + CCTV.
+
+Costs: RM5,000-RM12,000 legal fees for O.89. Timeline: 6-12 weeks typically.
+
+If police refuse to act ("civil matter"): do NOT give up. O.89 does not require police cooperation. Lawyer files directly.
+
+If squatter produces a "purchase contract": that contract is between squatter and the fraudster. Squatter's remedy is against the fraudster, NOT against you. Still a trespasser as against the registered proprietor. (Bahadun Haji Hassan v Ujan Teh & Ors principle.)
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 7 — HOLDOVER TENANT (lease ended, tenant still inside)
+═══════════════════════════════════════════════════════════════════════════════
+- Once tenancy expires and landlord does NOT accept further rent, tenant becomes "tenant at sufferance" — lowest category, just above trespasser.
+- Landlord entitled to mesne profits (market rent rate, not old rent) from day 1 after expiry.
+- DO NOT accept rent payments after expiry if you want to enforce — acceptance may create implied new periodic tenancy. If you must accept, mark payment as "for use and occupation only, without prejudice" in receipt.
+- Procedure: Notice to deliver vacant possession → file for possession → same as commercial route.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 8 — REMOVING AN ABUSIVE CO-TENANT (Domestic Violence Act 1994)
+═══════════════════════════════════════════════════════════════════════════════
+Scenario: both spouses on the lease. Victim obtains Protection Order / Interim Protection Order against abuser.
+
+The Protection Order can:
+- Restrain abuser from entering the shared residence (s.6 DVA 1994, as amended 2017).
+- Grant victim EXCLUSIVE OCCUPATION of the residence.
+- Order abuser to continue paying rent despite being excluded (s.6(2)(a) DVA).
+
+Landlord's position:
+- You are BOUND by a Protection Order granting exclusive occupation to the victim, even if both are on the lease.
+- Do NOT let the abuser back in. If you do, you may be aiding breach of the order.
+- Do NOT unilaterally remove the abuser from the lease — a Protection Order does not automatically end the abuser's contractual liability. Require victim's lawyer to apply for lease variation OR obtain court order for lease re-assignment.
+- Victim should also consider applying to Syariah / Civil court (depending on marriage type) for occupation order under the Law Reform (Marriage & Divorce) Act 1976 s.77 (property division) if divorcing.
+- If abuser refuses to leave despite Order: police enforce DVA s.19 (breach = arrestable offence, 1 year jail / RM2,000 fine).
+
+Practical steps for landlord:
+1. Ask victim for certified copy of the Protection Order.
+2. Ring-fence rent payments: continue receiving, do NOT interact with abuser.
+3. Document every communication.
+4. If abuser attempts entry: call police immediately, cite the Order.
+5. At lease renewal: offer new single-name lease to victim only (with co-signer if affordability is an issue).
+6. Deposit: held jointly until lease ends. Refund per court direction or joint written instruction.
+
+Related: if tenant is the victim and abuser is NOT on lease but has "moved in", that's an unauthorised occupant. Landlord can serve notice to vacate on the unauthorised occupant directly.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 9 — EMERGENCY / INJUNCTIVE RELIEF
+═══════════════════════════════════════════════════════════════════════════════
+When standard timeline is too slow:
+- Ex parte injunction if tenant destroying property / operating illegal business / harbouring fugitives.
+- Anton Piller order (rare) — to preserve evidence before hearing.
+- Mareva injunction — freeze tenant's assets if flight risk.
+- Criminal complaint (drug activity → see criminal_activity topic) may trigger police entry independent of civil process.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 10 — REAL CASES
+═══════════════════════════════════════════════════════════════════════════════
+• Er Eng Hong v New Kim Eng — self-help extinguished; tenant restored + damages.
+• Sidek bin Haji Muhamad v Government of Perak [1982] — adverse possession does not apply to Torrens title land in Peninsular Malaysia. Still leading authority in 2026.
+• PJ landlord changed locks while tenant at work → police report s.441 + emergency injunction → access restored in 48 hours → RM35,000 damages.
+• KL landlord cut electricity for 3 months → RM22,000 damages (general + inconvenience).
+• Ipoh squatter case 2024: shoplot owner used O.89 procedure, possession order in 9 weeks, RM8,400 legal fees, bailiff cleared premises cleanly.
+• KL DVA case 2023: husband on joint lease, Interim Protection Order excluded him, landlord mistakenly let him back for "to collect belongings" — victim sued landlord for negligent breach; settled RM15,000. Lesson: enforce the Order strictly.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 11 — NOTICE TEMPLATES
+═══════════════════════════════════════════════════════════════════════════════
+NOTICE TO VACATE (residential or commercial holdover):
 "Dear [Tenant Name],
 RE: NOTICE TO VACATE — [Property Address]
-You are hereby given [30/60/90] days' notice to vacate the above property by [Date], pursuant to [Clause X / expiry of tenancy].
-Please ensure: (1) All outstanding rent and utility bills are settled. (2) The property is returned per the inventory checklist. (3) Keys are returned on or before the vacate date.
-A joint inspection will be arranged prior to handover.
-[Landlord Name]
-[Date]"`
+You are hereby given [30/60/90] days' notice to vacate the above property by [Date], pursuant to [Clause X / expiry of tenancy / material breach of Clause Y].
+Please ensure: (1) All outstanding rent and utility bills are settled by the vacate date. (2) The property is returned in the condition set out in the inventory checklist. (3) Keys are returned on or before the vacate date.
+A joint inspection will be conducted on [Date/Time]. Failure to deliver vacant possession will result in legal proceedings for possession, mesne profits at market rate, and costs on an indemnity basis.
+Yours faithfully,
+[Landlord Name] | [Date]"
+
+NOTICE TO TRESPASSER (no tenancy exists):
+"TO: The Occupier — [Property Address]
+I, [Landlord Name], NRIC [xxx], am the registered proprietor of the above property (title: [GRN/HSM/PN xxx]).
+You are occupying the property WITHOUT my consent, licence, or any tenancy agreement. You have NO legal right to remain on the premises.
+You are hereby required to vacate the property within SEVEN (7) DAYS of this notice, failing which I shall apply under Order 89 of the Rules of Court 2012 for an Order of Possession, with costs sought against you on an indemnity basis. A police report for criminal trespass under s.441 of the Penal Code has been / will be lodged.
+[Affixed to property on: Date] | [Also served by AR Registered Post where address known]
+[Landlord Name] | NRIC | Date"`
   },
 
   rent_default: {
@@ -241,7 +416,22 @@ REAL CASES — HOLDOVER:
   },
 
   repair: {
-    keywords: ['repair', 'fix', 'baiki', 'pembaikan', '修理', '维修', 'leak', 'bocor', '漏水', 'mold', 'kulat', '霉', 'damage', 'rosak', '损坏', 'habitab', 'uninhabit', 'tak boleh duduk', '不能住', 'act of god', 'force majeure', '不可抗力', 'plumbing', 'paip', 'roof', 'bumbung', 'ceiling', 'siling'],
+    keywords: [
+      'repair', 'fix', 'baiki', 'pembaikan', '修理', '维修',
+      'leak', 'bocor', '漏水',
+      'mold', 'kulat', '霉',
+      'damage', 'rosak', '损坏',
+      'habitab', 'uninhabit', 'tak boleh duduk', '不能住',
+      'plumbing', 'paip', 'roof', 'bumbung', 'ceiling', 'siling',
+      'occupier liability', 'occupiers liability', 'occupier\'s liability', 'liabiliti penghuni',
+      'falling object', 'falling aircon', 'aircond fell', 'aircon fell', 'aircon fall', 'aircond fall', 'ac unit fell', 'objek jatuh', 'benda jatuh', '物品坠落', 'barang jatuh', 'falling ac',
+      'window ledge', 'window sill', '窗台',
+      'injured below', 'injured someone', 'cedera', 'person injured',
+      'who pays injury', 'tenant installed without telling', 'tenant installed aircon',
+      'common area injury', 'ground floor slip', 'stairs fall', 'jatuh tangga',
+      'landlord liability injury', 'landlord sued', 'personal injury tenant',
+      'contractor injured', 'pekerja cedera'
+    ],
     content: `REPAIRS & HABITABILITY:
 - No specific "habitability" statute. Governed by tenancy agreement + implied terms under Contracts Act.
 - General rule: Landlord = structural repairs (roof, walls, plumbing, electrical). Tenant = minor day-to-day (lightbulbs, minor blockages).
@@ -277,7 +467,80 @@ I wish to report: [describe issue — e.g., ceiling leak in master bedroom, mold
 As per [Clause X / landlord's implied obligation], please rectify within FOURTEEN (14) days.
 If no action is taken, I reserve the right to arrange repairs and deduct reasonable cost from rental, with receipts provided.
 [Tenant Name]
-[Date]"`
+[Date]"
+
+═══════════════════════════════════════════════════════════════════════════════
+OCCUPIER'S LIABILITY & FALLING OBJECTS (aircon falls off 18th floor, tiles dropping, etc.)
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK:
+- No standalone Occupiers' Liability Act in Malaysia. Liability flows from common law (Indermaur v Dames line as adopted) and tortious negligence principles.
+- Strata Titles Act 1985 s.72 / Strata Management Act 2013 — owner's duty regarding building structure and common property.
+- Civil Law Act 1956 s.7 (Fatal Accidents) + s.8 (Survival of Actions) — claim routes if injury or death caused.
+- Building & Common Property (Maintenance & Management) Act 2007 (partially superseded by SMA 2013).
+
+WHO PAYS WHEN AN AIRCON FALLS OFF THE 18th-FLOOR WINDOW LEDGE AND INJURES SOMEONE?
+Exposure chain (any or all may be sued — tenant's installation does NOT shield landlord):
+1. THE INSTALLER (tenant's contractor, if ID'd) — primary negligence. Check for CIDB registration / contractor insurance. Often insolvent / uninsurable.
+2. THE TENANT (who installed without landlord consent) — breach of tenancy clause + negligent installation. Check tenant's contents/liability insurance.
+3. THE LANDLORD (registered owner of the unit) — occupier's liability if in CONTROL of structure. Courts use a control test. Tenant in possession usually = tenant in control; BUT the FACADE / EXTERIOR / window ledge is often treated as part of structure → landlord retained duty.
+4. THE MANAGEMENT CORPORATION / JMB (if strata) — duty over common property including external facade under SMA s.59(1)(b). Compressors hanging on facade are often in the grey zone.
+5. THE DEVELOPER (if building still in DLP period) — defective design / no retention clip mandate.
+
+KEY JUDICIAL REASONING:
+- "Res ipsa loquitur" — an aircon does not fall unless someone was negligent. Burden shifts to defendants to prove they were not.
+- Landlord cannot rely solely on "tenant installed it without telling me" — the landlord's inspection duty (every 6-12 months) is standard practice. Failure to inspect = breach.
+- Leases often have clauses requiring tenant consent for fixtures — but this is a CONTRACTUAL right between landlord and tenant; it does NOT bind the injured third party below.
+
+VICTIM'S CLAIM:
+- Personal injury damages (medical, loss of earnings, pain & suffering, future care). Typical range RM50,000-RM2,000,000 depending on severity.
+- If death: Fatal Accidents dependency claim under Civil Law Act s.7 — RM100,000-RM1.5m range.
+- Claimant usually sues everyone ("shotgun pleading") → defendants fight between themselves.
+- Limitation: 6 years general; 3 years for fatal accidents claim.
+
+LANDLORD'S DEFENCE STRATEGY (after the fact):
+1. Joinder / third-party notice against tenant and installer.
+2. Rely on tenant's indemnity clause (most leases have one — enforce it).
+3. Claim against MC if facade negligence arguable.
+4. Notify building insurance (liability rider) immediately — within 48 hours typically.
+5. Preserve evidence: photograph remaining bracket, seek CCTV from MC, interview witnesses.
+6. Engage forensic engineer — often shifts liability to installer.
+
+LANDLORD'S DEFENCE (preventive — do this NOW):
+- Lease clause: "Tenant shall not install, affix, or attach any external fixture without landlord's prior written consent, and shall indemnify landlord against all claims arising from such installations."
+- Annual inspection right + exercise it (document photos).
+- Require contractor certification for any aircon installation + keep copy.
+- Require tenant to obtain Public Liability insurance (RM1m min) with landlord named as additional insured.
+- Confirm MC maintenance schedule for external facade includes bracket inspection.
+
+CLAIM OUTCOME MATRIX (typical apportionment):
+- Tenant 40% + Installer 30% + Landlord 20% + MC 10% = common split for unauthorised installation with facade factor.
+- If landlord inspected + documented: landlord share drops to 0-10%.
+- If installation pre-dates current landlord's ownership: still liable as current occupier but can chase previous owner.
+
+INSURANCE INTERACTION:
+- Landlord's Public Liability rider (usually RM500k-RM2m) covers third-party injury from the property.
+- Tenant's contents/liability insurance usually has RM100k-RM500k PL rider.
+- MC's master policy covers common property only — will deny if damage traced to individual unit install.
+- Subrogation: insurer pays victim then sues the most negligent party for recovery. See insurance topic.
+
+COMMON-AREA SLIPS, STAIRS, LIFT ACCIDENTS:
+- Landlord not generally liable for common-area injuries inside strata — MC's remit.
+- Exception: if landlord's tenant caused it (spilled oil, blocked fire escape with goods) → landlord may face claim via tenant control.
+
+CONTRACTOR INJURIES ON-SITE:
+- If landlord hires a repair contractor and worker falls: Workmen's Compensation Act 1952 / Social Security Act 1969 (SOCSO) routes. Register as employer (even for small jobs) or confirm contractor has SOCSO + insurance BEFORE hire.
+- Employers' Liability under common law if contractor was truly employed (control test).
+
+BEST-PRACTICE ACTION CHECKLIST AFTER AN INJURY INCIDENT:
+☐ Victim welfare first — call 999; do NOT admit liability.
+☐ Report to police + get report number.
+☐ Photograph scene + broken fixture + any brackets/screws.
+☐ Obtain CCTV within 24h (MCs often auto-wipe after 72h).
+☐ Notify landlord's insurer within 48 hours.
+☐ Notify MC (written) if strata.
+☐ Do NOT pay victim directly; coordinate via insurer.
+☐ Engage defence counsel before responding to any demand letter.
+☐ Keep a dedicated incident file for 7 years.`
   },
 
   rent_increase: {
@@ -645,13 +908,32 @@ REAL CASES — JOINT OWNERSHIP:
   },
 
   renovation: {
-    keywords: ['renovate', 'renovation', 'ubahsuai', '装修', 'reinstate', 'reinstatement', 'pemulihan', 'restore original', 'renovation consent', 'renovation deposit', 'contractor', 'kontraktor'],
-    content: `RENOVATION:
+    keywords: [
+      'renovate', 'renovation', 'ubahsuai', '装修',
+      'reinstate', 'reinstatement', 'pemulihan', 'restore original',
+      'renovation consent', 'renovation deposit', 'contractor', 'kontraktor',
+      'heritage', 'warisan', '遗产建筑', 'conservation zone', 'kawasan pemuliharaan', 'zon warisan',
+      'unesco', 'unesco zone', 'unesco world heritage', '联合国教科文组织', 'world heritage',
+      'george town', 'georgetown', 'george-town', 'penang heritage', 'lebuh armenian', 'heritage shophouse',
+      'melaka heritage', 'malacca heritage', 'jonker street', 'jonker walk',
+      'gpohi', 'george town world heritage incorporated', 'perzim', 'perbadanan muzium melaka',
+      'national heritage act', 'akta warisan kebangsaan', 'heritage act 2005', 'act 645',
+      'facade', 'fasad', '立面', 'facade approval', 'aircon facade', 'external fixture approval',
+      'heritage renovation', 'shophouse renovation', '老店屋装修',
+      'category i heritage', 'category ii heritage', 'category 1 heritage', 'category 2 heritage'
+    ],
+    content: `RENOVATION — general + heritage / conservation zones:
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 1 — GENERAL RENOVATION RULES
+═══════════════════════════════════════════════════════════════════════════════
 - Tenant renovations: ALWAYS get written consent from landlord.
 - Reinstatement clause: tenant must restore to original condition unless agreed otherwise.
 - If landlord agrees to keep renovations → put it in the tenancy agreement.
 - Strata: must comply with by-laws. Structural changes need MC approval + engineer cert.
 - Renovation deposit to MC: typically RM500-5,000 (refundable after completion).
+- PBT approval (borang A): required for structural changes, new wet area, change of use. Minor cosmetic = no need.
+- UBBL 1984 compliance for plumbing, electrical, drainage, fire egress.
 
 REAL CASES — RENOVATION:
 • Tenant renovated kitchen (RM12,000) with verbal consent only. At end of lease, landlord demanded reinstatement. Tenant had no written proof of consent. Had to pay RM8,000 to restore. Lesson: always get written consent.
@@ -664,7 +946,86 @@ I wish to carry out: 1. [e.g., Install built-in wardrobe] 2. [e.g., Replace kitc
 Estimated cost: RM[Amount]. Duration: [X] weeks.
 I undertake to: (a) Use licensed contractors. (b) Comply with strata by-laws if applicable. (c) [Reinstate to original / Leave for landlord — delete as appropriate].
 [Tenant Name]
-[Date]"`
+[Date]"
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 2 — HERITAGE / CONSERVATION ZONES (George Town, Melaka, KL Heritage)
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK:
+- National Heritage Act 2005 (Act 645) — Commissioner of Heritage has national authority.
+- Town and Country Planning Act 1976 (Act 172) — Special Area Plan (SAP) for heritage zones.
+- Penang Heritage (Conservation) Enactment + George Town Conservation Guidelines (GTWHI).
+- Melaka: Perbadanan Muzium Melaka (PERZIM) + state Heritage Enactment.
+- UNESCO Operational Guidelines — binding on Malaysia via World Heritage Convention ratification.
+
+UNESCO CORE & BUFFER ZONES (George Town + Melaka):
+- Core Zone: highest protection. Every external change needs permit.
+- Buffer Zone: moderate protection. Setback, height, facade rules.
+- Outside Zone: normal PBT rules apply.
+
+CATEGORY I vs CATEGORY II BUILDINGS (George Town):
+- Cat I (≈2,000 buildings): outstanding universal value. Highest protection. ANY change to facade, roof, signage, colour, height, aircon placement = needs approval. Interior changes also regulated if original features.
+- Cat II (≈2,700 buildings): contributing value. External changes regulated; internal changes typically allowed with notice.
+- Non-listed: standard PBT rules, still subject to zone-wide height/setback.
+
+WHAT REQUIRES APPROVAL (typical heritage shophouse):
+- Facade aircon units, pipes, cables visible externally.
+- Signage (material, size, lighting, bilingual format).
+- Roof tiles (must match traditional material — often specific supplier).
+- Windows and doors (original timber; uPVC usually rejected).
+- Colour scheme (heritage palette).
+- Partition walls exceeding 40% of original clear span.
+- Ceiling height reductions.
+- Adding mezzanine.
+- Ground-floor trading activity change.
+- Even "temporary" scaffolding needs notice.
+
+WHAT IS GENERALLY ALLOWED WITHOUT APPROVAL:
+- Like-for-like repairs to non-original elements.
+- Internal furnishings / paint that doesn't affect original features.
+- Pest treatment.
+- Services upgrade that remains concealed behind existing elements.
+
+APPLICATION PROCESS (George Town example):
+1. Preliminary consultation with GTWHI / MBPP Heritage Unit (free, recommended).
+2. Formal submission: Heritage Impact Assessment (HIA) by a gazetted conservation architect. RM5,000-RM30,000 depending on scope.
+3. Drawings: existing + proposed + materials + conservation methodology.
+4. MBPP Heritage Committee review — monthly meeting.
+5. Outcome: Approve / Approve with Conditions / Reject / Further-Information.
+6. Permit fee: RM100-RM5,000 depending on scale.
+7. Timeline: 2-6 months typical.
+
+APPEAL ROUTE IF REJECTED:
+- Written appeal to State Heritage Committee within 30 days.
+- Escalation to Heritage Appeals Tribunal (federal) under Act 645.
+- Judicial review for procedural unfairness.
+
+COMMON ENFORCEMENT ACTIONS:
+- Stop Work Order (Notis Berhenti Kerja).
+- Compound fine RM500-RM50,000 per offence.
+- Mandatory restoration at owner's cost (often exceeds original works).
+- Criminal prosecution under Act 645 s.114-115: up to RM50,000 / 1 year / both.
+- Severe cases: Ministerial demolition order of unapproved works.
+
+REAL CASES — HERITAGE:
+• George Town 2019: shophouse owner installed 5 facade aircons without permit. MBPP issued compound RM10,000 + mandatory removal. Owner appealed; settled at RM6,000 + relocate compressors to internal air well.
+• Melaka 2022: Jonker Walk cafe replaced original timber shopfront with glazed panel for AC efficiency. PERZIM ordered full restoration (RM32,000) — original pigeonhole grille had to be custom-made.
+• Penang 2024: owner converted heritage shophouse into boutique hotel with mezzanine + rooftop deck. Secured approval through proper HIA process, 8-month timeline, RM18,000 fees. Property value post-conversion rose 140% — illustrates that heritage compliance is an asset, not a liability.
+
+PRACTICAL TIPS FOR OWNERS/TENANTS:
+1. Before signing any heritage shophouse lease, check category + zone via MBPP One-Stop heritage counter.
+2. If you need aircon: consider split-unit with compressors in internal air-well (approved precedent). Visible facade compressors rarely approved.
+3. Use a gazetted conservation architect from day 1 — they know which materials/suppliers pass.
+4. Keep all heritage approvals with your deed — adds resale value.
+5. Insurance: get a Heritage/Restoration rider — sum insured should reflect bespoke reconstruction cost (2-4x modern build cost).
+6. Tax: Adaptive Reuse incentive (see tax topic) often applies to heritage restoration + conversion — can offset 60-70% of renovation cost over 5 years.
+
+APPLY / VERIFY HERE:
+- George Town World Heritage Inc (GTWHI): gtwhi.com.my | +60 4-261 6606
+- MBPP Heritage: mbpp.gov.my → Heritage Conservation
+- PERZIM Melaka: perzim.gov.my
+- National Heritage Dept (JWN): heritage.gov.my
+- Malaysian Institute of Architects (PAM) heritage chapter: pam.org.my`
   },
 
   noise: {
@@ -987,7 +1348,11 @@ VERIFY HERE:
       'mpkl', 'dbkl airbnb', 'mbpp airbnb', 'mbmb airbnb',
       'hybrid rental', 'mixed lease', 'sewa campuran',
       'premises license', 'tourism license', 'lesen pelancongan', 'motac',
-      'sst tourism', 'tourism tax', 'cukai pelancongan'
+      'sst tourism', 'tourism tax', 'cukai pelancongan',
+      'mco airbnb', 'pkp airbnb', 'lockdown airbnb', 'mco str', 'pkp str',
+      'airbnb fine', 'pbt fine airbnb', 'pbt compound airbnb', 'kompaun airbnb', 'airbnb denda', '爱彼迎罚款',
+      'airbnb retrospective', 'appeal airbnb fine', 'rayuan kompaun', 'appeal compound', 'old airbnb fine',
+      'hosting during mco', 'hosted during mco', 'mco 2021 fine', 'airbnb 2021 fine'
     ],
     content: `SHORT-TERM RENTAL & HYBRID MODELS (Airbnb / Digital Nomad / Corporate):
 
@@ -2286,7 +2651,12 @@ APPLY / VERIFY HERE:
       'agent complaint', 'aduan ejen',
       'deposit kept by agent', 'deposit dipegang ejen',
       'unregistered agent', 'ejen tidak berdaftar', '黑中介',
-      'vaeapma', 'akta penilai', 'lppeh'
+      'vaeapma', 'akta penilai', 'lppeh',
+      'agent laptop', 'agent lost ic', 'agent lost passport', 'agent leaked', 'agent data breach', 'agent pdpa', 'pdpa breach', 'pdpa data breach', 'tenant ic leaked', 'tenant passport leaked', 'personal data compromise', 'data pelanggan bocor', '客户资料泄露', 'kebocoran data peribadi',
+      'scam agent', 'scammer agent', 'scammer called', 'fake agent', 'impersonation', 'impersonating agent', 'ejen tipu', 'ejen palsu', 'agent pretending', 'someone pretending to be agent', 'fraudster agent', '冒充中介', '假中介',
+      'phishing', 'fake account', 'fake bank account', 'deposit transferred to scammer', 'scam deposit', 'scam rm8000', 'scam transferred', 'pemalsuan', 'akaun palsu',
+      'agent refused to show', 'refused to show unit', 'agent refused tenant', 'discrimination by agent', 'discrimination tenancy', 'transgender tenant', 'lgbt tenant', 'gender discrimination', 'racial discrimination', 'religious discrimination', 'agama diskriminasi', '歧视租客',
+      'agent negligence', 'agent liability', 'vicarious liability agent'
     ],
     content: `AGENT DISPUTES — MIEA, BOVEAEA, COMMISSION, MISCONDUCT:
 
@@ -2385,9 +2755,107 @@ TEMPLATES TO PREPARE:
 - Letter of Demand to agent / agency (commission / deposit return).
 - Police report narrative (chronology + evidence list).
 
+═══════════════════════════════════════════════════════════════════════════════
+AGENT DATA BREACH — TENANT PII LEAKED / STOLEN LAPTOP (PDPA 2010)
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK:
+- Personal Data Protection Act 2010 (PDPA). Agencies collecting IC/passport/bank statements are "data users" under PDPA.
+- PDPA 2024 amendments (in force): personal DATA BREACH NOTIFICATION now MANDATORY. Notify PDP Commissioner within 72 hours + notify affected individuals without undue delay.
+- Data users must appoint a Data Protection Officer (DPO) once thresholds met.
+- Penalties: up to RM1m / 3 years jail for s.5 breach (processing without consent). Failure to notify breach: up to RM250,000 / 2 years.
+
+LIABILITY WHEN AGENT LOSES TENANT'S IC COPY:
+1. Agent firm is liable as data user — personal responsibility of the directors.
+2. The individual agent (REN/PEA/REA) also personally liable; may face BOVEAEA conduct action.
+3. Landlord MAY be a joint data user if they directed collection — typically shared liability.
+4. Tenant's civil claim: damages for distress + identity theft mitigation costs (subscription to fraud monitoring, cost of replacement IC/passport, lost income dealing with fraud).
+5. Criminal route: if agent sold/disclosed data — Penal Code s.420 cheating, s.424 dishonest concealment.
+
+RESPONSE PROTOCOL (first 72 hours):
+1. Contain — disable remote access to any cloud account, change all agency passwords, wipe stolen device if possible (MDM).
+2. Assess — list all data types lost (IC, passport, bank, signature).
+3. Notify the tenants affected — clear, plain-language, state what, how, when, next steps.
+4. Notify PDP Commissioner via online portal (pdp.gov.my).
+5. Advise tenant to: file police report, subscribe to CTOS / iMoney fraud alerts, replace IC/passport if feasible, flag Lembaga Hasil + banks.
+6. Preserve evidence — any logs / forensic record. Do NOT format the device pre-forensic.
+7. Consider offering compensation proactively — often cheaper than PDP proceedings + civil suit.
+
+COMPENSATION RANGES (post-2024):
+- Low-harm cases (data leaked, no actual misuse yet): RM500-RM3,000 per tenant.
+- Identity theft documented: RM5,000-RM30,000.
+- Class-action / large agency: RM50,000-RM500,000 + enforcement fine.
+
+PREVENTIVE MEASURES (every agency/landlord should have):
+- Encrypted laptop / phone (hardware encryption on).
+- Cloud-only storage, no local copies after deal.
+- Zero-retention policy: delete tenant PII 7 years post-lease end (tax record period).
+- DPO appointed + training logs.
+- Access log on any "IC folder".
+
+═══════════════════════════════════════════════════════════════════════════════
+AGENT IMPERSONATION SCAMS — "SCAMMER PRETENDED TO BE MY AGENT"
+═══════════════════════════════════════════════════════════════════════════════
+COMMON PATTERN:
+1. Scammer scrapes listings + agent contact from property portals.
+2. Spoofs agent's WhatsApp/phone number (number porting or mask app).
+3. Contacts tenant directly, claims "my client needs faster transfer to secure unit".
+4. Sends "client account" details (actually mule account).
+5. Tenant transfers RM3,000-RM20,000. Money gone within minutes.
+6. Scammer vanishes. Real agent unaware.
+
+PARTIES' EXPOSURE:
+- The scammer — criminal prosecution under Penal Code s.420 (cheating) + Communications and Multimedia Act 1998 s.233 (impersonation online). In practice, rarely caught.
+- The tenant — primary victim; bears financial loss unless recovered from bank.
+- The real agent / agency — may face vicarious / apparent-authority claim if they failed to warn or their security practices let the spoof happen. Also possible BOVEAEA complaint for failing to safeguard client communication.
+- The landlord — generally NOT liable unless landlord was complicit or directed cash to private account.
+
+RECOVERY STEPS FOR VICTIM TENANT (first 24 hours):
+1. Call bank fraud hotline IMMEDIATELY — "Recall Fund" request if same-bank, "Rentas/DuitNow trace" if inter-bank. Success rate drops to <10% after 24 hours.
+2. Police report at nearest station — criminal breach + fraud. Get IPR number.
+3. File with National Scam Response Centre (NSRC) 997 — freezes suspect accounts across banks.
+4. Notify real agent + landlord in writing.
+5. If agent had weak security (WhatsApp with no 2FA, unverified contact info) → civil claim against agent for negligence.
+
+PREVENTION (for landlords and agents to publish):
+- ALWAYS request the agency's letterhead with client account. Verify client account on lppeh.gov.my or by calling agency's landline.
+- Cross-check instructions via a DIFFERENT channel (email + phone call).
+- Never transfer to a named individual's personal account.
+- Agencies should publish their client account details on their website + letterhead and explicitly warn against any other account.
+- WhatsApp number changes mid-deal → STOP, verify in person.
+
+VICARIOUS LIABILITY TEST (courts apply):
+- Did the real agency create the appearance of authority? (e.g., brochure listed agent's phone as sole contact).
+- Did they have adequate security? (2FA, client account controls, insurance).
+- Did they fail to warn clients about known scam patterns?
+- Multiple "YES" answers → agency may be on the hook for partial / full refund.
+
+═══════════════════════════════════════════════════════════════════════════════
+DISCRIMINATION BY AGENT (transgender, race, religion, nationality)
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL POSITION:
+- Malaysia has NO comprehensive anti-discrimination statute for private housing. Federal Constitution Art 8 binds State, not private parties.
+- Exceptions where discrimination IS actionable:
+  (a) Persons with Disabilities Act 2008 — reasonable accommodation duty.
+  (b) Housing Development Act 1966 — developer cannot refuse sale arbitrarily to Bumi quota applicants.
+  (c) Agency code of ethics (MEAS) — agent must not "bring the profession into disrepute". BOVEAEA has disciplined agents for public discriminatory statements.
+- BOVEAEA complaint route remains open for any conduct that breaches professional standards even if no specific statute.
+
+CLAIM PATHWAYS:
+- BOVEAEA disciplinary complaint — agent may be fined / suspended. Slower but on-record.
+- Social media / public complaint + boycott — strongest real-world pressure.
+- Civil suit for breach of implied contract if there was a services agreement + dignitary tort (limited).
+- Human rights body (SUHAKAM) — advisory, no enforcement power, but publishes reports that shape practice.
+- If refusal is by developer or housing cooperative (as distinct from agent), PDRM / MOHA may be relevant depending on the context.
+
+PRACTICAL REALITY (2026): discrimination cases rarely win monetary damages in MY courts, BUT:
+- Public exposure via BOVEAEA + media routinely costs the agency the mandate + reputation.
+- Ken's platform positioning (Find.ai = "pre-verified" trust marketplace) can reduce reliance on discriminatory filtering by surfacing compliance-based trust signals.
+
 APPLY / VERIFY HERE:
 - BOVEAEA: lppeh.gov.my | 03-2287 9888 | verify REA/PEA/REN tag
 - MIEA: miea.com.my | 03-7960 2120 (ethics referral)
+- PDP Commissioner: pdp.gov.my (data breach notification)
+- National Scam Response Centre (NSRC): 997
 - Tribunal Tuntutan Pengguna Malaysia (TTPM): ttpm.gov.my (claims ≤RM5K, no lawyer needed)
 - Criminal lawyer directory: malaysianbar.org.my`
   },
@@ -2686,7 +3154,14 @@ APPLY / VERIFY HERE:
       'interim injunction', 'injunksi interim', '临时禁制令',
       'division of assets', 'pembahagian harta', '财产分割',
       'islamic divorce', 'talak', 'fasakh', 'khuluk',
-      'syariah divorce', 'perceraian syariah'
+      'syariah divorce', 'perceraian syariah',
+      'domestic violence', 'keganasan rumah tangga', '家庭暴力', 'dva', 'dva 1994', 'domestic violence act', 'akta keganasan rumah tangga',
+      'protection order', 'perintah perlindungan', 'interim protection order', 'ipo', 'perintah perlindungan interim',
+      'restraining order', 'perintah menahan', '限制令', 'perintah sekatan',
+      'abusive husband', 'abusive wife', 'abusive spouse', 'abusive partner', 'suami ganas', 'isteri ganas', '施暴丈夫',
+      'remove from lease', 'remove spouse from lease', 'keluarkan dari kontrak', 'buang nama suami dari kontrak',
+      'co-tenant removal', 'remove cotenant', 'remove co-tenant',
+      'exclusive occupation', 'penghunian eksklusif', 'occupation order'
     ],
     content: `DIVORCE + TENANTED / MATRIMONIAL PROPERTY:
 
@@ -2770,11 +3245,96 @@ TEMPLATES TO PREPARE:
 - Consent Order draft (property division + rental income allocation).
 - Application for Interim Injunction (LRA s.103 for urgent matters).
 
+═══════════════════════════════════════════════════════════════════════════════
+DOMESTIC VIOLENCE ACT 1994 — REMOVING ABUSIVE CO-TENANT FROM LEASE
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK:
+- Domestic Violence Act 1994 (Act 521), as amended by Act A1538 (2017) — significantly broadened Protection Orders.
+- Applies to spouses (civil and Islamic marriages), former spouses, de facto partners, children, incapacitated adults within household.
+- Enforceable by civil police force — breach of Protection Order is an ARRESTABLE offence.
+
+ORDERS AVAILABLE:
+1. INTERIM PROTECTION ORDER (IPO) — s.4. Issued pending criminal investigation. Effective up to end of investigation / for prescribed period.
+2. PROTECTION ORDER (PO) — s.5. Post-investigation, issued by Magistrate. Up to 12 months, renewable.
+3. RESIDENTIAL ORDER — can grant VICTIM EXCLUSIVE OCCUPATION of the shared residence, even if victim is NOT the owner or sole lessee.
+4. EXCLUSION ORDER — prohibits abuser from entering the residence OR approaching within a specified distance.
+5. ANCILLARY ORDERS — abuser to continue paying rent / utilities; compensation for injury; counselling; no contact.
+
+LANDLORD'S LEGAL POSITION WHEN A PROTECTION ORDER EXISTS:
+- You are bound to respect the Order even though you are not a party to the DVA proceedings.
+- If Order gives victim exclusive occupation: do NOT readmit the abuser, do NOT hand over spare keys, do NOT allow "quick collection of belongings" without a police escort coordinated by victim / victim's lawyer.
+- Do NOT unilaterally amend the lease (e.g., delete abuser's name) — a Protection Order does NOT automatically terminate the abuser's contractual tenancy; only a court lease-variation order or joint consent can do that.
+- Continue to receive rent per existing lease. If Order requires abuser to keep paying but abuser defaults: pursue normal rent-default process against abuser while respecting victim's occupation rights.
+
+STEP-BY-STEP FOR LANDLORD WHEN TENANT SERVES YOU WITH A PROTECTION ORDER:
+1. Obtain certified copy of the Order. Read it carefully. Note: duration, exclusion distance, who pays rent, any landlord-specific direction.
+2. Copy it into your tenant file + cloud backup.
+3. Brief any on-site staff (guardhouse, condo security) — they must enforce the exclusion.
+4. Change locks ONLY if (a) victim requests and (b) Order permits — typically yes. Tenant pays for change (unless Order says otherwise).
+5. Document every contact the abuser attempts (date/time/channel). This evidence supports future enforcement.
+6. If abuser tries to enter: do NOT physically intervene. Call 999. The Order makes it an arrestable offence.
+7. At the end of the Order's term: consult with victim's lawyer before allowing any change. Extensions are common.
+
+LEASE VARIATION — "REMOVE HUSBAND FROM LEASE" — HOW IT ACTUALLY HAPPENS:
+Option A — MUTUAL CONSENT (rare post-abuse):
+- Abuser signs formal deed of release from the lease.
+- Victim executes new sole-name lease.
+- Stamp the new lease.
+- Re-calibrate deposit arrangement.
+
+Option B — COURT-ORDERED LEASE ASSIGNMENT (more common):
+- Victim's lawyer applies to High Court (Family Division) under LRA 1976 s.76 + s.103 for ancillary relief in divorce proceedings, OR under DVA framework for an ancillary property direction.
+- Order directs landlord to execute new lease in victim's sole name.
+- Landlord obliged to comply — refusal = contempt.
+- Abuser's guarantor obligations may survive — carefully check.
+
+Option C — LEASE ENDS, NEW LEASE STARTS:
+- Allow existing lease to expire naturally.
+- Refuse to renew with abuser. Offer new lease to victim only.
+- Document reason (written Protection Order).
+- Often cleanest route in short-term tenancies.
+
+Option D — VICTIM RELOCATES:
+- DVA framework provides emergency shelter referrals (WAO, All Women's Action Society, DV Unit JKM).
+- Landlord may, with victim's instruction, terminate early without penalty on humanitarian grounds (many lease clauses now allow this).
+
+LANDLORD RISK IF YOU MISHANDLE:
+- Admitting abuser back = facilitating breach of Order = possible abetment charge s.511 Penal Code.
+- Civil claim from victim for negligent breach of duty of care (recent cases suggest RM10,000-RM50,000 damages + costs).
+- Reputational harm + agent's professional complaint.
+
+WHEN ABUSER IS NOT ON THE LEASE (but moved in):
+- Abuser is an UNAUTHORISED OCCUPANT with respect to the landlord.
+- Landlord can serve direct notice to vacate on the abuser as unauthorised occupant (Specific Relief Act + tenancy terms).
+- Victim's Protection Order gives further grounds.
+- Coordinate with victim + police to minimise risk during removal.
+
+DEPOSIT HANDLING IN DVA CASES:
+- Default: held per original lease terms (both names).
+- Recommended: hold in neutral stakeholder until clarity — both parties' written consent OR court order for release.
+- At tenancy end, refund ONLY per joint instruction OR court order OR after proper notice/lodgment if one party can't be found.
+
+STEP BY STEP FOR VICTIM (info for tenants who ask the chatbot):
+1. Ensure safety first — leave if unsafe. Shelter via WAO (03-7956 3488) or local Women's Aid.
+2. Lodge police report — ask for DVA Unit officer.
+3. Visit Hospital Emergency for medical report (crucial evidence).
+4. Apply for IPO at Magistrate's Court (DVA counter) within 7 days of report.
+5. Engage legal aid (Yayasan Chow Kit, AWAM, WAO legal clinic) if can't afford lawyer.
+6. Serve Order on landlord + keep acknowledgement.
+7. Consider divorce + property division proceedings in parallel (LRA / Syariah).
+
+SUPPORT CONTACTS (for Find.ai to surface in chatbot):
+- WAO: 03-7956 3488 / Talian Kasih 15999
+- Talian Nur (JKM DVA): 15999
+- AWAM: 03-7877 0224
+- Polis DV Unit: nearest police station + ask for PPM
+
 APPLY / VERIFY HERE:
 - Civil High Court Family Division: kehakiman.gov.my
 - Syariah Court (state-specific): jksm.gov.my
 - Legal Aid Department (can't afford lawyer): jbg.gov.my
-- Bar Council Family Law Practitioners: malaysianbar.org.my`
+- Bar Council Family Law Practitioners: malaysianbar.org.my
+- Department of Social Welfare (JKM): jkm.gov.my`
   },
 
   abandonment: {
@@ -2912,7 +3472,13 @@ APPLY / VERIFY HERE:
       'uninhabitable', 'tidak boleh diduduki', '不能居住',
       'rent abatement', 'pengurangan sewa', '减租',
       'rent suspension', 'penggantungan sewa',
-      'contracts act s.57', 'frustration of contract'
+      'contracts act s.57', 'frustration of contract',
+      'earthquake', 'gempa', 'gempa bumi', '地震', 'aftershock', 'gegaran susulan',
+      'ranau earthquake', 'ranau', '2015 earthquake', 'sabah earthquake', 'kundasang earthquake',
+      'tsunami', 'tsunami 2004', 'gelombang tsunami',
+      'haze', 'jerebu', '烟雾', 'open burning season',
+      'volcanic', 'lahar',
+      'act of god not covered', 'insurance denied flood', 'insurance denied earthquake'
     ],
     content: `NATURAL DISASTER (flood, storm, landslide) — tenancy, rent, insurance:
 
@@ -3033,6 +3599,408 @@ APPLY / VERIFY HERE:
 - OFS (insurance dispute): ofs.org.my`
   },
 
+  malay_reserved_land: {
+    keywords: [
+      'malay reserved land', 'tanah rizab melayu', 'malay reservation', 'tanah simpanan melayu', 'mrl', '马来保留地', '马来保留区', '保留地', 'trm',
+      'bumiputera lot', 'bumi lot', 'bumiputra lot', 'bumiputera quota', 'lot bumiputera', 'kuota bumiputera', '土著保留单位',
+      'native customary rights', 'ncr', 'ncr land', 'tanah adat', 'tanah ncr', 'kampung native', 'native title', '原住民土地',
+      'sabah native', 'sarawak native', 'sabah native land', 'sarawak ncr', 'orang asli land', 'aboriginal land', 'tanah orang asli',
+      'malay reserve', 'reserved to malays', 'non-malay cannot buy', 'non-malay buyer', 'non malay buyer', 'chinese buyer reserved',
+      'nlc s.17', 'nlc section 17', 'malay reservation enactment', 'sabah land ordinance', 'sarawak land code',
+      'void transaction', 'transaksi batal', '交易无效',
+      'state authority consent', 'kebenaran pihak berkuasa negeri', 'epcn', 'bumi discount', 'bumi release'
+    ],
+    content: `MALAY RESERVED LAND, NATIVE CUSTOMARY RIGHTS, BUMI LOTS — ownership and transfer restrictions:
+
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK
+═══════════════════════════════════════════════════════════════════════════════
+- National Land Code 1965 s.17 — Malay Reserved Land (MRL / Tanah Rizab Melayu) is land reserved exclusively for Malays in Peninsular Malaysia.
+- State-specific MRL Enactments override where they differ (e.g. Perak, Selangor, Johor each have their own Malay Reservations Enactment). Always check the enactment of the state where the land sits.
+- Sabah: Native Title land under Sabah Land Ordinance (Cap. 68) — restricted to Natives of Sabah (as defined in s.65).
+- Sarawak: Native Customary Rights (NCR) land under Sarawak Land Code (Cap. 81) — restricted to Natives of Sarawak. Native Area Land (NAL) and Interior Area Land (IAL) also restricted.
+- Aboriginal Peoples Act 1954 — Orang Asli reserves.
+- Bumiputera Quota Lots under Housing Development Act 1966 — state-specific % of units reserved at developer level (30-50% depending on state). Distinct from MRL — these are not "reserved land" per se; they are sales quota units.
+
+═══════════════════════════════════════════════════════════════════════════════
+WHO CAN OWN / RENT MRL?
+═══════════════════════════════════════════════════════════════════════════════
+- Own (register on title): only Malays (definition per relevant state enactment — ethnicity + religion Islam in most states).
+- Lease / rent out: Malay owner CAN rent MRL to non-Malay tenants for residential or commercial use. Tenancy is permitted; transfer of title is not. Foreign tenant on MRL factory/shop is legal provided all other permits (business licence, work visa) are in order.
+- Transfer to non-Malay: VOID. Any sale, assignment, gift, or charge to a non-Malay is null ab initio under NLC s.17(1). Money paid is recoverable but the title NEVER passes.
+- Chargee/bank: cannot be non-Malay. Most banks route MRL financing through a special MRL-compliant lender or Bumi subsidiary.
+
+═══════════════════════════════════════════════════════════════════════════════
+KEY COMPLIANCE TRAPS FOR CN-MY CORRIDOR (and what Ken's platform must screen)
+═══════════════════════════════════════════════════════════════════════════════
+1. "Nominee arrangements" (Malay straw owner holding for Chinese buyer) are CRIMINALLY VOID. Sham trusts set aside; both parties at risk. No valid RPGT / stamp duty escape.
+2. Selling MRL to a Chinese investor: agent commits an offence under some state enactments (e.g. Selangor MRE s.7 — up to 3 months jail).
+3. Foreign investor wants to build a factory on MRL: only possible via long lease (≤99 years) from Malay owner, with State Authority consent, AND provided land use is already industrial. Foreign tenant does NOT need NLC s.433B consent for mere tenancy — only for TITLE acquisition.
+4. Bumi quota lot being resold from a Malay seller to a non-Malay buyer: needs Bumi Release (pelepasan Bumi) from the State Authority. Process: file with state Land Office → committee review → fee (often 0.5%-2% of market value). Timeline 3-12 months.
+5. Agent's duty: always check title (geran) BEFORE listing. If title says "Rizab Melayu" / "Malay Reservation" → flag immediately. Proceeding with a sale to non-Malay = negligence + regulatory breach (BOVAEA).
+6. Sabah native title: requires buyer to be Native as defined. Company ownership must be >50% Native + managed by Natives. Nominee structures void. State Minister may grant exemption in rare cases.
+7. Sarawak NCR: NCR cannot be sold to non-Natives. Can be leased for a term with State Authority consent in some cases. NCR status is being actively litigated — always verify current gazette.
+
+═══════════════════════════════════════════════════════════════════════════════
+HOW TO VERIFY LAND STATUS (before any transaction)
+═══════════════════════════════════════════════════════════════════════════════
+1. Conduct an official Land Search at the Pejabat Tanah dan Galian (PTG). RM50-RM100 per title.
+2. Look for these endorsements on the geran:
+   - "Rizab Melayu" / "Malay Reservation" / "Tanah Rizab" — MRL.
+   - "Tanah Adat" / "Native Title" — Sabah native / Sarawak NCR.
+   - "Syarat Nyata" (express condition) restricting transfer — must comply.
+   - "Sekatan Kepentingan" (restriction in interest) — consent required.
+3. Cross-check with state Land Office gazette for any reservation notification.
+4. Obtain written confirmation from PTG before exchanging contracts.
+
+═══════════════════════════════════════════════════════════════════════════════
+WHAT IF YOU ALREADY BOUGHT MRL AS A NON-MALAY?
+═══════════════════════════════════════════════════════════════════════════════
+- Transfer is void. Title does NOT pass. The Malay vendor remains owner on paper.
+- Buyer's remedy: recovery of purchase price under law of restitution + damages against vendor and agent.
+- Limitation: 6 years from discovery of voidness (Limitation Act 1953).
+- Report the agent to BOVAEA — if licensed, disciplinary action + restitution order possible.
+- Criminal prosecution of the vendor / agent may proceed independently.
+- SDSAS stamp duty already paid: claim refund from IRB via Form PDS 4 (adjudication reversal) within statutory timeline.
+
+═══════════════════════════════════════════════════════════════════════════════
+PRACTICAL DECISION TABLE (Ken's platform should display this)
+═══════════════════════════════════════════════════════════════════════════════
++-----------------------------+--------------------+------------------+-----------------+
+| Land type                   | Malay/Native buys  | Non-Malay buys   | Foreign buys    |
++-----------------------------+--------------------+------------------+-----------------+
+| Normal freehold title       | OK                 | OK + stamp duty  | OK + consent    |
+| Malay Reserved Land         | OK                 | VOID             | VOID            |
+| Bumi quota lot (new dev)    | OK                 | Needs release    | Very difficult  |
+| Bumi quota lot (sub-sale)   | OK                 | Needs release    | Very difficult  |
+| Sabah Native Title          | Native OK          | VOID unless exempt| VOID           |
+| Sarawak NCR                 | Native OK          | VOID mostly       | VOID           |
+| Orang Asli reserve          | OA OK              | VOID              | VOID            |
++-----------------------------+--------------------+------------------+-----------------+
+
+═══════════════════════════════════════════════════════════════════════════════
+AGENT / LAWYER CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+☐ Conduct PTG title search BEFORE listing.
+☐ Flag any Malay / Bumi / Native endorsement in the listing description.
+☐ Verify buyer's eligibility (ethnicity for MRL; Native status for Sabah/Sarawak).
+☐ For Bumi quota resale: advise buyer on release process + timeline + fee.
+☐ Keep written records — BOVAEA audit trail.
+☐ Never accept "we'll use a nominee" arrangement — refuse the mandate.
+
+APPLY / VERIFY HERE:
+- PTG (state land office) | Search PTG of state of land
+- BOVAEA / LPPEH (agent conduct): lppeh.gov.my
+- State Land Office (e-Tanah portal for some states)
+- National Legal Aid: jkm.gov.my`
+  },
+
+  money_laundering_amla: {
+    keywords: [
+      'amla', 'amlatfpua', 'anti money laundering', 'pencegahan pengubahan wang haram', '反洗钱',
+      'cash deposit', 'large cash', 'rm50,000 cash', 'rm50000 cash', 'cash rent', 'prepaid rent', 'bulk rent', 'lump sum rent', '大额现金', 'prepay rent', 'rent prepay',
+      'suspicious transaction', 'laporan urus niaga mencurigakan', 'str', 'ctr', 'cash threshold report',
+      'bank flagged', 'bank compliance', 'aml flag', 'kyc check', 'edd', 'enhanced due diligence',
+      'bnm aml', 'bnm guideline', 'bnm compliance',
+      'source of funds', 'sumber dana', 'sumber kewangan', 'source of wealth', '资金来源',
+      'tax evasion', 'elakkan cukai', '逃税',
+      'pep', 'politically exposed person',
+      'bank asked questions', 'bank wants source', 'bank freeze', 'account frozen'
+    ],
+    content: `ANTI-MONEY-LAUNDERING (AMLA) — large cash rent, suspicious deposits, bank queries:
+
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK
+═══════════════════════════════════════════════════════════════════════════════
+- Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001 (AMLATFPUAA 2001, commonly "AMLA").
+- BNM AML/CFT Guidelines (updated periodically).
+- Reporting Institutions (RIs): banks, property developers, real estate agents (from 2014), lawyers, accountants — all bound to run KYC, EDD, and file Suspicious Transaction Reports (STR).
+- Financial Intelligence Unit (FIU) at BNM receives STRs.
+- Cash Threshold Reports (CTR): banks report all cash transactions ≥ RM50,000 (single or structured) as standard practice.
+- Income Tax Act 1967 s.112-114 — interaction with tax evasion offences.
+
+═══════════════════════════════════════════════════════════════════════════════
+WHEN YOUR BANK CALLS (the "compliance is asking" scenario)
+═══════════════════════════════════════════════════════════════════════════════
+Scenario: tenant transfers RM50,000+ cash into your account as "prepaid rent". Bank's compliance department asks for explanation.
+
+What you MUST do:
+1. Respond promptly. Silence = account freeze.
+2. Provide documented source: signed tenancy agreement showing rent schedule, invoice for prepayment, tenant's ID + company details.
+3. If tenant is foreign / PEP / high-risk jurisdiction: attach tenant's own source-of-funds declaration.
+4. Attach your last 2 years tax Form BE / C showing rental income declared.
+5. Do NOT offer to "return the money" as a shortcut — that itself can be flagged as layering.
+
+What bank may do:
+- File STR to FIU regardless of your explanation (you won't be told).
+- Place temporary hold on the specific tranche while verifying.
+- Apply EDD — ongoing enhanced monitoring of your account for 12 months.
+- If unsatisfied: file own STR + may offboard you (close account).
+
+═══════════════════════════════════════════════════════════════════════════════
+YOUR OWN REPORTING OBLIGATIONS AS A LANDLORD / AGENT
+═══════════════════════════════════════════════════════════════════════════════
+- If you are a real estate AGENT (REA/PEA/REN), you are a Reporting Institution under AMLA First Schedule. You MUST:
+  * Conduct CDD / KYC on both parties to a sale or lease ≥ RM50,000 (practically every transaction).
+  * Keep records for 6 years post-transaction.
+  * File STR within a reasonable period when you suspect funds are proceeds of unlawful activity.
+  * Designate a Compliance Officer (CO) if firm has ≥ 5 agents.
+- If you are a PRIVATE LANDLORD (not in the business): not directly an RI, but you can still be prosecuted as a "party to" a money-laundering offence if you knowingly / with wilful blindness accept tainted funds.
+- Penalty (s.4 AMLA): up to RM5 million fine OR 5 years jail OR both, per charge. Property forfeiture likely.
+
+═══════════════════════════════════════════════════════════════════════════════
+RED FLAGS TO WATCH
+═══════════════════════════════════════════════════════════════════════════════
+- Rent paid in cash or third-party cheque, tenant reluctant to show source.
+- Tenant offers to "pay 2 years upfront" for a small property, no tax reason.
+- Payments structured just below RM50,000 (e.g. 3 x RM16,000 transfers).
+- Payer name differs from lease name and not explained.
+- Foreign tenant from high-risk jurisdiction (FATF grey/black list) with no business rationale.
+- Source named as "personal savings" by a young foreign tenant with no declared income.
+- Company tenant's owner is a PEP (or family of one).
+
+═══════════════════════════════════════════════════════════════════════════════
+BEST-PRACTICE LANDLORD WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+1. Insist on rent via bank transfer from TENANT's own named account. Add a clause to lease.
+2. For prepayment > RM20,000: request written source-of-funds explanation + tax residency declaration.
+3. For foreign tenant: verify USCC (CN) / equivalent + run through Find.ai CN-MY Trust Link.
+4. Keep tenant's ID, lease, receipts for 7 years (AMLA 6 + ITA buffer).
+5. If anything smells off: walk away BEFORE money moves. The moment funds are in your account, options narrow.
+6. If already received questionable funds: consult lawyer immediately; consider voluntary STR via your bank.
+7. Declare ALL rental income in Form BE / C regardless of source. Evasion + AMLA = compound exposure.
+
+═══════════════════════════════════════════════════════════════════════════════
+INTERACTION WITH STAMP DUTY / TAX
+═══════════════════════════════════════════════════════════════════════════════
+- Large prepaid rent: calculate stamp duty on FULL lease value. Underpayment + AMLA flag = regulator will find both.
+- IRB LHDN and FIU share data for enforcement. What one sees, the other often sees.
+- Undeclared cash rent + AMLA STR = almost always triggers IRB audit.
+
+APPLY / VERIFY HERE:
+- BNM FIU: bnm.gov.my → AML/CFT Guidelines
+- Companies Commission (SSM) beneficial ownership search: ssm.com.my (for tenant company background)
+- MySPRM integrity check: sprm.gov.my (for PEP risk)`
+  },
+
+  cross_border_enforcement: {
+    keywords: [
+      'cross-border', 'cross border', 'lintas sempadan', '跨境',
+      'sue china court', 'sue in china', 'china court', 'mahkamah china', '中国法院',
+      'foreign judgment', 'reciprocal enforcement', 'reciprocal judgment', 'rejaa', 'rejaa 1958', 'reciprocal enforcement of judgments act',
+      'my-cn enforcement', 'cn-my enforcement', 'china malaysia lawsuit',
+      'state immunity', 'soe immunity', 'sovereign immunity', 'state-owned', 'state owned enterprise', 'kekebalan negara', '主权豁免', 'soe tenant',
+      'arbitration clause', 'klausa timbang tara', 'aiac', 'ciac', 'cietac', 'international arbitration', 'icc arbitration', 'singapore arbitration',
+      'new york convention', 'convention foreign arbitral',
+      'customs seized', 'customs seizure', 'kastam rampas', 'customs raid', 'smuggling tenant', 'tenant smuggling', 'seludup', '走私', 'kastam warehouse', 'customs warehouse',
+      'landlord liable customs', 'tenant smuggled'
+    ],
+    content: `CROSS-BORDER ENFORCEMENT — suing foreign tenants, SOE immunity, customs exposure:
+
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK
+═══════════════════════════════════════════════════════════════════════════════
+- Reciprocal Enforcement of Judgments Act 1958 (REJAA 1958) — recognises money judgments from "listed countries" in the First Schedule. Listed: UK, Singapore, HK, NZ, Brunei, Sri Lanka, India (with reservations). CHINA is NOT listed. There is NO bilateral treaty between Malaysia and the PRC for civil judgment enforcement.
+- Arbitration Act 2005 — Malaysia is a signatory to the New York Convention 1958. Foreign arbitral awards enforceable in Malaysia with limited grounds to refuse.
+- AIAC (formerly KLRCA) — regional arbitration hub in KL.
+- Mutual Legal Assistance in Criminal Matters Act 2002 — for criminal enforcement only, not civil.
+- State Immunity — common law doctrine as applied by Malaysian courts: absolute/restrictive depending on case. Increasingly restrictive (commercial acts = no immunity).
+- Customs Act 1967 — landlord-related provisions on seizure, forfeiture, and knowledge.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 1 — CAN I SUE A CHINESE TENANT IN CHINA OR MALAYSIA?
+═══════════════════════════════════════════════════════════════════════════════
+Answer: SUE IN MALAYSIA (where the tenancy + breach occurred). Do NOT sue in China.
+
+Why:
+- Cause of action arose in Malaysia, Malaysian property, Malaysian law applies → Malaysia is proper forum (forum conveniens).
+- If you obtain judgment in Malaysia and want to enforce it against assets IN CHINA: you'll face significant hurdle because MY-CN has no reciprocal enforcement treaty.
+- Chinese courts will enforce foreign judgments only on de facto reciprocity basis. In recent years (post-2015 Supreme People's Court reforms) this has opened slightly, but success is case-by-case and slow.
+- Practical enforcement options against CN assets of judgment debtor:
+  (a) Hire Chinese counsel to re-litigate in PRC court using your MY judgment as evidence. 2-4 years timeline.
+  (b) If tenant has assets in HK, Singapore, UK → much easier via REJAA-listed countries.
+  (c) If tenant has operating subsidiaries in MY → enforce against MY assets first.
+
+Why NOT to sue in China:
+- No jurisdiction unless contract specifies, or defendant is domiciled in China.
+- Chinese courts generally decline cases about foreign immovable property.
+- You'll lose on forum non conveniens even if you try.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 2 — ARBITRATION IS THE BETTER CLAUSE FOR CN-MY CORRIDOR
+═══════════════════════════════════════════════════════════════════════════════
+If you have an AIAC / CIETAC / SIAC / ICC arbitration clause, awards are ENFORCEABLE in both MY and PRC under the New York Convention.
+
+Suggested clause for industrial lease with Chinese tenant:
+"Any dispute arising out of or in connection with this Lease shall be finally settled by arbitration administered by the Asian International Arbitration Centre (AIAC) in accordance with its Arbitration Rules then in force. Seat: Kuala Lumpur. Language: English. Number of arbitrators: 1 (disputes ≤ RM5m) or 3. Governing law: Malaysia."
+
+Why AIAC over CIETAC for MY landlord:
+- Neutral venue (neither party's home forum).
+- Enforceable in China under NY Convention.
+- English-language proceedings.
+- Cost: RM30k-RM150k for small-mid claims; faster than court (6-12 months).
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 3 — STATE-OWNED ENTERPRISE (SOE) IMMUNITY CLAIMS
+═══════════════════════════════════════════════════════════════════════════════
+Scenario: Chinese SOE tenant defaults, claims "as a state entity, you cannot sue us."
+
+Legal reality:
+- Malaysian courts follow the RESTRICTIVE immunity doctrine (see Village Holdings, Commonwealth of Australia v Midford Malaysia, and more recent lines). Commercial acts = no immunity.
+- Renting a factory / paying rent = commercial (jure gestionis) act. Immunity does NOT apply.
+- Exception: acts performed in exercise of sovereign authority (jure imperii) — e.g. diplomatic/consular premises, military use.
+- SOE is a corporate entity distinct from the State — the SOE's state ownership alone does not confer immunity; only the nature of the act matters.
+- Service of process on SOE: through their registered office in Malaysia (if any subsidiary) or via Hague Service Convention route through Chinese Central Authority.
+
+Practical rebuttal: "Your tenancy is a commercial activity. Under restrictive immunity doctrine as applied by Malaysian courts (Village Holdings and subsequent authority), commercial acts do not attract state immunity. Our claim will proceed."
+
+If SOE persists: make this a preliminary issue (striking out application). Typical resolution 3-6 months.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 4 — CUSTOMS SEIZURE AT TENANT'S WAREHOUSE
+═══════════════════════════════════════════════════════════════════════════════
+Scenario: Customs raids your warehouse tenant, finds smuggled / undeclared goods. Customs asks you for records.
+
+Legal exposure:
+- Customs Act 1967 ss.119-138 — officers may enter, search, seize.
+- s.135 — offences: up to 20 years jail / fines up to 20x value of goods.
+- s.127 — PROPERTY USED for smuggling can be FORFEITED — this includes the warehouse building if landlord "knew or ought to have known".
+- Landlord's shield: documented due diligence (lease checks, business verification, no "look the other way" behaviour). Find.ai's CN-MY Trust Link screening is defensible evidence.
+
+Your response protocol:
+1. Cooperate fully. Obstructing customs = offence s.133.
+2. Provide lease, KYC records, payment history, correspondence.
+3. Do NOT destroy / move any records — obstruction = separate offence.
+4. Engage Customs-experienced lawyer within 24 hours.
+5. Preserve rent status: tenant's default trigger is separate, but don't self-help while raid is live.
+6. If forfeiture proceedings start: file Notice of Claim under s.128 within 1 month. Prove innocent landlord status.
+
+Innocent landlord defence requirements:
+- No knowledge of illegal activity.
+- No constructive knowledge (ought to have known).
+- Took reasonable steps to prevent — KYC, site visits, clear use clause in lease.
+- Cooperated with authorities immediately on discovery.
+
+Rent recovery: continue to accrue contractually. If tenant is arrested / company wound up, prove in liquidation. If goods seized but rent paid — you may still enforce against other tenant assets.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART 5 — PRACTICAL LEASE PROTECTIONS FOR CN-MY INDUSTRIAL LANDLORDS
+═══════════════════════════════════════════════════════════════════════════════
+Must-have clauses:
+1. Use clause — narrow, specific (e.g. "manufacture of plastic injection components only"). Any other use = breach.
+2. Compliance clause — tenant warrants compliance with Customs, DOE, DOSH, DOSH, Immigration, MIDA.
+3. Right of entry — landlord may inspect on 48-hour notice.
+4. AIAC arbitration clause (see Part 2).
+5. Parent company guarantee — require PRC parent to guarantee MY subsidiary's rent.
+6. Security deposit — 3-6 months rent + bank guarantee (irrevocable, MY bank, tenor = lease + 6 months).
+7. Indemnity — tenant indemnifies landlord for all customs / regulatory / environmental liability.
+8. Immediate termination for regulatory breach.
+
+APPLY / VERIFY HERE:
+- AIAC: aiac.world
+- Malaysian Bar International Committee (practitioner referrals): malaysianbar.org.my
+- Royal Malaysian Customs (RMCD): customs.gov.my`
+  },
+
+  coliving: {
+    keywords: [
+      'coliving', 'co-living', 'co living', 'rumah kongsi', '共居',
+      'rooming house', 'rumah sewa', 'boarding house', 'lodging house', '寄宿',
+      'multiple tenants one unit', 'six tenants one unit', '6 tenants one unit', 'individual contracts per tenant', 'per room rental', 'room rental license',
+      'pbt raid', 'pbt said illegal', 'pbt compound', 'pbt fine', 'kompaun pbt', 'pbt license rental', 'dewan bandaraya', 'majlis perbandaran',
+      'zoning residential commercial', 'residential zoning', 'zoning breach', 'penggunaan tanah',
+      'ubbl room size', 'overcrowding limit', 'habitable room',
+      'colive operator', 'coliv', 'coliving operator', 'coliving startup'
+    ],
+    content: `COLIVING / ROOMING HOUSES — legality, PBT compliance, zoning risk:
+
+═══════════════════════════════════════════════════════════════════════════════
+LEGAL FRAMEWORK
+═══════════════════════════════════════════════════════════════════════════════
+- Local Government Act 1976 s.107 — PBT (pihak berkuasa tempatan) licensing power.
+- Street, Drainage and Building Act 1974 (Act 133) — enforcement of building use.
+- Uniform Building By-Laws 1984 (UBBL) — minimum room sizes, habitable room count, ventilation, toilet ratios.
+- Strata Management Act 2013 — house rules may restrict room-rental within strata.
+- Residential Tenancy Act 2026 — each individual room rental IS a residential tenancy if per-room contract. You now have multiple regulated tenancies in one unit.
+- National Land Code 1965 — land use condition on title ("untuk kediaman sahaja" = residential only).
+
+═══════════════════════════════════════════════════════════════════════════════
+IS COLIVING LEGAL IN MALAYSIA?
+═══════════════════════════════════════════════════════════════════════════════
+Short answer: it depends on HOW you structure it and WHICH PBT.
+
+LEGAL configurations:
+(a) Single lease to one tenant who subleases with your written consent — permitted if lease allows, but you must ensure tenant does not breach PBT rules or strata by-laws.
+(b) Coliving building (purpose-built, zoned commercial/mixed) with proper rooming house licence — legal in some PBTs (DBKL now issues specific "rumah sewa" licences; PJ, Subang Jaya, Shah Alam have their own frameworks).
+(c) Individual room rentals in a residential condo/terrace with ≤ n occupants per unit (where n = UBBL / house rule limit) — grey, generally tolerated if below threshold.
+
+LIKELY ILLEGAL configurations:
+(a) 6+ unrelated adults in a normal double-storey terrace, individual per-room contracts, no PBT rooming-house licence, residential zoning only → this is what triggered Ken's scenario. PBT can compound RM500-RM2,000 per occupant OR per day of breach.
+(b) Strata unit with >4 individual tenants where by-law caps at 4 persons → strata MC can fine under s.34 SMA 2013 + seek injunction.
+(c) Any unit in a "Kawasan Perumahan" zoned strictly for single-family use.
+
+═══════════════════════════════════════════════════════════════════════════════
+PBT COMPOUNDS — WHAT TO DO WHEN YOU'RE RAIDED
+═══════════════════════════════════════════════════════════════════════════════
+1. Demand written notice + officer's ID + citation of by-law breached.
+2. DO NOT pay on the spot. Compound notice gives 14-30 days.
+3. Options:
+   (a) Pay compound → quick + closes matter + on record.
+   (b) Negotiate down to ~50-70% within compliance period.
+   (c) Contest: file objection under Local Government Act s.103 OR appeal to Minister / Court.
+4. Root-cause fix: reduce occupancy to legal threshold OR apply for change-of-use / rooming house licence.
+
+═══════════════════════════════════════════════════════════════════════════════
+ROOMING HOUSE LICENCE APPLICATION (DBKL example)
+═══════════════════════════════════════════════════════════════════════════════
+Eligibility: residential property meeting UBBL standards + compliant with strata by-laws if strata + zoned appropriately.
+
+Submissions:
+- Form for Rumah Tumpangan licence (or jurisdiction equivalent).
+- Floor plan showing room sizes (min 6.5 m² per single room, 11 m² double).
+- Fire safety certificate (smoke detectors, extinguishers, two exits for 10+ occupants).
+- Building inspection (DBKL officer visits).
+- JMB/MC consent letter if strata.
+- Health Dept clearance (food prep shared kitchen).
+
+Fee: RM100-RM500 annual. Renewal yearly.
+
+Timeline: 3-6 months.
+
+═══════════════════════════════════════════════════════════════════════════════
+STRATA COLIVING — EXTRA LAYER
+═══════════════════════════════════════════════════════════════════════════════
+- Check house rules: many MCs cap at 4 adult occupants or require MC consent for per-room rental.
+- MC can invoke SMA s.70(1) for by-law breach; fines + injunction possible.
+- Retrospective by-laws (post-2015 amendment) can apply — see strata topic.
+- Condo access cards: limit per unit; MC may refuse to issue additional cards for 6+ tenants → practical control mechanism.
+
+═══════════════════════════════════════════════════════════════════════════════
+TAX + CONTRACTUAL IMPLICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+- Each individual room lease is separately stampable under SDSAS 2026 if per-room contract.
+- Income per tenant flows to landlord; must declare FULL gross rental in Form BE.
+- Deductible expenses: prorated per UBBL area used.
+- Insurance: normal HO policy may EXCLUDE multi-occupancy / rooming house use → get specific rider.
+
+═══════════════════════════════════════════════════════════════════════════════
+PRACTICAL CHECKLIST BEFORE YOU START COLIVING
+═══════════════════════════════════════════════════════════════════════════════
+☐ Check PBT zoning (PBT planning counter, RM30).
+☐ Check strata by-laws if applicable.
+☐ Apply for rooming house licence (or equivalent) proactively.
+☐ Install fire safety per UBBL.
+☐ Issue per-room RTA-compliant lease with individual deposits.
+☐ Keep occupant register (names + IC + date-in/out).
+☐ Get specific landlord insurance for multi-occupancy.
+☐ Consider CCTV in common areas (note PDPA signage).
+
+APPLY / VERIFY HERE:
+- DBKL rooming licence: dbkl.gov.my
+- Other PBTs: check respective council website
+- UBBL text: agc.gov.my (Attorney General's Chambers)`
+  },
+
   general: {
     keywords: [],
     content: `GENERAL REFERENCE:
@@ -3078,8 +4046,9 @@ export function matchTopics(userMessage, conversationHistory = []) {
     matched.push('general');
   }
 
-  // Cap at 3 topics to keep prompt focused
-  return matched.slice(0, 3);
+  // Cap at 5 topics to keep prompt focused while reducing slice-off of correct topics
+  // (v2.5 raise from 3 → 5 after stress-test revealed later-defined topics getting truncated)
+  return matched.slice(0, 5);
 }
 
 // Build the relevant knowledge section for injection into system prompt
