@@ -163,7 +163,7 @@ A joint inspection will be arranged prior to handover.
   },
 
   rent_default: {
-    keywords: ['tak bayar', 'not pay', 'arrears', 'tunggakan', '欠租', '拖欠', 'default', 'late rent', 'lewat sewa', 'demand letter', 'surat tuntutan', '催款', 'LOD', 'distress', 'Form 198'],
+    keywords: ['tak bayar', 'not pay', 'arrears', 'tunggakan', '欠租', '拖欠', 'default', 'late rent', 'lewat sewa', 'demand letter', 'surat tuntutan', '催款', 'LOD', 'distress', 'Form 198', 'mco', 'mco rent', 'mco reduced', 'mco-reduced', 'covid rent', 'covid-19 rent', 'moratorium rent', 'rental relief covid', 'covid reduced rent', 'sewa covid', 'pengurangan sewa covid', '疫情减租', '冠病减租', 'pkp rent', 'pkp sewa', 'temporary measures act', 'akta langkah-langkah sementara', 'covid-19 act 2020', 'pandemic rent reduction', 'reset rent', 'resume full rent', 'rent reduction expired'],
     content: `RENT DEFAULT & RECOVERY:
 - Step 1: Written reminder (WhatsApp + formal letter).
 - Step 2: Letter of Demand (LOD) — give 14 days.
@@ -193,7 +193,32 @@ You are hereby notified that as of [Date], you have outstanding rental arrears o
 Pursuant to Clause [X] of the Tenancy Agreement dated [Date], you are required to settle all outstanding amounts within FOURTEEN (14) days.
 Failure to do so will result in legal proceedings including an application under the Distress Act 1951 for seizure of your movable property.
 [Landlord Name]
-[Date]"`
+[Date]"
+
+COVID / MCO LEGACY RENT REDUCTION — HOW TO RESET:
+- Temporary Measures for Reducing the Impact of COVID-19 Act 2020 (Act 829) EXPIRED on 31 December 2022. Its moratorium protections are no longer in force.
+- No statutory obligation to continue reduced rent in 2023+. Any continued reduction is purely contractual (what you agreed in writing in 2020-2021).
+- If tenant is still paying MCO-reduced rent in 2026:
+  1. Find the original variation letter / email / WhatsApp agreeing to the reduction. Check its expiry or trigger-based terms (e.g., "until MCO lifted" / "until PKP ends").
+  2. If the agreed trigger has passed (MCO officially ended 2 May 2022 per MKN): send written notice that full contractual rent resumes from [next rent cycle] — give 30 days' notice for transition fairness.
+  3. If no written agreement — tenant has been paying reduced rent by "silent consent" / "estoppel by convention": you can still reset but give reasonable notice (60-90 days recommended) to rebut estoppel argument.
+  4. If tenant refuses to resume full rent: standard rent default procedure applies (LOD → Distress Act → possession). Send LOD for the SHORTFALL (difference between original tenancy rent and what they paid).
+
+COMMERCIAL TENANCIES WITH "COVID CLAUSE" HANGOVER:
+- Many commercial tenancies 2020-2022 had formal rent reduction MOUs with specific end dates.
+- If MOU ended but tenant keeps paying reduced rent: follow notice-to-resume steps above.
+- If MOU was silent on end date: 30-day written notice + reference to business conditions normalization.
+- If tenant's business is still struggling: consider stepped increase (50% gap in month 1, 75% in month 2, 100% in month 3) rather than cliff-edge — legally not required but reduces default risk.
+
+RENT VARIATION RECORD-KEEPING:
+- Every rent change (reduction, increase, step-up) should be documented in a side letter or addendum and kept for 7 years (LHDN requirement for rental income records).
+- If original tenancy was stamped, addendums usually do NOT need re-stamping unless fundamentally changing the lease (new term, new parties).
+
+COMMON TRAPS:
+- Assuming MCO protections still apply — they expired end of 2022. Tenant cannot invoke Act 829 today.
+- Cliff-edge rent reset without notice → tenant disputes and pays only reduced amount → you have to litigate for shortfall (time + cost).
+- Losing the original 2020 variation letter → weak evidence. Always keep digital copies.
+- Not tracking the accumulated shortfall → hard to compute years later.`
   },
 
   holdover: {
@@ -272,7 +297,7 @@ REAL CASES — RENT INCREASE:
   },
 
   subletting: {
-    keywords: ['sublet', 'subletting', 'sewa semula', '转租', 'airbnb', 'short-term', 'jangka pendek', '短租', 'room rent', 'sewa bilik', 'unauthorized occupant', 'penghuni tanpa izin', 'subletter', 'third party'],
+    keywords: ['sublet', 'subletting', 'sewa semula', '转租', 'airbnb', 'short-term', 'jangka pendek', '短租', 'room rent', 'sewa bilik', 'unauthorized occupant', 'penghuni tanpa izin', 'subletter', 'third party', 'boyfriend moved in', 'girlfriend moved in', 'partner moved in', 'moved in without', 'extra occupant', 'penghuni tambahan', 'extra people in unit', 'more people', 'overcrowding', 'lebih penghuni', 'unauthorized guest', 'tetamu tanpa izin', 'permanent guest', 'guest stays', 'stayed too long', 'co-habiting', 'cohabit'],
     content: `SUBLETTING & SHORT-TERM RENTAL (AIRBNB):
 - ALWAYS requires written landlord consent — without consent = breach + grounds for termination.
 - Landlord can include NO SUBLETTING clause. If breached → terminate + forfeit deposit.
@@ -381,7 +406,7 @@ REAL CASES — FOREIGN BUYERS:
   },
 
   strata: {
-    keywords: ['strata', 'condo', 'apartment', 'pangsapuri', '公寓', 'MC', 'JMB', 'management', 'pengurusan', '管理', 'by-law', 'undang-undang kecil', 'sinking fund', 'maintenance', 'penyelenggaraan', '维护费', 'AGM', 'SMT', 'common property', 'harta bersama', 'special levy', 'levi khas', 'en-bloc', 'en bloc', 'enbloc', 'urban renewal', 'URA', 'pembangunan semula', '旧楼重建', 'collective sale', 'jualan kolektif', 'demolish', 'redevelopment', 'bangunan lama'],
+    keywords: ['strata', 'condo', 'apartment', 'pangsapuri', '公寓', 'MC', 'JMB', 'management', 'pengurusan', '管理', 'by-law', 'undang-undang kecil', 'sinking fund', 'maintenance', 'penyelenggaraan', '维护费', 'AGM', 'SMT', 'common property', 'harta bersama', 'special levy', 'levi khas', 'en-bloc', 'en bloc', 'enbloc', 'urban renewal', 'URA', 'pembangunan semula', '旧楼重建', 'collective sale', 'jualan kolektif', 'demolish', 'redevelopment', 'bangunan lama', 'new by-law', 'undang-undang kecil baru', '新公寓条例', 'retrospective by-law', 'mid-lease by-law', 'by-law change', 'change by-law', 'sma s.32', 'sta s.70', 'mc ban rental', 'mc banned rental', 'mc larang sewa', '管委会禁止出租', 'smt appeal', 'smt tribunal', 'tribunal strata'],
     content: `STRATA (STA 1985 + SMA 2013):
 - MC manages common property after strata titles issued. JMB manages before MC formed.
 - Sinking fund: mandatory 10% of maintenance fee.
@@ -468,7 +493,46 @@ REAL CASES — URBAN RENEWAL / EN-BLOC:
 • KL condo (built 1992, 34 years old): developer offered collective sale. 82% owners consented. 18% minority objected citing undervaluation. Independent valuer confirmed original offer was 15% below market. Developer raised offer by 18% to close deal — all owners accepted. Total added compensation: RM2.8M across the building.
 • PJ flats (built 1988): declared dangerous by PBT. 54% consent triggered redevelopment under URA. Minority owner (elderly, opposed sale on sentimental grounds) filed at High Court — rejected, URA overrides individual preference. Sale proceeded.
 • Landlord in aging Penang condo had signed 2-year tenancy. CSA triggered year 1. Tenant received 6-month notice + 3-month rent relocation allowance from developer. Landlord returned full deposit + 4 months prepaid rent. Clean exit, no tribunal case.
-• Owner held out in 79% consent building (just below 80% threshold). Developer restructured compensation, 2 more owners flipped → hit 81%. Original holdout then had to sell at the SAME price he'd rejected. Cost him ~RM80K in legal fees and stress.`
+• Owner held out in 79% consent building (just below 80% threshold). Developer restructured compensation, 2 more owners flipped → hit 81%. Original holdout then had to sell at the SAME price he'd rejected. Cost him ~RM80K in legal fees and stress.
+
+RETROSPECTIVE BY-LAW APPLICATION (new by-law mid-lease):
+- Legal framework: Strata Titles Act 1985 s.70 + Strata Management Act 2013 s.32 — MC/JMB may make additional by-laws by Special Resolution (>75% of aggregate share units voting in favour at a duly convened General Meeting).
+- Statutory by-laws (Third Schedule of SMA 2013) — some are baseline and cannot be contracted out of (e.g., no hazard to common property, no nuisance, parking).
+- Additional by-laws — typically registered with the Commissioner of Buildings (COB) within 30 days of passage. Take effect from registration date going forward.
+
+CAN A NEW BY-LAW OVERRIDE MY EXISTING TENANCY?
+- General rule: by-laws are STATUTORY and bind all parcels/owners/occupants from registration. A private tenancy cannot contract out of the by-law.
+- BUT: by-laws do not generally have RETROSPECTIVE effect on contracts completed before registration. A lease signed before a new by-law remains valid for its term; however, the OWNER is bound to ensure the USE going forward complies with the by-law.
+- Conflict example: MC passes a new by-law banning tenancies <1 year. Your 18-month tenancy signed before registration remains valid. You do not need to evict your tenant mid-lease. But if at expiry the tenant wants to renew month-to-month, the new by-law applies — renewal would breach it.
+- Conflict example: MC passes "no short-term rental" by-law. Your existing 6-month corporate lease continues, but future short-term bookings are banned.
+- If by-law is draconian (e.g., bans ALL subletting outright), owners can challenge at Strata Management Tribunal (SMT) within 6 months of registration on grounds of unreasonableness, ultra vires, or breach of SMA.
+
+OWNER REMEDIES WHEN A NEW BY-LAW HURTS YOUR TENANCY:
+1. Attend the SGM where the by-law is proposed. Vote against. Have your written objection minuted.
+2. If by-law passes over your objection: file at SMT within 6 months to set aside under SMA s.142 (invalid by-law).
+3. Grounds: (i) ultra vires — exceeds MC's power under SMA; (ii) discriminatory — targets specific owner group; (iii) unreasonable — disproportionate restriction; (iv) procedural defect — SGM notice too short, quorum not met, voting irregular.
+4. Interim remedy: if imminent harm (lease renewal pending), apply for interim stay at SMT.
+5. Civil suit: for damages if by-law caused financial loss (rarely pursued; SMT is usually adequate).
+
+TENANT REMEDIES (existing tenant affected by new by-law):
+- Tenancy continues for its term. Tenant is not directly subject to challenge at SMT (only OWNERS have standing).
+- Tenant's remedy is against LANDLORD for breach of quiet enjoyment if MC enforcement interferes.
+- Landlord then faces downstream liability → so landlord has incentive to contest the by-law at SMT.
+
+TYPICAL RESTRICTIVE BY-LAWS (2024-2026 trend):
+- "No short-term rental" (Airbnb ban) — common in KL, Penang, JB.
+- "Minimum 6/12-month tenancy" — to push Airbnb out.
+- "Maximum 4 occupants per 2-bedroom unit" — anti-co-living.
+- "Tenant must be vetted + approved by MC" — very restrictive, challengeable.
+- "No foreign tenant without MC clearance" — discrimination, likely invalid.
+- "Renovation levy for any work" — often upheld if amount reasonable.
+
+STRATEGIC ADVICE FOR LANDLORDS:
+- Monitor MC circulars + AGM notices — don't miss the vote.
+- Attend SGM or appoint proxy (proxy form must be in writing, lodged 48hr before).
+- Keep digital copy of ALL by-laws current + historical versions for your building.
+- Include in future tenancies: "Tenant subject to prevailing strata by-laws as may be amended from time to time" — passes the risk to tenant.
+- Include exit clause: "If strata by-law change makes tenancy unlawful, either party may terminate with 30 days' notice + pro-rated refund."`
   },
 
   subsale: {
@@ -530,13 +594,36 @@ REAL CASES — DEVELOPER:
   },
 
   joint_ownership: {
-    keywords: ['joint', 'bersama', '共同', 'co-owner', 'pemilik bersama', 'survivorship', 'partition', 'pembahagian', 'inheritance', 'warisan', '继承', 'death', 'kematian', '死亡', 'will', 'wasiat', '遗嘱', 'tenancy in common'],
+    keywords: ['joint owner', 'joint tenancy', 'bersama', '共同', 'co-owner', 'co-owns', 'coowner', 'pemilik bersama', 'survivorship', 'partition', 'pembahagian', 'inheritance', 'warisan', '继承', 'death', 'kematian', '死亡', 'will', 'wasiat', '遗嘱', 'tenancy in common', 'co-owner refuse', 'pemilik bersama enggan', 'sister refuse sign', 'brother refuse sign', 'one owner block', 'pemilik halang', 'single owner let', 'seorang pemilik sewa', 'partition action', 'tindakan pembahagian', 'nlc 145', 'nlc 140', 'deadlock co-owner', 'pemilik tidak setuju', 'sister own', 'brother own', 'sibling own', 'my share', 'share ownership', '50% share', 'half owner', 'jointly own'],
     content: `JOINT OWNERSHIP:
 - Joint tenancy: equal shares, right of survivorship. Owner dies → share auto-goes to surviving owner(s).
 - Tenancy in common: distinct shares (can be unequal). Owner dies → share per will / Distribution Act 1958.
 - Check type: stated on title deed. "As joint tenants" = JT. Stated shares (e.g. "1/2") = TIC.
 - Distribution Act 1958 (non-Muslim intestate): spouse 1/3, children 2/3. No children: spouse 1/2, parents 1/2. Muslims: Faraid.
 - Partition: NLC s.145. If can't agree → court order for partition or sale.
+
+CAN ONE CO-OWNER LET THE PROPERTY ALONE?
+- Short answer: technically yes, but with limits. A co-owner may deal only with their own share, not the whole property.
+- Practical rule: a tenancy of the WHOLE property signed by only one co-owner is voidable at the instance of the non-signing co-owner. If the other co-owner objects, they can (i) apply for injunction, (ii) demand their share of rent, (iii) revoke consent and eject the tenant.
+- Safer path: all co-owners sign as joint landlords. If one refuses, the dissenting co-owner's legal remedy is partition, not veto — so you have leverage.
+- Rental income from joint property: divided per ownership share. Filing with LHDN: each co-owner declares their share in Form BE/B.
+- If one co-owner collects all rent: must account to the others. Refusal = breach of fiduciary duty (co-owner relationship) → civil claim + interest.
+
+DEADLOCK + PARTITION ACTION (NLC s.140 / s.145):
+- NLC s.140: Partition by consent — all owners agree, Land Office processes.
+- NLC s.145 (Peninsular Malaysia): Partition by court order — any co-owner can apply when consent cannot be obtained.
+- Sabah: Land Ordinance (Cap.68) Part V has parallel partition provisions.
+- Sarawak: Land Code (Cap.81) also provides partition procedure.
+- Court options at partition: (a) physical partition (rare, rarely practical for strata/single building); (b) sale by public auction, proceeds divided per share; (c) one owner buys out the other(s) at a valuer's fair price.
+- Timeline: 8-18 months from filing to final order. Legal cost RM15K-60K depending on dispute.
+- Court considers: ownership shares, contributions (who paid down payment, who maintained it), occupancy history, availability of alternative accommodation, hardship.
+
+PROPERTY INHERITANCE & DEATH:
+- NO inheritance tax (abolished 1991).
+- Transfer from deceased: RM10 stamp duty on MOT (not full rates).
+- RPGT: transfer to beneficiary = NOT a disposal (no RPGT). When beneficiary later sells: acquisition date = date of death, price = market value at death.
+- Small estates (≤RM5M per amended 2022 Act): Land Administrator (faster, cheaper).
+- Large estates (>RM5M) or mostly movable: High Court for Grant of Probate/LA.
 
 CO-OWNER REPAIR & COST DISPUTES:
 - ALL co-owners share repair costs proportionate to ownership.
@@ -757,7 +844,8 @@ VERIFY HERE:
       'passport', 'pasport', '护照',
       'visa expiry', 'visa tamat', '签证过期', 'overstay', 'lebih tempoh',
       'foreign worker', 'pekerja asing', '外劳', 'bangladeshi', 'indonesian worker', 'nepali', 'myanmar',
-      'employment pass', 'professional visit pass', 'student pass', 'dependant pass'
+      'employment pass', 'professional visit pass', 'student pass', 'dependant pass',
+      'unhcr', 'refugee', 'pelarian', '难民', 'rohingya', 'asylum', 'asylum seeker', 'pencari suaka', 'stateless', 'tanpa kewarganegaraan', 'refugee card', 'kad unhcr'
     ],
     content: `FOREIGN TENANT COMPLIANCE — IMMIGRATION ACT 1959/63:
 
@@ -847,6 +935,37 @@ I, [Full Name], Passport [Country] No. [XXXX], hereby declare:
 Signed: _____ Date: _____
 Landlord Counter-signed: _____ Date: _____"
 
+UNHCR REFUGEES / ASYLUM-SEEKERS (Rohingya, Myanmar, Somali, etc.):
+- Malaysia is NOT a signatory to the 1951 Refugee Convention or its 1967 Protocol. Technically, under Immigration Act 1959/63, UNHCR cardholders are still "undocumented" in domestic law.
+- BUT: MOHA (Ministry of Home Affairs) operates a de facto tolerance policy. Since the 2019 MOHA circular and subsequent enforcement guidelines, UNHCR cardholders are generally not subject to immediate detention for mere presence, though they lack formal work permits.
+- As of 2026: no law SPECIFICALLY authorises landlords to rent to UNHCR cardholders, and no law specifically prohibits it. Grey zone.
+
+PRACTICAL LANDLORD POSITION (renting to UNHCR cardholders):
+- You can rent, but you accept elevated risk. Prosecution under s.55E (harbouring) is theoretically possible though rare for UNHCR cardholders.
+- DO: verify UNHCR card (look for holographic seal, QR code, expiry date; call UNHCR MY office: +603-2118 4800 to verify if in doubt).
+- DO: document the tenant's status clearly (photocopy of card + declaration that "tenant holds UNHCR cardholder status pending formal resettlement").
+- DO: include a termination clause tied to any change in Malaysian government policy.
+- DO: charge market rent, take deposit, issue stamped tenancy agreement — same as any other tenant.
+- DON'T: cluster-house (5+ cardholders in one unit) — attracts raid risk + fire safety red flag.
+- DON'T: take cash-only off-books — looks like exploitation + breaks AMLA trail.
+- DON'T: rent units that lack basic safety (no smoke detector, unauthorised sub-divided rooms) — UBBL + Bomba exposure compounds.
+
+SUBLETTING TO UNHCR CARDHOLDERS (where tenant sublets to refugees):
+- This is YOUR risk escalated: you are the registered owner, so summons/raids involve you.
+- Standard tenancy has "no subletting without consent" — enforce it strictly.
+- If your tenant sublets to 5+ UNHCR cardholders secretly (HMO-style co-living), you face: (i) breach of your tenancy clause, (ii) PBT change-of-use summons (residential to boarding house), (iii) Bomba fire safety compound, (iv) s.55E harbouring by association.
+- Remedy: immediate breach notice, serve termination, involve PBT for inspection if unsure, coordinate with UNHCR MY (they may help rehouse cardholders) to avoid humanitarian crisis.
+
+LANDLORD EMPATHY + LEGAL FLOOR:
+- Many UNHCR cardholders are families fleeing persecution. Courts and media are sympathetic to landlords who handled transitions humanely.
+- If you discover refugees subletting and it's otherwise orderly → formalise the arrangement (bring it into your direct tenancy, inspect, stamp) rather than evicting abruptly.
+- If arrangement is chaotic/unsafe → document everything, terminate the tenant who broke the clause, coordinate with refugee welfare NGOs (e.g., Tenaganita, Suaram, UNHCR MY) to transition residents safely.
+
+STAY-INFORMED CHECKPOINTS:
+- UNHCR Malaysia: unhcr.org/en/where-we-work/asia-and-pacific/malaysia
+- MOHA refugee policy updates: moha.gov.my
+- Parliamentary bills watch: parlimen.gov.my for any Refugee Act (discussed 2024-2025 but not yet tabled).
+
 VERIFY HERE:
 - Jabatan Imigresen Malaysia: imi.gov.my
 - MyImmi mobile app (Android/iOS): visa/passport scanning
@@ -854,7 +973,8 @@ VERIFY HERE:
 - MM2H: my2h.gov.my
 - De Rantau: mdec.my/derantau
 - Employer immigration verification: esd.imi.gov.my
-- Reporting hotline: 03-8880 1000 (Ibu Pejabat Imigresen)`
+- Reporting hotline: 03-8880 1000 (Ibu Pejabat Imigresen)
+- UNHCR Malaysia: unhcr.org/en/where-we-work/asia-and-pacific/malaysia | +603-2118 4800`
   },
 
   short_term_rental: {
@@ -1860,6 +1980,1057 @@ APPLY / VERIFY HERE:
 - SJKP: sjkp.com.my
 - PR1MA RTO / HouzKEY: respective scheme portals
 - Budget 2026 gazette: mof.gov.my / percetakan nasional`
+  },
+
+  tenant_death: {
+    keywords: [
+      'tenant died', 'tenant death', 'penyewa meninggal', 'penyewa mati', '租客死亡', '租客过世',
+      'died in', 'meninggal dalam', '死在', 'found dead', 'dijumpai mati',
+      'body found', 'mayat', '尸体', 'deceased tenant', 'penyewa yang telah meninggal',
+      'biohazard', 'cleaning blood', 'pembersihan mayat', '生物危害清理',
+      'next of kin', 'waris', '亲属', 'estate claim', 'tuntutan pusaka',
+      'amanah raya', 'arb', 'harta pusaka kecil', 'small estate',
+      'probate tenant', 'death cert tenant', 'sijil kematian penyewa',
+      'suicide in rental', 'unattended death', 'kematian tanpa saksi'
+    ],
+    content: `TENANT DEATH IN PROPERTY (life event — high legal + emotional stakes):
+
+IMMEDIATE ACTIONS (first 24-48 hours):
+1. Do NOT enter the unit alone. Call police (999) if you discover the body or suspect a death. Police Act 1967 s.29 requires sudden-death investigation by PDRM.
+2. Preserve the scene until police release it (can be 6 hours to 3 days). Take nothing.
+3. Note date/time you called, the IO (investigating officer) name, and get the police report number — you will need it for insurance, deposit, estate, and Bomba if there was fire/decomposition.
+4. Do NOT clean. Biohazard cleaning is a regulated activity — appoint a licensed biohazard/trauma cleaner (Department of Environment DOE schedule waste if body was decomposed >48 hours). Typical cost: RM3,000 – RM15,000 depending on condition. Keep receipts — claimable against deposit or insurance.
+5. Take dated photos of the unit before and after cleaning for Section 90A digital evidence (court-admissible).
+
+TENANCY STATUS AFTER DEATH:
+- Tenancy does NOT automatically terminate. Under Contracts Act 1950, the tenant's obligations pass to their estate (the deceased's legal heirs).
+- Estate becomes the tenant. Rent continues to accrue until tenancy is lawfully terminated.
+- BUT — if tenancy agreement has a "death of tenant" clause (rare in MY standard tenancies), follow that clause.
+- Practical: serve a 14-day notice to next-of-kin (if known) giving them the option to surrender or continue. If they surrender, do a formal handover with inventory.
+
+WHO DO YOU DEAL WITH (estate hierarchy):
+1. If deceased left a WILL → executor named in will applies for Grant of Probate (High Court if estate > RM5M, Small Estates Distribution Unit at Land Office if ≤ RM5M).
+2. If NO WILL (intestate) → next-of-kin applies for Letters of Administration under Probate & Administration Act 1959 / Distribution Act 1958.
+3. If estate < RM5M AND mostly immovable property → Small Estates (Distribution) Act 1955 (amended 2022 to raise ceiling to RM5M) → Land Office has jurisdiction. Faster + cheaper than High Court.
+4. If no one comes forward → Amanah Raya Berhad (ARB, 1-300-88-6863, amanahraya.com.my) can be appointed administrator. ARB may also handle small estates at landlord's request.
+5. Muslim estates → Faraid distribution applies. Syariah Court may be involved for probate (Sijil Faraid issued).
+
+DEPOSIT RETURN:
+- Deposit belongs to the estate (not family unless properly probated). Don't pay to "whoever shows up."
+- Valid recipients: executor (with Grant of Probate), administrator (with Letters of Administration), or Amanah Raya with Letter of Administration.
+- If estate is tiny (deposit < RM10K, no grant obtained), practical path: get the spouse/children to sign a declaration (surat akuan berkanun) confirming they are next-of-kin and releasing you from further claim. Not legally airtight but industry practice.
+- Deduct: unpaid rent up to surrender date, biohazard cleaning, any damage proved with photos.
+- HOLD any residual deposit for at least 6 months before disbursing if estate is unclear — someone else may come forward with probate.
+
+BELONGINGS INSIDE UNIT:
+- Do NOT throw away. Belongings are part of the estate and disposing of them = tort of conversion (you pay damages).
+- Serve formal 14-day notice under Distress Act 1951 to estate/next-of-kin demanding collection.
+- If no collection after notice → inventory with witness (ideally bailiff via court), photograph each item, store for another 30 days, then dispose/auction per Distress Act procedure.
+- If the deceased was a hoarder or had sentimental items, over-communicate with family before disposal. Courts take a dim view of brutal efficiency here.
+
+INSURANCE IMPLICATIONS:
+- Landlord building/fire policy usually EXCLUDES death-in-property (suicide, unattended death). Check "suicide clause" + "biohazard cleanup" endorsement.
+- Some policies cover biohazard cleaning up to RM10K-20K. Submit claim within 7 days.
+- Tenant's life/contents insurance (if any) may pay family — not your concern.
+- If tenant was murdered or death was violent, your insurer may subrogate against the perpetrator.
+
+RE-LETTING / VALUE IMPACT:
+- No statutory disclosure obligation in Malaysia (unlike California's "death in home" rule) — but Section 17 Sale of Goods Act 1957 fair-dealing applies. Agents advise disclosure to next tenant to avoid post-contract complaints.
+- "Stigmatized property" — Asian markets often see 10-30% rental discount for 6-18 months after reported death. Feng shui blessing / religious ceremony (tahlil, puja, 超渡) is commonly done before re-letting.
+- Photograph the full cleaned-out unit and get a certificate from the biohazard cleaner stating property is decontaminated.
+
+EMOTIONAL + PRACTICAL NOTES:
+- Be human to the family. They're grieving. Don't demand rent the day after the funeral.
+- Keep a log of every call, message, and payment for the estate proceeding — Small Estates hearings can drag 12-18 months.
+- Consider waiving last month's rent as goodwill; it often buys peace and protects reputation.
+
+COMMON TRAPS:
+- Throwing belongings out = tort of conversion. Courts have awarded RM20K+ damages.
+- Paying deposit to "spouse" who turns out not to be legally married / not next-of-kin → you pay twice.
+- Re-letting before biohazard certificate = future tenant's illness claim could stick to you (occupier's liability).
+- Using personal cleaners for decomposed body = DOE scheduled waste violation (RM500K fine max) + health risk.
+
+TEMPLATES TO PREPARE:
+- Notice to Next-of-Kin (14-day collection / tenancy decision)
+- Deposit Release + Indemnity Letter (for family signing in estate < RM10K)
+- Letter to Amanah Raya requesting administration (estate mostly unclaimed)
+- Disclosure addendum for next tenant (optional but recommended)
+
+APPLY / VERIFY HERE:
+- Amanah Raya Berhad: amanahraya.com.my or 1-300-88-6863
+- Small Estates Distribution Unit: your State Land Office (Pejabat Tanah Daerah)
+- Probate Registrar: High Court Civil Division
+- Biohazard cleaners (DOE-licensed): google "trauma cleaning Malaysia" or ask your insurer`
+  },
+
+  criminal_activity: {
+    keywords: [
+      'drugs', 'dadah', '毒品', 'drug raid', 'serbuan', '扫毒',
+      'pdrm raid', 'police raid', 'serbuan polis', '警察突击',
+      'illegal business', 'perniagaan haram', '非法生意',
+      'massage parlor', 'rumah urut', '按摩院', 'brothel', 'prostitution', 'pelacuran',
+      'gambling den', 'sarang judi', '赌场', 'illegal gambling',
+      'ddа', 'dangerous drugs', 'akta dadah berbahaya', 'forfeiture', 'rampasan harta',
+      'section 39b', 's.39b', 's39b', 'seksyen 39b',
+      'criminal tenant', 'tenant arrested', 'penyewa ditahan', '租客被捕',
+      'crime scene', 'tempat kejadian', '犯罪现场', 'unlawful activity'
+    ],
+    content: `CRIMINAL ACTIVITY IN YOUR RENTAL (drugs, illegal business, police raid):
+
+IMMEDIATE ACTIONS ON POLICE RAID / ARREST:
+1. Cooperate fully. Provide tenancy agreement, tenant's IC/passport copy, deposit receipt, any screening records.
+2. Get the police report number + IO contact. You may be called as witness (saksi) — not suspect (tertuduh) — if you had no knowledge.
+3. Photograph everything BEFORE police remove items (Section 90A evidence — may be needed if forfeiture is later contested).
+4. Consult a criminal lawyer WITHIN 48 HOURS if drugs are involved. Even as witness, your statement binds you under Evidence Act s.18.
+5. Do NOT re-let immediately. Police may retain premises as "scheduled crime scene" — ask for written release.
+
+DANGEROUS DRUGS ACT 1952 (DDA) — PROPERTY FORFEITURE RISK:
+- DDA s.39B: trafficking (possession above threshold quantities = death penalty pre-2023, now life imprisonment + whipping).
+- DDA s.2 + s.39C: ANY premises used for drug activity can be forfeited to the State — including your property — even if the landlord is not charged.
+- This is a PROPERTY forfeiture, not a personal criminal charge. Standard of proof = balance of probabilities (civil standard), NOT beyond reasonable doubt.
+- Attorney General applies via High Court for forfeiture order. Public Prosecutor's office.
+
+LANDLORD DEFENCE — DDA s.40A "INNOCENT OWNER" DEFENCE:
+To save your property from forfeiture, you must prove ALL of the following:
+1. You had NO KNOWLEDGE that the property was used for drug activity.
+2. You exercised REASONABLE DILIGENCE in selecting and supervising the tenant.
+3. You did not consent to or connive in the activity.
+
+Evidence that builds your "reasonable diligence":
+- Tenant screening records (IC verification, employment letter, CTOS/CCRIS with consent, referee checks).
+- Written tenancy agreement with "no illegal activity" clause + right-to-enter-with-notice clause.
+- Periodic inspection records (quarterly walk-through, dated photos, signed inspection receipts).
+- Prompt response to any neighbour complaint or red flag (documented).
+- Use of licensed real estate agent (REN/PEA) — shifts some duty.
+
+WARNING: Section 40A cases have gone BOTH ways. Landlords who screened properly + inspected periodically + responded to red flags have saved their property. Landlords who "just collected rent" have lost properties worth RM1M+.
+
+ILLEGAL BUSINESS IN YOUR RENTAL (massage parlor, gambling, prostitution, illegal factory):
+- Your tenancy agreement's "lawful purpose" clause is breached the moment you discover illegal use. Breach is fundamental — you can re-enter (serve notice) and re-let.
+- BUT: do not self-help evict (change lock) even then — use the Distress Act / Specific Relief Act 1950 procedure. Courts grant expedited possession for illegal use.
+- Penal Code s.102: abetting = accessory liability. Once you KNOW and do nothing, you lose the "innocent landlord" shield.
+- Licensed trades check (tenant running a "business" in residential unit):
+  * Massage: PBT premise license + signboard license + (for TCM/reflexology) MOH registration. NO such license = illegal regardless of content.
+  * F&B / eatery: PBT premise + food handler + halal (if claimed) + signboard + Bomba CFO.
+  * Retail/online store: SSM registration. Check at ssm.com.my. Residential-zoned unit cannot host customer walk-in.
+  * Worship centre / tuition centre: PBT change-of-use + neighbour consent often required.
+- Running business in residential unit without PBT change-of-use = landlord also fineable (up to RM50K under Local Government Act 1976).
+
+STEPS WHEN YOU SUSPECT ILLEGAL ACTIVITY:
+1. Document the red flags: unusual foot traffic, late-night visitors, locked doors during inspection, request for "no CCTV in corridor," cash-only rent, sudden smell of chemicals or burning, refusal of landlord inspection.
+2. Send written inspection notice (7-14 days under most standard tenancies). Inspect with witness. Photograph.
+3. If you confirm illegal activity → file police report immediately. Get report number. This is your "innocent landlord" evidence trail.
+4. Breach notice + immediate termination per tenancy's illegal-use clause.
+5. Initiate possession proceedings at Sessions Court (if rent < RM1M) or High Court.
+6. Do NOT accept further rent after discovering the breach — accepting rent is "waiver of breach" and weakens your case.
+
+PENAL CODE / OTHER STATUTES TO KNOW:
+- Penal Code s.102: abetment.
+- AMLATFPUAA 2001 (Anti-Money Laundering Act): rent paid from crime proceeds can be frozen/recovered. If tenant pays rent via unusual channels (foreign wire, crypto, third-party), keep records.
+- Common Gaming Houses Act 1953: premises used for gambling → forfeitable + landlord liability if knowing.
+- Prevention of Crime Act 1959 (PoCA): syndicate activity tagged premises.
+- Immigration Act 1959/63 s.55E: harbouring illegal immigrants = up to RM30K fine + 5 years jail. Applies if tenant sub-houses overstayers.
+
+WHEN LANDLORD MAY BE CHARGED (not just witness):
+- You knew and did nothing (written complaints from neighbours on file; you ignored).
+- You took "extra rent" in cash off-books — looks like profit-sharing.
+- Your agent / family member was involved — landlord has vicarious exposure.
+- You impeded the investigation (refused police entry without warrant despite their request).
+
+WHAT IF PROPERTY IS SEIZED BUT YOU'RE INNOCENT:
+- Within 30 days of forfeiture notice, file objection at High Court.
+- Attach all your screening + inspection records.
+- Affidavit of innocent owner + reasonable diligence.
+- If property has mortgage, bank will often join proceedings (bank has first charge; they also want property back).
+- Engage criminal lawyer with forfeiture experience — typical legal cost RM20K-80K; cheaper than losing the property.
+
+COMMON TRAPS:
+- Accepting rent after knowing the tenant's illegal use = waiver of right to terminate. Stop the auto-debit immediately.
+- Agreeing to "cash only, no receipt" arrangement — courts see it as collusion.
+- No tenant screening records at all — you fail the "reasonable diligence" test automatically.
+- Never inspecting the unit — courts treat this as willful blindness.
+- Failing to file police report — you look complicit, not innocent.
+
+TEMPLATE STEPS:
+- Notice of Inspection (7-14 days)
+- Breach Notice (illegal use) + termination
+- Police Report narrative (chronology of red flags + discovery)
+- Affidavit of Innocent Owner (for forfeiture objection)
+
+APPLY / VERIFY HERE:
+- AGC (Attorney General's Chambers): agc.gov.my (forfeiture case lookup)
+- PDRM Narcotics Crime Investigation Department: rmp.gov.my
+- Criminal lawyer directory: malaysianbar.org.my (find "Criminal Law" practitioners)
+- Bar Council Legal Aid Centre (if you can't afford): malaysianbar.org.my/LAC`
+  },
+
+  fire_safety: {
+    keywords: [
+      'fire safety', 'keselamatan kebakaran', '消防安全',
+      'bomba', 'fire brigade', 'pasukan bomba', '消防局',
+      'fire extinguisher', 'alat pemadam api', '灭火器',
+      'smoke detector', 'pengesan asap', '烟雾报警器',
+      'fire alarm', 'penggera kebakaran', '火警报警器',
+      'sprinkler', 'percikan air', '喷淋系统',
+      'cfo', 'certificate of fitness', 'sijil kelayakan', 'fire certificate',
+      'ubbl', 'uniform building by-law', 'undang-undang kecil bangunan',
+      'fire services act', 'akta perkhidmatan bomba', 'fsa 1988',
+      'fire summons', 'saman bomba', '消防传票',
+      'fire escape', 'tangga kecemasan', '逃生通道',
+      'fire drill', 'latihan kebakaran', '消防演习',
+      'fire code', 'kod kebakaran', '防火规范'
+    ],
+    content: `FIRE SAFETY & BOMBA COMPLIANCE (landlord liability, UBBL, FSA):
+
+LEGAL FRAMEWORK:
+- Fire Services Act 1988 (FSA 1988) — main statute.
+- Uniform Building By-Laws 1984 (UBBL) — fire safety in Part VII + Part VIII.
+- Local Government Act 1976 — PBT enforcement authority.
+- Strata Titles Act 1985 + Strata Management Act 2013 — shared responsibilities in strata.
+- Street, Drainage & Building Act 1974 — access for fire appliances.
+- Penalty exposure: FSA s.28 = up to RM50,000 fine or 10 years jail (or both) for failure to maintain fire safety installations. FSA s.33 = obstruction of fire services = RM10K + 6 months jail.
+
+LANDLORD'S CORE OBLIGATIONS (even for residential strata):
+1. Install and maintain smoke detectors (UBBL 225 — required in sleeping areas + escape routes).
+2. Provide a functional fire extinguisher (UBBL 227 — minimum 2kg ABC dry powder per unit in many PBTs).
+3. Do NOT obstruct fire escape, staircase, or emergency exit — in strata, a stored bicycle/shoe rack in fire-rated corridor is a chargeable offence (RM1K-5K per incident).
+4. Do NOT alter fire-rated walls, doors, or ceilings during renovation without Bomba + PBT approval (UBBL 236-248 + Bomba plan approval for renovations involving fire-rated elements).
+5. For buildings >5 storeys or >18m height: maintain Certificate of Fitness for Occupation (CFO) with current Fire Certificate endorsement (renewed annually for hi-rise commercial; 3-yearly for most residential strata via MC).
+
+FIRE CERTIFICATE (FC) & BOMBA CFO — DOES IT APPLY TO ME?
+- FC required for "designated premises" under FSA s.28 (FSA Order 1988):
+  * Hotels, hospitals, schools, factories, shopping complexes, office buildings, cinemas, theatres, strata buildings >5 storeys or >1,000 sqm GFA.
+- For individual strata lots (your single condo unit): landlord is NOT the FC holder — the Management Corporation (MC/JMB) is. But you share the obligation to not compromise the building's fire rating.
+- For whole landed property converted to commercial use (shop, office, factory): YOU are the FC applicant.
+- Renewal: annual inspection by Bomba. Fees from RM200 (small shop) to RM50,000+ (high-rise).
+
+WHAT TRIGGERS A FIRE SAFETY SUMMONS TO LANDLORD:
+1. Bomba routine inspection finds missing/expired smoke detector or extinguisher in your rented unit.
+2. Tenant removed fire alarm, painted over sprinkler head, blocked escape route — but you are the registered owner → summons lands on YOU, not tenant (unless tenant has FC in their name).
+3. Post-fire investigation identifies landlord renovation that compromised fire rating (common: demolishing fire-rated wall for "open kitchen" without re-certification).
+4. Neighbour complaint of hoarding in common area traced to your tenant.
+5. Strata building loses FC → MC may individually surcharge lots found non-compliant.
+
+WHAT TO DO IF YOU RECEIVE A FIRE SAFETY SUMMONS:
+1. Do NOT ignore. Typical summons: compound RM500 – RM5,000. Court appearance escalates to RM50K + jail.
+2. Fix the non-compliance within the compound period (usually 14-30 days). Get dated photos + Bomba-authorised contractor's invoice.
+3. Reply to Bomba with proof of rectification before the hearing date.
+4. Pay compound (if allowed) or attend court. Bring rectification evidence — often magistrate reduces fine substantially.
+5. Serve notice to tenant for reimbursement if tenant caused the breach (with your tenancy's "fire safety compliance" clause). Deduct from deposit at end of lease if needed.
+
+LANDLORD RENOVATION + FIRE SAFETY:
+- Any renovation touching fire-rated elements (walls, doors, ceilings, ducts, lobby) needs Bomba plan approval (PBB) via MySubmission (bomba.gov.my). Fee from RM300. Takes 4-8 weeks.
+- Common non-compliant renovations that trigger summons later:
+  * Removing fire-rated door between unit and corridor (replaced with glass/decorative door).
+  * Cutting hole in fire-rated ceiling for chandelier / air-con ducting without re-sealing.
+  * Installing wooden parquet in escape corridor (fire load exceeded).
+  * Blocking sprinkler coverage with overhead structures (gypsum ceiling covering sprinkler head).
+- If you bought a unit with existing non-compliant renovations from previous owner, you INHERIT the liability. Do a pre-purchase Bomba audit on older units.
+
+STRATA BUILDING LANDLORD (MC as FC holder):
+- MC is the FC holder. MC conducts the annual fire drill, maintains sprinkler system, pump room, hose reels.
+- Your obligation as parcel owner: (i) don't renovate in ways that compromise FR; (ii) don't store combustibles on common property; (iii) pay sinking fund contribution (sinking fund often used for major fire system upgrades).
+- If your tenant blocks the escape corridor, MC issues a notice to YOU as registered parcel proprietor. Forward to tenant with reimbursement demand.
+- Fire drill attendance: not mandatory for individual residents but highly recommended to be tenant-briefed. Tenancy clause can require tenant to participate.
+
+COMMERCIAL LANDLORD (YOU are FC holder):
+- You maintain the FC annually.
+- Your tenant's use must match the FC category (e.g., FC was issued for "office" — tenant can't run a restaurant without FC upgrade).
+- Tenant change-of-use → you must re-apply for FC with updated occupancy classification. Typically 6-12 weeks.
+- If tenant's activity (welding, cooking, chemical storage) exceeds FC fire load rating, you can be charged as "permitting non-conforming use."
+
+INSURANCE IMPLICATIONS:
+- Building fire insurance voidable if material non-compliance existed at time of fire (undeclared renovation, expired FC).
+- Loss of rent cover — triggers only if building fire-certified. If FC lapsed, claim likely denied.
+- Landlord public liability — essential. Covers claims from tenant or tenant's visitors for injury from fire-related hazard.
+- See 'insurance' topic for claim mechanics.
+
+COMMON TRAPS:
+- "My tenant removed the smoke detector, not me" — landlord is still the registered owner on Bomba's radar. Summons goes to you.
+- Hiring a non-Bomba-registered contractor for renovation involving FR walls — work disallowed at certification, redo cost 2-3x.
+- "FC lapsed by 2 weeks, no biggie" — tenant accident during that 2 weeks = insurance void + personal liability.
+- Buying a converted shophouse / warehouse without checking Bomba compliance — RM50K-300K rectification bill is common.
+- Treating strata MC's fire drill notice as "MC problem" — tenant's refusal to participate can be traced back to your tenancy clause (or lack thereof).
+
+HIGH-RISK PROPERTY TYPES FOR FIRE LIABILITY:
+- Pre-1985 buildings (built before UBBL) — many grandfathered but every renovation triggers current UBBL compliance.
+- Shoplots with residential upper floors (common mixed-use) — dual-use complicates FC.
+- Pre-war shophouses with wooden structures — extreme fire risk, higher premium, often require MANDATORY sprinkler retrofit for rent >RM50K/month.
+- Old industrial factories converted to logistics / co-working — change-of-use + fire load upgrade mandatory.
+- Rural/kampung wooden houses — UBBL may be softer but FSA still applies.
+
+TEMPLATES TO PREPARE:
+- Tenancy clause: "Fire Safety Compliance" — tenant cannot tamper with fire safety equipment, must report any defect within 7 days, reimburses reinstallation cost.
+- Pre-tenancy fire equipment checklist (signed by tenant at move-in).
+- Annual fire safety inspection log (landlord's record, signed by tenant each year).
+
+APPLY / VERIFY HERE:
+- Bomba plan approval + FC application: bomba.gov.my (MySubmission portal)
+- Bomba general hotline: 994 (emergency) / 03-8892 7000 (enquiry)
+- UBBL 1984 full text: agc.gov.my
+- PBT premise license (commercial): your local council (DBKL, MPSJ, MBPJ etc.)`
+  },
+
+  agent_dispute: {
+    keywords: [
+      'agent dispute', 'pertikaian ejen', '代理纠纷',
+      'estate agent', 'ejen hartanah', '地产代理',
+      'property agent', 'ejen harta',
+      'real estate negotiator', 'perunding hartanah',
+      'probationary estate agent',
+      'boveaea', 'bovaea', 'lembaga penilai', 'board of valuers',
+      'miea', 'malaysian institute of estate agents', 'institut ejen hartanah',
+      'agent commission', 'komisen ejen', '佣金',
+      'agent missing', 'ejen hilang', 'ejen lari', '代理跑路',
+      'agent fraud', 'penipuan ejen', '代理诈骗',
+      'agent complaint', 'aduan ejen',
+      'deposit kept by agent', 'deposit dipegang ejen',
+      'unregistered agent', 'ejen tidak berdaftar', '黑中介',
+      'vaeapma', 'akta penilai', 'lppeh'
+    ],
+    content: `AGENT DISPUTES — MIEA, BOVEAEA, COMMISSION, MISCONDUCT:
+
+KEY DISTINCTION — REGULATOR vs INDUSTRY BODY:
+- BOVEAEA (Board of Valuers, Appraisers, Estate Agents and Property Managers) = GOVERNMENT REGULATOR. Only body that can license, fine, or strike off agents. Website: lppeh.gov.my.
+- MIEA (Malaysian Institute of Estate Agents) = INDUSTRY BODY (trade association). Has ethics committee but cannot enforce statutory penalties. Website: miea.com.my.
+- Complaints with legal bite go to BOVEAEA, not MIEA. MIEA can arbitrate member-to-member disputes and refer serious matters to BOVEAEA.
+
+LEGAL FRAMEWORK:
+- Valuers, Appraisers, Estate Agents and Property Managers Act 1981 (VAEAPMA / Act 242).
+- Malaysian Estate Agency Standards (MEAS) — practice rules under VAEAPMA.
+- VAEAPMA s.22D — client account rule: all client money (deposit, booking, earnest) must go into a designated client account, NOT agent's personal/firm operating account.
+- VAEAPMA s.30 — unregistered person practising = RM300,000 fine + 3 years jail.
+- Max commission caps (MEAS Schedule):
+  * Sale: 3% of sale price (negotiable).
+  * Rental: 1 month rent for 1-2 year tenancy (for residential/commercial).
+  * For longer leases (3yr+): pro-rated, capped at 1.25 months.
+
+WHO CAN LEGALLY PRACTISE:
+1. REA (Registered Estate Agent) — fully licensed, holds E number.
+2. PEA (Probationary Estate Agent) — passed Part I/II, in 2-year probation under REA.
+3. REN (Real Estate Negotiator) — junior, MUST work under REA/PEA, holds tag number.
+- Check at lppeh.gov.my (search by name or E/REN tag number).
+- No tag / fake tag / "I'm an agent" with no registration = illegal. Do NOT engage.
+
+AGENT KEPT YOUR MONEY (deposit, booking, commission kickback):
+Step 1 — VERIFY registration first. Go to lppeh.gov.my search. If unregistered:
+  * Immediate police report (fraud, criminal breach of trust under Penal Code s.406-410).
+  * Separate civil claim at Sessions/Magistrate Court.
+  * Amount < RM5,000 → Tribunal for Consumer Claims (TTPM) — fast, no lawyer needed.
+  * Amount > RM5K: Magistrate Court (≤RM100K) or Sessions Court (≤RM1M).
+
+Step 2 — If agent IS registered:
+  * File BOVEAEA complaint: lppeh.gov.my → Complaints → Download Form → submit with evidence + statutory declaration.
+  * Complaint triggers investigation by Disciplinary Committee (VAEAPMA Part V).
+  * Penalties: reprimand, fine up to RM25,000, suspension, or strike off (deregistration).
+  * BOVEAEA has a Compensation Fund (MEAS Rule) — up to RM50K per claim if agent is bankrupt/disappeared.
+  * File in PARALLEL: police report (CBT if money misappropriated), civil suit for recovery.
+
+Step 3 — Evidence bundle you need:
+  * Signed listing/agency agreement.
+  * WhatsApp / email records showing money flow instructions.
+  * Bank-in slips, transfer receipts.
+  * Client account details (demand from agent in writing — refusal is itself misconduct).
+  * Any offer letter, earnest receipt, tenancy draft.
+
+AGENT ABANDONED THE DEAL / SWITCHED SIDES:
+- Dual agency (representing both landlord and tenant) is allowed only with FULL written disclosure + consent from both. Without disclosure = conflict of interest = BOVEAEA complaint grounds.
+- Agent pushed you to a "preferred lawyer" or "preferred financier" who turned out to be kickback recipient = breach of fiduciary duty. Grounds for commission forfeiture + complaint.
+
+COMMISSION DISPUTE MECHANICS:
+- Commission payable only upon "effective cause of sale/lease" (i.e., agent introduced the tenant/buyer who actually transacted).
+- If you engaged multiple agents and signed with tenant introduced by Agent A but Agent B had earlier appointment → industry norm = first-introducer wins unless their mandate expired.
+- If agent claims commission on a deal you closed directly after their showing → 30-day "protection clause" in agency agreement usually applies. Beyond that, commission may be forfeit.
+- If agent did NOT deliver a signed tenancy (you signed it direct) but showed the tenant: agent typically still entitled (effective cause). If tenant drove the deal through other channels, disputable.
+
+TENANT SIDE — WHEN YOUR "AGENT" ASKS FOR CASH:
+- Any agent who asks for deposit/earnest in cash or personal account = RED FLAG.
+- All client money must go to agency's CLIENT ACCOUNT (VAEAPMA s.22D). Demand the client account bank details on agency letterhead.
+- If agent refuses or says "faster this way" → walk away + report to BOVEAEA.
+
+ESCAPE ROUTE IF YOU ALREADY PAID A ROGUE AGENT:
+1. Lodge police report (CBT / s.420 cheating) — get report number same day.
+2. File civil suit for recovery + damages. Small Claims (<RM5K) fast; Magistrate if larger.
+3. BOVEAEA complaint if registered — may get partial recovery via Compensation Fund.
+4. Bank freeze application (Anti-Money Laundering Act) if funds traceable — needs lawyer.
+5. CTOS/CCRIS report against individual agent — makes future fraud harder for them.
+
+UNREGISTERED AGENT (BLACK AGENT / BROKER LIAR):
+- VAEAPMA s.30: illegal to hold out as agent or negotiate property transaction without registration.
+- Penalty: RM300K fine / 3 years jail.
+- Report: BOVEAEA (enforcement arm will raid) + police.
+- You lose BOVEAEA Compensation Fund protection for unregistered persons — civil suit only.
+
+LANDLORD — CHECKLIST BEFORE SIGNING WITH AN AGENT:
+1. Verify REA/PEA/REN tag on lppeh.gov.my.
+2. Demand firm name (E registration number) — should appear on business card + agency agreement.
+3. Signed exclusive/non-exclusive agency agreement clarifying: term, commission rate, protection period, client account for deposits.
+4. Never pay "marketing fee" upfront to an agent for unit they haven't secured tenant for — commission is success-fee only.
+5. Never pass deposits/earnest to individual's personal account.
+
+COMPETITION / DUAL LISTING:
+- Exclusive agency: one agent only for the term — better service but locks you in.
+- Non-exclusive: multiple agents, first effective cause wins — faster but risk of commission dispute.
+- Dual listing is industry norm; state in writing how "introduction" is defined to avoid disputes.
+
+COMMON TRAPS:
+- Assuming MIEA can recover your money — they cannot. Only BOVEAEA has statutory teeth.
+- Paying agent via DuitNow to personal account "for speed" — now it's an AML issue + no recovery path.
+- Signing agency agreement without reading the "protection period" clause — you can owe commission months after relationship ended.
+- Believing "no commission if no deal" — you may owe partial marketing fees if the agreement says so.
+
+TEMPLATES TO PREPARE:
+- Agency Agreement (use MIEA/BOVEAEA standard, fill exclusive/non-exclusive, commission, protection period).
+- BOVEAEA Complaint Form (download from lppeh.gov.my).
+- Letter of Demand to agent / agency (commission / deposit return).
+- Police report narrative (chronology + evidence list).
+
+APPLY / VERIFY HERE:
+- BOVEAEA: lppeh.gov.my | 03-2287 9888 | verify REA/PEA/REN tag
+- MIEA: miea.com.my | 03-7960 2120 (ethics referral)
+- Tribunal Tuntutan Pengguna Malaysia (TTPM): ttpm.gov.my (claims ≤RM5K, no lawyer needed)
+- Criminal lawyer directory: malaysianbar.org.my`
+  },
+
+  insurance: {
+    keywords: [
+      'insurance', 'insurans', 'insuran', '保险',
+      'fire insurance', 'insurans kebakaran', '火险',
+      'building insurance', 'insurans bangunan', '建筑保险',
+      'contents insurance', 'insurans kandungan', 'insurans harta',
+      'public liability', 'liabiliti awam', '公共责任保险',
+      'landlord insurance', 'insurans tuan rumah',
+      'claim denied', 'tuntutan ditolak', '理赔被拒',
+      'insurance claim', 'tuntutan insurans', '保险索赔',
+      'subrogation', 'subrogasi', '代位求偿',
+      'policy renewal', 'pembaharuan polisi',
+      'flood insurance', 'insurans banjir', '洪水保险',
+      'piam', 'persatuan insurans', 'insurance ombudsman',
+      'ofs', 'ombudsman financial services', 'ombudsmen perkhidmatan kewangan',
+      'loss of rent', 'kerugian sewa', '租金损失保险'
+    ],
+    content: `LANDLORD INSURANCE — BUILDING, CONTENTS, PUBLIC LIABILITY, CLAIMS:
+
+LEGAL FRAMEWORK:
+- Financial Services Act 2013 (FSA 2013) — regulates licensed insurers.
+- Insurance Act 1996 (repealed by FSA 2013) — superseded but older policies may still reference it.
+- Common law doctrines: indemnity, subrogation, utmost good faith (uberrimae fidei), insurable interest.
+- Ombudsman for Financial Services (OFS — formerly FMB): independent dispute resolution for consumer insurance complaints, free for claims ≤ RM250K personal / ≤ RM500K SME.
+
+TYPES OF LANDLORD POLICIES (typical Malaysian market):
+1. FIRE / HOUSEOWNER (HOPO): covers building structure only. Standard fire perils = fire, lightning, explosion. Add-ons needed for flood, storm, burst pipe, landslide, riot.
+2. HOUSEHOLDER / CONTENTS: covers contents inside the property — furniture, appliances, etc. For unfurnished tenancies = tenant's responsibility. For furnished = landlord's policy.
+3. PUBLIC LIABILITY (PL): covers injury to third parties (tenant's visitor slips, balcony collapse, falling tile) and property damage to third parties. Typical cover RM500K – RM5M. ESSENTIAL for landlords — tenant or visitor lawsuit can exceed annual rent.
+4. LOSS OF RENT: pays out rent for reconstruction period (usually 12 months max). Kicks in after an insured peril makes unit uninhabitable. Premium ~5-10% of annual rent.
+5. LANDLORD-SPECIFIC COMBO: integrated policy bundling (1)+(3)+(5) + legal expenses + malicious damage by tenant + rent default cover. Growing segment. PLT/Allianz/Etiqa/Zurich/Tokio Marine lead.
+
+FOR STRATA PARCELS:
+- MC holds the master policy for common property + building structure. Check the MC's policy wording annually — know what's covered for your unit's walls.
+- You (parcel owner) buy CONTENTS + PL separately for inside the unit.
+- Some MC master policies are "insured walls out" (covers up to and including your unit's internal partition walls). Others are "bare walls" (only external structure). Read it.
+
+WHAT A STANDARD FIRE POLICY EXCLUDES (common gotchas):
+- Flood (needs "special perils" add-on — ~0.1% of sum insured extra).
+- Malicious damage by tenant (specific tenant-caused vandalism rider).
+- Tenant negligence cooking fire (may be covered but insurer will subrogate against tenant — see next section).
+- Unoccupied property >30 days (cover suspends automatically — must notify insurer).
+- Electrical rewiring / plumbing "gradual deterioration."
+- Terrorism (unless Malaysia Terrorism Risk Pool add-on).
+- War, nuclear, pandemic (global exclusion).
+
+SUBROGATION — WHY INSURER MAY LATER SUE YOUR TENANT:
+- After paying your fire claim, insurer "steps into your shoes" and may recover from the party who caused the loss (usually the tenant).
+- Common: tenant cooking oil fire → insurer pays you → insurer sues tenant for the amount.
+- You have a DUTY to cooperate with subrogation: preserve evidence, name the tenant, provide tenancy agreement.
+- This is why your tenancy should require tenant to hold their own contents + liability insurance — otherwise you're the only deep pocket.
+
+TENANT OBLIGATIONS (write into tenancy):
+1. Tenant shall obtain and maintain contents insurance for their own belongings (landlord not liable for theft/damage to tenant goods unless negligent).
+2. Tenant shall obtain third-party liability coverage for their acts (minimum RM250K).
+3. Tenant shall not do anything that increases the fire risk or premium of the landlord's policy (e.g., running a business, storing combustibles).
+4. Tenant to notify landlord immediately of any incident that may give rise to claim (fire, flood, break-in).
+5. Indemnity clause: tenant indemnifies landlord for loss caused by tenant's breach.
+
+CLAIM PROCESS — STEP BY STEP:
+1. IMMEDIATE (day 1-3):
+   * Call emergency services if needed (999 for Bomba, 994 for police).
+   * Make the property safe (plug leaks, board up windows — not doing so can void coverage for "consequential loss").
+   * Photograph everything — date-stamped, multiple angles.
+   * Keep receipts for emergency mitigation (these are claimable).
+
+2. NOTIFICATION (within 7 days usually, check policy):
+   * Call insurer hotline → get claim reference number.
+   * Submit written notification with photos, police/Bomba report, estimated loss.
+
+3. ASSESSMENT (week 2-4):
+   * Insurer appoints loss adjuster. They inspect, request documents, may depreciate.
+   * Landlord appoints own assessor/QS (recommended for claims >RM50K) to negotiate the settlement.
+   * Provide tenancy agreement, purchase invoices for items, prior valuations.
+
+4. SETTLEMENT (week 4-12):
+   * Offer letter from insurer — you sign "discharge voucher."
+   * Disputes: OFS complaint (free) within 6 months of final offer.
+   * Court suit: FSA 2013 limitation period is 6 years from breach of policy.
+
+CLAIM DENIAL — YOUR APPEAL PATH:
+1. Request written denial reason from insurer.
+2. Cross-check against policy wording. Common denial bases:
+   * Material non-disclosure at policy inception (tenant type, renovation, prior claims).
+   * Breach of warranty (e.g., unoccupancy, fire safety lapses).
+   * Exclusion applies (flood without add-on, wear & tear).
+   * Late notification (often 7-14 day clock).
+3. Appeal internally to insurer's Customer Service Manager within 14 days.
+4. If unresolved after 60 days: escalate to Ombudsman for Financial Services (OFS) — ofs.org.my.
+5. OFS decision is binding on insurer up to RM250K (personal)/RM500K (SME) if you accept. Above limits → Civil Court.
+
+TENANT NEGLIGENCE → YOUR CLAIM → YOUR CIVIL SUIT AGAINST TENANT:
+- Tenant left stove on, fire damaged unit RM150K. Your insurer pays (assuming peril covered) → subrogates against tenant.
+- Alternative if insurer denies (e.g., tenant commercial use violated policy): you sue tenant in tort (negligence, breach of contract).
+- Evidence: police/Bomba report, loss adjuster report, repair invoices, original tenancy agreement.
+- Limitation: 6 years (contract) / 6 years (tort) from incident date.
+- Enforcement: if tenant has no asset, judgment is paper win. Consider CTOS listing + bankruptcy if debt exceeds RM100K threshold.
+
+FLOOD SPECIFIC (Ganu, KL flash, Kelantan):
+- Fire policy by default EXCLUDES flood. You need "Special Perils" endorsement: ~0.1% of sum insured annual premium (RM500K cover ≈ RM500/year extra).
+- Post-2021 floods, some insurers declined renewal for high-risk addresses. Alternatives: MyFloodInsurance (PIAM pool), National Flood Insurance Scheme (being developed under Budget 2026).
+- Claim documentation: dated photos, drone footage if possible, municipal flood declaration letter, receipts for emergency repairs.
+- Loss of rent rider crucial — flood reconstruction typically 3-6 months; lost rent can exceed RM30K easily.
+
+LOSS OF RENT — HOW IT WORKS:
+- Pays "fair market rent" for reconstruction period, capped at policy limit (typically 12 months).
+- Trigger: insured peril (fire/flood etc.) renders unit uninhabitable.
+- Calculation: use last tenancy's actual rent OR current market rate per valuer's letter (whichever is lower typically).
+- NOT triggered by: tenant breach (rent default), voluntary vacancy, non-insured peril.
+
+RENT GUARANTEE / TENANT DEFAULT INSURANCE (emerging product):
+- Pays landlord's rent if tenant defaults (typically up to 6-12 months arrears).
+- Premium: 2-4% of annual rent.
+- Screening required — insurer approves tenant before bind.
+- Claim trigger: tenant >60 days in arrears + Notice to Quit served + eviction process commenced.
+- Good for: high-value units (>RM10K/month rent), first-time landlords, absentee landlords.
+
+PUBLIC LIABILITY CLAIM SCENARIOS (why it's essential):
+- Balcony railing failed, tenant's child fell — RM500K injury claim.
+- Stair-rail pulled out from wall, tenant's guest broke leg — RM150K claim.
+- Leaking pipe damaged neighbour's unit below — neighbour claims RM80K.
+- Gas leak caused tenant's hospitalization — RM300K claim.
+- Without PL: landlord pays from personal assets. With PL: insurer defends and pays.
+
+COMMON TRAPS:
+- Fire policy only covers building, not PL — many landlords think "I have insurance" but it's just structural.
+- Not declaring tenant type (expat vs local, commercial use) → material non-disclosure → claim denied at time of loss.
+- Buying cheapest quote without reading exclusions → flood/theft/malicious damage excluded.
+- Not keeping receipts for appliances / renovation → depreciation applied, payout halved.
+- Policy cancelled for non-payment of premium and you don't realize → zero cover at time of loss.
+- Unoccupied >30 days (between tenants) without notifying insurer → cover void.
+
+LANDLORD-INSURANCE CHECKLIST:
+☐ Building/fire policy with current sum insured matching rebuild cost (not market value).
+☐ Special perils rider: flood, storm, burst pipe, landslide.
+☐ Public liability: minimum RM1M cover.
+☐ Loss of rent rider.
+☐ Tenant default rider (optional but good for high-value units).
+☐ Annual review after any renovation / tenant change.
+☐ Copy of policy + schedule stored digitally (and in Evidence Vault if using Find.ai).
+☐ Emergency contacts on fridge: insurer hotline, Bomba, plumber.
+
+APPLY / VERIFY HERE:
+- Ombudsman for Financial Services: ofs.org.my | 03-2272 2811
+- PIAM (General Insurance Association): piam.org.my
+- Bank Negara Malaysia Consumer Alert: bnm.gov.my/customer-alert
+- Licensed insurers list: bnm.gov.my → Financial Institutions Directory
+- Independent insurance brokers (better rates, wider market): MITBA (miba.com.my)`
+  },
+
+  inheritance: {
+    keywords: [
+      'inheritance', 'warisan', 'pusaka', '遗产',
+      'probate', 'probet', 'grant of probate', 'geran probet',
+      'letters of administration', 'surat kuasa mentadbir', 'loa',
+      'intestate', 'tanpa wasiat', '无遗嘱',
+      'death of landlord', 'tuan rumah meninggal', '房东死亡',
+      'landlord died', 'pemilik meninggal', 'landlord dies',
+      'father passed away', 'mother passed away', 'parent died', 'parents passed away',
+      'bapa meninggal', 'ibu meninggal',
+      'passed away', 'meninggal dunia', '去世',
+      'amanah raya', 'balai harta', 'public trustee',
+      'small estate', 'harta pusaka kecil', 'pesaka kecil',
+      'distribution act', 'akta pembahagian', 'akta pesaka',
+      'faraid', 'islamic estate', 'pusaka islam', '回教遗产',
+      'inherited property', 'harta warisan', 'inherited', 'inherit', 'mewarisi',
+      'executor', 'wasi', 'pemegang amanah',
+      'estate administrator', 'estate claim', 'tuntutan harta'
+    ],
+    content: `INHERITED / PROBATE OF TENANTED PROPERTY:
+
+LEGAL FRAMEWORK:
+- Probate and Administration Act 1959 — main probate statute (Peninsular).
+- Distribution Act 1958 — intestate succession (non-Muslim).
+- Small Estates (Distribution) Act 1955 — amended 2022: ceiling raised to RM5M, Land Office jurisdiction (faster, cheaper than High Court).
+- Public Trust Corporation Act 1995 — Amanah Raya Berhad (ARB) as public trustee.
+- Muslim estates: Syariah Court issues Sijil Faraid; distribution per Islamic Law (Faraid).
+- Sabah: Probate and Administration Ordinance (Cap.109).
+- Sarawak: Probate and Administration Ordinance (Cap.80).
+
+WHO INHERITS WHAT (non-Muslim, no will, per Distribution Act 1958):
+- Spouse + parent + children: spouse 1/4, children 1/2 (divided equally), parent 1/4.
+- Spouse + children (no parent): spouse 1/3, children 2/3.
+- Spouse + parent (no children): spouse 1/2, parent 1/2.
+- Spouse only: 100%.
+- Children only: 100% equal shares.
+- If no spouse/child/parent → siblings → nephews/nieces → grandparents → uncles/aunts → state (bona vacantia).
+
+WHO INHERITS WHAT (Muslim, Faraid):
+- Complex rules based on relationship (husband, wife, son, daughter, father, mother, brother, sister) + gender weighting (generally 2:1 male:female).
+- Apply to Syariah Court for Sijil Faraid (computes each heir's share).
+- Civil court issues grant; Syariah court determines distribution.
+- 1/3 rule — deceased can only dispose of 1/3 via will (wasiat); 2/3 strictly per Faraid.
+
+THREE PATHS TO GET THE PROPERTY TRANSFERRED:
+1. GRANT OF PROBATE (with will, any estate size): Executor files at High Court. Takes 6-18 months. Legal fees RM5K-50K+ depending on complexity.
+2. LETTERS OF ADMINISTRATION (no will, above RM5M or has significant movable assets): Administrator applies at High Court. Takes 12-24 months. Requires sureties or bond.
+3. SMALL ESTATES DISTRIBUTION (no will, estate ≤ RM5M, mostly immovable/land): Apply at State Land Office / Pejabat Tanah Daerah. Fast — 3-6 months. Cost ~RM200 filing + minor. Best path for most family inherited properties.
+
+TENANTED PROPERTY IN PROBATE — TENANCY CONTINUES:
+- Death of landlord does NOT terminate the tenancy. Contracts Act 1950 — rights and obligations pass to estate.
+- Tenant should continue paying rent. But to whom?
+- BEFORE grant issued: rent goes to "estate of [deceased]". In practice, family often collects informally (risky — unauthorised administration = personal liability).
+- Best practice during probate gap: family jointly opens an estate bank account (bank needs letter of authority from court), rent paid into that.
+- Tenant's protection: pay rent via bank transfer with reference "Estate of [Deceased Name]" + keep receipts. If overpaid to wrong person, tenant protected by good faith doctrine.
+
+TENANT SIDE — YOUR LANDLORD DIED:
+1. Verify the death: ask family for death certificate copy (JPN-issued).
+2. Pause electronic standing order if unsure of recipient — pay via bank transfer monthly instead, to same account but with clear "rent" memo.
+3. Request that family formalise successor via probate within 3-6 months.
+4. Upon grant/small-estate distribution issued: new landlord (executor/administrator/beneficiary) takes over. They should provide you a certified grant copy.
+5. Existing tenancy agreement runs to original expiry. New landlord cannot change terms mid-lease.
+6. If family delays >12 months and tenancy expires → apply to court for "Amanah Raya administration" or treat tenancy as ended (safer: pay into solicitor's stakeholder account).
+
+LANDLORD SIDE — YOU INHERITED TENANTED PROPERTY:
+1. Get certified copies of: grant of probate / LA / small-estate distribution order. Need multiple certified copies (banks, LHDN, land office each want one).
+2. Introduce yourself formally to tenant: letter with grant copy, updated bank details, your ID.
+3. Honour existing tenancy to expiry. You cannot hike rent, evict, or change terms before expiry unless tenancy allows.
+4. Stamp the tenancy AGAIN only if you amend it (e.g., rent review on expiry, new agreement) — original stamp carries through.
+5. Notify LHDN: rental income now taxable to you (or to estate, depending on whether property has been distributed yet).
+6. Update utility accounts (TNB, SYABAS/IWK, Indah Water) — Change of Tenancy with grant.
+7. Notify MC/JMB for strata → update parcel proprietor records.
+8. Review landlord insurance — rename as new owner or buy fresh.
+
+WHEN NO ONE CLAIMS THE ESTATE (abandoned estate):
+- Under Public Trust Corporation Act 1995, Amanah Raya Berhad (ARB) can be appointed administrator.
+- Landlord/tenant can petition ARB: amanahraya.com.my | 1-300-88-6863.
+- ARB administers, collects rent, distributes per intestate rules. Takes fee (scale per estate value).
+- Useful when: family is absent/abroad, family in dispute, no obvious next-of-kin.
+
+AMANAH RAYA (ARB) vs LAND OFFICE vs HIGH COURT — WHICH PATH:
+| Scenario | Recommended path |
+|---|---|
+| Has will, any estate size | High Court (Probate) |
+| No will, estate ≤ RM5M, mostly immovable | Land Office (Small Estates) — fastest, cheapest |
+| No will, estate > RM5M or complex movables | High Court (LA) |
+| Family in dispute, no obvious administrator | ARB (public trustee) — impartial |
+| Estate abandoned / heirs missing | ARB or State claim (bona vacantia) |
+
+STAMP DUTY ON INHERITED PROPERTY:
+- No stamp duty on transmission by death (Stamp Act 1949 s.15).
+- But: nominal fee for transmission memorandum at Land Office (~RM10).
+- Subsequent transfer to specific heir: may attract nominal duty (RM10) if per grant, OR full ad valorem if "family settlement" involves consideration.
+- If beneficiaries sell inherited property: RPGT applies but uses deceased's acquisition date + value, NOT heirs' acquisition (favourable CGT treatment).
+
+RPGT (CAPITAL GAINS TAX) POST-INHERITANCE:
+- Real Property Gains Tax Act 1976: gain = sale price − acquisition price.
+- For inherited property, "acquisition price" = market value at date of death (per Certificate of Probate).
+- So if deceased bought at RM500K in 1990, died 2020 when market value was RM1.2M, you sell 2026 for RM1.5M:
+  * Your taxable gain = RM1.5M − RM1.2M = RM300K (not RM1M).
+  * RPGT rate: holding period since inheritance applies (6th year+ = 0% for citizen).
+- Get a valuer to fix the market-value-at-death (JPPH or private registered valuer) — critical for RPGT.
+
+DEATH WHILE MORTGAGED (MRTA kicks in):
+- Most home loans require MRTA/MLTA (mortgage reducing/level term assurance).
+- MRTA pays off loan balance on borrower's death → property passes to heirs free of mortgage.
+- MLTA pays a lump sum to estate → family chooses whether to use it to pay off loan.
+- Always verify: get MRTA/MLTA policy number, contact insurer within 90 days of death.
+
+COMMON TRAPS:
+- Family collecting rent informally for years without probate → they are "intermeddling executors" — personally liable for debts + tax of estate.
+- Not using Small Estates path when eligible → wasted RM30K+ on High Court process.
+- Selling inherited property without proper transmission → void transfer, buyer cannot get clean title.
+- Muslim family ignoring Faraid — courts can override "gentleman's agreement" decades later.
+- Not getting date-of-death valuation → locked out of RPGT base step-up, paying way more tax.
+
+TEMPLATES TO PREPARE:
+- Notice to Tenant (landlord deceased, rent interim arrangement).
+- Letter to Amanah Raya (petition for administration).
+- Letter to Bank (request executor's account / letter of authority).
+- Letter to LHDN (notify estate TIN for rental income).
+- Family Consent Deed (all heirs agreeing to one heir managing interim).
+
+APPLY / VERIFY HERE:
+- Amanah Raya Berhad: amanahraya.com.my | 1-300-88-6863
+- State Land Office (Small Estates): jkptg.gov.my (find your state)
+- High Court Probate Registry: kehakiman.gov.my
+- Syariah Court (Muslim estate): jksm.gov.my (find state Syariah Court)
+- Malaysian Bar probate specialist: malaysianbar.org.my`
+  },
+
+  divorce_matrimonial: {
+    keywords: [
+      'divorce', 'perceraian', 'bercerai', '离婚',
+      'matrimonial', 'perkahwinan', 'pernikahan',
+      'ex-wife', 'ex-husband', 'bekas isteri', 'bekas suami', '前妻', '前夫',
+      'spouse block', 'pasangan halang', '配偶阻止',
+      'joint name divorce', 'nama bersama cerai',
+      'lra 1976', 'law reform marriage', 'akta membaharui undang-undang',
+      'matrimonial asset', 'harta sepencarian', '婚姻财产',
+      'matrimonial home', 'rumah matrimonial',
+      'interim injunction', 'injunksi interim', '临时禁制令',
+      'division of assets', 'pembahagian harta', '财产分割',
+      'islamic divorce', 'talak', 'fasakh', 'khuluk',
+      'syariah divorce', 'perceraian syariah'
+    ],
+    content: `DIVORCE + TENANTED / MATRIMONIAL PROPERTY:
+
+LEGAL FRAMEWORK:
+- NON-MUSLIM: Law Reform (Marriage and Divorce) Act 1976 (LRA 1976). Civil High Court jurisdiction.
+- MUSLIM: Islamic Family Law Enactment (state-specific, e.g., IFLE Selangor 2003, IFLE WP 1984). Syariah Court jurisdiction.
+- NEVER cross-jurisdictional: convert to Islam mid-marriage does NOT dissolve civil marriage automatically; must still obtain civil decree.
+- East Malaysia: Sabah/Sarawak have minor procedural variations.
+
+KEY PROVISIONS FOR PROPERTY DIVISION:
+- LRA 1976 s.76: Division of matrimonial assets.
+  * Jointly acquired: default 50/50 (but adjusted for contributions — financial, non-financial, domestic).
+  * Solely acquired by one party, other contributed (e.g., domestic work, childcare): court has discretion to award a share.
+  * Acquired before marriage + not jointly maintained: usually stays with original owner.
+- LRA 1976 s.77 — maintenance and division orders after decree.
+- LRA 1976 s.103 — interim orders / injunctions.
+- Islamic Family Law: harta sepencarian (jointly acquired matrimonial assets). Principles similar to LRA but applied via Syariah court with Islamic jurisprudential lens.
+
+STANDARD POSITION WHILE DIVORCE IS PENDING:
+- Property in joint names: NEITHER party can unilaterally sell, mortgage, or encumber without the other's consent (or court order).
+- Existing tenancies: both parties share landlord rights — tenant can continue paying rent into joint account.
+- Rent collected during pendency: often held in escrow / solicitor's stakeholder account pending final division.
+
+"EX-WIFE BLOCKING TENANCY RENEWAL / SALE" — YOUR OPTIONS:
+1. INTERIM INJUNCTION (LRA s.103): Apply to court for order allowing you to execute tenancy/sale in the interim. Court considers: (a) is the tenancy at market value? (b) is the proposed action in best interest of both parties? (c) is the objection reasonable or tactical?
+2. COURT-APPROVED SALE: If sale will satisfy both parties' divorce settlement, apply for court-approved sale with proceeds held in escrow until division finalized.
+3. PARTITION ACTION (NLC s.140): If one co-owner refuses to cooperate, apply to partition — court can order sale and division of proceeds. Available even outside divorce context.
+4. NEGOTIATION + CONSENT ORDER: Mediation → agreed settlement → consent order filed in court. Faster, cheaper (RM5K-15K). Avoids trial (RM80K-200K).
+
+MATRIMONIAL HOME vs INVESTMENT PROPERTY (different treatment):
+- MATRIMONIAL HOME: primary residence. Court gives strong preference to non-earning / custodial spouse with children. Often awarded to that spouse outright or with deferred sale.
+- INVESTMENT PROPERTY (rental units): treated as financial asset. Valued at market, divided based on contributions. Tenancies often kept running during proceedings.
+
+RENTAL INCOME DURING PROCEEDINGS:
+- Best practice: open stakeholder account, tenant pays rent into it, both parties (or their solicitors) jointly sign withdrawals.
+- Common: solicitor's client account acts as neutral holder.
+- Tenant's position: keep paying to existing account unless informed in writing by BOTH parties. If one party disputes, hold rent in trust (notify both).
+
+TENANT SIDE — LANDLORD COUPLE DIVORCING:
+- Keep paying rent as usual unless you receive joint written instruction to change.
+- Do NOT be drawn into either side's conflict — neutral position only.
+- If landlords dispute who is owner: pay into solicitor's stakeholder account (landlord must arrange) and document.
+- Tenancy continues per original terms; divorce does not terminate tenancy.
+- Deposit: remains held by whoever received it. At tenancy end, both spouses must jointly approve refund/deduction (or per court order).
+
+ISLAMIC DIVORCE SPECIFICS:
+- Talak (husband pronounces divorce), Khuluk (wife-initiated, with compensation), Fasakh (annulment via court), Ta'liq (conditional divorce triggered).
+- Harta sepencarian: contributions considered by Syariah Court.
+- Idah period (waiting period, ~3 months / menstrual cycles): husband typically provides maintenance + accommodation. Matrimonial home cannot be sold during idah without wife's consent.
+- Mut'ah (consolation gift): discretionary award.
+- Nafkah (maintenance): ongoing obligation where applicable.
+
+CROSS-CUTTING: CHILD CUSTODY + MATRIMONIAL HOME:
+- If there are young children, court tends to award use (not necessarily ownership) of matrimonial home to custodial parent until children reach age 18.
+- Ownership may be divided 50/50 but "right to live" goes to custodial parent.
+- Common outcome: "deferred sale" — property sold when youngest child turns 18 or custodial parent remarries.
+
+COMMON TRAPS:
+- Transferring property to a "friend" or LLC during divorce to dodge division = unlawful disposition, voidable; courts impose penal costs.
+- Letting tenancy lapse as "leverage" — court can order the other spouse to manage the asset and dock your share if you caused rent loss.
+- Renting property out suddenly during divorce without notice = unauthorised dealing; spouse can apply for injunction.
+- Ignoring interim orders = contempt of court; fines + imprisonment possible.
+- Taking "cash rent" off the books to hide income = tax evasion + distorts division share.
+
+PRACTICAL TIMELINE:
+- Pre-filing (mediation): 2-4 months (optional but often required first).
+- Filing + Case Management: 2-3 months.
+- Trial: 6-12 months (contested) / 1-2 months (uncontested, consent).
+- Division enforcement: 3-6 months post-decree.
+- Total typical: 12-24 months contested; 3-6 months amicable consent.
+
+COSTS (indicative, 2026):
+- Uncontested consent petition: RM5K-15K total legal fees.
+- Contested divorce with property + custody: RM80K-300K each side.
+- Syariah court (uncontested): RM3K-8K.
+- Syariah court (contested harta sepencarian): RM25K-100K.
+
+TEMPLATES TO PREPARE:
+- Letter to Tenant (re: interim rent arrangement during divorce).
+- Stakeholder account instruction (rent deposit holding).
+- Consent Order draft (property division + rental income allocation).
+- Application for Interim Injunction (LRA s.103 for urgent matters).
+
+APPLY / VERIFY HERE:
+- Civil High Court Family Division: kehakiman.gov.my
+- Syariah Court (state-specific): jksm.gov.my
+- Legal Aid Department (can't afford lawyer): jbg.gov.my
+- Bar Council Family Law Practitioners: malaysianbar.org.my`
+  },
+
+  abandonment: {
+    keywords: [
+      'abandoned', 'ditinggalkan', '弃置',
+      'tenant disappeared', 'penyewa hilang', '租客失踪',
+      'tenant ran away', 'penyewa lari',
+      'abandoned property', 'harta ditinggalkan',
+      'abandoned goods', 'barang ditinggalkan', '弃置财物',
+      'left belongings', 'tinggalkan barang',
+      'tenant skip', 'tenant skipped', 'kabur',
+      'distress act', 'akta distres', 'akta menyita',
+      're-let', 'sewa semula', '重新出租',
+      'tenant no contact', 'penyewa tiada kontak',
+      'empty unit tenant gone', 'unit kosong'
+    ],
+    content: `TENANT ABANDONMENT (disappeared, left belongings, re-letting):
+
+LEGAL FRAMEWORK:
+- Distress Act 1951 — landlord's right to seize goods for rent arrears + procedure for disposal.
+- Contracts Act 1950 — tenancy contract obligations.
+- Specific Relief Act 1950 — possession rights.
+- Tort of Conversion (common law) — unauthorised disposal of tenant's goods → landlord liable for market value.
+- Tort of Trespass to Goods — similar liability.
+
+STAGE 1 — CONFIRM ABANDONMENT (not just tenant on holiday):
+Classic abandonment indicators:
+- Rent unpaid 2+ months, no contact.
+- Utilities disconnected (TNB / IWK / Syabas — check with provider, they'll confirm).
+- Unanswered calls/messages for 14+ days.
+- Neighbours confirm tenant hasn't been seen.
+- Unit shows signs of hasty departure (half-packed, food rotting, critical items missing).
+- Mail piling up.
+
+Do NOT assume abandonment from just:
+- Dark windows (tenant may travel).
+- 1-month rent default (tenant may be late).
+- No reply to one message.
+
+STAGE 2 — DOCUMENT AND SERVE NOTICE:
+1. Physical inspection with witness (ideally MC security or a neighbour) — photograph everything, note state of utilities, food freshness, presence of belongings.
+2. Serve "Notice to Quit / Notice of Presumed Abandonment":
+   - Post one copy on the unit door (photograph it in situ with date/time).
+   - Mail registered + AR to tenant's last known address (tenancy agreement address).
+   - Email and WhatsApp to all contact numbers.
+   - Notice to include: arrears owed, 14-day deadline to contact, warning that further steps will be taken.
+3. Keep log: every message, phone call, visit — build the "reasonable diligence" trail.
+
+STAGE 3 — RIGHT OF ENTRY + INVENTORY:
+- After 14-day notice period expires + tenant still silent:
+- Enter with at least 2 witnesses (MC rep, neighbour, your agent — never alone).
+- Videotape the entry (continuous, no cuts) — this is evidence against accusations of theft.
+- Inventory every item present: list + photo. Separate high-value (laptop, electronics, jewellery) from low-value (clothes, kitchenware).
+- Note: landlord does NOT yet own tenant's goods. Distress Act procedure applies (see Stage 4).
+
+STAGE 4 — DISTRESS ACT 1951 PROCEDURE (for goods worth anything):
+- Apply for Warrant of Distress at Sessions Court in the district. Fee ~RM100-300. Sworn statement of rent arrears required.
+- Court issues warrant → bailiff attends property, inventories goods, seizes them (or leaves impounded).
+- Notice of Sale posted: goods auctioned after statutory period (typically 6 days for perishables, 14-30 days for other goods).
+- Proceeds deducted for arrears + costs; any surplus held for tenant (6-year limitation for claim).
+- Landlord PAID from sale proceeds. Any shortfall = civil claim against tenant.
+
+STAGE 5 — LOW-VALUE OR PERISHABLE ITEMS (practical fast track):
+- If goods appear to be worth less than cost of Distress Act procedure (e.g., old mattress, cheap clothes):
+  1. Serve 30-day notice ("collect goods or they will be disposed").
+  2. Send notice via multiple channels (post, email, WhatsApp).
+  3. Publish notice in a local newspaper (optional but strong defence).
+  4. After 30 days + no contact → dispose. Keep: inventory, photos, disposal receipts (donation centre, recycling), witness statement.
+- Risk: tenant returns and sues for conversion. Your defence = reasonable notice + proportionate disposal + no personal benefit. Courts usually accept if trail is clean.
+
+IF TENANT HAS LEFT VALUABLE ITEMS (laptop, car, jewelry):
+- Do NOT dispose informally. High value = high conversion liability (full market value damages).
+- Use full Distress Act procedure OR petition court for a "Disposal Order" in a summary application.
+- Alternative: store professionally (self-storage unit, RM200-500/month) for 3-6 months. Charge storage cost to tenant account.
+- Vehicle on premises: report to JPJ (may be stolen/unregistered), lodge police report — transfer legal responsibility before towing.
+
+RE-LETTING — WHEN IS IT SAFE:
+- Once possession is formally recovered (tenant surrendered OR Distress Act proceedings concluded OR court possession order), you can re-let.
+- Before formal recovery, re-letting risks "constructive eviction" claim if tenant returns (even if tenant was the breach-maker).
+- Document the "change of locks" with witness + notice to tenant's last contact.
+- Deposit: after deductions (arrears, damage, disposal cost), residual returned to tenant's bank or held 6 months.
+
+DEPOSIT APPLICATION:
+- Deposit can be applied to: unpaid rent, damage costs, disposal/distress costs, utility arrears.
+- Itemised list must be prepared (tenant may surface later and dispute).
+- If deposit exceeds arrears → hold residual in client account for at least 6 months before disposing.
+
+DANGER ZONES (DO NOT DO):
+- Immediately throw out belongings = tort of conversion. Courts awarded RM20K-100K damages.
+- Rent the unit again while tenant's goods are still inside — double exposure.
+- Keep valuable tenant items for personal use = civil + criminal (Penal Code s.403-408 CBT).
+- Change locks WITHOUT notice + witness + inventory — could be "self-help eviction" illegal under Specific Relief Act.
+
+IF TENANT RESURFACES AFTER YOU RE-LET:
+- Their remedy: damages if any, not possession (once you have re-let in good faith with proper notice).
+- Your shield: the paper trail (notices, inventory, photos, witness statements, Distress Act warrant).
+- Pay any residual deposit owed + itemised deduction — often ends the dispute.
+
+TAX ON ABANDONED DEPOSIT RESIDUAL:
+- Unclaimed deposit after 6 years → "forfeited" income to landlord. Declarable in Form BE / Form C year of forfeiture.
+- Better practice: try to return via bank transfer (last known account). If bounces, hold in suspense ledger, declare only when definitively abandoned.
+
+COMMON TRAPS:
+- No written notice before entry → tenant sues for trespass even if they abandoned.
+- Disposing of laptop/phone "because it was broken anyway" without inventory → conversion damages = cost of new device.
+- Not photographing state of unit at entry → tenant claims "you stole my things" with no counter-evidence.
+- Letting new tenant in before formally recovering possession → constructive eviction claim by original tenant.
+- Not deducting disposal/storage cost from deposit → later hard to claim.
+
+TEMPLATES TO PREPARE:
+- Notice of Presumed Abandonment (14-day).
+- Goods Collection Notice (30-day with disposal warning).
+- Inventory + Photo Log (signed by witness).
+- Warrant of Distress Application (Sessions Court).
+- Re-letting Readiness Checklist.
+
+APPLY / VERIFY HERE:
+- Sessions Court (Distress Act warrant): kehakiman.gov.my → find Sessions Court by district.
+- Malaysian Bar litigation practitioners: malaysianbar.org.my
+- Self-storage facilities (for valuable items): Storhub, ExtraSpace, Space Valet
+- Auction houses (distress sale): check with Sessions Court registry for approved bailiffs`
+  },
+
+  natural_disaster: {
+    keywords: [
+      'flood', 'banjir', '洪水',
+      'flash flood', 'banjir kilat', '山洪',
+      'natural disaster', 'bencana alam', '自然灾害',
+      'force majeure', 'keadaan tak terelak', '不可抗力',
+      'act of god', 'kehendak tuhan',
+      'nadma', 'agensi pengurusan bencana',
+      'disaster relief', 'bantuan bencana', '灾难救济',
+      'landslide', 'tanah runtuh', '山体滑坡',
+      'storm damage', 'kerosakan ribut', '风暴损害',
+      'uninhabitable', 'tidak boleh diduduki', '不能居住',
+      'rent abatement', 'pengurangan sewa', '减租',
+      'rent suspension', 'penggantungan sewa',
+      'contracts act s.57', 'frustration of contract'
+    ],
+    content: `NATURAL DISASTER (flood, storm, landslide) — tenancy, rent, insurance:
+
+LEGAL FRAMEWORK:
+- Contracts Act 1950 s.57 — frustration of contract (radical change in circumstances making performance impossible).
+- Common law doctrine of force majeure (applies only if tenancy agreement has FM clause — not implied).
+- National Disaster Management Agency Act 2011 (Act 805) — NADMA coordinates response.
+- Insurance: FSA 2013 + specific policy terms (most fire policies EXCLUDE flood without rider).
+- Local Government Act 1976 — PBT emergency powers.
+
+DOCTRINE OF FRUSTRATION (Contracts Act s.57):
+- When performance of contract becomes impossible through no party's fault, contract is discharged.
+- Applied to tenancies when property destroyed (fire, earthquake, landslide) — tenant released from future rent, landlord released from provision of premises.
+- NOT applied to temporary unavailability (e.g., 2-week flood clean-up) — partial performance still possible.
+- Test: has the commercial purpose been fundamentally destroyed, or merely interrupted?
+
+RENT ABATEMENT / SUSPENSION — WHEN:
+- Property UNINHABITABLE (flood submerged ground floor, roof collapsed, fire gutted interior): rent may be abated or suspended.
+- Most standard MY tenancy agreements have "damage clause": rent abates pro-rata if unit unusable, and tenant may terminate if repair >3-6 months.
+- Without written clause: implied duty of quiet enjoyment + implied warranty of fitness (commercial tenancies) may allow abatement.
+- Without clause AND not totally uninhabitable: rent continues. Tenant may sue for landlord's breach if landlord failed to repair.
+
+FLOOD-SPECIFIC (Ganu, KL flash, Kelantan, Johor, 2021+ baseline):
+- Flood plain zoning: check DID (Department of Irrigation & Drainage) map at did.gov.my — tenants and landlords should know risk level.
+- If unit is in "frequent flood" zone (>1 major event per 5 years), disclose to tenant at inception (good practice, reduces disputes).
+- Flash flood (urban drainage failure, not from river) — usually covered under "storm" peril + special perils rider.
+- River flood (overflow) — strictly under flood rider.
+
+INSURANCE TRIAGE — STEP BY STEP:
+1. SAFETY FIRST: do not re-enter until fire/water/structural risk clears.
+2. DOCUMENT: dated photos/videos (drone if possible), water marks on walls, damaged contents inventory with approximate values.
+3. REPORT:
+   - Insurer hotline (within 7 days, per most policies).
+   - Police report (for contents loss / looting during evacuation).
+   - PBT (for structural damage) — may trigger assessment + emergency order.
+   - NADMA or MKN for official declaration (boosts insurance credibility + qualifies for federal aid).
+4. MITIGATE: reasonable steps to prevent further damage — pump out water, board up windows, tarp roof, relocate salvageable items. KEEP RECEIPTS — claimable.
+5. LOSS ADJUSTER: insurer sends one within 5-10 days. Do not sign discharge voucher until you've verified the settlement.
+
+WHAT LANDLORD PAYS vs WHAT TENANT PAYS:
+- LANDLORD: building structure, built-in fixtures (wardrobes, kitchen cabinets integral to unit), restoration of common areas in landed properties.
+- TENANT: contents (their own furniture, electronics, clothes) — tenant's contents insurance handles this.
+- GREY AREAS (clarify at tenancy inception):
+  * Aircon — usually landlord's if installed; tenant's if tenant installed and can remove.
+  * Curtains / blinds — usually tenant's if not built-in.
+  * Washer/dryer — depends on who bought; typically landlord's if unfurnished lease.
+
+FEDERAL / STATE DISASTER RELIEF:
+- NADMA coordinated cash aid for affected households (Bantuan Korban Banjir RM1,000+ one-time for severely affected).
+- MADANI / BMM (Bantuan Madani) supplements — amount varies per budget.
+- State welfare: additional support in certain states (e.g., Kelantan "Bantuan Khas Rakyat" after major floods).
+- Landlord relief: some banks offer mortgage deferment / hardship restructure (request via RCC — Rangkaian Credit Counselling or bank direct).
+- Apply: nadma.gov.my | jkm.gov.my (Department of Social Welfare).
+
+TENANT CAN TERMINATE — WHEN:
+- If tenancy has "destruction" / "force majeure" clause → follow its terms (usually notice period + proportionate rent refund).
+- If no clause + property is totally destroyed → Contracts Act s.57 frustration automatically discharges tenancy.
+- If property is partially damaged + repair will take >3 months → tenant can typically serve termination notice (common clause).
+- If repair is <3 months → tenant usually required to stay (with rent abatement during unusable period).
+
+LANDLORD CAN TERMINATE / RELET — WHEN:
+- If major damage = tenancy frustrated → landlord free to rebuild and re-let.
+- If landlord elects NOT to rebuild (write-off): tenancy ends, tenant's deposit refunded pro-rata.
+- If repair is being done + tenant has relocated: tenancy continues (rent abated during repair), tenant returns on completion.
+
+RELIEF STEPS — LANDLORD CHECKLIST:
+☐ Inspect property safely.
+☐ Photo/video every damaged area before cleanup.
+☐ Notify insurer within 7 days (even if no rider — open claim early).
+☐ Pump water, salvage, mitigate — keep receipts.
+☐ Notify tenant in writing of expected repair timeline.
+☐ Offer rent abatement OR relocation OR termination per policy/law.
+☐ Apply for disaster relief (NADMA, state welfare).
+☐ Document all communications + expenses.
+☐ Final settlement with insurer → negotiate for full restoration cost.
+
+RELIEF STEPS — TENANT CHECKLIST:
+☐ Evacuate safely, photograph damage to personal belongings.
+☐ Activate contents insurance (if any).
+☐ Seek landlord's position on abatement / termination.
+☐ Apply for federal/state disaster aid.
+☐ Keep receipts for emergency relocation (Airbnb, hotel, boxes).
+☐ Document landlord's response timeline.
+
+RENT ABATEMENT FORMULA (practical):
+- Percentage abatement = % of unit unusable × days unusable / 30.
+- Example: 60% of unit (ground floor) flooded, unusable 20 days. Abatement = 60% × 20/30 = 40% of month's rent deducted.
+- If entire unit unusable: full rent suspension for affected period + deposit held in escrow.
+
+INSURANCE DISPUTE — OFS PATH:
+- If insurer denies flood claim citing "no rider" but policy schedule is ambiguous → appeal to Ombudsman for Financial Services (ofs.org.my). Free, binding on insurer up to RM250K personal / RM500K SME.
+- Common denial grounds: late notification, insufficient mitigation, pre-existing damage.
+
+PRACTICAL STRATEGIES:
+- Install flood-resistant features (raised electrical sockets, aluminium doors on ground floor, drainage improvements) — premium discount available.
+- Climate-change trend: consider periodic valuation + sum insured adjustment. Post-2021 reconstruction costs rose 25-40%.
+- For commercial tenants in flood-prone zones: negotiate "flood day" clauses in tenancy (e.g., X free days/year when operations halted).
+
+COMMON TRAPS:
+- Assuming fire policy covers flood → it doesn't unless rider is specified.
+- Failing to mitigate (not pumping water) → insurer reduces payout for "consequential loss."
+- Starting repair before loss adjuster visits → claim may be disputed.
+- No photo baseline of unit before tenancy → post-disaster disputes over "pre-existing" damage.
+- Letting tenant handle insurance when unit is still landlord's → confused claims, delayed restoration.
+
+TEMPLATES TO PREPARE:
+- Damage & Mitigation Log (photo-stamped, dated).
+- Rent Abatement Notice to Tenant (partial / full).
+- Termination Notice (frustration / destruction trigger).
+- Insurance Claim Bundle (photos, receipts, statement).
+- Disaster Relief Application Checklist.
+
+APPLY / VERIFY HERE:
+- NADMA: nadma.gov.my | 03-8870 4800
+- DID Flood Map: did.gov.my → Flood Risk Map
+- Dept Social Welfare (JKM): jkm.gov.my | 15999
+- MKN (National Security Council): mkn.gov.my
+- OFS (insurance dispute): ofs.org.my`
   },
 
   general: {
