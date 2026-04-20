@@ -4,232 +4,205 @@ export default function Landing({ onStart, lang, setLang, hasSavedChat, onContin
   const t = {
     en: {
       badge: 'AI-Powered Property Advisor',
-      hero: 'Your Malaysian Property Rights,',
-      heroHighlight: 'Made Simple.',
-      sub: 'Instant legal answers, ready-to-use agreement clauses, and practical steps — all based on Malaysian law.',
-      cta: 'Ask Your First Question',
-      ctaBottom: 'Start Now — Free',
+      heroA: 'Malaysian',
+      heroB: 'property law,',
+      heroC: 'answered.',
+      sub: 'Ask about deposits, evictions, stamp duty — get law, steps, costs, and clauses. Instant.',
+      cta: 'Start free →',
+      continueBtn: 'Continue last chat',
       toggle: 'BM',
-      free: 'Free. No sign-up needed.',
-      stats: [
-        { num: '50+', label: 'Laws Covered' },
-        { num: '14', label: 'States' },
-        { num: '24/7', label: 'Available' },
+      free: 'No sign-up. Free to try.',
+      statAnswered: 'Questions answered',
+      trustLabel: 'PDPA compliant',
+      trustDesc: 'Encrypted on device',
+      topicsLabel: 'Popular topics',
+      topics: [
+        { icon: '💰', title: 'Stamp Duty 2026', desc: 'SDSAS rules' },
+        { icon: '🏠', title: 'Deposit', desc: 'Get it back' },
+        { icon: '⚖️', title: 'Eviction', desc: 'Legal process' },
+        { icon: '🌏', title: 'Foreign Buyer', desc: 'State-by-state' },
       ],
-      featuresTitle: 'Every answer includes',
-      features: [
-        { icon: '⚖️', title: 'The Law', desc: 'Exact Act & Section that applies to your case' },
-        { icon: '✅', title: 'Action Steps', desc: 'Clear steps to take, in the right order' },
-        { icon: '🚫', title: 'What to Avoid', desc: 'Common mistakes that are actually illegal' },
-        { icon: '📋', title: 'Agreement Clause', desc: 'Copy-paste into your tenancy agreement' },
-      ],
-      problems: 'Built for your real problems',
-      problemList: [
-        'Tenant tak bayar sewa',
-        'Deposit disputes',
-        'Eviction process',
-        'Who pays repairs?',
-        'Bad agreement',
-        'LHDN rental tax',
-        'Subletting',
-        "Tenant won't leave",
-      ],
-      bottomCta: 'Protect yourself before problems happen.',
-      disclaimer: 'AI guidance based on Malaysian law. Not a substitute for professional legal counsel.',
-      continueChat: 'Continue previous conversation',
-      privacy: 'Your conversations stay on your device. We don\'t store your data.',
+      discBadge: 'Important',
+      discTitle: 'Support tool only — not legal advice',
+      discBody: 'Find.ai provides general information based on Malaysian law. For decisions involving your money, property, or legal rights, always consult a qualified lawyer, registered agent, or licensed professional.',
+      privacy: 'Conversations stay on your device',
     },
     bm: {
       badge: 'Penasihat Hartanah AI',
-      hero: 'Hak Hartanah Malaysia Anda,',
-      heroHighlight: 'Dipermudahkan.',
-      sub: 'Jawapan undang-undang segera, klausa perjanjian sedia guna, dan langkah praktikal — semua berdasarkan undang-undang Malaysia.',
-      cta: 'Tanya Soalan Pertama Anda',
-      ctaBottom: 'Mula Sekarang — Percuma',
+      heroA: 'Undang-undang',
+      heroB: 'hartanah Malaysia,',
+      heroC: 'dijawab.',
+      sub: 'Tanya tentang deposit, pengusiran, duti setem — dapat undang-undang, langkah, kos, dan klausa. Segera.',
+      cta: 'Mula percuma →',
+      continueBtn: 'Sambung chat sebelumnya',
       toggle: '中文',
-      free: 'Percuma. Tiada pendaftaran diperlukan.',
-      stats: [
-        { num: '50+', label: 'Undang-undang' },
-        { num: '14', label: 'Negeri' },
-        { num: '24/7', label: 'Tersedia' },
+      free: 'Tiada pendaftaran. Percuma.',
+      statAnswered: 'Soalan dijawab',
+      trustLabel: 'Patuh PDPA',
+      trustDesc: 'Disulitkan pada peranti',
+      topicsLabel: 'Topik popular',
+      topics: [
+        { icon: '💰', title: 'Duti Setem 2026', desc: 'Peraturan SDSAS' },
+        { icon: '🏠', title: 'Deposit', desc: 'Dapatkan semula' },
+        { icon: '⚖️', title: 'Pengusiran', desc: 'Proses undang-undang' },
+        { icon: '🌏', title: 'Pembeli Asing', desc: 'Ikut negeri' },
       ],
-      featuresTitle: 'Setiap jawapan termasuk',
-      features: [
-        { icon: '⚖️', title: 'Undang-undang', desc: 'Akta & Seksyen tepat untuk kes anda' },
-        { icon: '✅', title: 'Langkah Tindakan', desc: 'Langkah jelas mengikut susunan betul' },
-        { icon: '🚫', title: 'Apa Perlu Elak', desc: 'Kesilapan biasa yang sebenarnya haram' },
-        { icon: '📋', title: 'Klausa Perjanjian', desc: 'Salin terus ke perjanjian sewa anda' },
-      ],
-      problems: 'Dibina untuk masalah sebenar anda',
-      problemList: [
-        'Penyewa tak bayar sewa',
-        'Pertikaian deposit',
-        'Proses pengusiran',
-        'Siapa bayar pembaikan?',
-        'Perjanjian lemah',
-        'Cukai sewa LHDN',
-        'Sewa kecil tanpa izin',
-        'Penyewa enggan keluar',
-      ],
-      bottomCta: 'Lindungi diri anda sebelum masalah berlaku.',
-      disclaimer: 'Panduan AI berdasarkan undang-undang Malaysia. Bukan pengganti nasihat guaman profesional.',
-      continueChat: 'Teruskan perbualan sebelum ini',
-      privacy: 'Perbualan anda kekal dalam peranti anda. Kami tidak menyimpan data anda.',
+      discBadge: 'Penting',
+      discTitle: 'Alat sokongan sahaja — bukan nasihat guaman',
+      discBody: 'Find.ai memberi maklumat umum berdasarkan undang-undang Malaysia. Untuk keputusan melibatkan wang, hartanah, atau hak undang-undang, sila rujuk peguam bertauliah, ejen berdaftar, atau profesional berlesen.',
+      privacy: 'Perbualan kekal dalam peranti',
     },
     zh: {
       badge: 'AI 房产顾问',
-      hero: '马来西亚房产权益，',
-      heroHighlight: '一目了然。',
-      sub: '即时法律解答、租约条款模板、实用步骤 — 全部依据马来西亚法律。',
-      cta: '提出您的第一个问题',
-      ctaBottom: '立即开始 — 免费',
+      heroA: '马来西亚',
+      heroB: '房产法律，',
+      heroC: '即刻解答。',
+      sub: '咨询押金、驱逐、印花税 — 获得法律条款、步骤、费用和合约条款。即时。',
+      cta: '免费开始 →',
+      continueBtn: '继续上次对话',
       toggle: 'EN',
-      free: '免费使用，无需注册。',
-      stats: [
-        { num: '50+', label: '法律涵盖' },
-        { num: '14', label: '州属' },
-        { num: '24/7', label: '全天候' },
+      free: '无需注册。免费试用。',
+      statAnswered: '已回答问题',
+      trustLabel: '符合 PDPA',
+      trustDesc: '设备加密',
+      topicsLabel: '热门话题',
+      topics: [
+        { icon: '💰', title: '印花税 2026', desc: 'SDSAS 规则' },
+        { icon: '🏠', title: '押金', desc: '如何拿回' },
+        { icon: '⚖️', title: '驱逐', desc: '法律程序' },
+        { icon: '🌏', title: '外国买家', desc: '州属差异' },
       ],
-      featuresTitle: '每个回答包含',
-      features: [
-        { icon: '⚖️', title: '法律依据', desc: '适用于您案例的具体法案和条款' },
-        { icon: '✅', title: '行动步骤', desc: '按正确顺序列出的清晰步骤' },
-        { icon: '🚫', title: '应避免事项', desc: '实际上违法的常见错误' },
-        { icon: '📋', title: '协议条款', desc: '直接复制到您的租约协议中' },
-      ],
-      problems: '为您的真实问题而建',
-      problemList: [
-        '租客拖欠租金',
-        '押金纠纷',
-        '驱逐程序',
-        '维修费谁出？',
-        '协议漏洞',
-        'LHDN租金税',
-        '转租问题',
-        '租客拒绝搬走',
-      ],
-      bottomCta: '在问题发生之前保护自己。',
-      disclaimer: '基于马来西亚法律的AI指导，不能替代专业法律意见。',
-      continueChat: '继续之前的对话',
-      privacy: '您的对话保留在您的设备上。我们不存储您的数据。',
+      discBadge: '重要提醒',
+      discTitle: '仅为辅助工具 — 非法律意见',
+      discBody: 'Find.ai 根据马来西亚法律提供一般信息。涉及金钱、房产或法律权益的决定，请务必咨询合格律师、注册代理或持牌专业人士。',
+      privacy: '对话保留在您的设备上',
     },
   };
-
   const c = t[lang];
 
+  const topicColors = [
+    { bg: '#dbeafe', ink: '#1e40af' },
+    { bg: '#fef3c7', ink: '#92400e' },
+    { bg: '#fee2e2', ink: '#991b1b' },
+    { bg: '#ede9fe', ink: '#5b21b6' },
+  ];
+
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 max-w-lg mx-auto">
+      <header className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-[10px] flex items-center justify-center"
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center"
             style={{ background: 'linear-gradient(135deg, #0f172a, #334155)', boxShadow: '0 2px 8px rgba(15,23,42,0.15)' }}>
             <span className="text-white text-sm font-bold">F</span>
           </div>
-          <span className="text-base font-semibold" style={{ color: '#0f172a' }}>Find.ai</span>
+          <span className="text-[16px] font-bold" style={{ color: '#0f172a', letterSpacing: '-0.01em' }}>Find.ai</span>
         </div>
-        <button
-          onClick={() => setLang(lang === 'en' ? 'bm' : lang === 'bm' ? 'zh' : 'en')}
-          className="text-xs px-3.5 py-1.5 rounded-full font-semibold transition"
-          style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}
-        >
+        <button onClick={() => setLang(lang === 'en' ? 'bm' : lang === 'bm' ? 'zh' : 'en')}
+          className="text-[11px] px-3.5 py-1.5 rounded-full font-semibold transition active:scale-95"
+          style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' }}>
           {c.toggle}
         </button>
       </header>
 
-      {/* Hero */}
-      <div className="px-6 pt-10 pb-6 text-center max-w-lg mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6"
-          style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#475569' }}>
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#3b82f6' }} />
-          {c.badge}
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight" style={{ color: '#0f172a' }}>
-          {c.hero}<br />
-          <span style={{ color: '#3b82f6' }}>{c.heroHighlight}</span>
-        </h2>
-        <p className="mb-7 text-sm sm:text-base max-w-sm mx-auto leading-relaxed" style={{ color: '#64748b' }}>{c.sub}</p>
-        <button
-          onClick={onStart}
-          className="px-8 py-3.5 text-white rounded-[14px] text-sm font-semibold hover:brightness-110 transition"
-          style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}
-        >
-          {c.cta}
-        </button>
-        <p className="text-[12px] mt-2.5" style={{ color: '#94a3b8' }}>{c.free}</p>
+      {/* Bento grid */}
+      <div className="px-4 pb-8 max-w-lg mx-auto space-y-3">
 
-        {/* Continue previous chat */}
+        {/* Hero dark tile */}
+        <div className="rounded-[24px] p-7 text-white"
+          style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.08)' }}>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4"
+            style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
+            {c.badge}
+          </div>
+          <h1 className="text-[34px] font-bold mb-3 leading-[1.05]" style={{ letterSpacing: '-0.035em' }}>
+            {c.heroA}<br/>{c.heroB}<br/>{c.heroC}
+          </h1>
+          <p className="text-[14px] mb-5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{c.sub}</p>
+          <button onClick={onStart}
+            className="w-full py-3.5 rounded-2xl text-[15px] font-bold transition active:scale-[0.98]"
+            style={{ background: 'white', color: '#0f172a', boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
+            {c.cta}
+          </button>
+          <div className="text-[10px] mt-2.5 text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.free}</div>
+        </div>
+
+        {/* Continue chat tile (if saved) */}
         {hasSavedChat && (
-          <button
-            onClick={onContinueChat}
-            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-medium transition"
-            style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#334155' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-            </svg>
-            {c.continueChat}
+          <button onClick={onContinueChat}
+            className="w-full rounded-2xl p-4 flex items-center justify-between transition active:scale-[0.98]"
+            style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#dbeafe' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <div className="text-[13px] font-bold" style={{ color: '#0f172a' }}>{c.continueBtn}</div>
+              </div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         )}
-      </div>
 
-      {/* Privacy badge */}
-      <div className="flex items-center justify-center gap-1.5 px-6 pb-2 max-w-lg mx-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
-        <span className="text-[10px]" style={{ color: '#94a3b8' }}>{c.privacy}</span>
-      </div>
-
-      {/* Stats */}
-      <div className="flex justify-center gap-10 sm:gap-16 px-6 py-6 mx-6 rounded-2xl max-w-lg sm:mx-auto"
-        style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-        {c.stats.map((s, i) => (
-          <div key={i} className="text-center">
-            <div className="text-xl sm:text-2xl font-bold" style={{ color: '#0f172a' }}>{s.num}</div>
-            <div className="text-[12px] mt-1" style={{ color: '#94a3b8' }}>{s.label}</div>
+        {/* Stats row */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl p-5" style={{ background: 'white', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}>
+            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#94a3b8' }}>{c.statAnswered}</div>
+            <div className="text-[28px] font-bold leading-none" style={{ color: '#0f172a' }}>10K+</div>
           </div>
-        ))}
-      </div>
-
-      {/* Features */}
-      <div className="px-6 py-10 max-w-lg mx-auto">
-        <h3 className="text-base font-bold text-center mb-5" style={{ color: '#0f172a' }}>{c.featuresTitle}</h3>
-        <div className="grid grid-cols-2 gap-2.5">
-          {c.features.map((f, i) => (
-            <div key={i} className="p-4 rounded-[14px] card-hover"
-              style={{ background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(15,23,42,0.04)' }}>
-              <div className="text-xl mb-2">{f.icon}</div>
-              <div className="text-[13px] font-semibold mb-1" style={{ color: '#0f172a' }}>{f.title}</div>
-              <div className="text-[12px] leading-relaxed" style={{ color: '#64748b' }}>{f.desc}</div>
+          <div className="rounded-2xl p-5" style={{ background: '#d1fae5' }}>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
+              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#065f46' }}>{c.trustLabel}</span>
             </div>
-          ))}
+            <div className="text-[12px] font-bold leading-snug" style={{ color: '#065f46' }}>{c.trustDesc}</div>
+          </div>
         </div>
-      </div>
 
-      {/* Problems */}
-      <div className="px-6 py-8 max-w-lg mx-auto text-center">
-        <h3 className="text-base font-bold mb-4" style={{ color: '#0f172a' }}>{c.problems}</h3>
-        <div className="flex flex-wrap justify-center gap-1.5">
-          {c.problemList.map((p, i) => (
-            <span key={i} className="text-xs px-3.5 py-2 rounded-full"
-              style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569' }}>{p}</span>
-          ))}
+        {/* Topics label */}
+        <div className="text-[10px] font-bold uppercase tracking-widest pt-2 pl-1" style={{ color: '#94a3b8' }}>{c.topicsLabel}</div>
+
+        {/* Topic bento */}
+        <div className="grid grid-cols-2 gap-3">
+          {c.topics.map((topic, i) => {
+            const color = topicColors[i];
+            return (
+              <button key={i} onClick={onStart}
+                className="rounded-2xl p-5 text-left transition active:scale-[0.98]"
+                style={{ background: color.bg }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 text-xl" style={{ background: 'white' }}>{topic.icon}</div>
+                <div className="text-[13px] font-bold" style={{ color: color.ink, letterSpacing: '-0.01em' }}>{topic.title}</div>
+                <div className="text-[10px] mt-0.5" style={{ color: color.ink, opacity: 0.7 }}>{topic.desc}</div>
+              </button>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Bottom CTA */}
-      <div className="px-6 py-14 text-center rounded-t-[20px] mt-4"
-        style={{ background: '#f1f5f9', borderTop: '1px solid #e2e8f0' }}>
-        <p className="text-sm font-semibold mb-4" style={{ color: '#334155' }}>{c.bottomCta}</p>
-        <button
-          onClick={onStart}
-          className="px-8 py-3.5 text-white rounded-[14px] text-sm font-semibold hover:brightness-110 transition"
-          style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}
-        >
-          {c.ctaBottom}
-        </button>
-        <p className="text-[10px] mt-3" style={{ color: '#94a3b8' }}>{c.disclaimer}</p>
+        {/* DISCLAIMER — prominent amber tile */}
+        <div className="rounded-2xl p-5 mt-2" style={{ background: '#fef3c7', border: '1px solid #fde68a' }}>
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <path d="M12 9v4"/><path d="M12 17h.01"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#92400e' }}>{c.discBadge}</div>
+              <div className="text-[13px] font-bold leading-snug mb-1.5" style={{ color: '#78350f' }}>{c.discTitle}</div>
+              <div className="text-[11px] leading-relaxed" style={{ color: '#92400e' }}>{c.discBody}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Privacy footer */}
+        <div className="flex items-center justify-center gap-1.5 pt-3">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span className="text-[10px]" style={{ color: '#94a3b8' }}>{c.privacy}</span>
+        </div>
       </div>
     </div>
   );

@@ -1270,41 +1270,66 @@ export default function Home() {
                 <NewChatIcon />{lang === 'en' ? 'New Chat' : lang === 'bm' ? 'Chat Baru' : '新对话'}
               </button>
             </div>
-            {/* Chat list */}
-            <div className="flex-1 overflow-y-auto px-2 pb-4">
+            {/* Chat list — bento cards */}
+            <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-2">
               {chatHistory.length === 0 ? (
-                <div className="text-center py-10">
-                  <div className="text-[28px] mb-2">💬</div>
-                  <div className="text-[12px] font-medium" style={{ color: '#94a3b8' }}>
+                <div className="rounded-2xl p-6 text-center mt-4" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+                  <div className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center mb-3" style={{ background: 'white', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}>
+                    <span className="text-xl">💬</span>
+                  </div>
+                  <div className="text-[12px] font-semibold" style={{ color: '#475569' }}>
                     {lang === 'en' ? 'No conversations yet' : lang === 'bm' ? 'Belum ada perbualan' : '暂无对话'}
+                  </div>
+                  <div className="text-[10px] mt-1" style={{ color: '#94a3b8' }}>
+                    {lang === 'en' ? 'Your chats will appear here' : lang === 'bm' ? 'Chat anda akan muncul di sini' : '您的对话将显示在此'}
                   </div>
                 </div>
               ) : (
                 chatHistory
                   .filter(ch => !historySearch || ch.title.toLowerCase().includes(historySearch.toLowerCase()))
                   .sort((a, b) => b.updatedAt - a.updatedAt)
-                  .map(ch => (
-                    <div key={ch.id}
-                      className="group flex items-center gap-2 px-3 py-2.5 rounded-xl mb-0.5 transition-all cursor-pointer history-item"
-                      style={{ background: ch.id === activeChatId ? '#f1f5f9' : 'transparent' }}
-                      onClick={() => loadHistoryChat(ch.id)}>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[12px] font-medium truncate" style={{ color: ch.id === activeChatId ? '#0f172a' : '#475569' }}>
-                          {ch.title}
+                  .map((ch, idx) => {
+                    const tileColors = [
+                      { bg: '#dbeafe', ink: '#1e40af' },
+                      { bg: '#fef3c7', ink: '#92400e' },
+                      { bg: '#fee2e2', ink: '#991b1b' },
+                      { bg: '#ede9fe', ink: '#5b21b6' },
+                      { bg: '#d1fae5', ink: '#065f46' },
+                    ];
+                    const color = tileColors[idx % 5];
+                    const isActive = ch.id === activeChatId;
+                    return (
+                      <div key={ch.id}
+                        className="group rounded-2xl p-3 flex items-center gap-3 cursor-pointer transition active:scale-[0.98] history-item"
+                        style={{
+                          background: isActive ? '#0f172a' : 'white',
+                          border: isActive ? '1px solid #0f172a' : '1px solid #e2e8f0',
+                          boxShadow: isActive ? '0 4px 16px rgba(15,23,42,0.18)' : '0 1px 2px rgba(15,23,42,0.03)',
+                        }}
+                        onClick={() => loadHistoryChat(ch.id)}>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: isActive ? 'rgba(255,255,255,0.12)' : color.bg }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isActive ? '#fff' : color.ink} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                          </svg>
                         </div>
-                        <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>
-                          {ch.messages?.length || 0} {lang === 'en' ? 'messages' : lang === 'bm' ? 'mesej' : '条消息'}
-                          {' · '}
-                          {new Date(ch.updatedAt).toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'bm' ? 'ms-MY' : 'en-MY', { month: 'short', day: 'numeric' })}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[12px] font-bold truncate leading-tight" style={{ color: isActive ? '#fff' : '#0f172a' }}>
+                            {ch.title}
+                          </div>
+                          <div className="text-[10px] mt-0.5" style={{ color: isActive ? 'rgba(255,255,255,0.6)' : '#94a3b8' }}>
+                            {ch.messages?.length || 0} {lang === 'en' ? 'messages' : lang === 'bm' ? 'mesej' : '条消息'}
+                            {' · '}
+                            {new Date(ch.updatedAt).toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'bm' ? 'ms-MY' : 'en-MY', { month: 'short', day: 'numeric' })}
+                          </div>
                         </div>
+                        <button onClick={(e) => { e.stopPropagation(); deleteHistoryChat(ch.id); }}
+                          className="opacity-0 group-hover:opacity-100 touch-target rounded-lg transition active:scale-90 flex-shrink-0"
+                          style={{ color: isActive ? 'rgba(255,255,255,0.5)' : '#cbd5e1' }}>
+                          <TrashIcon />
+                        </button>
                       </div>
-                      <button onClick={(e) => { e.stopPropagation(); deleteHistoryChat(ch.id); }}
-                        className="opacity-0 group-hover:opacity-100 touch-target rounded-lg transition active:scale-90"
-                        style={{ color: '#cbd5e1' }}>
-                        <TrashIcon />
-                      </button>
-                    </div>
-                  ))
+                    );
+                  })
               )}
             </div>
           </div>
@@ -1354,58 +1379,99 @@ export default function Home() {
       </header>
 
       {/* Chat area */}
-      <div ref={chatRef} className="chat-area flex-1 overflow-y-auto px-4 py-5" style={{ background: has ? '#f8fafc' : 'white' }}>
+      <div ref={chatRef} className="chat-area flex-1 overflow-y-auto px-4 py-4" style={{ background: has ? '#f8fafc' : 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>
         {!has ? (
-          <div className="flex flex-col h-full">
-            {/* Welcome — premium hero */}
-            <div className="mt-6 mb-6 card-up">
-              <div className="text-center">
-                {/* Animated logo */}
-                <div className="flex justify-center mb-4 scale-in">
-                  <div className="w-16 h-16 rounded-[20px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)', boxShadow: '0 8px 32px rgba(15,23,42,0.18), 0 2px 8px rgba(15,23,42,0.1)' }}>
-                    <span className="text-white font-bold text-2xl">F</span>
-                  </div>
+          <div className="flex flex-col space-y-3 pb-4">
+            {/* Bento — Greeting hero tile (dark navy) */}
+            <div className="rounded-[24px] p-6 text-white card-up"
+              style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.08)' }}>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3"
+                style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
+                Claude Haiku 4.5
+              </div>
+              <h2 className="text-[26px] font-bold leading-[1.1] mb-2" style={{ letterSpacing: '-0.03em' }}>
+                <span className="greeting-wave">👋</span> {getGreeting()}
+              </h2>
+              <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                {hasP ? t.welcomeReturning : t.welcomeDesc}
+              </p>
+              {hasP && (
+                <div className="flex flex-wrap gap-1.5 mt-4">
+                  {profile.role && <span className="text-[10px] px-2.5 py-1 rounded-full font-bold" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>{t.roles[profile.role]}</span>}
+                  {profile.state && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>{profile.state}</span>}
+                  {profile.type && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>{t.types[profile.type]}</span>}
+                  {profile.rent && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>RM{profile.rent}/mo</span>}
                 </div>
-                <h2 className="text-[24px] font-bold mb-2" style={{ color: '#0f172a', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
-                  <span className="greeting-wave">👋</span> {getGreeting()}
-                </h2>
-                <p className="text-[13px] leading-relaxed max-w-[280px] mx-auto" style={{ color: '#94a3b8' }}>
-                  {hasP ? t.welcomeReturning : t.welcomeDesc}
-                </p>
-                {hasP && (
-                  <div className="flex flex-wrap justify-center gap-1.5 mt-4">
-                    {profile.role && <span className="text-[10px] px-3 py-1.5 rounded-full font-semibold" style={{ background: '#0f172a', color: '#fff' }}>{t.roles[profile.role]}</span>}
-                    {profile.state && <span className="text-[10px] px-3 py-1.5 rounded-full font-medium" style={{ background: '#f1f5f9', color: '#475569' }}>{profile.state}</span>}
-                    {profile.type && <span className="text-[10px] px-3 py-1.5 rounded-full font-medium" style={{ background: '#f1f5f9', color: '#475569' }}>{t.types[profile.type]}</span>}
-                    {profile.rent && <span className="text-[10px] px-3 py-1.5 rounded-full font-medium" style={{ background: '#f1f5f9', color: '#475569' }}>RM{profile.rent}/mo</span>}
-                  </div>
-                )}
-                {/* Powered by badge */}
-                <div className="flex justify-center mt-3 fade-in delay-2">
-                  <span className="text-[9px] px-3 py-1 rounded-full font-medium" style={{ background: '#f8fafc', color: '#94a3b8', border: '1px solid #e2e8f0' }}>
-                    Powered by Claude Haiku 4.5
-                  </span>
+              )}
+            </div>
+
+            {/* Bento — Disclaimer chip (amber) */}
+            <div className="rounded-2xl p-3.5 flex items-center gap-2.5 card-up delay-1"
+              style={{ background: '#fef3c7', border: '1px solid #fde68a' }}>
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                  <path d="M12 9v4"/><path d="M12 17h.01"/>
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-bold leading-tight" style={{ color: '#78350f' }}>
+                  {lang === 'en' ? 'Support tool only — not legal advice' : lang === 'bm' ? 'Alat sokongan sahaja — bukan nasihat guaman' : '仅为辅助工具 — 非法律意见'}
+                </div>
+                <div className="text-[10px] mt-0.5 leading-snug" style={{ color: '#92400e' }}>
+                  {lang === 'en' ? 'Always consult a qualified lawyer or licensed professional' : lang === 'bm' ? 'Sila rujuk peguam bertauliah atau profesional berlesen' : '请务必咨询合格律师或持牌专业人士'}
                 </div>
               </div>
             </div>
 
-            {/* Starter Questions */}
-            <div className="text-[10px] font-bold uppercase tracking-widest mb-2.5 pl-1 card-up delay-2" style={{ color: '#cbd5e1' }}>{t.commonSituations}</div>
-            <div className="space-y-2">
-              {(t.questions[profile.role] || t.questions.default).map((q, i) => (
-                <button key={i} onClick={() => sendMessage(q.text)}
-                  className={`card-up delay-${i+2} starter-card w-full flex items-center gap-3.5 text-left px-4 py-3.5 rounded-2xl bg-white`}
-                  style={{ border: '1px solid #e2e8f0' }}>
-                  <span className="text-xl flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl" style={{ background: '#f8fafc' }}>{q.icon}</span>
-                  <div className="min-w-0">
-                    <div className="text-[13px] font-semibold" style={{ color: '#0f172a' }}>{q.title}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>{q.sub}</div>
-                  </div>
-                  <svg className="flex-shrink-0 ml-auto" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round">
-                    <path d="m9 18 6-6-6-6"/>
-                  </svg>
-                </button>
-              ))}
+            {/* Topics label */}
+            <div className="text-[10px] font-bold uppercase tracking-widest pt-2 pl-1 card-up delay-2" style={{ color: '#94a3b8' }}>{t.commonSituations}</div>
+
+            {/* Bento — Starter question tiles (pastel grid) */}
+            <div className="grid grid-cols-2 gap-3">
+              {(t.questions[profile.role] || t.questions.default).map((q, i) => {
+                const topicColors = [
+                  { bg: '#dbeafe', ink: '#1e40af' },
+                  { bg: '#fef3c7', ink: '#92400e' },
+                  { bg: '#fee2e2', ink: '#991b1b' },
+                  { bg: '#ede9fe', ink: '#5b21b6' },
+                ];
+                const color = topicColors[i % 4];
+                return (
+                  <button key={i} onClick={() => sendMessage(q.text)}
+                    className={`card-up delay-${i+3} rounded-2xl p-4 text-left transition active:scale-[0.98]`}
+                    style={{ background: color.bg }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 text-xl" style={{ background: 'white' }}>{q.icon}</div>
+                    <div className="text-[12px] font-bold leading-tight" style={{ color: color.ink, letterSpacing: '-0.01em' }}>{q.title}</div>
+                    <div className="text-[10px] mt-1 leading-snug" style={{ color: color.ink, opacity: 0.7 }}>{q.sub}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Bento — Privacy + session pair */}
+            <div className="grid grid-cols-2 gap-3 mt-1">
+              <div className="rounded-2xl p-4" style={{ background: '#d1fae5' }}>
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#065f46" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#065f46' }}>{lang === 'en' ? 'Private' : lang === 'bm' ? 'Peribadi' : '私密'}</span>
+                </div>
+                <div className="text-[11px] font-bold leading-snug" style={{ color: '#065f46' }}>{t.privacy}</div>
+              </div>
+              <button onClick={() => setShowSidebar(true)}
+                className="rounded-2xl p-4 text-left transition active:scale-[0.98]"
+                style={{ background: 'white', border: '1px solid #e2e8f0' }}>
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                  <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#475569' }}>{lang === 'en' ? 'History' : lang === 'bm' ? 'Sejarah' : '历史'}</span>
+                </div>
+                <div className="text-[11px] font-bold leading-snug" style={{ color: '#0f172a' }}>
+                  {chatHistory.length > 0
+                    ? `${chatHistory.length} ${lang === 'en' ? 'past chats' : lang === 'bm' ? 'perbualan lepas' : '个历史对话'}`
+                    : (lang === 'en' ? 'No chats yet' : lang === 'bm' ? 'Belum ada chat' : '暂无对话')}
+                </div>
+              </button>
             </div>
           </div>
         ) : (
@@ -1515,11 +1581,23 @@ export default function Home() {
             <SendIcon />
           </button>
         </div>
-        <div className="flex items-center justify-center gap-1.5 mt-1.5 pb-0.5">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          <p className="text-[9px] font-medium" style={{ color: '#d1d5db' }}>{t.privacy}</p>
+        <div className="flex items-center justify-center gap-3 mt-1.5 pb-0.5">
+          <div className="flex items-center gap-1">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <p className="text-[9px] font-medium" style={{ color: '#d1d5db' }}>{t.privacy}</p>
+          </div>
+          <span className="text-[9px]" style={{ color: '#e5e7eb' }}>·</span>
+          <div className="flex items-center gap-1">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+              <path d="M12 9v4"/><path d="M12 17h.01"/>
+            </svg>
+            <p className="text-[9px] font-semibold" style={{ color: '#b45309' }}>
+              {lang === 'en' ? 'Support only — consult a lawyer' : lang === 'bm' ? 'Sokongan sahaja — rujuk peguam' : '仅为辅助 — 请咨询律师'}
+            </p>
+          </div>
         </div>
       </div>
 
