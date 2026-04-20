@@ -1388,7 +1388,7 @@ export default function Home() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3"
                 style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
-                Claude Haiku 4.5
+                Cakap 1.0
               </div>
               <h2 className="text-[26px] font-bold leading-[1.1] mb-2" style={{ letterSpacing: '-0.03em' }}>
                 <span className="greeting-wave">👋</span> {getGreeting()}
