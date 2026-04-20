@@ -739,12 +739,22 @@ export default function Home() {
     setLang(load('fi_lang', 'en'));
     setProfile(load('fi_profile', { role: '', state: '', type: '', rent: '' }));
     setFeedbackMap(load('fi_feedback', {}));
-    setChatHistory(load('fi_chat_history', []));
+    const history = load('fi_chat_history', []);
+    setChatHistory(history);
+    // Restore activeChatId so case memory (property nickname, tenant, tax dates)
+    // survives a refresh. Validate against history to avoid dangling IDs.
+    const savedActiveId = load('fi_active_chat_id', null);
+    if (savedActiveId && history.some(ch => ch.id === savedActiveId)) {
+      setActiveChatId(savedActiveId);
+      const activeEntry = history.find(ch => ch.id === savedActiveId);
+      if (activeEntry?.messages?.length) setMessages(activeEntry.messages);
+    }
     if (load('fi_messages', []).length > 0) setHasSavedChat(true);
     setReady(true);
   }, []);
 
   useEffect(() => { if (ready) save('fi_lang', lang); }, [lang, ready]);
+  useEffect(() => { if (ready && activeChatId) save('fi_active_chat_id', activeChatId); }, [activeChatId, ready]);
   useEffect(() => {
     if (ready && messages.length > 0) {
       const real = messages.filter(m => m.content !== '');
@@ -1389,13 +1399,24 @@ export default function Home() {
 
   const clearChat = () => { startNewChat(); setHasSavedChat(false); };
   const loadChat = () => {
+    // Prefer resuming the most recent chat entry (preserves memory/caseType).
+    // Fall back to the orphaned fi_messages only if no history exists.
+    const history = load('fi_chat_history', []);
+    if (history.length > 0) {
+      const latest = history[0];
+      setActiveChatId(latest.id);
+      setMessages(latest.messages || []);
+      setHasSavedChat(false);
+      setShowChat(true);
+      setShowSidebar(false);
+      return;
+    }
     const saved = load('fi_messages', []);
     const newId = generateChatId();
     setActiveChatId(newId);
     setMessages(saved);
     setHasSavedChat(false);
     setShowChat(true);
-    // Add to history if not already there
     if (saved.length > 0) {
       setChatHistory(prev => {
         const updated = [{ id: newId, title: getChatTitle(saved), messages: saved, createdAt: Date.now(), updatedAt: Date.now() }, ...prev];
