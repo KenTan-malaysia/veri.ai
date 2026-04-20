@@ -54,10 +54,65 @@ STAMP DUTY ON PROPERTY PURCHASE (MOT):
 - First-time homebuyer exemption: 100% exemption on MOT + loan stamp duty for homes ≤RM500,000 (until 31 Dec 2027).
 - Stamp duty on loan agreement: flat 0.5% of total loan amount.
 
-REAL CASES — STAMP DUTY:
-• Landlord tried to enforce deposit deduction using unstamped agreement at Tribunal. Case dismissed — s.52 Stamp Act. Landlord then paid late stamping penalty (RM100 + 20%) and refiled. Second attempt succeeded because agreement was now admissible.
+STAMPS PORTAL — STEP-BY-STEP E-STAMPING (LHDN DIGITAL SYSTEM):
+From 2026, ALL tenancy stamping goes through the LHDN STAMPS portal (stamps.hasil.gov.my). No more walk-in counter for standard tenancies.
+
+WALKTHROUGH — FIRST-TIME LANDLORD:
+1. Register at mytax.hasil.gov.my → get TIN (Tax Identification Number). All landlords collecting rent need a TIN from 2026.
+2. Log in to stamps.hasil.gov.my with MyTax credentials.
+3. Click "Permohonan Setem" (Application for Stamping) → "Perjanjian Sewa" (Tenancy Agreement).
+4. SDSAS self-assessment form auto-loads. Fill:
+   - Landlord details (name, IC/SSM, TIN, address)
+   - Tenant details (name, IC/passport, contact)
+   - Property address + type (residential/commercial/industrial)
+   - Lease start + end date
+   - Monthly rent + any non-rent considerations (premium, key money)
+   - Deposit amount (for record, not taxed)
+5. System auto-calculates duty using Math.ceil(annual_rent ÷ 250) × rate. VERIFY the number matches your own calculation — you are legally responsible for accuracy under SDSAS.
+6. Upload signed tenancy agreement (PDF, max 10MB). Both pages of signatures required.
+7. Pay online: FPX (direct bank), credit card, or e-wallet (TNG, Boost, GrabPay). Receipt issued instantly.
+8. Download digital stamp certificate (PDF with QR code + unique Stamp Serial No.). This is your PROOF of stamping.
+9. Attach the stamp certificate PDF to your signed tenancy agreement. Keep both together — this is the "stamped agreement" going forward.
+
+DIGITAL STAMP CERTIFICATE — IS MY PDF LEGALLY VALID?
+- YES. LHDN digital certificates are legally equivalent to physical stamps under Stamp Act 1949 (as amended 2024) + Digital Signature Act 1997.
+- QR code on certificate links to stamps.hasil.gov.my verification page — anyone (tenant, judge, Tribunal, MC) can scan to confirm authenticity.
+- Courts and RTT accept digital certificates as evidence. No need to print and physically affix.
+- Verification URL pattern: https://stamps.hasil.gov.my/verify?serial=[STAMP_SERIAL_NO]
+- Red flags (certificate may be fake):
+  * QR code doesn't resolve to stamps.hasil.gov.my
+  * Serial number not found in LHDN database
+  * Date/amount on cert doesn't match agreement
+  * PDF metadata shows recent edit after issuance
+- Tenant's right: DEMAND the stamp certificate within 30 days of signing. If landlord can't produce it, agreement is unstamped — tenant has leverage in any future dispute.
+
+LATE STAMPING VIA STAMPS PORTAL (CURE PROCESS):
+1. Log in → "Permohonan Setem" → select agreement → system detects late filing.
+2. System auto-calculates penalty based on how late:
+   - ≤3 months late: RM50 or 10% of duty, whichever higher
+   - 3-6 months late: RM100 or 20%
+   - >6 months: case-by-case (may require manual review by LHDN officer)
+3. Pay duty + penalty together. Certificate issued with "Late Stamped" annotation.
+4. Agreement is now admissible in court. BUT: if you already tried to use unstamped agreement and lost, that case is finished — you cannot re-litigate.
+
+2026 TRANSITION YEAR CONCESSION:
+- LHDN issued a Public Ruling (2026/01) granting NO PENALTIES for calculation errors made in good faith during 2026.
+- Applies to first-time SDSAS users who under-declared because of misunderstanding the new system.
+- Does NOT cover deliberate underpayment or late stamping (late penalty still applies separately).
+- Keep screenshot of your SDSAS calculation + any correspondence with LHDN as proof of good-faith effort.
+
+WHAT LANDLORDS GET WRONG (STAMPS portal):
+- Using old 2025 forms: portal auto-rejects. You must use the 2026 SDSAS flow.
+- Stamping only 1 copy: you need stamping for EACH executed copy if lodging with land office or court. Portal lets you select number of copies — extra copies = RM10 each (duplicate duty).
+- Forgetting to download certificate: LHDN keeps record for 7 years, but losing the PDF means you must re-download. Save it in 2 places (email + cloud).
+- Letting tenancy run past stamp certificate date without renewal stamping: each renewal (even auto-renew) needs fresh stamping.
+
+REAL CASES — STAMP DUTY + STAMPS PORTAL:
+• Landlord tried to enforce deposit deduction using unstamped agreement at Tribunal. Case dismissed — s.52 Stamp Act. Landlord then paid late stamping penalty (RM100 + 20%) via STAMPS portal and refiled. Second attempt succeeded because agreement was now admissible.
 • Tenant paid RM2,000/month rent. Landlord never stamped the agreement for 2 years. When deposit dispute arose, tenant's lawyer used s.52 to block landlord from presenting the agreement. Landlord lost the entire RM4,000 deposit claim.
-• First-time buyer purchased RM480,000 condo — saved RM7,200 in MOT stamp duty + RM1,200 in loan stamp duty under first-time exemption. Total savings: RM8,400.`
+• First-time buyer purchased RM480,000 condo — saved RM7,200 in MOT stamp duty + RM1,200 in loan stamp duty under first-time exemption. Total savings: RM8,400.
+• Landlord filed SDSAS wrongly (used old 2025 rates) during transition. LHDN flagged underpayment RM120. Landlord paid shortfall — no penalty under 2026 transition concession. Saved ~RM50 in penalty.
+• Tenant verified landlord's stamp certificate via QR scan before moving in — QR link was broken. Tenant demanded proper certificate before paying deposit. Landlord had faked the PDF to avoid SDSAS cost. Tenant walked away, kept RM5,000 deposit.`
   },
 
   eviction: {
@@ -320,7 +375,7 @@ REAL CASES — FOREIGN BUYERS:
   },
 
   strata: {
-    keywords: ['strata', 'condo', 'apartment', 'pangsapuri', '公寓', 'MC', 'JMB', 'management', 'pengurusan', '管理', 'by-law', 'undang-undang kecil', 'sinking fund', 'maintenance', 'penyelenggaraan', '维护费', 'AGM', 'SMT', 'common property', 'harta bersama', 'special levy', 'levi khas'],
+    keywords: ['strata', 'condo', 'apartment', 'pangsapuri', '公寓', 'MC', 'JMB', 'management', 'pengurusan', '管理', 'by-law', 'undang-undang kecil', 'sinking fund', 'maintenance', 'penyelenggaraan', '维护费', 'AGM', 'SMT', 'common property', 'harta bersama', 'special levy', 'levi khas', 'en-bloc', 'en bloc', 'enbloc', 'urban renewal', 'URA', 'pembangunan semula', '旧楼重建', 'collective sale', 'jualan kolektif', 'demolish', 'redevelopment', 'bangunan lama'],
     content: `STRATA (STA 1985 + SMA 2013):
 - MC manages common property after strata titles issued. JMB manages before MC formed.
 - Sinking fund: mandatory 10% of maintenance fee.
@@ -351,10 +406,63 @@ PROPERTY INSURANCE (SMA 2013 s.93):
 - Unit interior (fixtures, renovations): owner insures separately.
 - Tenants: contents insurance for personal belongings only.
 
+URBAN RENEWAL ACT (URA) 2024-2026 — 80% EN-BLOC CONSENT FRAMEWORK:
+The Urban Renewal Act (URA) — tabled 2024, operational phased rollout 2026 — introduces Malaysia's first majority-rule collective sale/redevelopment regime. This is a MAJOR shift: under old STA 1985 + SMA 2013, any redevelopment required 100% owner consent (impossible in practice). URA breaks the deadlock.
+
+CONSENT THRESHOLDS (tiered by building age):
+- Buildings ≥30 years old: 75% owner consent triggers redevelopment (by share units).
+- Buildings <30 years old: 80% owner consent required.
+- Buildings declared "dilapidated/dangerous" by authorities: 51% consent sufficient.
+- Heritage-listed buildings: excluded from URA — still need 100%.
+
+WHO ORGANIZES A COLLECTIVE SALE:
+- Typically: developer approaches MC/JMB OR group of majority owners initiates.
+- MC calls Special General Meeting (SGM) → Special Resolution vote.
+- If threshold met → MC appoints Urban Renewal Committee (URC) to negotiate sale/redevelopment.
+- Minimum notice to all owners: 30 days before SGM + written notice of proposal.
+
+THE PROCESS (simplified):
+1. Feasibility study (developer or MC-commissioned): valuation, redevelopment potential, compensation offer.
+2. SGM with Special Resolution vote — achieves 75%/80% threshold.
+3. Urban Renewal Committee (URC) formed — represents all owners in negotiations.
+4. Collective Sale Agreement (CSA) drafted — lists compensation for each owner based on share units + condition.
+5. Minority objection period: 60 days after CSA executed.
+6. Minority objectors can apply to Strata Management Tribunal (SMT) or High Court to challenge on specific grounds (see below).
+7. If no valid objection → sale proceeds. All owners (including objectors) legally bound to transfer.
+8. Compensation disbursed to owners. Vacant possession required within 6-12 months.
+
+MINORITY OBJECTION GROUNDS (URA-specific):
+- Financial loss: compensation below valuation (must prove with independent valuer report).
+- Procedural irregularity: SGM notice defective, voting not by share units, quorum not met.
+- Bad faith: developer/majority colluded to squeeze out minority at below-market price.
+- Sentimental/heritage value: only for genuinely heritage properties — usually rejected.
+- NOT valid ground: "I just don't want to move." URA explicitly overrides individual preference once threshold met.
+
+LANDLORD IMPLICATIONS — WHY URA MATTERS TO YOU:
+- Your tenant CANNOT block the sale — they have no vote. But their tenancy must be honored until CSA triggers vacant possession clause.
+- On CSA execution, tenant receives notice to vacate with minimum 3-6 months (URA default; check specific CSA terms).
+- Landlord must return tenant's deposit + any prepaid rent pro-rated.
+- Relocation assistance: URA requires developers to offer displaced TENANTS a relocation allowance (typically 1-3 months rent). This comes from developer, not landlord.
+- IMPORTANT: if your tenancy agreement has "vacant possession" or "compulsory acquisition" clause referencing URA, follow that. If silent, URA default applies.
+- Compensation to owner typically includes: market value of unit + 10-30% "disturbance premium" (for forced sale) + temporary accommodation allowance during redevelopment.
+- TAX: sale proceeds under URA generally trigger RPGT (same rules as normal sale). No special URA exemption — plan for tax liability.
+
+STRATEGIC CONSIDERATIONS FOR LANDLORDS IN AGING BUILDINGS (2026+):
+- If your building is 25-30 years old: redevelopment pressure will rise. Consider: (1) sell now at premium before URA uncertainty, OR (2) hold and participate in collective sale for higher compensation + new unit in redeveloped tower.
+- "Right to first refusal" of new unit: some URA-covered projects offer original owners priority purchase of units in the new development at construction cost. Check the CSA.
+- If you're in the 20-25% minority: DO NOT sign the CSA immediately. Get independent valuation. If your unit is undervalued, file objection within 60 days.
+- Tenancy risk: signing a 3-year lease in a 28-year-old condo = risk of URA-triggered termination. Add URA termination clause that protects tenant's deposit + gives 6-month notice.
+
 REAL CASES — STRATA:
 • MC charged RM5,000 special levy for lift replacement. Owner refused to pay. MC registered charge on unit — owner couldn't sell until levy + penalty paid. Total delay cost owner RM12,000 in lost sale opportunity.
 • Tenant complained about noise to MC. MC issued warning to offending unit. Owner of noisy unit ignored. MC filed at SMT — awarded RM5,000 damages + mandatory compliance order.
-• MC failed to insure building. Fire damaged 3 units. Affected owners sued MC committee members personally — court upheld personal liability under s.93.`
+• MC failed to insure building. Fire damaged 3 units. Affected owners sued MC committee members personally — court upheld personal liability under s.93.
+
+REAL CASES — URBAN RENEWAL / EN-BLOC:
+• KL condo (built 1992, 34 years old): developer offered collective sale. 82% owners consented. 18% minority objected citing undervaluation. Independent valuer confirmed original offer was 15% below market. Developer raised offer by 18% to close deal — all owners accepted. Total added compensation: RM2.8M across the building.
+• PJ flats (built 1988): declared dangerous by PBT. 54% consent triggered redevelopment under URA. Minority owner (elderly, opposed sale on sentimental grounds) filed at High Court — rejected, URA overrides individual preference. Sale proceeded.
+• Landlord in aging Penang condo had signed 2-year tenancy. CSA triggered year 1. Tenant received 6-month notice + 3-month rent relocation allowance from developer. Landlord returned full deposit + 4 months prepaid rent. Clean exit, no tribunal case.
+• Owner held out in 79% consent building (just below 80% threshold). Developer restructured compensation, 2 more owners flipped → hit 81%. Original holdout then had to sell at the SAME price he'd rejected. Cost him ~RM80K in legal fees and stress.`
   },
 
   subsale: {
@@ -514,6 +622,755 @@ REAL CASES — COMMERCIAL:
 REAL CASES — BANKRUPTCY:
 • Owner defaulted on RM450,000 loan. Bank sent LOD after 3 months, filed foreclosure at month 5. Auction held at month 10. Property sold at RM380,000 (below market). Owner still owed RM70,000 shortfall to bank.
 • Debtor with RM150,000 in debts proposed VA — 60% repayment over 3 years. 80% of creditors agreed. Avoided bankruptcy, kept property.`
+  },
+
+  tenant_screening: {
+    keywords: [
+      'screening', 'vetting', 'vet tenant', 'check tenant', 'background check', 'semak penyewa', 'tapis penyewa', '筛选租客', '审查租客', '背景调查',
+      'ctos', 'ccris', 'ramci', 'iscore', 'experian', 'credit score', 'credit report', 'skor kredit', 'laporan kredit', '信用评分', '信用报告',
+      'pdpa', 'akta perlindungan data', '个人数据保护', 'consent form', 'borang persetujuan',
+      'rental history', 'sejarah sewa', '租赁历史', 'reference check', 'rujukan majikan', 'referee',
+      'bad tenant', 'penyewa bermasalah', '问题租客', 'midnight flit', 'flit', 'skip rent', 'ponteng sewa',
+      'discrimination', 'diskriminasi', '歧视', 'race preference', 'pilihan kaum', '种族偏好',
+      'inclusive listing', 'chinese only', 'malay only', 'indian only', 'bumi only', 'no indian', 'no chinese',
+      'bank statement', 'penyata bank', '银行对账单', 'payslip', 'slip gaji', '工资单', 'employment letter', 'surat pengesahan majikan'
+    ],
+    content: `TENANT SCREENING & LAWFUL VETTING (2026):
+
+LEGAL FRAMEWORK:
+- PDPA 2010 (Personal Data Protection Act): Landlord collecting tenant NRIC, payslip, bank statement, credit report = "data user." Must obtain written consent, specify purpose, store securely, delete when tenancy ends.
+- RTA 2026 Anti-Discrimination: Cannot refuse tenancy based on race, religion, gender, disability, HIV, marital status, national origin. Must screen on CREDIT + INCOME + REFERENCES, not demographics. Fine up to RM20,000 for discriminatory refusal.
+- Platform rules 2026: iProperty, PropertyGuru, Mudah, EdgeProp now auto-flag and remove listings with race preferences ("Chinese only", "prefer Malay", "no Indian"). Repeat offenders get account suspended. Some platforms also flag "clean cooking" euphemisms.
+
+CREDIT CHECK TOOLS (landlord access):
+
+1. CTOS (most common in 2026):
+   - Self-employed landlords: register at ctoscredit.com.my → pay-per-check (RM20-50/report).
+   - Tenant gives consent via CTOS Tenant Screening module → landlord receives full report.
+   - Shows: credit score (300-850), active loans, default history, bankruptcy status, litigation records (lawsuits, judgments).
+   - Good score: ≥697. Fair: 571-696. Poor: ≤570.
+   - Red flag: "AKPK" entry = tenant is on debt management; "writ of summons" = being sued.
+
+2. CCRIS (Bank Negara Central Credit Reference):
+   - Only tenant can pull own report (not landlord directly).
+   - Tenant downloads via BNM eCCRIS portal → forwards PDF to landlord.
+   - Shows: credit facility status over past 12 months — PAID, MISSED, CLASSIFIED.
+   - Any "2 months overdue" or "3 months+" flags = major warning.
+   - Free for tenant; refuses to provide = red flag.
+
+3. RAMCI (Credit Bureau Malaysia Sdn Bhd):
+   - Alternative to CTOS. Landlord registers at cbm.my.
+   - Report similar: score, outstanding loans, defaults.
+   - Pay-per-check ~RM30.
+
+4. iScore (Experian Malaysia):
+   - Newer entrant, widely used by corporate landlords.
+   - Mobile app friendly — tenant can share live score in 60 seconds.
+
+LAWFUL SCREENING CRITERIA (safe to use, RTA-compliant):
+- Credit score (CTOS/CCRIS) — minimum threshold e.g. ≥650
+- Debt-to-income ratio — rent should not exceed 40% of gross monthly income
+- Employment verification — letter from employer, payslip (3 months), EPF statement
+- Bank statements (3-6 months) — looking for stable inflow, no chronic overdraft
+- Previous landlord reference — ask about rent punctuality, property condition, termination reason
+- Length of employment — prefer ≥1 year at current employer (gig workers need supplementary proof)
+- Existing debt commitments — credit card balance, car loan, personal loan sum ratio
+- Security deposit cheque clearing — confirm it clears before handover
+
+UNLAWFUL SCREENING CRITERIA (never use, RTA fine):
+- Race, ethnicity, skin colour
+- Religion or religious practice (prayer, pork, halal)
+- "Cooking style" / "curry smell" / "cultural habits" — all proxies for race, also illegal
+- Gender (except for single-gender housing exemption)
+- Marital status, pregnancy
+- National origin (can't refuse "just because they're Chinese nationals" — can refuse if they cannot provide valid work visa)
+- Disability (unless property is physically unsuitable AND no reasonable accommodation possible)
+- HIV or any health status
+
+HOW TO WRITE A COMPLIANT LISTING:
+❌ WRONG: "Chinese family only. Non-smoker. No Indian." → auto-banned from iProperty/PropertyGuru.
+❌ WRONG: "Prefer clean tenants. No strong cooking smells." → still flagged as race proxy.
+✅ CORRECT: "Professional working tenant. Minimum 1-year lease. CTOS check required. Non-smoker unit. References requested."
+
+PRACTICAL SCREENING FLOW (RTA 2026 COMPLIANT):
+1. Advertise on iProperty / PropertyGuru / Mudah with lawful criteria only.
+2. On inquiry: send PDPA consent form + application form (income, employer, rental history).
+3. Upon short-listing: ask tenant to pull CCRIS (free) and/or landlord pays for CTOS.
+4. Income verification: payslip + bank statement + EPF i-Akaun screenshot.
+5. Reference call to previous landlord + employer HR.
+6. If approved: issue tenancy offer letter → stamped agreement → register on e-Sewa.
+7. If rejected: provide lawful written reason (e.g. "credit score below threshold") within 7 days. NEVER write "prefer other demographics."
+
+RED FLAGS — STOP & VERIFY:
+- Tenant refuses any credit check → suggests past defaults.
+- Payslip PDF with mismatched fonts / "Free Payslip Generator" watermark → forgery.
+- Offers 6-12 months rent upfront in cash → money laundering or hiding income source; report suspicious transaction to BNM FIU if >RM50,000.
+- "Can I pay deposit in USDT / crypto?" → tax evasion risk; insist on bank transfer for audit trail.
+- Urgency pressure ("need to move in tomorrow") → usually midnight flit from previous landlord.
+- Multiple previous landlords in short span → serial flitter pattern.
+- NRIC shown but refuses to let you photograph → identity concern.
+- Uses free email (gmail/yahoo) with employer claiming to be at major MNC → suspicious, cross-check LinkedIn.
+
+REAL CASES:
+• KL landlord advertised "Chinese only RM2,500/month condo" on iProperty. Platform auto-removed listing, account suspended 14 days. Refused to remove on repost → permanent ban. Landlord missed rental window for 2 months.
+• Landlord asked tenant for RM50 CTOS cost upfront during viewing. Tenant filed complaint to KPKT — landlord's advertising fee for screening is landlord's cost under RTA 2026. Landlord fined RM1,500.
+• Subang landlord rejected qualified tenant with 730 CTOS score citing "not compatible culturally." Tenant complained to KPKT with application records. Fine: RM15,000 + ordered to process application OR pay 3 months lost rent (RM7,500). Total cost: RM22,500.
+• Petaling Jaya landlord did thorough screening (CTOS 712, employment verified, references clean). Tenant stayed 3 years, zero disputes. Landlord's neighbor skipped screening, got "midnight flit" tenant with 3 months unpaid rent. Lesson: screening pays off.
+
+PDPA-COMPLIANT CONSENT CLAUSE (include in application form):
+"I, [Name] (NRIC [XXX]), consent to [Landlord Name] processing my personal data (NRIC, income, employment, CTOS/CCRIS report, bank statements, references) solely for the purpose of evaluating my tenancy application for [Property Address]. I understand I may withdraw consent at any time by written request. Data will be deleted within 6 months of application closure unless tenancy is approved."
+
+VERIFY HERE:
+- CTOS: ctoscredit.com.my
+- CCRIS via BNM: eccris.bnm.gov.my
+- RAMCI: cbm.my
+- iScore: iscore.com.my
+- PDPA guidelines: pdp.gov.my
+- RTA complaint portal: kpkt.gov.my/rtt`
+  },
+
+  foreign_tenant: {
+    keywords: [
+      'foreign tenant', 'penyewa asing', '外国租客',
+      'immigration', 'imigresen', 'pendatang', '移民',
+      'work permit', 'permit kerja', 'work pass', 'pass kerja', '工作准证', '工作签证',
+      'harbour', 'harbouring', 'melindungi', '窝藏', 'shelter illegal',
+      'illegal immigrant', 'pendatang asing tanpa izin', 'pati', '非法移民',
+      'expat', 'expatriate', 'warga asing',
+      'mm2h', 'malaysia my second home', 'de rantau', 'derantau', 'digital nomad', 'nomad',
+      'myimmi', 'ejim', 'my visa', 'epermit',
+      'passport', 'pasport', '护照',
+      'visa expiry', 'visa tamat', '签证过期', 'overstay', 'lebih tempoh',
+      'foreign worker', 'pekerja asing', '外劳', 'bangladeshi', 'indonesian worker', 'nepali', 'myanmar',
+      'employment pass', 'professional visit pass', 'student pass', 'dependant pass'
+    ],
+    content: `FOREIGN TENANT COMPLIANCE — IMMIGRATION ACT 1959/63:
+
+CRITICAL LEGAL EXPOSURE — THE "HARBOURING" OFFENSE:
+- Immigration Act 1959/63, Section 55E: it is a CRIMINAL OFFENSE to knowingly harbour, shelter, or employ a person without valid immigration status.
+- Penalty: Fine RM10,000-RM50,000 per illegal immigrant + imprisonment up to 5 years + whipping in aggravated cases.
+- Even an unintentional landlord can be prosecuted if police prove "should have known" (e.g., failed to check visa).
+- Additional liability under Immigration Regulations 1963 for landlords who provide accommodation without verifying status.
+
+WHO YOU CAN RENT TO (valid passes):
+1. Employment Pass (EP) — skilled professionals, minimum salary RM5,000/month, tied to specific employer.
+2. Professional Visit Pass (PVP) — short-term professionals, researchers, artists.
+3. Dependant Pass — spouse/children of EP holders.
+4. Student Pass — enrolled at recognized IPTA/IPTS; landlord should keep copy of confirmation letter from institution.
+5. MM2H (Malaysia My Second Home) — long-term resident programme, renewed every 5-10 years.
+6. DE Rantau Nomad Pass — digital nomad visa (launched 2022, expanded 2024-2026); valid 3-12 months, renewable.
+7. Social Visit Pass — short-term only, ≤3 months; NOT meant for regular residential rental.
+8. PR (Permanent Resident) — treated as locals for rental; can show MyPR card.
+9. Refugee card (UNHCR) — landlord can rent but document status clearly.
+
+WHO YOU CANNOT RENT TO:
+- Tourists on 30/60/90-day social visit who are clearly not short-term — high prosecution risk.
+- "Runaway" foreign workers whose pass has been cancelled.
+- Overstayed individuals of any nationality.
+- Anyone who refuses to show passport + visa endorsement.
+
+MANDATORY VERIFICATION STEPS (do ALL before signing):
+
+STEP 1 — Physical document check:
+- Original passport (not photocopy, not photo of photo)
+- Current visa endorsement page — check stamp, "UNTIL [date]", and pass category
+- Work permit card (for EP/foreign workers) — front + back
+
+STEP 2 — Digital verification (critical in 2026):
+- MyImmi mobile app (Jabatan Imigresen Malaysia): verify passport status via scan.
+- eJim online (ejim.imi.gov.my): employer-side verification for EP status.
+- XPATS (Expatriate Services Division) portal: check EP validity for professionals.
+- For foreign workers: MyIMMS Pekerja Asing portal (requires employer credentials, but tenant's current/former employer can pull a screenshot).
+
+STEP 3 — Cross-check:
+- Name on passport = name on work permit = name on bank statement = name on rental application. Mismatches = fraud.
+- Visa expiry date must extend beyond tenancy term. If visa expires before end of lease, include a clause: "Tenancy automatically terminates if tenant's immigration status lapses and is not renewed within 30 days."
+
+STEP 4 — Documentation for your defense file (keep for 7 years):
+- Photocopy of passport bio page
+- Photocopy of visa endorsement
+- Photocopy of work permit
+- MyImmi/eJim screenshot with date
+- Signed declaration from tenant: "I confirm my immigration status is valid until [DD-MM-YYYY]. I will notify landlord within 7 days of any change."
+- Photograph of tenant holding passport (optional but powerful in defense)
+
+REPORTING DUTY:
+- If you discover your tenant has overstayed, been cancelled, or is working illegally: you have 72 hours to report to Immigration (nearest JIM office or hotline 03-8880 1000) AND terminate the tenancy.
+- Failure to report once you "know" = prosecution risk. Landlord who reports in good faith is protected.
+
+SPECIAL CASES:
+
+MM2H:
+- MM2H participants have 5-10 year renewable stay; premium tenants (lower default risk statistically).
+- Verify by calling MM2H Centre (my2h.gov.my) or asking for MM2H approval letter.
+- 2024 reforms raised financial thresholds — older MM2H holders may still be on old rules; don't reject, just verify.
+
+DE RANTAU NOMAD PASS:
+- Growing segment in 2026, especially in KL/Penang/Langkawi.
+- Usually short-term (3-12 months); willing to pay premium for furnished units.
+- Verify via MDEC De Rantau portal; confirm they have proof of remote employer and minimum USD24,000 annual income.
+
+DIPLOMATIC / UN / INTL NGO:
+- Show diplomatic ID or host agency letter.
+- Tenancy usually via agency (World Bank, UN, embassy) — rent paid by agency, not individual.
+
+REAL CASES:
+• Landlord in Cheras rented to "tourist" Bangladeshi on social visit pass for 8 months. Immigration raid caught 4 foreign workers in unit. Landlord charged under s.55E → fined RM40,000, served 6 months jail. Lost the unit (auctioned to pay legal fees).
+• Petaling Jaya landlord rented to MM2H Chinese family with full document check. Tenant stayed 4 years, zero issues. Verification took 30 minutes online and saved landlord from any prosecution risk.
+• Subang landlord trusted a "friend referral" and skipped passport check. Tenant turned out to be overstayed Nepali worker. Raid → landlord fined RM18,000 + tenant deported. Landlord also liable for unpaid rent no one could recover.
+• KL landlord rented to De Rantau nomad from Portugal. Nomad paid 6 months upfront, left early to travel. Landlord kept remaining rent per clause. Clean experience.
+• Landlord in KK rented to student on expired student pass (school had terminated enrollment 3 months prior). Landlord charged but pleaded "didn't know" — court accepted mitigation (had original valid pass on file) → reduced to RM5,000 fine. Still, a painful lesson.
+
+TEMPLATE — FOREIGN TENANT VERIFICATION ADDENDUM:
+"ADDENDUM TO TENANCY AGREEMENT — FOREIGN TENANT DECLARATION
+I, [Full Name], Passport [Country] No. [XXXX], hereby declare:
+1. My immigration status in Malaysia is: [EP / Student Pass / MM2H / De Rantau / Other: _____], valid until [DD-MM-YYYY].
+2. I have provided landlord with copies of my passport bio page, current visa endorsement, and [work permit / student confirmation letter / MM2H letter].
+3. I authorize the landlord to verify my status via Jabatan Imigresen Malaysia or any relevant agency.
+4. I will notify landlord in writing within 7 days of any change to my immigration status.
+5. I understand that if my status lapses and is not renewed within 30 days, this tenancy automatically terminates without refund of rental paid.
+Signed: _____ Date: _____
+Landlord Counter-signed: _____ Date: _____"
+
+VERIFY HERE:
+- Jabatan Imigresen Malaysia: imi.gov.my
+- MyImmi mobile app (Android/iOS): visa/passport scanning
+- eJim portal: ejim.imi.gov.my
+- MM2H: my2h.gov.my
+- De Rantau: mdec.my/derantau
+- Employer immigration verification: esd.imi.gov.my
+- Reporting hotline: 03-8880 1000 (Ibu Pejabat Imigresen)`
+  },
+
+  short_term_rental: {
+    keywords: [
+      'short term', 'jangka pendek', '短期', 'airbnb', 'homestay', 'booking.com', 'agoda', 'vrbo',
+      'short term rental', 'str', 'penyewaan jangka pendek', '短期出租',
+      'digital nomad', 'nomad', 'de rantau', 'remote worker', 'pekerja jarak jauh',
+      'corporate lease', 'expat rental', 'relocation', 'executive stay', 'serviced apartment', 'apartmen perkhidmatan',
+      'pbt license', 'lesen pbt', 'pihak berkuasa tempatan', 'council license',
+      'mpkl', 'dbkl airbnb', 'mbpp airbnb', 'mbmb airbnb',
+      'hybrid rental', 'mixed lease', 'sewa campuran',
+      'premises license', 'tourism license', 'lesen pelancongan', 'motac',
+      'sst tourism', 'tourism tax', 'cukai pelancongan'
+    ],
+    content: `SHORT-TERM RENTAL & HYBRID MODELS (Airbnb / Digital Nomad / Corporate):
+
+LEGAL STATUS IN 2026:
+Short-term rental (STR) is NOT universally legal in Malaysia — it depends on the PBT (local council) and the property type. The 2024-2025 national policy shift pushed regulation downward: each PBT sets its own rules. Several major councils now require licensing.
+
+PBT POSITIONS (as of 2026):
+
+KL (DBKL):
+- Residential condos/apartments: STR generally prohibited under Strata Management Act + DBKL By-Laws 2020. Enforcement rising since 2024.
+- Fine: RM10,000-RM50,000 for unauthorised STR operation.
+- Commercial-zoned buildings (SoHo, service apartment with tourism license): STR allowed with MOTAC tourism license.
+- Management Corporation (MC) by-laws can also restrict — even in allowed buildings, MC can vote to ban STR.
+
+PENANG (MBPP / MBSP):
+- STR Licensing Scheme introduced 2024: RM250/year license per unit.
+- Must comply with: minimum stay 2 nights, max 60 days/year per unit, tourism tax collection.
+- Non-compliance: license revoked + compound RM5,000.
+
+MELAKA (MBMB):
+- Tourism-friendly zone: residential STR allowed with PBT license + MOTAC registration.
+- Heritage zone has stricter rules — no STR in some areas.
+
+SELANGOR (various PBTs):
+- Mixed. PJ (MBPJ), Shah Alam (MBSA) lean restrictive. Klang (MPK) more permissive.
+- Check individual PBT by-laws at each council's website.
+
+JOHOR (MBJB, MPPG):
+- Tourism-oriented. STR in Iskandar zone generally permitted with license.
+- Legoland/RCE areas specifically zoned for tourism rental.
+
+SABAH / SARAWAK:
+- Different ordinances. Generally more permissive for tourism. Kota Kinabalu + Kuching have STR licensing.
+
+LICENSES REQUIRED (typical stack):
+1. PBT STR License / Premises License (RM200-500/year, depending on council).
+2. MOTAC Tourism Accommodation Premises License (if operating as tourism rental) — motac.gov.my.
+3. Business registration (SSM) if operating multiple units — can register sole prop or sdn bhd.
+4. Service Tax registration (LHDN) if gross receipts exceed RM500K/year — 8% service tax on accommodation since 2024.
+5. Tourism Tax collection (RM10/room/night for non-Malaysians) — remit to LHDN.
+
+HYBRID RENTAL MODELS (the 2026 landlord sweet spot):
+
+A. CORPORATE / EXPAT MEDIUM-TERM (3-6 months):
+- Target: MNC assignees, manufacturing consultants (China-MY corridor), contract engineers.
+- Furnished, serviced, includes utilities + WiFi.
+- Rent premium: 40-80% above standard long-term.
+- Legal: treat as regular tenancy agreement (long enough to be "residential"), stamp duty applies at 1-year tier rate.
+- Lower wear & tear than Airbnb turnover.
+
+B. DIGITAL NOMAD (3-12 months via De Rantau):
+- Target: DE Rantau Pass holders, remote tech workers.
+- Fully furnished, fibre broadband, co-working access nearby.
+- Rent premium: 30-60% above long-term.
+- Document as residential tenancy — avoids PBT STR licensing requirement.
+- Must still verify visa (see foreign_tenant topic).
+
+C. TRUE AIRBNB / STR (nightly rental):
+- Highest ROI but highest compliance burden.
+- Typical gross yield: 8-15% if occupancy 65%+. Net after PBT fees, MOTAC, cleaning, MC fines risk: 5-10%.
+- Requires FULL license stack (above).
+- Not recommended for first-time landlords in 2026 KL market due to enforcement.
+
+FINANCIAL COMPARISON (illustrative, RM1.2M condo):
+- Long-term 12-month lease: RM3,500/month = RM42,000/year gross. Low turnover, stable.
+- Medium-term corporate (3-6mo): RM5,500/month × 10 months occupied = RM55,000/year gross.
+- Digital nomad: RM6,500/month × 9 months occupied = RM58,500/year gross.
+- Airbnb (nightly): RM350 × 22 nights × 12 months = RM92,400/year gross — BUT deduct 20% platform fee, 15% cleaning, 8% service tax, PBT license, MC fines risk → net ≈ RM52,000-62,000.
+
+CONCLUSION: Medium-term corporate / digital nomad often beats Airbnb on risk-adjusted basis.
+
+MC (MANAGEMENT CORPORATION) CONSENT:
+- Even if PBT allows STR, the MC can ban it.
+- Check by-laws at MC office BEFORE listing on Airbnb.
+- MC fines for unauthorized STR: RM200-1,000 per incident; repeat offenders reported to Land Office.
+- Get written consent (AGM resolution or MC letter) before operating.
+
+TAX TREATMENT 2026:
+- Rental income taxed as Section 4(d) under Income Tax Act 1967 if passive; Section 4(a) if active business (multiple units + services) — rate up to 30% individual.
+- Sdn Bhd structure: flat 24% corporate tax (17% for SME first RM150K profit).
+- Service tax 8% on accommodation — must register if gross ≥RM500K/year.
+- Tourism tax RM10/night for foreign guests — remit monthly.
+- Capital allowance on furniture/fittings: 20% initial + 10% annual.
+- Airbnb fees are deductible. So are utilities, cleaning, linen, platform commissions.
+
+CLAUSES TO INCLUDE (corporate / nomad agreements):
+- Minimum stay period (e.g., 90 days).
+- Utility cap (include RM300/month, excess passed to tenant).
+- Early termination clause — 30 days notice OR 1 month rent in lieu.
+- Guest policy — no sub-STR to other tourists.
+- Furniture inventory + condition photos (Evidence Vault).
+- Cleaning schedule and deposit for deep clean on departure.
+
+REAL CASES:
+• Mont Kiara condo owner ran Airbnb without MC consent. MC fined RM1,000/incident × 12 incidents (RM12,000). DBKL also compounded RM8,000. Total: RM20,000 — wiped out the year's Airbnb profit.
+• Penang Georgetown landlord applied for MBPP STR license properly. Listed on Airbnb + Booking.com. 68% occupancy first year. Net RM45K on a RM550K apartment (8.2% yield) — clean and legal.
+• KL landlord pivoted from long-term to De Rantau digital nomad rental. Raised rent from RM3,200 to RM5,800/month furnished. Occupancy 10/12 months. Gross uplift: RM31,000/year. No PBT issues because each nomad stayed 3-6 months on residential tenancy basis.
+• Shah Alam landlord signed 6-month corporate lease with MNC HR for Chinese manufacturing consultant. Rent RM6,500/month vs RM3,800 normal long-term. Company paid via invoice, deducted 8% service tax. Landlord registered as sole prop with SSM to claim deductions → saved ~RM4,500 in net tax.
+• JB landlord listed Airbnb + MC hadn't banned it. 3 parties disturbed neighbors → MC AGM amended by-laws to ban STR. Landlord forced to pivot to long-term within 60 days.
+
+VERIFY HERE:
+- DBKL: dbkl.gov.my → Search "short-term rental by-law"
+- MBPP: mbpp.gov.my → STR licensing
+- MOTAC tourism license: motac.gov.my
+- De Rantau: mdec.my/derantau
+- LHDN service tax: hasil.gov.my (GST/SST)
+- Airbnb Malaysia operator guide: airbnb.com.my/help/hosting-regulations`
+  },
+
+  utility_account: {
+    keywords: [
+      'tnb', 'utility', 'utiliti', 'electric', 'elektrik', '电费', '水电',
+      'air selangor', 'syabas', 'pba', 'water bill', 'bil air', '水费',
+      'iwk', 'sewerage', 'pembetungan',
+      'indah water',
+      'utility deposit', 'deposit utiliti', '水电押金',
+      'change of tenancy', 'cot', 'tukar nama akaun', 'transfer account', '更名', '过户',
+      'smart meter', 'meter pintar', '智能电表',
+      'aircon bill', 'bil aircon', '空调电费',
+      'final bill', 'bil akhir', '最终账单',
+      'meter reading', 'bacaan meter',
+      'unifi', 'tm unifi', 'maxis fibre', 'celcom fibre', 'internet bill',
+      'cukai pintu', 'assessment', 'cukai tanah', 'quit rent',
+      'utility skip', 'tinggalkan bil', '跑单'
+    ],
+    content: `UTILITY MANAGEMENT FOR LANDLORDS (TNB / AIR SELANGOR / IWK / INTERNET):
+
+THE UTILITY DEPOSIT PROBLEM (2026):
+- Standard tenancy: ½ month rent as utility deposit. On a RM2,500 rent, that's RM1,250.
+- Reality with aircon-heavy tenants: electricity alone can hit RM800-1,200/month. Two months of unpaid bill = RM2,400 → deposit insufficient.
+- TNB tariff went up in 2024-2025 (ICPT surcharge) and rolls into 2026 ToU (Time-of-Use) pricing — peak hours now cost 25-40% more.
+- Water tariff hikes in Selangor (Nov 2024) + Johor pushed the utility risk higher.
+
+SOLUTION — SHIFT ACCOUNTS TO TENANT (Change of Tenancy / CoT):
+
+TNB CHANGE OF TENANCY:
+- Tenant applies via myTNB app OR TNB Careline OR any Kedai Tenaga.
+- Documents needed: tenant IC, tenancy agreement (stamped), landlord consent letter, meter reading photo, RM50 application fee.
+- Tenant deposits new refundable security deposit to TNB (usually RM150-500 for residential, higher for commercial/aircon-heavy).
+- Processing: 3-7 working days.
+- Once done: TNB bills go directly to tenant. Landlord NOT liable for unpaid TNB bills.
+- CAVEAT: at end of tenancy, if tenant skips without paying final bill, TNB cuts supply but the debt follows the TENANT (registered against their IC), NOT the meter. Landlord can open new CoT immediately with next tenant.
+
+AIR SELANGOR CHANGE OF NAME:
+- Similar process: application via Air Selangor mobile app or branch.
+- Documents: IC, tenancy agreement, meter reading, deposit RM80-200.
+- Processing: 5-10 days.
+
+INDAH WATER (IWK) SEWERAGE:
+- Billed to property owner by default (not tenant). Normally stays in landlord's name.
+- Some states allow transfer — check IWK portal.
+- Typical RM8/month residential; landlord usually absorbs this.
+
+INTERNET (Unifi / Maxis / Celcom Fibre):
+- Tenant should open own account — NOT use landlord's.
+- If shared building internet: include cost in rent and disclose.
+
+LHDN QUIT RENT / ASSESSMENT (cukai tanah / cukai pintu):
+- Always landlord's responsibility (owner, not occupier).
+- Due annually. Non-payment → interest + eventual land registry lien.
+
+WHEN TO USE WHICH APPROACH:
+
+STRATEGY A — Tenant pays TNB/Water directly (best for long-term 12+ months):
+1. Clause in agreement: "Tenant shall apply for Change of Tenancy with TNB and Air Selangor within 7 days of taking vacant possession. All utility accounts shall be in tenant's name for the duration of the tenancy."
+2. Landlord assists with CoT paperwork on handover day.
+3. Landlord meter-reads at handover (photo evidence).
+4. Reduced utility deposit needed — can cut from ½ month to ¼ month since tenant bears utility risk.
+
+STRATEGY B — Landlord keeps account + charges tenant (best for short-term/furnished/serviced):
+1. Monthly utility pass-through with receipts.
+2. Require HIGHER utility deposit — 1 month rent or cap-based (e.g., RM2,000 for aircon-heavy condo).
+3. Install smart meter to track usage in real time.
+4. Set utility inclusive cap: "Rent includes RM300/month utilities; excess billed monthly with receipt."
+
+SMART METER ROLLOUT (TNB 2025-2030):
+- TNB committed to 9 million smart meters by 2030.
+- Klang Valley, Penang, Johor in first phase (2024-2026).
+- Tenant landlords can check myTNB app for real-time daily usage.
+- Peak-hour warning helps tenant reduce bill.
+- Anti-tampering alerts = fraud detection.
+- If your property has old analog meter, request upgrade (free, under rollout).
+
+AIRCON-HEAVY TENANT RISK MITIGATION:
+- Standard RM2,500 rent condo with 2-3 aircons: baseline RM250-400/month electricity.
+- 24/7 aircon usage: RM800-1,200/month.
+- Mitigation:
+  (a) Install smart plug / smart meter; monitor usage.
+  (b) Clause: "Monthly electricity above RM400 shall be borne by Tenant in addition to rent."
+  (c) Higher utility deposit (RM2,000+).
+  (d) Insist on Change of Tenancy so TNB chases tenant directly.
+  (e) Inspect aircon filters on handover — clogged = higher consumption.
+
+COMMON MISTAKES:
+
+MISTAKE 1: Leaving account in landlord's name "for convenience."
+→ Result: tenant runs up bill, skips, TNB comes after LANDLORD. Landlord pays to maintain supply for next tenant.
+
+MISTAKE 2: Accepting meter reading from tenant without photo.
+→ Result: disputed final reading, argument over "who used what."
+
+MISTAKE 3: Not checking outstanding bill before handover.
+→ Result: new tenant inherits previous tenant's arrears if no CoT done.
+
+MISTAKE 4: Including utilities in rent without cap.
+→ Result: tenant has zero incentive to conserve; aircon runs 24/7.
+
+REAL CASES:
+• Puchong landlord left TNB in own name "to save hassle." Tenant ran business from condo (illegal home salon), ran multiple dryers + aircons. 6-month bill: RM5,400. Tenant vanished owing 2 months rent + bill. Landlord had to pay RM5,400 to keep meter connected for next tenant. Total loss: RM8,000+.
+• KL condo landlord insisted on CoT on day 1. Tenant registered with TNB directly. Tenant's final bill after moving out: RM2,100 unpaid. Landlord immediately did new CoT with next tenant — TNB pursued old tenant's IC for debt. Landlord zero liability.
+• Shah Alam landlord installed smart meter + capped utility at RM350/month (excess to tenant). Tenant stayed 2 years, ran moderate aircon; only had to pay excess twice (RM80 and RM120 respectively). Clean relationship.
+• JB landlord furnished expat 6-month corporate rental, kept accounts in own name with pass-through + RM2,500 utility deposit. Expat ran heavy AC. Monthly electric RM950. Deposit easily covered tail risk. No disputes.
+
+TEMPLATE — UTILITY HANDOVER CHECKLIST:
+"HANDOVER UTILITY CHECKLIST — [Property Address]
+Date: _______
+Tenant: _______
+Landlord/Agent: _______
+
+TNB:
+- Meter reading at handover: ___________ kWh [photo attached]
+- Outstanding balance confirmed paid: YES / NO
+- Change of Tenancy (CoT) application: □ Done on [date] □ Pending □ N/A
+- New account reference: _________
+
+AIR SELANGOR / PBA:
+- Water meter reading: ___________ m³ [photo attached]
+- Outstanding balance: _________
+- Change of name application: □ Done □ Pending
+
+IWK Sewerage: remains in landlord's name ☑
+
+INTERNET:
+- Existing line: ON / OFF. Provider: _________
+- Tenant to apply separately if needed: YES / NO
+
+Signatures:
+Tenant: _____ Landlord: _____"
+
+VERIFY HERE:
+- TNB CoT: mytnb.com.my / Careline 1-300-88-5454
+- Air Selangor: airselangor.com
+- IWK: iwk.com.my
+- Smart meter rollout status: tnb.com.my/smartmeter`
+  },
+
+  smart_lock: {
+    keywords: [
+      'smart lock', 'kunci pintar', '智能锁', 'digital lock', 'kunci digital',
+      'wifi lock', 'keyless', 'tanpa kunci', 'access card', 'kad akses',
+      'biometric', 'fingerprint', 'cap jari', '指纹锁',
+      'revoke access', 'tarik balik akses', '撤销访问', 'remote access',
+      'lock change', 'tukar kunci', '换锁',
+      'igloohome', 'yale smart', 'samsung smart lock', 'xiaomi lock', 'schlage', 'aqara',
+      'access log', 'log akses', '访问记录',
+      'duplicate key', 'duplikat kunci', '复制钥匙',
+      'passcode', 'kod laluan', '密码',
+      'airbnb lock', 'remote lock'
+    ],
+    content: `SMART LOCK & DIGITAL ACCESS MANAGEMENT (LANDLORD GUIDE 2026):
+
+WHY LANDLORDS ARE SWITCHING:
+- Physical keys get duplicated (locksmith = RM5-15/key; tenant can walk out with unlimited copies).
+- Between tenancies: changing a mechanical lock costs RM150-400 per unit.
+- No audit trail — no way to prove who entered and when.
+- Lost keys = emergency locksmith call-out RM200+ at odd hours.
+- Smart locks solve all of the above if deployed correctly.
+
+LEGAL FRAMEWORK — PDPA 2010 FOR ACCESS LOGS:
+- Smart lock access logs (who entered, when) = personal data under PDPA.
+- Landlord becomes "data user" → must:
+  (a) Notify tenant in writing what data is collected.
+  (b) Specify retention period (e.g., 6 months after tenancy).
+  (c) Store securely (encrypted app, 2FA enabled).
+  (d) Not share with third parties without consent.
+  (e) Delete upon tenancy end.
+- Secret surveillance without disclosure = PDPA breach; tenant can file complaint (penalty up to RM300K / 2 years jail for data controller).
+
+LEGAL FRAMEWORK — NO SELF-HELP EVICTION:
+- Even with smart lock, landlord CANNOT remotely revoke tenant's access mid-tenancy — that's self-help eviction (criminal under RTA 2026 s.55 + Immigration Act + Penal Code).
+- Revocation is ONLY permitted:
+  (a) After tenancy properly ends (expiry / termination with notice).
+  (b) After RTT / court possession order.
+  (c) Tenant's voluntary surrender of keys/handover.
+
+LOCK CATEGORIES & MALAYSIAN COMPLIANCE:
+
+TIER 1 — KEYPAD ONLY (basic, no WiFi):
+- Brands: Schlage Encode (basic), Yale YDM3109, Samsung SHP-DP609.
+- Pros: no internet dependency, simple, cheap (RM400-900).
+- Cons: no remote revocation; must manually change passcode on-site between tenants.
+- Use case: long-term tenancy where landlord visits quarterly.
+
+TIER 2 — WIFI / APP-CONTROLLED (recommended for most):
+- Brands: Igloohome (made in Singapore, very popular in Malaysia), Yale Smart Living, Aqara U300, Xiaomi Mijia Smart Lock Pro, Samsung SHP-DP960.
+- Pros: remote passcode generation, time-limited codes, access log visibility, revoke anytime.
+- Cons: depends on WiFi; need backup battery + emergency key.
+- Price: RM1,200-2,500 residential grade.
+- Use case: multi-tenancy portfolio, furnished/Airbnb, long-distance landlord.
+
+TIER 3 — BIOMETRIC (fingerprint + face + PIN + card):
+- Brands: Yale YDM7116, Samsung SHP-DP960, Anviz FS5, Locstar S83.
+- Pros: highest security, multiple auth options.
+- Cons: expensive (RM2,000-4,500), more failure modes.
+- Use case: high-value properties, expat rentals.
+
+TIER 4 — COMMERCIAL GRADE / INTEGRATION:
+- Brands: Assa Abloy VingCard, Salto, Schlage Control.
+- Use case: serviced apartments, hotels, co-living.
+- Needs PMS (Property Management System) integration.
+
+SELECTION CRITERIA FOR MALAYSIAN LANDLORDS:
+- WiFi chipset: 2.4GHz (most Malaysian home routers) — 5GHz-only locks will fail.
+- Battery: AA backup preferred (can buy at 7-Eleven) over rechargeable Li-ion proprietary.
+- Offline passcode generation: Igloohome's OTP (offline) is a killer feature — generates valid codes even when lock has no internet.
+- Emergency mechanical key override: MUST-HAVE in case battery dies at 2am.
+- Malaysian door thickness: 40-50mm is standard; verify lock compatibility.
+- Mortise vs rim: most HDB-style Malaysian doors take rim; newer condos use mortise.
+- IP rating: IP54+ recommended for landed (outdoor exposure to rain).
+- Shariah compliance: some Islamic-finance properties may require fingerprint-only or passcode (not biometric face) for gender-mixed households.
+
+HANDOVER PROTOCOL:
+
+DAY 0 (before tenant moves in):
+1. Generate unique tenant master passcode (6-8 digits, avoid 123456).
+2. Record in secure vault (1Password / Bitwarden).
+3. Create tenancy agreement clause (template below).
+4. Provide WRITTEN notice of access logging to tenant.
+5. Ensure mechanical backup key is labelled + stored offsite (with you, not on property).
+
+DAY 1 (handover):
+1. Demonstrate lock operation to tenant.
+2. Tenant sets personal secondary PIN (optional).
+3. Show how to change passcode (if lock supports self-service).
+4. Document in handover form: "Smart lock model ___, master code issued, secondary code enabled, access log enabled."
+
+DURING TENANCY:
+- Do NOT log in to view access history casually — only with cause.
+- Disable any cameras pointed at interior (illegal without consent).
+- Record landlord entry with 24-hour written notice (per RTA 2026).
+
+AT TENANCY END:
+1. Tenant surrenders property.
+2. Landlord immediately generates new master passcode.
+3. Deletes tenant's secondary code.
+4. Downloads final access log to PDF for records (6-month retention).
+5. Does NOT keep tenant's code active "just in case."
+
+CRITICAL — DO NOT:
+- ❌ Install camera inside unit without written tenant consent (privacy + PDPA breach).
+- ❌ Keep tenant's passcode active after tenancy ends.
+- ❌ Remotely lock tenant out during tenancy dispute (self-help eviction).
+- ❌ Share access log with third party (previous landlord, agent, bank) without tenant's written consent.
+- ❌ Use same default passcode across multiple units.
+- ❌ Rely solely on WiFi (battery failure + no internet = lockout nightmare).
+
+SAMPLE TENANCY CLAUSE — SMART LOCK:
+"SMART LOCK & ACCESS MANAGEMENT:
+(a) The premises are secured by a smart lock [Model: ________]. Tenant acknowledges the lock records an access log (entry time, code used) which is retained for the duration of the tenancy plus six (6) months thereafter, in compliance with the Personal Data Protection Act 2010.
+(b) Landlord shall provide Tenant with a master passcode on handover. Tenant may configure one additional secondary code for their household use.
+(c) Tenant undertakes not to share the master passcode with any person beyond their household. Unauthorized distribution is a material breach of this tenancy.
+(d) Landlord shall not enter the premises using the smart lock without 24 hours' written notice to Tenant, except in a genuine emergency (fire, flood, medical).
+(e) Upon termination of tenancy and Tenant's vacation of the premises, Landlord is entitled to reset all passcodes and generate a new master code.
+(f) Access logs will be deleted within 6 months of tenancy end unless required for legal proceedings."
+
+COST-BENEFIT (illustrative):
+- Manual rekey between tenants: RM250 × 4 tenancies over 5 years = RM1,000.
+- Smart lock one-time: RM1,500. Amortized over 5 years = RM300/year.
+- Plus: lost key incident prevention × savings from no emergency locksmith calls.
+- Plus: faster tenant turnover (no wait for locksmith).
+- ROI break-even: typically 2-3 tenancies.
+
+REAL CASES:
+• Mont Kiara condo landlord switched to Igloohome in 2023. Had 4 tenancies since. Zero locksmith calls. Saved ~RM800 vs manual rekey. Tenants appreciated feature → faster leasing.
+• Shah Alam landlord installed smart lock without written PDPA notice to tenant. Tenant discovered access log, filed PDPA complaint to Pejabat Pesuruhjaya Perlindungan Data (PDP). Landlord fined RM5,000 + ordered to issue proper disclosure. Lesson: tell the tenant.
+• KL landlord during rent dispute remotely changed passcode locking tenant out. Tenant filed police report (criminal trespass dispossession) + RTT complaint. Court ordered immediate restoration + RM8,000 damages. Landlord also charged under Penal Code s.441.
+• Bangsar serviced apartment operator deployed 20 Igloohome locks integrated with booking platform. Guest check-in fully automated with 24-hour valid OTP codes. Occupancy up 12% due to seamless experience.
+
+VERIFY HERE:
+- PDPA guidelines: pdp.gov.my
+- Igloohome Malaysia: igloohome.co/my
+- Yale Malaysia: yale.com/my
+- Lock compliance certification (SIRIM): sirim.my for door hardware standards`
+  },
+
+  gen_z_yield: {
+    keywords: [
+      'gen z', 'millennial', 'young tenant', 'penyewa muda', '年轻租客',
+      'muji', 'japandi', 'scandinavian', 'minimalist', 'industrial design', 'aesthetic', 'instagrammable', 'instagram',
+      'renovation roi', 'roi renovasi', 'upgrade rental', 'upgrade sewa',
+      'furnished', 'berperabot', '家具齐全',
+      'rental uplift', 'kenaikan sewa', '租金上涨',
+      'old furniture', 'perabot lama', '旧家具', 'wooden', 'teak', 'rattan',
+      'ikea', 'muji malaysia', 'shein home',
+      'tile paint', 'vinyl floor', 'wallpaper', 'kertas dinding'
+    ],
+    content: `GEN Z / MILLENNIAL RENTER — DESIGN ROI FOR LANDLORDS:
+
+WHO RENTS IN 2026:
+- Gen Z (born 1997-2012, aged 14-29 in 2026) + late millennials = ~65% of urban rental market.
+- Priorities (from multiple Malaysian rental surveys 2024-2025):
+  1. Aesthetic ("Instagrammable") — 78%
+  2. High-speed internet (≥500Mbps) — 92%
+  3. Walkable to MRT/LRT — 71%
+  4. In-unit washer/dryer — 68%
+  5. Air-con in all bedrooms — 84%
+  6. Good lighting (natural + warm LED) — 61%
+  7. Clean, neutral colours — 70%
+- What they AVOID: dark timber furniture, floral upholstery, cluttered layouts, 4000K cool white tubes, heavy curtains.
+
+THE COMMON PROBLEM:
+- Older landlords often inherited or bought units 10-20 years ago. Furnishings are dated: dark teak sets, faded tiles, yellow fluorescent tubes.
+- Result: unit sits vacant 2-3 months between tenancies; rent falls RM200-500 below market.
+- Annual hidden cost of "looking old": RM3,000-10,000 in lost rent.
+
+MINIMALLY INVASIVE UPGRADES (high ROI, reversible, no MC drama):
+
+TIER 1 — COSMETIC ONLY (<RM3,000 per unit, no approvals):
+- Repaint walls: warm white or greige (RM800-1,200 for 800sqft condo).
+- Replace fluorescent tubes with 3000K warm LED (RM40-60 per bulb × 8-12 bulbs).
+- Replace yellowed curtains with beige/white linen blinds (RM500-800).
+- Add 1-2 sheer area rugs (RM250-400 each).
+- Swap dark cushion covers to neutral (RM200 total).
+- Add framed prints (IKEA/Shein wall art RM20-50 each).
+- Deep clean + steam carpet (RM400-600).
+- Potted plants (real or good quality fake, RM300).
+
+Rent uplift after Tier 1: RM100-250/month. Payback: 12-18 months.
+
+TIER 2 — MUJI/JAPANDI LIGHT REFRESH (RM5,000-15,000):
+- Replace old bed frame with platform bed (RM800-1,500 IKEA/SSF).
+- Add warm wood veneer desk/shelf (RM400-800).
+- Replace dining set with rattan/wood + upholstered chairs (RM1,200-2,500).
+- Install warm LED strip lights under cabinets (RM300-500).
+- Replace bathroom faucet + showerhead with black matte (RM400-800).
+- Upgrade kitchen taps to sleek matte (RM250-400).
+- Paint outdated feature walls; remove heavy wallpaper.
+- Swap light fixtures (globe pendant, paper lanterns).
+- Add fabric headboard (RM400-800).
+
+Rent uplift after Tier 2: RM300-700/month. Payback: 18-24 months.
+
+TIER 3 — INDUSTRIAL / LOFT AESTHETIC (RM15,000-30,000):
+- Expose concrete ceiling (remove plaster + seal).
+- Exposed copper/black iron pipe shelving (RM1,500-3,000).
+- Acacia wood worktops / breakfast island.
+- Matte black ironmongery throughout (hinges, handles).
+- Edison-style pendant lights (RM400-800 per fixture).
+- Polished concrete look on floor (epoxy coat RM15-25/sqft).
+- Built-in entertainment wall.
+
+Rent uplift after Tier 3: RM600-1,500/month on premium units. Payback: 24-36 months.
+
+LANDLORD CONSENT REQUIRED FOR (MC approval needed):
+- Any work affecting common walls / structural elements.
+- Changes to windows, window grilles, balcony railings.
+- Altering main door (colour, material) where MC dictates uniformity.
+- Drilling into slab floor or load-bearing walls.
+- AC compressor relocation.
+- Changes visible from outside (exterior paint, window film).
+
+SAFE (usually NO approval needed):
+- Internal wall painting.
+- Vinyl flooring over existing tile (reversible, non-permanent adhesive).
+- Curtains, blinds.
+- Furniture swaps.
+- Removable wallpaper.
+- Minor electrical (LED bulb changes).
+- Swapping internal doors (keep originals).
+
+STRATA BY-LAW WARNINGS (check MC house rules):
+- Drilling hours: often 9am-5pm weekdays only.
+- Contractor access pass required.
+- Lift protection pads required when moving furniture.
+- Noise complaint tolerance is very low in Malaysian strata — schedule renovation in 2-3 consecutive days, not spread over weeks.
+
+REVERSIBILITY RULE:
+- Every upgrade should be reversible unless landlord intends to keep improvements permanently.
+- Reversible: peel-and-stick wallpaper, vinyl plank flooring (over tile), removable light fixtures.
+- NOT reversible: plaster removal, wall demolition, embedded flooring, changed door frames.
+- Important for: (a) selling later without reinstatement dispute, (b) SPA/MOT transfer cleanliness, (c) strata compliance.
+
+ROI CALCULATOR RULE OF THUMB:
+Rent uplift / month × 12 × 5 years ≥ Renovation cost × 1.5 → PROCEED.
+Below that ratio → reconsider or defer.
+
+Example: RM400 uplift × 12 × 5 = RM24,000. Renovation up to RM16,000 is good ROI.
+
+TENANCY CLAUSE — LANDLORD UPGRADES BETWEEN TENANCIES:
+"Landlord shall deliver the Property in the condition shown in the attached inventory (photos Appendix A). Tenant acknowledges the Property has been refreshed/upgraded and undertakes to use reasonable care to preserve the finish. Damage beyond normal wear will be deducted from Security Deposit per itemised invoice."
+
+TENANCY CLAUSE — TENANT RENOVATIONS DURING TENANCY:
+"No tenant alteration, painting, or permanent fixture installation shall be made without Landlord's prior written consent. Minor reversible changes (removable wallpaper, temporary hooks, furniture) are permitted. All tenant-installed items shall be removed on vacation unless Landlord agrees in writing to retain."
+
+TARGETING GEN Z IN YOUR LISTING:
+- Title: "Fully Refreshed · Walking Distance MRT · Fibre Ready · Move-in Ready"
+- Photos: natural light, straight angles, 35mm feel, neutral colours.
+- Include: "Smart lock", "3000K warm lighting", "fully furnished MUJI style", "in-unit W/D", "new mattress".
+- List on: iProperty, PropertyGuru, Mudah (still dominant), EdgeProp; also Instagram/TikTok reels of unit walkthrough.
+- Video walkthrough > photo listing (70% of young renters watch video before viewing).
+
+REAL CASES:
+• Cheras condo: landlord spent RM4,800 on Tier 1 refresh (paint + LED + blinds + rugs). Rent up from RM1,800 to RM2,100. Payback: 16 months.
+• Setapak apartment: landlord did full Muji makeover RM14,000. Rent up from RM2,200 to RM2,900. Netted extra RM8,400 in year one; full payback in 20 months.
+• KL loft: industrial renovation RM24,000. Rent up from RM3,800 to RM5,200. Payback 17 months. Sold the unit 3 years later at 14% premium over comparables — aesthetic also lifted resale.
+• Subang apartment: landlord refused to refresh (preferred original 2005 teak furniture). 4 months vacant. Finally rented at RM1,600 (market comp was RM2,000). Lost RM4,800 in rent + RM1,600 below-market × 12 = RM24,000 total underperformance vs refreshing.
+
+SHOPPING LIST (reliable sources in Malaysia):
+- IKEA (Damansara, Cheras, Batu Kawan, Tebrau): furniture, lighting, textiles.
+- MUJI (Pavilion, Mid Valley, Sunway, IOI City): cleaner styling pieces.
+- Shopee / Lazada: peel-and-stick wallpaper, LED strips (verify seller ratings).
+- HomeBox / SSF / Index Living Mall: affordable sofa/dining sets.
+- Nippon / Jotun / Dulux (via Mr DIY): low-VOC interior paint.
+- Shein Home / Mr DIY: budget decor, art frames.
+- Lighting Fair PJ / KL Seng Heng: pendants, LEDs.
+
+MISTAKE TO AVOID:
+Over-personalizing for the CURRENT tenant. Your unit will house multiple tenants over 10 years — stick to broadly neutral, broadly liked aesthetics. Muji/Japandi/Scandinavian = safest. Avoid anything very dark, very pink, or very themed.`
   },
 
   rta_2026: {
