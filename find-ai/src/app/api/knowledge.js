@@ -515,6 +515,143 @@ REAL CASES — BANKRUPTCY:
 • Debtor with RM150,000 in debts proposed VA — 60% repayment over 3 years. 80% of creditors agreed. Avoided bankruptcy, kept property.`
   },
 
+  affordable_housing: {
+    keywords: [
+      'affordable', 'mampu milik', 'rumah mampu', '可负担', '经济房',
+      'pr1ma', 'rumawip', 'residensi wilayah', 'residensi madani', 'ppam', 'ppr', 'program perumahan rakyat',
+      'rumah selangorku', 'rsku', 'rmmj', 'rumah mampu milik johor', 'my home', 'myhome',
+      'low cost', 'kos rendah', '低收入', 'b40', 'm40',
+      'moratorium', 'tempoh larangan', '限售期', 'tidak boleh jual', '不能卖',
+      'income cap', 'had pendapatan', '收入上限',
+      'quota bumiputera', 'kuota bumi', 'bumi discount', 'diskaun bumiputera', '土著折扣',
+      'first time buyer', 'pembeli pertama', '首次购房', 'first home',
+      'government house', 'rumah kerajaan', 'subsidised', 'subsidi', '补贴房'
+    ],
+    content: `MALAYSIAN AFFORDABLE HOUSING SCHEMES (2026):
+
+FEDERAL SCHEMES:
+- PR1MA (Perumahan Rakyat 1Malaysia): Household income RM2,500–RM15,000. Price RM100,000–RM400,000. 10-year moratorium (cannot resell in open market). Must be Malaysian citizen, not own another home.
+- Residensi Wilayah / RUMAWIP (KL, Putrajaya, Labuan): Monthly income ≤RM15,000 (single) or ≤RM15,000 combined (couple). Price capped RM300,000. 10-year moratorium. Must not own property in the Federal Territory.
+- Residensi MADANI (2024–2027 program, replaces some RUMAWIP branding): Target 500,000 units by 2027. Income cap RM15,000. Price RM150K-300K depending on location.
+- PPAM (Perumahan Penjawat Awam Malaysia): ONLY civil servants (penjawat awam). Price RM90,000–RM300,000. Must complete 3 years of service. 10-year moratorium.
+- PPR (Program Perumahan Rakyat): RENTAL scheme for B40 (household income ≤RM3,000). Monthly rent RM124–RM250. Managed by PBT/state. Application via JPN.
+- MyHome scheme: One-off RM30,000 subsidy for first-time buyer of private affordable housing priced RM100K-400K. Must meet income cap. Processed at point of purchase.
+
+STATE SCHEMES:
+- Rumah Selangorku (RSKU): Selangor only. Price RM42,000–RM250,000 across 5 tiers. Income cap RM3,000–RM10,000. 10-year moratorium. Apply at LPHS (Lembaga Perumahan dan Hartanah Selangor).
+- Rumah Mampu Milik Johor (RMMJ): Johor. Price RM42,000–RM250,000. Income RM3,000–RM10,000. Managed by Perbadanan Perumahan Johor. 10-year moratorium.
+- Penang Affordable Housing: RM72,500–RM400,000 tiers. Income RM3,500–RM12,000. Managed by PDC. Special scheme for Penangites.
+- Perak Rumah Mesra Rakyat: income RM3,000–RM8,000.
+- Rumah Idaman Sarawak (SSL Scheme) & Sabah PPRT: separate state programs with own income caps.
+
+CRITICAL RULES (apply to MOST schemes):
+1. CITIZENSHIP: Must be Malaysian citizen. Foreigners and PR NOT eligible.
+2. FIRST-TIME ONLY: Must not already own residential property (some states allow ≤1 small unit).
+3. INCOME CAP verified via EPF/LHDN — understating income = fraud, agreement can be VOIDED.
+4. MORATORIUM: 10 years is standard. During moratorium:
+   - Cannot sell in open market
+   - Can only sell back to the scheme operator at formula price (usually purchase price + small appreciation)
+   - Violation = forfeit + possible criminal charge under Housing Development Act
+5. NO SUBLETTING to foreigners during moratorium (some schemes prohibit subletting entirely).
+6. BUMIPUTERA QUOTA: Many projects reserve 30-70% of units for Bumiputera buyers. Bumiputera discount typically 5-15% (state-dependent). Non-Bumi can apply for released quota after sales period.
+7. DEATH/DIVORCE: Property transfer within family usually allowed. Sale to outsiders still blocked.
+
+REAL CASES — AFFORDABLE HOUSING:
+• PR1MA buyer tried to flip unit at year 3 for 40% profit. Transfer blocked by SPA restrictive covenant + Housing Development Authority refused consent. Buyer forced to wait full 10 years or sell back to PR1MA at formula price.
+• Couple understated income to qualify for Rumah Selangorku (declared RM9,000, actual RM14,000). LPHS audit via EPF records caught discrepancy. SPA voided, deposit forfeited, buyer banned from future scheme applications.
+• PR1MA owner rented unit to foreign worker during moratorium — violated subletting clause. Received show-cause notice, ordered to terminate tenancy within 30 days, fined RM5,000.
+• Johor RMMJ buyer inherited property from deceased parent during moratorium. Transfer within family allowed after estate process. 10-year clock reset from original purchase date, not inheritance date.
+
+APPLY HERE (2026):
+- PR1MA: pr1ma.my
+- RUMAWIP / Residensi Wilayah: kpkt.gov.my (KPKT)
+- PPR (rental): state PBT or e-Perumahan portal
+- Rumah Selangorku: lphs.selangor.gov.my
+- RMMJ: pphj.com.my
+- Penang Affordable: pdc.gov.my`
+  },
+
+  government_scheme: {
+    keywords: [
+      'stamp duty exemption', 'pengecualian duti setem', '印花税豁免',
+      'first home scheme', 'skim rumah pertamaku', 'srp', 'my first home', '首套房',
+      'i-miliki', 'imiliki', 'hoc', 'home ownership campaign',
+      'madani', 'belanjawan', 'budget 2026', 'budget 2025',
+      'sjkp', 'skim jaminan kredit perumahan', 'credit guarantee', 'jaminan kredit',
+      'rent to own', 'rto', 'sewa beli', 'sewa-beli', '先租后买', 'houzkey',
+      'cagamas', 'skim smi', 'skim pembiayaan',
+      '100% financing', 'pembiayaan penuh', '全额贷款', 'zero down', 'tanpa deposit',
+      'developer exemption', 'pengecualian pemaju',
+      'ewpg', 'bumiputera lot release', 'pelepasan lot bumi',
+      'rumah mesra rakyat', 'skim bantuan', 'subsidi kerajaan', 'government subsidy'
+    ],
+    content: `GOVERNMENT HOUSING SCHEMES & INCENTIVES (2026):
+
+STAMP DUTY EXEMPTIONS (active in 2026):
+- First-Time Homebuyer Exemption (extended under Budget 2024 to 31 Dec 2027):
+  * Properties ≤RM500,000: 100% exemption on MOT stamp duty + 100% on loan agreement stamp duty.
+  * Properties RM500,001–RM1,000,000: 75% exemption on MOT + 100% on loan agreement stamp duty.
+  * Must be Malaysian citizen, first residential property, SPA executed between 1 Jan 2024 and 31 Dec 2027.
+  * NOT available if buyer (or spouse) has ever owned residential property anywhere in Malaysia.
+- i-MILIKI (phased out — only SPAs signed June 2022–Dec 2023 qualify; do NOT cite for new purchases).
+- HOC (Home Ownership Campaign 2020–2021, 2022–2023): ENDED. Not available in 2026. Developers may still market "HOC-equivalent" promos but these are NOT government-subsidised — verify with LHDN before claiming any exemption.
+
+FINANCING SCHEMES (active):
+- Skim Rumah Pertamaku / My First Home Scheme (SRP): Administered by Cagamas SRP Berhad.
+  * Up to 100% financing (no down payment required).
+  * Joint household income ≤RM10,000 (gross).
+  * Property ≤RM500,000.
+  * Must be first home. Age <40 at application.
+  * Participating banks: Maybank, CIMB, Public Bank, RHB, Hong Leong, Bank Rakyat, Bank Islam, AmBank, Alliance, BSN.
+  * Loan tenure up to 40 years or age 70, whichever earlier.
+- SJKP (Skim Jaminan Kredit Perumahan): Government credit guarantee for buyers WITHOUT fixed income (self-employed, gig workers, farmers, fishermen, small traders).
+  * Up to 120% financing (covers property + legal fees + MOT).
+  * Household income ≤RM5,000.
+  * Property ≤RM300,000 (standard) or ≤RM500,000 (SJKP Madani 2024+).
+  * SJKP guarantees the bank loan — removes the "no payslip" obstacle.
+- Skim Pembiayaan i-BIAYA / Bank Rakyat: Islamic financing for affordable housing purchases.
+
+RENT-TO-OWN (RTO) SCHEMES:
+- PR1MA RTO: 5-year rental phase → convert to full purchase at original price. No deposit upfront. During rental, maintenance cost is tenant's.
+- HouzKEY (Maybank): up to 5 years rent with option to purchase. Monthly "rental" partially treated as loan installment. Property must be in HouzKEY inventory.
+- SJKP RTO (selected state projects): similar 5-year rent-then-buy model.
+- KEY RISK: if buyer walks away at end of rental, they lose ALL rental paid — it does NOT convert to a refund. Read the purchase option clause carefully.
+
+BUDGET 2026 HOUSING INITIATIVES (verify with MOF gazette before quoting exact figures):
+- Residensi MADANI: 500,000 affordable units targeted by 2027.
+- RM2.4 billion allocated for affordable housing development.
+- Extension of stamp duty exemptions to 2027.
+- RM10 billion housing guarantee fund expansion (SJKP).
+- Youth Housing Scheme (under review) — proposed 10% deposit assistance for Malaysians aged 21-40.
+
+BUMIPUTERA LOT RELEASE:
+- Every new development must reserve a Bumiputera quota (typically 30-50%, state-dependent).
+- Unsold Bumi lots can be RELEASED to non-Bumi buyers after a fixed holding period (usually 6-12 months from OC).
+- Some states offer Bumi Discount (5-15% off list price) for Bumi buyers — this is a STATE-level subsidy, not federal.
+- Foreigners: not eligible for Bumi discount or for released-Bumi lots that still carry restrictive endorsement.
+
+REAL CASES — GOVERNMENT SCHEMES:
+• First-time buyer purchased RM480,000 condo in 2025. Claimed 100% MOT + loan stamp duty exemption under Budget 2024 extension. Saved RM8,400. Filed via e-Stamping at MyTax. Exemption approved automatically because SPA, loan agreement, and IC details matched.
+• Couple applied for SRP with joint income RM9,800 on RM495,000 property — got 100% financing approved. Would have needed RM49,500 deposit otherwise.
+• Self-employed durian farmer applied for SJKP on RM250,000 kampung house. Normally rejected by banks (no payslip). SJKP guarantee approved — Maybank financed 110% of price. Farmer only paid RM3,000 in legal fees out of pocket.
+• RTO buyer rented HouzKEY unit for 3 years (RM2,500/month = RM90,000 paid), then decided not to buy because property dropped in value. Lost entire RM90,000 — rental is NOT refundable. Should have exercised purchase option or walked away earlier.
+• Non-Bumi buyer tried to purchase Bumi-reserved unit before release period ended. SPA signed but MOT consent refused by State Authority. Deposit RM15,000 held in dispute for 8 months. Resolved only after Bumi release approval.
+
+COMMON TRAPS:
+- "HOC available" adverts in 2026: HOC ended in 2023. Ask the developer to point to the current gazetted exemption — if they can't, it's a marketing gimmick.
+- "Free legal fees" often means the developer's lawyer handles it (conflict of interest) and "free" excludes disbursements (valuation, search fees, stamp duty).
+- "Zero downpayment" usually means the developer rebates the 10% — you still need to pay, then get refund at SPA signing. Read the rebate schedule.
+- Claiming first-time exemption when spouse has owned property before = exemption revoked + penalty. LHDN cross-checks via ownership records.
+- SRP income check uses GROSS income (before EPF/SOCSO/tax). Don't quote net — you'll be under-reported or rejected.
+
+APPLY / VERIFY HERE:
+- Stamp duty exemption: hasil.gov.my (LHDN) → e-Stamping / MyTax
+- SRP: cagamas-srp.com.my or any participating bank branch
+- SJKP: sjkp.com.my
+- PR1MA RTO / HouzKEY: respective scheme portals
+- Budget 2026 gazette: mof.gov.my / percetakan nasional`
+  },
+
   general: {
     keywords: [],
     content: `GENERAL REFERENCE:
