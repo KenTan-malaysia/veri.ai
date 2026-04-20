@@ -27,7 +27,12 @@ const UI = {
     langToggle: 'BM',
     analyzing: 'Analyzing...',
     commonSituations: 'Try asking about',
-    voiceHint: 'Tap mic to speak in any language',
+    voiceHint: 'Tap mic · hold for push-to-talk · speak in any language',
+    voiceDenied: 'Microphone blocked. Enable it in your browser settings.',
+    voiceNoHardware: 'No microphone found on this device.',
+    voiceTypeInstead: 'Having trouble? Tap the text box and type instead.',
+    voiceSwitchingLang: 'Switching to English…',
+    voiceHoldHint: 'Release to send',
     profileTitle: 'Quick setup',
     profileDesc: 'So I can give you the right answers',
     profileRole: 'I am a...',
@@ -97,6 +102,12 @@ const UI = {
     langToggle: '中文',
     analyzing: 'Menganalisis...',
     commonSituations: 'Cuba tanya tentang',
+    voiceHint: 'Ketik mikrofon · tekan & tahan untuk bercakap · sebarang bahasa',
+    voiceDenied: 'Mikrofon disekat. Aktifkan dalam tetapan pelayar anda.',
+    voiceNoHardware: 'Tiada mikrofon pada peranti ini.',
+    voiceTypeInstead: 'Ada masalah? Sentuh kotak teks dan taip sahaja.',
+    voiceSwitchingLang: 'Menukar ke Bahasa Inggeris…',
+    voiceHoldHint: 'Lepas untuk hantar',
     voiceHint: 'Ketik mikrofon untuk bercakap',
     profileTitle: 'Persediaan pantas',
     profileDesc: 'Supaya saya beri jawapan yang tepat',
@@ -167,7 +178,12 @@ const UI = {
     langToggle: 'EN',
     analyzing: '分析中...',
     commonSituations: '试试问这些',
-    voiceHint: '点击麦克风用任何语言提问',
+    voiceHint: '点击麦克风 · 长按说话 · 任意语言',
+    voiceDenied: '麦克风被阻止。请在浏览器设置中启用。',
+    voiceNoHardware: '此设备没有麦克风。',
+    voiceTypeInstead: '遇到问题？点击文字框手动输入即可。',
+    voiceSwitchingLang: '切换到英文…',
+    voiceHoldHint: '松开发送',
     profileTitle: '快速设置',
     profileDesc: '帮助我给您准确的建议',
     profileRole: '我是...',
@@ -665,11 +681,29 @@ export default function Home() {
   const [activeChatId, setActiveChatId] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
+  // Voice state (Option C)
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
+  const [voiceAmplitude, setVoiceAmplitude] = useState(0);   // 0..1 for waveform
+  const [voiceFailCount, setVoiceFailCount] = useState(0);   // no-speech fails → show hint after 2
+  const [voiceHoldMode, setVoiceHoldMode] = useState(false); // push-to-talk active
+  const [voiceFallbackNote, setVoiceFallbackNote] = useState(null); // 'switching-en' message flash
   const chatRef = useRef(null);
   const inputRef = useRef(null);
   const recRef = useRef(null);
   const streamRef = useRef(null);
   const streamContentRef = useRef('');
+  // Voice (Option C UX)
+  const voiceSilenceRef = useRef(null);      // setTimeout for 1.5s auto-send
+  const voiceBaseInputRef = useRef('');      // preserve typed text before voice starts
+  const audioContextRef = useRef(null);      // Web Audio API
+  const analyserRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const rafRef = useRef(null);               // requestAnimationFrame
+  const holdTimerRef = useRef(null);         // long-press detection (300ms)
+  const voiceLangRef = useRef(null);         // active recognition lang (for fallback)
+  const voiceUserStoppedRef = useRef(false); // distinguish manual-stop from silence-end
+  const voiceAutoSendRef = useRef(true);     // whether to auto-send on silence
 
   // PWA install prompt
   useEffect(() => {
@@ -742,31 +776,225 @@ export default function Home() {
     }
   }, [messages, loading]);
 
-  // Speech recognition
+  // ─── VOICE (Option C — Malaysian UX) ───────────────────────────────────
+  // Supports: code-switch fallback (en-US), auto-send on 1.5s silence, continuous mode,
+  // permission-denied toast, hold-to-talk long-press, real-time waveform amplitude.
+
+  const primaryLangCode = useCallback((l) => {
+    if (l === 'bm') return 'ms-MY';
+    if (l === 'zh') return 'zh-CN';
+    return 'en-MY';
+  }, []);
+
+  // Initialize recognition instance when UI lang changes
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SR) {
-      const r = new SR();
-      r.continuous = false;
-      r.interimResults = true;
-      r.lang = lang === 'bm' ? 'ms-MY' : lang === 'zh' ? 'zh-CN' : 'en-MY';
-      r.onresult = (e) => {
-        let t = '';
-        for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-        setInput(t);
-      };
-      r.onend = () => setListening(false);
-      r.onerror = () => setListening(false);
-      recRef.current = r;
+    if (!SR) {
+      setVoiceSupported(false);
+      return;
     }
-  }, [lang]);
+    setVoiceSupported(true);
 
-  const toggleVoice = () => {
-    if (!recRef.current) return;
-    if (listening) { recRef.current.stop(); setListening(false); }
-    else { setInput(''); recRef.current.start(); setListening(true); }
+    const buildRec = (langCode) => {
+      const r = new SR();
+      r.continuous = true;           // don't cut off long landlord questions
+      r.interimResults = true;
+      r.lang = langCode;
+      r.onresult = (e) => {
+        let interim = '';
+        let finalText = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const res = e.results[i];
+          if (res.isFinal) finalText += res[0].transcript;
+          else interim += res[0].transcript;
+        }
+        // Append voice to whatever user already typed — never wipe
+        const base = voiceBaseInputRef.current;
+        const spacer = base && !base.endsWith(' ') ? ' ' : '';
+        const combined = (base + spacer + finalText + interim).trim();
+        setInput(combined);
+        // If this result included finalized text, commit it as new base
+        if (finalText) voiceBaseInputRef.current = (base + spacer + finalText).trim();
+        // Reset silence timer → 1.5s no-speech triggers auto-send
+        if (voiceSilenceRef.current) clearTimeout(voiceSilenceRef.current);
+        voiceSilenceRef.current = setTimeout(() => {
+          const final = voiceBaseInputRef.current;
+          if (final && voiceAutoSendRef.current) {
+            stopVoice(false);
+            sendMessage(final);
+          }
+        }, 1500);
+      };
+      r.onend = () => {
+        // If user didn't manually stop, try to restart (continuous mode sometimes drops)
+        if (!voiceUserStoppedRef.current && listening) {
+          try { r.start(); return; } catch (_) { /* already started or blocked */ }
+        }
+        setListening(false);
+        cleanupAudio();
+      };
+      r.onerror = (e) => {
+        const err = e?.error || '';
+        if (err === 'not-allowed' || err === 'service-not-allowed') {
+          setVoiceError('denied');
+          stopVoice(true);
+          return;
+        }
+        if (err === 'audio-capture') {
+          setVoiceError('nohardware');
+          stopVoice(true);
+          return;
+        }
+        if (err === 'no-speech') {
+          // User was silent. Increment fail count. After 2 fails → show "type instead" hint.
+          setVoiceFailCount((n) => n + 1);
+          // If primary lang is ms-MY/zh-CN and we got nothing, retry in en-US (Rojak fallback)
+          const currentLang = voiceLangRef.current;
+          if (currentLang && currentLang !== 'en-US') {
+            setVoiceFallbackNote('switching-en');
+            setTimeout(() => setVoiceFallbackNote(null), 2500);
+            voiceLangRef.current = 'en-US';
+            try {
+              r.lang = 'en-US';
+              r.start();
+              return;
+            } catch (_) { /* fallthrough */ }
+          }
+        }
+        setListening(false);
+        cleanupAudio();
+      };
+      return r;
+    };
+
+    const langCode = primaryLangCode(lang);
+    voiceLangRef.current = langCode;
+    recRef.current = buildRec(langCode);
+
+    return () => {
+      try { recRef.current?.stop(); } catch (_) {}
+      recRef.current = null;
+    };
+  }, [lang, primaryLangCode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Audio analyser for waveform amplitude (0..1)
+  const startAudioAnalyser = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      const ctx = new AC();
+      audioContextRef.current = ctx;
+      const source = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      source.connect(analyser);
+      analyserRef.current = analyser;
+      const buf = new Uint8Array(analyser.frequencyBinCount);
+      const loop = () => {
+        if (!analyserRef.current) return;
+        analyser.getByteFrequencyData(buf);
+        let sum = 0;
+        for (let i = 0; i < buf.length; i++) sum += buf[i];
+        const avg = sum / buf.length / 255; // 0..1
+        setVoiceAmplitude(Math.min(1, avg * 2.2)); // boost so idle breath ≈ 0.1, loud speech ≈ 1
+        rafRef.current = requestAnimationFrame(loop);
+      };
+      loop();
+    } catch (err) {
+      // getUserMedia denied — still attempt recognition (Chrome sometimes separates permissions)
+      if (err && (err.name === 'NotAllowedError' || err.name === 'SecurityError')) {
+        setVoiceError('denied');
+      } else if (err && err.name === 'NotFoundError') {
+        setVoiceError('nohardware');
+      }
+    }
   };
+
+  const cleanupAudio = () => {
+    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+    if (analyserRef.current) { try { analyserRef.current.disconnect(); } catch (_) {} analyserRef.current = null; }
+    if (audioContextRef.current) { try { audioContextRef.current.close(); } catch (_) {} audioContextRef.current = null; }
+    if (mediaStreamRef.current) {
+      try { mediaStreamRef.current.getTracks().forEach(t => t.stop()); } catch (_) {}
+      mediaStreamRef.current = null;
+    }
+    setVoiceAmplitude(0);
+  };
+
+  const startVoice = async () => {
+    if (!recRef.current) return;
+    setVoiceError(null);
+    setVoiceFallbackNote(null);
+    voiceBaseInputRef.current = input; // preserve whatever user already typed
+    voiceUserStoppedRef.current = false;
+    voiceLangRef.current = primaryLangCode(lang);
+    try { recRef.current.lang = voiceLangRef.current; } catch (_) {}
+    try {
+      recRef.current.start();
+      setListening(true);
+      startAudioAnalyser();
+    } catch (_) {
+      // Already started — ignore
+    }
+  };
+
+  const stopVoice = (manual = true) => {
+    if (manual) voiceUserStoppedRef.current = true;
+    if (voiceSilenceRef.current) { clearTimeout(voiceSilenceRef.current); voiceSilenceRef.current = null; }
+    try { recRef.current?.stop(); } catch (_) {}
+    setListening(false);
+    cleanupAudio();
+  };
+
+  // Tap toggle (short press)
+  const toggleVoice = () => {
+    if (!voiceSupported) return;
+    if (listening) stopVoice(true);
+    else { voiceAutoSendRef.current = true; startVoice(); }
+  };
+
+  // Long-press hold-to-talk
+  const handleVoicePressStart = (e) => {
+    if (!voiceSupported || loading) return;
+    // Don't preventDefault — let click still fire for short presses
+    holdTimerRef.current = setTimeout(() => {
+      // Entered hold mode
+      setVoiceHoldMode(true);
+      voiceAutoSendRef.current = false; // hold mode sends on release, not on silence
+      startVoice();
+    }, 300);
+  };
+
+  const handleVoicePressEnd = () => {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+    if (voiceHoldMode) {
+      // Release → send what we captured
+      const captured = voiceBaseInputRef.current || input;
+      setVoiceHoldMode(false);
+      stopVoice(true);
+      if (captured && captured.trim()) {
+        setTimeout(() => sendMessage(captured), 200); // tiny delay so onresult can finalize
+      }
+    }
+  };
+
+  // Auto-dismiss voice error toast after 5s
+  useEffect(() => {
+    if (!voiceError) return;
+    const id = setTimeout(() => setVoiceError(null), 5000);
+    return () => clearTimeout(id);
+  }, [voiceError]);
+
+  // Reset fail count when user successfully types or starts a new chat
+  useEffect(() => {
+    if (input && voiceFailCount > 0) setVoiceFailCount(0);
+  }, [input]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Smart context engine — builds rich context for AI
   const buildSmartContext = useCallback(() => {
@@ -1647,22 +1875,93 @@ export default function Home() {
       </div>
 
       {/* Input bar */}
-      <div className="no-print input-elevated px-4 pt-3 pb-2.5 input-safe">
+      <div className="no-print input-elevated px-4 pt-3 pb-2.5 input-safe relative">
+
+        {/* Voice error toast (auto-dismisses after 5s) */}
+        {voiceError && (
+          <div className="absolute left-4 right-4 -top-12 rounded-2xl px-4 py-3 flex items-start gap-2.5 fade-in"
+            style={{ background: '#fee2e2', border: '1px solid #fecaca', boxShadow: '0 4px 16px rgba(220,38,38,0.15)', zIndex: 30 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#991b1b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div className="text-[11px] font-medium leading-snug" style={{ color: '#991b1b' }}>
+              {voiceError === 'denied' ? t.voiceDenied : t.voiceNoHardware}
+            </div>
+          </div>
+        )}
+
+        {/* Fallback lang note (e.g. "Switching to English…") */}
+        {voiceFallbackNote && (
+          <div className="absolute left-1/2 -translate-x-1/2 -top-9 rounded-full px-3.5 py-1.5 flex items-center gap-1.5 fade-in"
+            style={{ background: '#fef3c7', border: '1px solid #fde68a', boxShadow: '0 2px 8px rgba(146,64,14,0.12)', zIndex: 30 }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#f59e0b' }} />
+            <span className="text-[10px] font-semibold" style={{ color: '#92400e' }}>{t.voiceSwitchingLang}</span>
+          </div>
+        )}
+
+        {/* "Having trouble? Type instead" hint after 2 consecutive no-speech fails */}
+        {voiceFailCount >= 2 && !listening && !voiceError && (
+          <div className="mb-2 rounded-xl px-3 py-2 flex items-center gap-2 fade-in"
+            style={{ background: '#f1f5f9', border: '1px solid #e2e8f0' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span className="text-[11px] font-medium" style={{ color: '#475569' }}>{t.voiceTypeInstead}</span>
+          </div>
+        )}
+
         <div className="input-area flex items-end gap-1 rounded-2xl px-3.5 pr-1.5 py-1 bg-white transition"
-          style={{ border: '1.5px solid #e2e8f0', boxShadow: '0 1px 4px rgba(15,23,42,0.03)' }}>
+          style={{ border: listening ? '1.5px solid #ef4444' : '1.5px solid #e2e8f0', boxShadow: listening ? '0 0 0 4px rgba(239,68,68,0.08), 0 1px 4px rgba(15,23,42,0.03)' : '0 1px 4px rgba(15,23,42,0.03)' }}>
           <textarea ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKey}
-            placeholder={listening ? t.placeholderListening : (has ? t.placeholderActive : t.placeholder)}
+            placeholder={listening ? (voiceHoldMode ? t.voiceHoldHint : t.placeholderListening) : (has ? t.placeholderActive : t.placeholder)}
             rows={1} className="flex-1 resize-none bg-transparent text-[16px] focus:outline-none py-2.5"
             style={{ color: '#1e293b', maxHeight: '100px', lineHeight: '1.5' }}
             onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px'; }}
           />
-          {recRef.current !== undefined && (
-            <button onClick={toggleVoice} disabled={loading}
-              className={`touch-target rounded-xl flex items-center justify-center transition active:scale-90 ${
-                listening ? 'bg-red-500 text-white pulse-ring' : ''
-              } disabled:opacity-40`}
-              style={!listening ? { color: '#94a3b8' } : {}}>
-              <MicIcon />
+          {voiceSupported && (
+            <button
+              onClick={toggleVoice}
+              onMouseDown={handleVoicePressStart}
+              onMouseUp={handleVoicePressEnd}
+              onMouseLeave={handleVoicePressEnd}
+              onTouchStart={handleVoicePressStart}
+              onTouchEnd={handleVoicePressEnd}
+              onTouchCancel={handleVoicePressEnd}
+              onContextMenu={(e) => e.preventDefault()}
+              disabled={loading}
+              aria-label={listening ? 'Stop recording' : 'Start voice input'}
+              className={`touch-target rounded-xl flex items-center justify-center transition active:scale-90 relative overflow-hidden disabled:opacity-40 ${
+                listening ? 'text-white' : ''
+              }`}
+              style={{
+                color: listening ? 'white' : '#94a3b8',
+                background: listening
+                  ? `radial-gradient(circle, rgba(239,68,68,${0.9 + voiceAmplitude * 0.1}) 0%, rgba(220,38,38,1) 100%)`
+                  : 'transparent',
+                transform: listening ? `scale(${1 + voiceAmplitude * 0.25})` : 'scale(1)',
+                boxShadow: listening ? `0 0 0 ${4 + voiceAmplitude * 12}px rgba(239,68,68,${0.25 - voiceAmplitude * 0.15})` : 'none',
+                transition: 'transform 80ms ease-out, box-shadow 80ms ease-out, background 120ms',
+              }}>
+              {listening ? (
+                // Waveform bars when recording — 5 bars scaled by amplitude
+                <div className="flex items-center gap-[2px] h-5">
+                  {[0, 1, 2, 3, 4].map((i) => {
+                    const phase = (voiceAmplitude + i * 0.17) % 1;
+                    const h = 20 + phase * 60 + voiceAmplitude * 40;
+                    return (
+                      <span key={i} style={{
+                        width: '2.5px',
+                        height: `${Math.min(20, h / 5)}px`,
+                        background: 'white',
+                        borderRadius: '2px',
+                        transition: 'height 60ms ease-out',
+                      }} />
+                    );
+                  })}
+                </div>
+              ) : (
+                <MicIcon />
+              )}
             </button>
           )}
           <button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}
