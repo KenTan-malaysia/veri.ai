@@ -707,6 +707,7 @@ export default function Home() {
   const voiceLangRef = useRef(null);         // active recognition lang (for fallback)
   const voiceUserStoppedRef = useRef(false); // distinguish manual-stop from silence-end
   const voiceAutoSendRef = useRef(true);     // whether to auto-send on silence
+  const voiceMaxRef = useRef(null);          // 45s hard watchdog — force-stop if engine hangs
 
   // PWA install prompt
   useEffect(() => {
@@ -793,10 +794,19 @@ export default function Home() {
   // Supports: code-switch fallback (en-US), auto-send on 1.5s silence, continuous mode,
   // permission-denied toast, hold-to-talk long-press, real-time waveform amplitude.
 
+  // Detect iOS Safari (WKWebView counts too) — needed because continuous SpeechRecognition
+  // is unreliable on iOS; onend fires silently and restart loops hang.
+  const isIOSRef = useRef(typeof navigator !== 'undefined' && (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  ));
+
   const primaryLangCode = useCallback((l) => {
+    // BCP-47 locales. en-MY is NOT a real Web Speech locale (Chrome falls back silently
+    // to en-US, Safari rejects). Use en-US and let the Rojak fallback do the rest.
     if (l === 'bm') return 'ms-MY';
     if (l === 'zh') return 'zh-CN';
-    return 'en-MY';
+    return 'en-US';
   }, []);
 
   // Initialize recognition instance when UI lang changes
@@ -811,7 +821,9 @@ export default function Home() {
 
     const buildRec = (langCode) => {
       const r = new SR();
-      r.continuous = true;           // don't cut off long landlord questions
+      // iOS Safari: continuous mode causes onend without results + freezes on restart.
+      // Use single-utterance mode on iOS; auto-restart on non-iOS only.
+      r.continuous = !isIOSRef.current;
       r.interimResults = true;
       r.lang = langCode;
       r.onresult = (e) => {
@@ -829,18 +841,20 @@ export default function Home() {
         setInput(combined);
         // If this result included finalized text, commit it as new base
         if (finalText) voiceBaseInputRef.current = (base + spacer + finalText).trim();
-        // Reset silence timer → 1.5s no-speech triggers auto-send
-        if (voiceSilenceRef.current) clearTimeout(voiceSilenceRef.current);
-        voiceSilenceRef.current = setTimeout(() => {
-          const final = voiceBaseInputRef.current;
-          if (final && voiceAutoSendRef.current) {
-            stopVoice(false);
-            sendMessage(final);
-          }
-        }, 1500);
+        // Note: silence-timer is now reset from the audio analyser loop based on real
+        // audio amplitude (handles natural pauses). We also reset here on any result
+        // event as a belt-and-braces for devices with no amplitude data.
+        resetSilenceTimer();
       };
       r.onend = () => {
-        // If user didn't manually stop, try to restart (continuous mode sometimes drops)
+        // On iOS, continuous=false means onend fires after each utterance.
+        // Don't restart — let user tap again if they want more. Prevents freeze loops.
+        if (isIOSRef.current) {
+          setListening(false);
+          cleanupAudio();
+          return;
+        }
+        // Desktop/Android: continuous mode can drop; auto-restart if user hasn't stopped.
         if (!voiceUserStoppedRef.current && listening) {
           try { r.start(); return; } catch (_) { /* already started or blocked */ }
         }
@@ -891,7 +905,25 @@ export default function Home() {
     };
   }, [lang, primaryLangCode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Audio analyser for waveform amplitude (0..1)
+  // Silence-timer helper — auto-sends after SILENCE_MS of no speech.
+  // Per-language tuning: BM/ZH speakers often pause longer for thinking.
+  const SILENCE_MS_BY_LANG = { en: 2000, bm: 2500, zh: 2500 };
+  const resetSilenceTimer = () => {
+    if (voiceSilenceRef.current) clearTimeout(voiceSilenceRef.current);
+    const delay = SILENCE_MS_BY_LANG[lang] || 2200;
+    voiceSilenceRef.current = setTimeout(() => {
+      const final = voiceBaseInputRef.current;
+      if (final && voiceAutoSendRef.current) {
+        stopVoice(false);
+        sendMessage(final);
+      }
+    }, delay);
+  };
+
+  // Audio analyser for waveform amplitude (0..1). Also drives silence detection:
+  // when real audio is present (amplitude above threshold), we reset the silence timer
+  // so natural pauses mid-sentence don't trigger premature auto-send.
+  const VOICE_THRESHOLD = 0.08; // above this = real speech (tuned for mobile mic noise)
   const startAudioAnalyser = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -912,7 +944,11 @@ export default function Home() {
         let sum = 0;
         for (let i = 0; i < buf.length; i++) sum += buf[i];
         const avg = sum / buf.length / 255; // 0..1
-        setVoiceAmplitude(Math.min(1, avg * 2.2)); // boost so idle breath ≈ 0.1, loud speech ≈ 1
+        const boosted = Math.min(1, avg * 2.2);
+        setVoiceAmplitude(boosted); // idle breath ≈ 0.1, loud speech ≈ 1
+        // Reset silence timer whenever real audio is detected — handles natural
+        // mid-sentence pauses (BM/ZH speakers often pause 1-2s to think).
+        if (boosted > VOICE_THRESHOLD) resetSilenceTimer();
         rafRef.current = requestAnimationFrame(loop);
       };
       loop();
@@ -949,6 +985,16 @@ export default function Home() {
       recRef.current.start();
       setListening(true);
       startAudioAnalyser();
+      // Arm silence timer immediately so a totally-silent session still auto-stops.
+      resetSilenceTimer();
+      // 45s hard watchdog — if the engine hangs (iOS Safari sometimes stalls), force-stop
+      // and send whatever we captured. Prevents the "freezes mid-sentence" symptom.
+      if (voiceMaxRef.current) clearTimeout(voiceMaxRef.current);
+      voiceMaxRef.current = setTimeout(() => {
+        const captured = voiceBaseInputRef.current;
+        stopVoice(false);
+        if (captured && voiceAutoSendRef.current) sendMessage(captured);
+      }, 45000);
     } catch (_) {
       // Already started — ignore
     }
@@ -957,6 +1003,7 @@ export default function Home() {
   const stopVoice = (manual = true) => {
     if (manual) voiceUserStoppedRef.current = true;
     if (voiceSilenceRef.current) { clearTimeout(voiceSilenceRef.current); voiceSilenceRef.current = null; }
+    if (voiceMaxRef.current) { clearTimeout(voiceMaxRef.current); voiceMaxRef.current = null; }
     try { recRef.current?.stop(); } catch (_) {}
     setListening(false);
     cleanupAudio();
