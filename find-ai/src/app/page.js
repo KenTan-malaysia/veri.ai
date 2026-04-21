@@ -4,6 +4,8 @@ import { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import Landing from './landing';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { CaseMemoryModal, buildCaseMemoryContext, emptyMemory, hasPdpaConsent } from './caseMemory';
+import StampDutyCalc from '../components/tools/StampDutyCalc';
+import { L as toolLabels } from '../components/tools/labels';
 
 const STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -684,6 +686,8 @@ export default function Home() {
   const [historySearch, setHistorySearch] = useState('');
   // Case-file memory (per-chat; extends chatHistory item shape)
   const [showCaseMemory, setShowCaseMemory] = useState(false);
+  // Phase 1 tools (stamp duty is wired; screen + audit to follow)
+  const [showStampTool, setShowStampTool] = useState(false);
   // Voice state (Option C)
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
@@ -1704,6 +1708,18 @@ export default function Home() {
         onClear={clearCaseMemory}
       />
 
+      {/* Phase 1 — SDSAS 2026 Stamp Duty Calculator (TOOL 3) */}
+      {showStampTool && (
+        <StampDutyCalc
+          lang={lang}
+          onClose={() => setShowStampTool(false)}
+          activeMemory={activeMemory}
+          onSaveMemory={(nextMemory) => saveCaseMemory(nextMemory, activeCaseType)}
+          profileLandlord={profile.role === 'landlord' ? t.roles.landlord : ''}
+          property={activeMemory?.property?.nickname || activeMemory?.property?.address || ''}
+        />
+      )}
+
       {/* Sidebar overlay */}
       {showSidebar && (
         <div className="fixed inset-0 z-50 flex" style={{ maxWidth: '32rem', margin: '0 auto' }}>
@@ -1915,8 +1931,45 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Phase 1 — Pre-signing toolkit launchers */}
+            <div className="card-up delay-2">
+              <div className="flex items-end justify-between pl-1 pb-2">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>
+                    {toolLabels[lang].phase1Tools}
+                  </div>
+                  <div className="text-[10px] font-semibold mt-0.5" style={{ color: '#cbd5e1' }}>
+                    {toolLabels[lang].phase1ToolsSub}
+                  </div>
+                </div>
+                <span className="text-[8px] font-bold px-2 py-0.5 rounded-md" style={{ background: '#0f172a', color: '#fff', letterSpacing: '0.06em' }}>BETA</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2.5">
+                {/* Screen — coming soon */}
+                <div className="rounded-2xl p-3 text-left opacity-60 cursor-not-allowed" style={{ background: '#f8fafc', border: '1px dashed #e2e8f0' }}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-base" style={{ background: '#fff' }}>🛡️</div>
+                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#64748b' }}>{toolLabels[lang].toolScreenTile}</div>
+                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#94a3b8' }}>{toolLabels[lang].toolScreenTileSub}</div>
+                </div>
+                {/* Audit — coming soon */}
+                <div className="rounded-2xl p-3 text-left opacity-60 cursor-not-allowed" style={{ background: '#f8fafc', border: '1px dashed #e2e8f0' }}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-base" style={{ background: '#fff' }}>📑</div>
+                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#64748b' }}>{toolLabels[lang].toolAuditTile}</div>
+                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#94a3b8' }}>{toolLabels[lang].toolAuditTileSub}</div>
+                </div>
+                {/* Stamp duty — LIVE */}
+                <button onClick={() => setShowStampTool(true)}
+                  className="rounded-2xl p-3 text-left transition active:scale-[0.97] hover:shadow-md"
+                  style={{ background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)', border: '1px solid #6ee7b7' }}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-[13px] font-bold" style={{ background: '#065f46', color: '#fff' }}>RM</div>
+                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#064e3b' }}>{toolLabels[lang].toolStampTile}</div>
+                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#065f46' }}>{toolLabels[lang].toolStampTileSub}</div>
+                </button>
+              </div>
+            </div>
+
             {/* Topics label */}
-            <div className="text-[10px] font-bold uppercase tracking-widest pt-2 pl-1 card-up delay-2" style={{ color: '#94a3b8' }}>{t.commonSituations}</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest pt-2 pl-1 card-up delay-3" style={{ color: '#94a3b8' }}>{t.commonSituations}</div>
 
             {/* Bento — Starter question tiles (pastel grid) */}
             <div className="grid grid-cols-2 gap-3">

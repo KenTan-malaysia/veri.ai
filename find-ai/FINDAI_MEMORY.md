@@ -47,16 +47,33 @@ Pushed to GitHub → Vercel auto-deployed. Five files in that commit:
 - iPhone Safari voice: speak with mid-sentence pause → waits ~2s after final stop → auto-sends full text
 - Android Chrome voice: same test, recovers if engine drops
 
+### 🟢 v3.3.1 IN-FLIGHT — TOOL 3 LIVE (2026-04-21, awaiting deploy)
+
+**Task #78 (StampDuty resurrection) — DONE.** First end-to-end Phase 1 tool wired into production app.
+
+Files changed since v3.3 ship (4 files, ready to push):
+
+1. **src/components/tools/StampDutyCalc.js** — full rewrite. Reads `activeMemory.property.monthlyRent` for prefill, persists stamp calculation back to case memory as a dispute entry, generates "SDSAS 2026 Tax Accuracy Certificate" PDF via shared `buildStampReport` + `exportReport`. New props: `activeMemory`, `onSaveMemory`, `caseRef`, `profileLandlord`, `property`. Stable case ref via `useMemo`.
+2. **src/components/tools/labels.js** — added `phase1Tools`, `phase1ToolsSub`, `toolScreenTile/Sub`, `toolAuditTile/Sub`, `toolStampTile/Sub`, `exportPdf`, `exporting`, `stampSavedToCase` in EN/BM/中文.
+3. **src/app/page.js** — imported `StampDutyCalc` + `toolLabels`, added `showStampTool` state, added modal render with inline `onSaveMemory` wrapper preserving `activeCaseType`, **added "Pre-signing toolkit" bento launcher row** in the chat empty state (3 tiles — Screen/Audit greyed dashed "coming soon", Stamp live in pastel green).
+4. **FINDAI_MEMORY.md** — this status block.
+
+**Smoke test on https://find-ai-lovat.vercel.app after deploy:**
+1. Open chat (empty state) → see "Pre-signing toolkit · Don't sign blind" row above the 4 starter tiles → tap green "Stamp duty / SDSAS 2026" tile.
+2. Modal opens. Enter rent (e.g. 2500) → pick 2-year lease → Calculate → see RM 144 (or whatever the SDSAS gives). Old-vs-new comparison renders with red +RM increase.
+3. Tap **🛡️ Export PDF** → new tab opens with branded Find.ai letterhead, navy gradient header, QR code (api.qrserver.com), case ref `FA-20260421-XXXX`, A4 print CSS. Native print dialog → "Save as PDF". Test EN, then toggle BM (`Jangan tandatangan buta`), then 中文 (`签约前先查清`).
+4. Tap **Save to case** → button flips to green check ("Saved to case memory"). Open Case File modal → dispute history shows "SDSAS stamp duty calculated: RM ___ (Xy lease)" with the case ref.
+5. If a Case File already had a `monthlyRent` value, the modal should pre-fill the rent input on open.
+
 ### 🎯 NEXT SESSION — Start Here
 
-Three tool resurrections unblocked (PDF module is in place). Recommended order:
+Two tool resurrections still pending (PDF module + StampDuty paving the way):
 
-1. **#78 StampDuty** (fastest — formula already correct, just wire PDF export + Case Memory read). Good first wire-up to prove the tool → pdfExport flow end-to-end in production.
-2. **#76 TenantScreen** (dormant in `src/components/tools/TenantScreen.js` — needs PDPA consent modal + trust score UI polish + `buildScreenReport` wiring).
-3. **#81 agreement_clauses knowledge topic** (unblocks #77 AgreementHealth — build 12 clause red-flag patterns for the Audit tool).
-4. **#77 AgreementHealth** (after #81).
-5. **#79 tools hub + landing rewrite** — 3 bento tiles (Screen/Audit/Stamp) + chat as supporting 4th tile.
-6. **#80 Case Memory hand-off** — Screen → Audit → Stamp auto-populate.
+1. **#76 TenantScreen** (dormant in `src/components/tools/TenantScreen.js` — needs PDPA consent modal + trust score UI polish + `buildScreenReport` wiring + launcher tile in page.js empty state, replacing the "coming soon" Screen tile).
+2. **#81 agreement_clauses knowledge topic** (unblocks #77 AgreementHealth — build 12 clause red-flag patterns for the Audit tool).
+3. **#77 AgreementHealth** (after #81 — wire `buildAuditReport`, replace "coming soon" Audit tile in page.js).
+4. **#79 tools hub + landing rewrite** — 3 bento tiles (Screen/Audit/Stamp) + chat as supporting 4th tile on landing.js (currently the toolkit only appears in the chat empty state).
+5. **#80 Case Memory hand-off** — Screen → Audit → Stamp auto-populate (StampDuty already reads `activeMemory.property.monthlyRent` — this pattern repeats for the other two).
 
 ### 🗂️ Local-only preview files (not committed, safe to delete)
 
