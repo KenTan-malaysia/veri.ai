@@ -1,10 +1,26 @@
 # Find.ai — Malaysian Property Compliance Toolkit
 
-> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21.
+> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Product version shipping now: **Cakap 2.0**.
 
 ---
 
-## NORTH STAR (2026 v3.2 — Phase 1)
+## 🧬 PRODUCT DNA (read before every task)
+
+**DNA = TRUST BEFORE SIGNING.**
+
+Claude must auto-screen every Ken request through this filter BEFORE writing code, copy, or plans:
+
+1. Does this build trust BEFORE a tenancy is signed?
+2. How directly — bullseye, adjacent, or off-axis?
+3. If off-axis: flag it, push back, or suggest parking to Phase 2+. Do NOT silently build off-DNA features.
+
+Open non-trivial replies with a one-line DNA read, e.g. *"DNA read: bullseye — deepens pre-signing trust via tenant verification."* or *"DNA read: adjacent — post-signing. Park for Phase 2?"*
+
+**Cakap 2.0** is the Phase 1 product name = Tenant Screening + Agreement Health Check + SDSAS 2026 Stamp Duty + Chatbox. (Cakap 1.0 = legacy chat-only era — model badge in UI only, do not promote.)
+
+---
+
+## NORTH STAR (2026 v3.3.1 — Phase 1 / Cakap 2.0)
 
 **Tagline:** *"Don't sign blind."*
 

@@ -1,14 +1,36 @@
 # FIND.AI — COMPRESSED MEMORY
-> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-21 (v3.3 — Phase 1 doctrine lock: "Don't sign blind" toolkit).
+> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-21 (v3.3.1 — Cakap 2.0 naming lock + DNA filter: TRUST BEFORE SIGNING).
 
 ## 🔴 PICK UP HERE (2026-04-21 EOD)
 
+### 🧬 PRODUCT DNA — LOCKED (never drift from this)
+
+> **DNA = TRUST BEFORE SIGNING.**
+>
+> Every request, feature, idea, pivot, copy change, or tool addition Zeus receives must be auto-screened through this filter **before any work begins**:
+>
+> 1. *Does this build trust BEFORE a tenancy is signed?*
+> 2. *How directly — bullseye, adjacent, or off-axis?*
+> 3. If off-axis → push back / park / redirect. Do NOT silently build off-DNA features.
+>
+> Zeus opens any non-trivial response with a 1-line DNA read, e.g. *"DNA read: bullseye — this deepens pre-signing trust via X."* or *"DNA read: adjacent — post-signing. Park for Phase 2?"*
+
+### 🏷️ PRODUCT NAMING — LOCKED (v3.3.1)
+
+- **Cakap 2.0** = the full Phase 1 product (bundle name). Four tools under one roof:
+  1. **Tenant Screening** (TOOL 1) — "Can I trust this tenant?"
+  2. **Agreement Health Check** (TOOL 2) — "Is this agreement safe to sign?"
+  3. **SDSAS 2026 Stamp Duty Calculator** (TOOL 3) — "Am I paying the right duty?"
+  4. **Chatbox** (TOOL 4) — gap-filler Q&A for everything else.
+- "Cakap 1.0" = legacy name for chat-only era (model badge in UI). Do not promote.
+- "Find.ai" = company/brand. "Cakap 2.0" = the product version shipping now.
+
 ### 🧭 PHASE 1 DOCTRINE — LOCKED (v3.3)
 
-**Find.ai is a Malaysian property compliance TOOLKIT, not a chatbot.**
+**Find.ai / Cakap 2.0 is a Malaysian property compliance TOOLKIT, not a chatbot.**
 
 - **Tagline:** "Don't sign blind."
-- **Spine:** Trust before signing. Every feature answers ONE of 3 pre-signing questions:
+- **Spine (= DNA):** Trust before signing. Every feature answers ONE of 3 pre-signing questions:
   - *"Can I trust this tenant?"* → **TOOL 1 — Tenant Screening**
   - *"Is this agreement safe to sign?"* → **TOOL 2 — Agreement Health Check**
   - *"How much stamp duty & how to stamp?"* → **TOOL 3 — SDSAS 2026 Calculator**
