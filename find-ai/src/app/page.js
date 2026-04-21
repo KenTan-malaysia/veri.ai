@@ -6,6 +6,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import { CaseMemoryModal, buildCaseMemoryContext, emptyMemory, hasPdpaConsent } from './caseMemory';
 import StampDutyCalc from '../components/tools/StampDutyCalc';
 import TenantScreen from '../components/tools/TenantScreen';
+import TenantRegister from '../components/tools/TenantRegister';
 import { L as toolLabels } from '../components/tools/labels';
 
 const STATES = [
@@ -690,6 +691,7 @@ export default function Home() {
   // Phase 1 tools (stamp duty + screen wired; audit to follow)
   const [showStampTool, setShowStampTool] = useState(false);
   const [showScreenTool, setShowScreenTool] = useState(false);
+  const [showTenantRegister, setShowTenantRegister] = useState(false);
   // Voice state (Option C)
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
@@ -1734,6 +1736,14 @@ export default function Home() {
         />
       )}
 
+      {/* Path D — Tenant Pre-Registration (reusable trust profile) */}
+      {showTenantRegister && (
+        <TenantRegister
+          lang={lang}
+          onClose={() => setShowTenantRegister(false)}
+        />
+      )}
+
       {/* Sidebar overlay */}
       {showSidebar && (
         <div className="fixed inset-0 z-50 flex" style={{ maxWidth: '32rem', margin: '0 auto' }}>
@@ -1902,92 +1912,259 @@ export default function Home() {
       <div ref={chatRef} className="chat-area flex-1 overflow-y-auto px-4 py-4" style={{ background: has ? '#f8fafc' : 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>
         {!has ? (
           <div className="flex flex-col space-y-3 pb-4">
-            {/* Bento — Greeting hero tile (dark navy) */}
-            <div className="rounded-[24px] p-6 text-white card-up"
-              style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.08)' }}>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3"
-                style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
-                Cakap 1.0
-              </div>
-              <h2 className="text-[26px] font-bold leading-[1.1] mb-2" style={{ letterSpacing: '-0.03em' }}>
-                <span className="greeting-wave">👋</span> {getGreeting()}
-              </h2>
-              <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                {hasP ? t.welcomeReturning : t.welcomeDesc}
-              </p>
-              {hasP && (
-                <div className="flex flex-wrap gap-1.5 mt-4">
-                  {profile.role && <span className="text-[10px] px-2.5 py-1 rounded-full font-bold" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>{t.roles[profile.role]}</span>}
-                  {profile.state && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>{profile.state}</span>}
-                  {profile.type && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>{t.types[profile.type]}</span>}
-                  {profile.rent && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)' }}>RM{profile.rent}/mo</span>}
+            {/* v2 Bento — Hero · Don't sign blind. */}
+            <div className="relative rounded-[24px] p-7 text-white card-up overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, #112A55 0%, #0B1E3F 55%, #050B1A 100%)', boxShadow: '0 1px 2px rgba(5,11,26,0.04), 0 12px 40px -10px rgba(5,11,26,0.3)' }}>
+              {/* Grain */}
+              <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-multiply"
+                style={{ backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.08 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>\")" }} />
+              <div className="relative">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4"
+                  style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10b981' }} />
+                  {lang === 'en' ? 'Cakap 2.0 · Phase 1' : lang === 'bm' ? 'Cakap 2.0 · Fasa 1' : 'Cakap 2.0 · 第一阶段'}
                 </div>
-              )}
+                <h2 className="text-[44px] font-extrabold leading-[0.96] mb-3" style={{ letterSpacing: '-0.045em' }}>
+                  {lang === 'en' ? (<>Don&apos;t sign<br/>blind.</>)
+                    : lang === 'bm' ? (<>Jangan tandatangan<br/>membuta tuli.</>)
+                    : (<>别盲签<br/>合约。</>)}
+                </h2>
+                <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {lang === 'en'
+                    ? 'Three sharp pre-signing checks. One branded PDF each. Built for Malaysian landlords, agents, and SME tenants.'
+                    : lang === 'bm'
+                      ? 'Tiga semakan tepat sebelum tandatangan. Satu PDF berjenama setiap satu. Untuk tuan rumah, ejen, dan penyewa SME Malaysia.'
+                      : '三个精准的签约前检查。每个生成品牌 PDF。为马来西亚房东、经纪、中小企业租客打造。'}
+                </p>
+                {/* 3 stats */}
+                <div className="grid grid-cols-3 gap-3 mt-5 pt-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+                  <div>
+                    <div className="text-[22px] font-bold leading-none" style={{ fontFamily: 'ui-monospace, "SF Mono", monospace', letterSpacing: '-0.02em' }}>48</div>
+                    <div className="text-[9px] mt-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>{lang === 'en' ? 'Topics' : lang === 'bm' ? 'Topik' : '主题'}</div>
+                  </div>
+                  <div>
+                    <div className="text-[22px] font-bold leading-none" style={{ fontFamily: 'ui-monospace, "SF Mono", monospace', letterSpacing: '-0.02em' }}>3</div>
+                    <div className="text-[9px] mt-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>{lang === 'en' ? 'Languages' : lang === 'bm' ? 'Bahasa' : '语言'}</div>
+                  </div>
+                  <div>
+                    <div className="text-[22px] font-bold leading-none" style={{ fontFamily: 'ui-monospace, "SF Mono", monospace', letterSpacing: '-0.02em', color: '#C9A96A' }}>RM10k</div>
+                    <div className="text-[9px] mt-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>{lang === 'en' ? 'Fine safe' : lang === 'bm' ? 'Denda selamat' : '免罚'}</div>
+                  </div>
+                </div>
+                {hasP && (
+                  <div className="flex flex-wrap gap-1.5 mt-4">
+                    {profile.role && <span className="text-[10px] px-2.5 py-1 rounded-full font-bold" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}>{t.roles[profile.role]}</span>}
+                    {profile.state && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.8)' }}>{profile.state}</span>}
+                    {profile.type && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.8)' }}>{t.types[profile.type]}</span>}
+                    {profile.rent && <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.8)' }}>RM{profile.rent}/mo</span>}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Bento — Disclaimer chip (amber) */}
-            <div className="rounded-2xl p-3.5 flex items-center gap-2.5 card-up delay-1"
-              style={{ background: '#fef3c7', border: '1px solid #fde68a' }}>
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-                  <path d="M12 9v4"/><path d="M12 17h.01"/>
-                </svg>
+            {/* Journey label */}
+            <div className="flex items-center justify-between pt-2 pb-1 px-1 card-up delay-1">
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: '#475569' }}>
+                {lang === 'en' ? 'The Pre-Signing Journey' : lang === 'bm' ? 'Perjalanan Pra-Tandatangan' : '签约前三步'}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[11px] font-bold leading-tight" style={{ color: '#78350f' }}>
-                  {lang === 'en' ? 'Support tool only — not legal advice' : lang === 'bm' ? 'Alat sokongan sahaja — bukan nasihat guaman' : '仅为辅助工具 — 非法律意见'}
-                </div>
-                <div className="text-[10px] mt-0.5 leading-snug" style={{ color: '#92400e' }}>
-                  {lang === 'en' ? 'Always consult a qualified lawyer or licensed professional' : lang === 'bm' ? 'Sila rujuk peguam bertauliah atau profesional berlesen' : '请务必咨询合格律师或持牌专业人士'}
-                </div>
+              <div className="text-[10px] font-medium" style={{ color: '#94a3b8' }}>
+                {lang === 'en' ? 'screen · audit · stamp' : lang === 'bm' ? 'saring · audit · setem' : '筛查 · 审查 · 印花'}
               </div>
             </div>
 
-            {/* Phase 1 — Pre-signing toolkit launchers */}
-            <div className="card-up delay-2">
-              <div className="flex items-end justify-between pl-1 pb-2">
+            {/* TOOL 1 — SCREEN with embedded Grade A preview */}
+            <button onClick={() => setShowScreenTool(true)}
+              className="card-up delay-1 text-left rounded-[20px] p-5 transition active:scale-[0.99] hover:shadow-lg"
+              style={{ background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.03), 0 8px 24px -12px rgba(15,23,42,0.12)' }}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white"
+                    style={{ background: '#0B1E3F', fontFamily: 'ui-monospace, "SF Mono", monospace' }}>01</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#64748b' }}>
+                    {lang === 'en' ? 'Screen' : lang === 'bm' ? 'Saring' : '筛查'}
+                  </span>
+                </div>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  style={{ background: '#d1fae5', color: '#065f46' }}>{lang === 'en' ? 'Live' : lang === 'bm' ? 'Aktif' : '可用'}</span>
+              </div>
+              <div className="text-[17px] font-bold leading-tight" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>
+                {lang === 'en' ? 'Can I trust this tenant?' : lang === 'bm' ? 'Boleh percaya penyewa ini?' : '这位租客可信吗？'}
+              </div>
+              <div className="text-[12px] mt-1 leading-relaxed" style={{ color: '#64748b' }}>
+                {toolLabels[lang].toolScreenTileSub}
+              </div>
+              {/* Grade A preview */}
+              <div className="mt-4 rounded-2xl p-4 relative overflow-hidden"
+                style={{ background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', border: '1px solid #A7F3D0' }}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#047857' }}>
+                      {lang === 'en' ? 'Grade' : lang === 'bm' ? 'Gred' : '等级'}
+                    </div>
+                    <div className="text-[56px] font-black leading-none mt-1" style={{ color: '#047857', fontFamily: 'ui-monospace, "SF Mono", monospace' }}>A</div>
+                    <div className="text-[10px] font-bold mt-1" style={{ color: '#065f46' }}>
+                      {lang === 'en' ? 'Low risk · 92 / 100' : lang === 'bm' ? 'Risiko rendah · 92 / 100' : '低风险 · 92 / 100'}
+                    </div>
+                  </div>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#047857"/>
+                    <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#94a3b8' }}>CCRIS · CTOS · References</span>
+                <span className="text-[12.5px] font-bold" style={{ color: '#0f172a' }}>
+                  {lang === 'en' ? 'Start →' : lang === 'bm' ? 'Mula →' : '开始 →'}
+                </span>
+              </div>
+            </button>
+
+            {/* TOOL 2 — AUDIT (coming soon) with clause bars preview */}
+            <div className="card-up delay-2 text-left rounded-[20px] p-5 opacity-85"
+              style={{ background: '#ffffff', border: '1px dashed #cbd5e1' }}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white"
+                    style={{ background: '#64748b', fontFamily: 'ui-monospace, "SF Mono", monospace' }}>02</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#64748b' }}>
+                    {lang === 'en' ? 'Audit' : lang === 'bm' ? 'Audit' : '审查'}
+                  </span>
+                </div>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  style={{ background: '#fef3c7', color: '#92400e' }}>{lang === 'en' ? 'Soon' : lang === 'bm' ? 'Segera' : '即将推出'}</span>
+              </div>
+              <div className="text-[17px] font-bold leading-tight" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>
+                {lang === 'en' ? 'Is this agreement fair?' : lang === 'bm' ? 'Perjanjian ini adil?' : '这份合约公平吗？'}
+              </div>
+              <div className="text-[12px] mt-1 leading-relaxed" style={{ color: '#64748b' }}>
+                {toolLabels[lang].toolAuditTileSub}
+              </div>
+              <div className="mt-4 space-y-2.5">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>
-                    {toolLabels[lang].phase1Tools}
+                  <div className="flex items-center justify-between text-[10.5px] mb-1">
+                    <span className="font-bold" style={{ color: '#334155' }}>{lang === 'en' ? 'Rent · deposit' : lang === 'bm' ? 'Sewa · deposit' : '租金 · 押金'}</span>
+                    <span className="font-bold" style={{ color: '#047857', fontFamily: 'ui-monospace, monospace' }}>OK</span>
                   </div>
-                  <div className="text-[10px] font-semibold mt-0.5" style={{ color: '#cbd5e1' }}>
-                    {toolLabels[lang].phase1ToolsSub}
+                  <div className="h-1 rounded-full" style={{ background: '#f1f5f9' }}>
+                    <div className="h-full rounded-full" style={{ width: '92%', background: 'linear-gradient(90deg,#059669,#10B981)' }} />
                   </div>
                 </div>
-                <span className="text-[8px] font-bold px-2 py-0.5 rounded-md" style={{ background: '#0f172a', color: '#fff', letterSpacing: '0.06em' }}>BETA</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2.5">
-                {/* Screen — LIVE (Payment Discipline Scan) */}
-                <button onClick={() => setShowScreenTool(true)}
-                  className="rounded-2xl p-3 text-left transition active:scale-[0.97] hover:shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #dbeafe, #bfdbfe)', border: '1px solid #93c5fd' }}>
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-base" style={{ background: '#1e40af', color: '#fff' }}>🛡️</div>
-                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#1e3a8a' }}>{toolLabels[lang].toolScreenTile}</div>
-                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#1e40af' }}>{toolLabels[lang].toolScreenTileSub}</div>
-                </button>
-                {/* Audit — coming soon */}
-                <div className="rounded-2xl p-3 text-left opacity-60 cursor-not-allowed" style={{ background: '#f8fafc', border: '1px dashed #e2e8f0' }}>
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-base" style={{ background: '#fff' }}>📑</div>
-                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#64748b' }}>{toolLabels[lang].toolAuditTile}</div>
-                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#94a3b8' }}>{toolLabels[lang].toolAuditTileSub}</div>
+                <div>
+                  <div className="flex items-center justify-between text-[10.5px] mb-1">
+                    <span className="font-bold" style={{ color: '#334155' }}>{lang === 'en' ? 'Notice period' : lang === 'bm' ? 'Tempoh notis' : '通知期'}</span>
+                    <span className="font-bold" style={{ color: '#b45309', fontFamily: 'ui-monospace, monospace' }}>{lang === 'en' ? 'Review' : lang === 'bm' ? 'Semak' : '复查'}</span>
+                  </div>
+                  <div className="h-1 rounded-full" style={{ background: '#f1f5f9' }}>
+                    <div className="h-full rounded-full" style={{ width: '62%', background: 'linear-gradient(90deg,#D97706,#F59E0B)' }} />
+                  </div>
                 </div>
-                {/* Stamp duty — LIVE */}
-                <button onClick={() => setShowStampTool(true)}
-                  className="rounded-2xl p-3 text-left transition active:scale-[0.97] hover:shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)', border: '1px solid #6ee7b7' }}>
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 text-[13px] font-bold" style={{ background: '#065f46', color: '#fff' }}>RM</div>
-                  <div className="text-[11px] font-bold leading-tight" style={{ color: '#064e3b' }}>{toolLabels[lang].toolStampTile}</div>
-                  <div className="text-[9px] mt-0.5 leading-snug" style={{ color: '#065f46' }}>{toolLabels[lang].toolStampTileSub}</div>
-                </button>
+                <div>
+                  <div className="flex items-center justify-between text-[10.5px] mb-1">
+                    <span className="font-bold" style={{ color: '#334155' }}>{lang === 'en' ? 'Eviction clause' : lang === 'bm' ? 'Klausa pengusiran' : '驱逐条款'}</span>
+                    <span className="font-bold" style={{ color: '#b91c1c', fontFamily: 'ui-monospace, monospace' }}>{lang === 'en' ? 'Danger' : lang === 'bm' ? 'Bahaya' : '危险'}</span>
+                  </div>
+                  <div className="h-1 rounded-full" style={{ background: '#f1f5f9' }}>
+                    <div className="h-full rounded-full" style={{ width: '28%', background: 'linear-gradient(90deg,#B91C1C,#DC2626)' }} />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Topics label */}
-            <div className="text-[10px] font-bold uppercase tracking-widest pt-2 pl-1 card-up delay-3" style={{ color: '#94a3b8' }}>{t.commonSituations}</div>
+            {/* TOOL 3 — STAMP with RM calc preview */}
+            <button onClick={() => setShowStampTool(true)}
+              className="card-up delay-2 text-left rounded-[20px] p-5 transition active:scale-[0.99] hover:shadow-lg"
+              style={{ background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(15,23,42,0.03), 0 8px 24px -12px rgba(15,23,42,0.12)' }}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white"
+                    style={{ background: '#0B1E3F', fontFamily: 'ui-monospace, "SF Mono", monospace' }}>03</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#64748b' }}>
+                    {lang === 'en' ? 'Stamp' : lang === 'bm' ? 'Setem' : '印花'}
+                  </span>
+                </div>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  style={{ background: '#d1fae5', color: '#065f46' }}>SDSAS 2026</span>
+              </div>
+              <div className="text-[17px] font-bold leading-tight" style={{ color: '#0f172a', letterSpacing: '-0.02em' }}>
+                {lang === 'en' ? 'Am I paying the right duty?' : lang === 'bm' ? 'Saya bayar duti betul?' : '印花税算对了吗？'}
+              </div>
+              <div className="text-[12px] mt-1 leading-relaxed" style={{ color: '#64748b' }}>
+                {toolLabels[lang].toolStampTileSub}
+              </div>
+              <div className="mt-4 rounded-2xl overflow-hidden" style={{ border: '1px solid #e2e8f0' }}>
+                <div className="px-3 py-2 flex items-center justify-between text-[10px]" style={{ background: '#f8fafc' }}>
+                  <span className="font-bold uppercase tracking-wider" style={{ color: '#94a3b8' }}>{lang === 'en' ? 'Your lease' : lang === 'bm' ? 'Pajakan' : '您的租约'}</span>
+                  <span style={{ color: '#475569', fontFamily: 'ui-monospace, monospace' }}>RM 2,500 × 24 mo</span>
+                </div>
+                <div className="p-4 flex items-end justify-between" style={{ background: '#ffffff' }}>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8' }}>{lang === 'en' ? 'Stamp duty' : lang === 'bm' ? 'Duti setem' : '印花税'}</div>
+                    <div className="text-[28px] font-black leading-none mt-1" style={{ color: '#0f172a', fontFamily: 'ui-monospace, monospace', letterSpacing: '-0.02em' }}>RM 240</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#047857' }}>✓ {lang === 'en' ? 'Verified' : lang === 'bm' ? 'Disahkan' : '已验证'}</div>
+                    <div className="text-[10px] mt-1" style={{ color: '#64748b', fontFamily: 'ui-monospace, monospace' }}>{lang === 'en' ? 'Save RM 24' : lang === 'bm' ? 'Jimat RM 24' : '省 RM 24'}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#94a3b8' }}>Stamp Act · e-Duti Setem</span>
+                <span className="text-[12.5px] font-bold" style={{ color: '#0f172a' }}>
+                  {lang === 'en' ? 'Start →' : lang === 'bm' ? 'Mula →' : '开始 →'}
+                </span>
+              </div>
+            </button>
 
-            {/* Bento — Starter question tiles (pastel grid) */}
+            {/* PATH D — TENANT REGISTRATION dark-navy strip */}
+            <button onClick={() => setShowTenantRegister(true)}
+              className="card-up delay-3 w-full text-left rounded-[20px] p-5 transition active:scale-[0.98] hover:shadow-lg relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, #112A55 0%, #0B1E3F 55%, #050B1A 100%)', boxShadow: '0 4px 24px -6px rgba(5,11,26,0.3)' }}>
+              <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply"
+                style={{ backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.1 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>\")" }} />
+              <div className="relative">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider"
+                    style={{ background: 'rgba(16,185,129,0.22)', color: '#6ee7b7' }}>
+                    {lang === 'en' ? 'For tenants' : lang === 'bm' ? 'Untuk penyewa' : '租客专区'}
+                  </span>
+                  <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md" style={{ background: '#fff', color: '#0f172a' }}>NEW</span>
+                </div>
+                <div className="flex items-end gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[18px] font-bold leading-tight text-white" style={{ letterSpacing: '-0.02em' }}>
+                      {lang === 'en' ? 'Register once. Rent anywhere.' : lang === 'bm' ? 'Daftar sekali. Sewa mana-mana.' : '注册一次。租遍各处。'}
+                    </div>
+                    <div className="text-[11px] mt-1 leading-snug" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                      {toolLabels[lang].regDesc}
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)', fontFamily: 'ui-monospace, monospace' }}>1·{lang === 'en' ? 'Phone' : lang === 'bm' ? 'Fon' : '手机'}</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)', fontFamily: 'ui-monospace, monospace' }}>2·{lang === 'en' ? 'ID' : lang === 'bm' ? 'IC' : '身份'}</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)', fontFamily: 'ui-monospace, monospace' }}>3·TNB</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)', fontFamily: 'ui-monospace, monospace' }}>4·{lang === 'en' ? 'Net' : lang === 'bm' ? 'Net' : '网络'}</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)', fontFamily: 'ui-monospace, monospace' }}>5·{lang === 'en' ? 'OK' : lang === 'bm' ? 'OK' : '同意'}</span>
+                    </div>
+                  </div>
+                  <div className="w-16 flex-shrink-0 rounded-xl p-2 text-center"
+                    style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
+                    <div className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#6ee7b7' }}>{lang === 'en' ? 'Grade' : lang === 'bm' ? 'Gred' : '等级'}</div>
+                    <div className="text-[28px] font-black text-white leading-none mt-0.5" style={{ fontFamily: 'ui-monospace, monospace' }}>A</div>
+                    <div className="text-[8px] mt-0.5" style={{ color: '#6ee7b7', fontFamily: 'ui-monospace, monospace' }}>92</div>
+                  </div>
+                </div>
+              </div>
+            </button>
+
+            {/* Ask anything else label */}
+            <div className="flex items-center justify-between pt-3 pb-1 px-1 card-up delay-3">
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: '#475569' }}>
+                {lang === 'en' ? 'Or ask anything else' : lang === 'bm' ? 'Atau tanya apa-apa' : '或问任何问题'}
+              </div>
+              <span className="text-[10px]" style={{ color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>48 topics</span>
+            </div>
+
+            {/* Starter question tiles (pastel bento) */}
             <div className="grid grid-cols-2 gap-3">
               {(t.questions[profile.role] || t.questions.default).map((q, i) => {
                 const topicColors = [
@@ -2009,8 +2186,8 @@ export default function Home() {
               })}
             </div>
 
-            {/* Bento — Privacy + session pair */}
-            <div className="grid grid-cols-2 gap-3 mt-1">
+            {/* Privacy + History pair */}
+            <div className="grid grid-cols-2 gap-3 mt-1 card-up delay-4">
               <div className="rounded-2xl p-4" style={{ background: '#d1fae5' }}>
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#065f46" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -2031,6 +2208,23 @@ export default function Home() {
                     : (lang === 'en' ? 'No chats yet' : lang === 'bm' ? 'Belum ada chat' : '暂无对话')}
                 </div>
               </button>
+            </div>
+
+            {/* Statute grounding strip + disclaimer */}
+            <div className="pt-4 pb-2 card-up delay-4">
+              <div className="text-[9px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: '#94a3b8' }}>
+                {lang === 'en' ? 'Grounded in' : lang === 'bm' ? 'Berdasarkan' : '法规依据'}
+              </div>
+              <div className="flex flex-wrap gap-1 text-[10px]" style={{ color: '#64748b' }}>
+                <span className="px-2 py-0.5 rounded-md" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>Contracts Act 1950</span>
+                <span className="px-2 py-0.5 rounded-md" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>RTA 2026</span>
+                <span className="px-2 py-0.5 rounded-md" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>Stamp Act 1949</span>
+                <span className="px-2 py-0.5 rounded-md" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>PDPA 2010</span>
+                <span className="px-2 py-0.5 rounded-md" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>s.90A</span>
+              </div>
+              <div className="text-[9px] mt-2.5 italic" style={{ color: '#94a3b8' }}>
+                {lang === 'en' ? '* Support tool only — not legal advice. Always consult a qualified lawyer.' : lang === 'bm' ? '* Alat sokongan sahaja — bukan nasihat guaman. Sila rujuk peguam bertauliah.' : '* 仅为辅助工具 — 非法律意见。请务必咨询合格律师。'}
+              </div>
             </div>
           </div>
         ) : (
