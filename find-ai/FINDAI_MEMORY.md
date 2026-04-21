@@ -1,27 +1,53 @@
 # FIND.AI — COMPRESSED MEMORY
-> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-21 (v3.2 — digital_evidence topic added + v3.1 fixes).
+> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-21 (v3.3 — Phase 1 doctrine lock: "Don't sign blind" toolkit).
 
 ## 🔴 PICK UP HERE (2026-04-21 EOD)
 
-**Four uncommitted changes waiting on Ken to push:**
+### 🧭 PHASE 1 DOCTRINE — LOCKED (v3.3)
 
-1. **knowledge.js v3.2** — all R5-R100 patches PLUS new `digital_evidence` topic (Module 48). Full Section 90A Evidence Act 1950 workflow, Certificate of Authenticity template, SHA-256 hashing, NTP timestamps, WhatsApp/SMS admissibility, CCTV consent rules, check-in/check-out photography workflow, Evidence Vault teaser. Scored **25/25 (100%)** on dedicated stress test; R100 still 100/100 (zero regressions). Covers Rent Default Toolkit priority #2 (Deposit Shield / Evidence). Topic count now 48.
-2. **page.js chat-memory fix** — activeChatId now persists to `fi_active_chat_id` localStorage key + loadChat resumes latest history entry instead of forking a new ID. Fixes the "case memory doesn't work after refresh" bug Ken reported.
-3. **page.js mobile voice recording hardening** — five fixes for iOS Safari + Android Chrome:
-   - `en-MY` → `en-US` (Web Speech doesn't accept en-MY; Safari was rejecting it silently).
-   - `isIOSRef` detection + `r.continuous = !isIOS` so iOS uses single-utterance mode.
-   - `onend` skips auto-restart on iOS (prevents freeze loops).
-   - Amplitude-driven silence timer: `VOICE_THRESHOLD = 0.08` + `SILENCE_MS_BY_LANG = {en:2000, bm:2500, zh:2500}` — natural mid-sentence pauses no longer trigger premature auto-send.
-   - 45s hard watchdog in `startVoice` that force-stops + sends captured text if the engine hangs. Silence timer is also armed on start so totally-silent sessions auto-stop.
-4. **Rent Default Toolkit coverage audit** — mapped 8 priority features to knowledge.js. 7/8 now fully covered; remaining gap is #5 Agreement Scanner (add `agreement_clauses` topic next session — distributed clause-red-flag library).
+**Find.ai is a Malaysian property compliance TOOLKIT, not a chatbot.**
 
-**To deploy tomorrow:**
+- **Tagline:** "Don't sign blind."
+- **Spine:** Trust before signing. Every feature answers ONE of 3 pre-signing questions:
+  - *"Can I trust this tenant?"* → **TOOL 1 — Tenant Screening**
+  - *"Is this agreement safe to sign?"* → **TOOL 2 — Agreement Health Check**
+  - *"How much stamp duty & how to stamp?"* → **TOOL 3 — SDSAS 2026 Calculator**
+  - Gap-filler: **TOOL 4 — Contextual Chatbox** (48-topic knowledge base)
+- **Journey:** Screen → Audit → Stamp. Case Memory hands data between tools.
+- **Output:** Each tool produces a **branded PDF** with Find.ai letterhead + QR code (viral loop).
+- **Target user:** Malaysian landlords (1-10 units), property agents, SME commercial tenants — **PRE-signing**, not post-problem.
+- **Public roadmap = Phase 1 only.** Phases 2-4 (Evidence Vault → CN-MY B2B → Verified Marketplace) are INTERNAL and NEVER mentioned in marketing/UI until Phase 4.
+- **Ruthless 90-day focus:** pre-signing wedge. Tools, not chat. Trust, not listings.
+
+### 📋 NEXT SESSION — Phase 1 Tool Resurrection Backlog
+
+Three of the four tools exist as dormant components in `src/components/tools/` but are not wired into the live app. Phase 1 ship requires:
+
+1. **Build `src/lib/pdfExport.js`** — shared module for all 4 tools. Find.ai letterhead (navy gradient header, logo, date, case ref), footer with QR code pointing back to find.ai/case/:id, PDPA disclaimer, "Not legal advice" shield. `jsPDF` or server-side render.
+2. **Resurrect `TenantScreen.jsx`** (dormant in `src/components/tools/`) → wire into new tools hub → add PDF export ("Tenant Screening Report"). Inputs: name, IC, employer, CTOS/CCRIS status, income, references. Output: trust score 0-100 + PDF.
+3. **Resurrect `AgreementHealth.jsx`** (dormant) → wire into tools hub → add PDF export ("Agreement Health Check Report"). Paste-tenancy-text input → scan for 12 red-flag clauses (no-exit, landlord super-powers, unreasonable deposit, etc.) → output scored report + PDF.
+4. **Resurrect `StampDuty.jsx`** (dormant) → wire into tools hub → add PDF export ("SDSAS 2026 Tax Accuracy Certificate"). Already has SDSAS formula `Math.ceil(annual_rent/250)*rate_tier`. Needs: UI polish + BNDS form pre-fill + PDF certificate.
+5. **Build tools hub route** (`/tools` or re-purpose `calculators.js`) — 4 bento tiles (Screen / Audit / Stamp / Ask). Mobile-first, thumb-zone CTAs.
+6. **Rewrite `landing.js`** — lead with 3 pre-signing tool tiles (Screen/Audit/Stamp), chat as supporting 4th tile. Hero copy: "Don't sign blind." Sub-hero: "Screen your tenant. Audit the agreement. Stamp it right. In 10 minutes, for free."
+7. **Wire Case Memory hand-off** — Screen tool's output auto-populates Audit tool's tenant field; Audit tool's rent field auto-populates Stamp tool. Use `fi_chat_history[activeId].memory` as shared case store.
+
+### 🔁 Five uncommitted changes still waiting on Ken to push:
+
+1. **src/lib/pdfExport.js** (NEW) — shared PDF export module for all 4 Phase 1 tools. Zero npm dependencies (uses browser-native print-to-PDF). Branded Find.ai letterhead + QR viral loop (find.ai/r/:caseRef) + PDPA footer + tri-lingual (EN/BM/中文). Exports `exportReport()` + 4 convenience builders (`buildScreenReport`, `buildAuditReport`, `buildStampReport`, `buildChatReport`). Smoke test 14/14 PASS.
+2. **knowledge.js v3.2** — all R5-R100 patches PLUS new `digital_evidence` topic (Module 48). Full Section 90A Evidence Act 1950 workflow, Certificate of Authenticity template, SHA-256 hashing, NTP timestamps, WhatsApp/SMS admissibility, CCTV consent rules, check-in/check-out photography workflow. Scored **25/25 (100%)** on dedicated stress test; R100 still 100/100 (zero regressions). Topic count now 48.
+3. **page.js chat-memory fix** — activeChatId now persists to `fi_active_chat_id` localStorage key + loadChat resumes latest history entry instead of forking a new ID.
+4. **page.js mobile voice recording hardening** — five fixes for iOS Safari + Android Chrome (en-US lang, isIOS single-utterance, onend restart skip on iOS, amplitude silence timer with lang-aware thresholds, 45s hard watchdog).
+5. **Rent Default Toolkit coverage audit** — 7/8 priorities now fully covered; gap = #5 Agreement Scanner (will be satisfied by TOOL 2 Agreement Health Check resurrection above).
+
+**Deploy command (Windows PowerShell):**
 ```powershell
 cd "C:\Users\Tan Ken Yap\Documents\data collection\OneDrive\Desktop\Claude\find-ai"
-git add src/app/page.js src/app/api/knowledge.js FINDAI_MEMORY.md
-git commit -m "feat(knowledge): add digital_evidence topic (Section 90A) + fix chat memory + harden mobile voice; v3.2"
+git add src/lib/pdfExport.js src/app/page.js src/app/api/knowledge.js CLAUDE.md FINDAI_MEMORY.md
+git commit -m "Phase 1 v3.3: 'Don't sign blind' doctrine + shared pdfExport.js + v3.2 knowledge/chat-memory/voice fixes"
 git push
 ```
+
+> **Note on pdf-preview-*.html files:** three sample reports were dropped into the repo root for visual inspection. Open them in a browser + hit Ctrl+P to preview the PDF output. **Do NOT commit these** — they're temporary previews. Either delete them before the push or leave them and `.gitignore` will ignore them (they're not added to the git add line above).
 
 **Then smoke-test:**
 - **Chat memory:** create a chat → fill Case File modal → refresh → send a message. Devtools → Application → Local Storage → `fi_active_chat_id` should be set; the case memory block should appear in the system prompt.
@@ -233,7 +259,11 @@ Stamp Act 1949 (incl. s.52, s.36A, s.62 as amended), Finance Act 2025 (SDSAS), B
 - **v2.0** — Rebranded Find.ai, SDSAS 2026, multi-module restructure
 - **v2.1 (2026-04-20)** — Stage 1 strip: verification modules removed. Chatbox-only.
 - **v2.2 (2026-04-20)** — Bento redesign: landing, chat empty state, history sidebar, profile all rewritten in Apple bento style. Cakap 1.0 branding.
-- **v2.3 (2026-04-20 — THIS SAVE POINT)** — Landlord v1 positioning. Budget 2026 knowledge (29 topics). Hardened legal disclaimer. Option B marketing headline. Coverage audit documented.
+- **v2.3 (2026-04-20)** — Landlord v1 positioning. Budget 2026 knowledge (29 topics). Hardened legal disclaimer. Option B marketing headline. Coverage audit documented.
+- **v3.0 (2026-04-21)** — Knowledge base expanded to 40+ topics. R100 stress harness built. 100/100 FULL pass.
+- **v3.1 (2026-04-21)** — R5-R100 keyword patches. Chat-memory persistence fix (`fi_active_chat_id`). Mobile voice recording hardened (en-US, isIOS single-utterance, amplitude silence timer, 45s watchdog).
+- **v3.2 (2026-04-21)** — `digital_evidence` topic added (Module 48). Section 90A Evidence Act 1950 full workflow. 25/25 stress test. R100 still 100%. Topic count = 48.
+- **v3.3 (2026-04-21 — THIS SAVE POINT)** — **Phase 1 doctrine lock.** Find.ai reframed as a toolkit (Screen/Audit/Stamp/Chat), not a chatbot. Tagline "Don't sign blind." CLAUDE.md rewritten to define 4 Phase 1 tools + 4-Phase internal roadmap (Phases 2-4 never mentioned publicly). Each tool produces a branded PDF with QR viral loop. 90-day pre-signing wedge focus.
 
 ---
 
@@ -279,13 +309,16 @@ Vercel auto-deploys within ~60 seconds.
 
 When Ken opens a new session with this file:
 
-1. Read this file end-to-end.
-2. Greet: "Resuming Find.ai — v2.3 landlord-first, 29-topic knowledge base, 70% coverage. Push the commit in Section 12, or start a new task?"
+1. Read this file end-to-end — **start with the "🧭 PHASE 1 DOCTRINE" block at the top**. That's the operating system.
+2. Greet: "Resuming Find.ai — Phase 1 doctrine locked (v3.3). Toolkit, not chatbot. 4 tools: Screen → Audit → Stamp → Chat. Ready to resurrect TenantScreen, AgreementHealth, StampDuty + build pdfExport.js, or push pending v3.2/v3.3 commits first?"
 3. Do NOT re-scan codebase unless Ken asks or this file is clearly stale.
-4. Common next tasks Ken may request:
-   - Push current changes (Section 12 commands)
-   - Close v2 roadmap gaps (Section 8) — insurance, fire safety, flood, CCRIS dispute, inheritance, DDA s.39B, agent/MIEA
-   - Re-enable dormant tools (LegalBridge, SituationNavigator, EvidenceVault)
-   - Address open bugs in Section 13
-   - Refresh CLAUDE.md to match current state
-5. Ken's preferences: direct tone, short answers, no verbose explanations, token-efficient.
+4. **Phase 1 tool resurrection is the primary backlog** — see the numbered list in the PICK UP HERE section.
+5. Common next tasks Ken may request:
+   - Push v3.3 doctrine + v3.2 knowledge commits (PowerShell command in PICK UP HERE)
+   - Build `src/lib/pdfExport.js` (shared for all 4 tools)
+   - Resurrect one of the 3 dormant tools (TenantScreen / AgreementHealth / StampDuty)
+   - Rewrite `landing.js` to lead with 3 pre-signing tiles
+   - Build tools hub route (`/tools`)
+   - Add `agreement_clauses` knowledge topic (feeds TOOL 2)
+6. **Reject scope creep:** any request that looks like Phase 2 (Evidence Vault), Phase 3 (CN-MY B2B), or Phase 4 (marketplace) = defer. Pre-signing wedge only for 90 days.
+7. Ken's preferences: direct tone, short answers, no verbose explanations, token-efficient. Never assume approval.

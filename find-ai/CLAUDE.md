@@ -1,20 +1,34 @@
-# Find.ai — Malaysian PropTech Compliance & Advisory Platform
+# Find.ai — Malaysian Property Compliance Toolkit
 
-> Previously "Unbelievebe". Rebranded and expanded. Consumer legal Q&A + enterprise compliance modules in one platform.
+> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21.
 
 ---
 
-## Identity
+## NORTH STAR (2026 v3.2 — Phase 1)
 
-**What it is:** AI-powered Malaysian property compliance platform. Two layers — free consumer advisory (the original Unbelievebe chatbot) and premium compliance tools (SDSAS, Evidence Vault, Cross-Border Verification).
+**Tagline:** *"Don't sign blind."*
 
-**What it is NOT:** A chatbot. A general property listing site. A CRM. It's a compliance-first utility tool that solves real legal and financial pain for Malaysian landlords.
+**What Find.ai is:** A Malaysian property **compliance toolkit** — a set of sharp utility tools that protect both sides of a tenancy BEFORE anyone signs. Each tool produces a branded PDF that creates a viral sharing loop.
 
-**Target users:**
-- Layer 1 (Free): Malaysian landlords, tenants, first-time buyers — anyone with a property law question
-- Layer 2 (Premium): Industrial landlords renting to foreign manufacturers (China-MY corridor focus), property agents managing multiple units, SME tenants navigating commercial leases
+**What Find.ai is NOT:**
+- Not a chatbot. (The chatbox is one of four tools — it fills gaps between the other three, not the front door.)
+- Not a listing site. (The marketplace pivot is Phase 4 endgame — never mentioned publicly for the next 90 days.)
+- Not a CRM.
+- Not a one-stop property super-app.
 
-**Domain:** `find.ai` (TBD — currently deployed at unbelievebe.vercel.app)
+**The one spine:** **trust before signing.** Every tool answers one of three pre-signing questions:
+1. "Can I trust this tenant?" → Tenant Screening
+2. "Is this agreement fair?" → Agreement Health Check
+3. "Am I paying the right stamp duty?" → SDSAS 2026 Calculator
+
+**The user journey:** *screen → audit → stamp*. Data carries forward between tools via Case Memory so the user never re-enters the same tenant/property twice. The chatbox sits alongside ready to answer "what about X clause / what about Sabah / what about this edge case."
+
+**Target users (Phase 1 only):**
+- Malaysian landlords managing 1-10 units, especially first-timers and accidental landlords
+- Property agents who want screening + audit + stamp as a bundled service to offer their landlord clients
+- SME commercial tenants receiving a draft agreement and needing a quick audit before signing
+
+**Domain:** `find.ai` (TBD — currently deployed at https://find-ai-lovat.vercel.app)
 
 ---
 
@@ -58,154 +72,75 @@ find-ai/
 
 ---
 
-## Modules
+## Phase 1 Tools (the entire product for the next 90 days)
 
-### MODULE A: SDSAS 2026 Compliance Engine [BUILT]
-**Status:** Calculator logic complete. Integrated into calculators.js.
+All four tools share one spine — **pre-signing trust** — and data flows between them via the existing Case Memory system (`fi_chat_history[i].memory`). Every tool produces a branded PDF export. The PDF is the viral mechanic: when a landlord shares the Tenant Screening report on WhatsApp, the recipient sees the Find.ai letterhead + QR code and becomes a user.
 
-**What it does:** Calculates stamp duty for tenancy agreements under the 2026 Self-Assessment System.
+### TOOL 1 — Tenant Screening  [dormant code, to be resurrected]
+**Question answered:** *"Can I trust this tenant before I hand over keys?"*
 
-**Key rules:**
-- Formula: `Math.ceil(annual_rent / 250) * rate`
-- No RM2,400 exemption (removed in 2026)
-- Rate tiers: ≤1yr = RM1, 1-3yr = RM3, 3-5yr = RM5, >5yr = RM7 per RM250 unit
-- Minimum duty: RM10
-- 30-day stamping deadline from execution
-- Penalty: up to 100% of unpaid duty (Section 36A Stamp Act 1949)
-- 2026 transition year: IRB penalty concession (no penalties for errors)
+**Inputs:** Tenant name + IC (or USCC for PRC company tenants) + optional CCRIS/CTOS consent + reference contacts.
 
-**IMPORTANT:** Rate tiers (RM1/3/5/7) are from project brief. Ken must verify against gazetted Finance Act 2025 schedule before production launch. If rates differ, update one line in calculators.js and RATE_TABLE in Python.
+**Outputs:** Trust score (A/B/C/D) + factor breakdown + red flags + **"Find.ai Screening Report PDF"** stamped with report ID and date.
 
-**Outputs:**
-- Stamp duty amount with full breakdown
-- Old vs new comparison (shows cost increase from 2026 changes)
-- SDSAS explainer badge
-- BNDS form pre-fill data (Python module)
+**Hand-off:** If passed, tenant details flow into the Case Memory → prefill Agreement Health Check and SDSAS Calculator.
 
-**Files:** `src/app/calculators.js` (StampDutyCalc component), `sdsas_2026_calculator.py` (verification + BNDS prefill)
+**Source of truth:** `src/components/tools/TenantScreen.jsx` (dormant, needs rewire + PDF export).
 
 ---
 
-### MODULE B: Digital Evidence Vault [NOT BUILT]
-**Status:** Planned
+### TOOL 2 — Agreement Health Check  [dormant code, to be resurrected]
+**Question answered:** *"Is this tenancy agreement fair and legally safe?"*
 
-**What it does:** SHA-256 hash-locked, NTP-timestamped photography for property handovers (check-in/check-out). Generates a "Section 90A Certificate of Authenticity" PDF that makes inventory reports court-ready legal documents.
+**Inputs:** Paste agreement text (or upload Word/PDF later) + answers to 10-15 clause questions (deposit amount, notice period, eviction clause, stamp duty clause, etc.).
 
-**Legal basis:** Evidence Act 1950 (Section 90A) — digital photos and chat logs need a "Computer-Generated Certificate" to be admissible in Malaysian courts.
+**Outputs:** Health score (0-100) + clause-by-clause red/yellow/green flags + specific rewrites for dangerous clauses + **"Find.ai Agreement Audit PDF."**
 
-**Key features to build:**
-- Photo capture with NTP timestamp + GPS location
-- SHA-256 hash of each image (immutable proof)
-- Section 90A certificate PDF generation
-- Comparison view (check-in vs check-out)
-- Export as court-ready evidence bundle
+**Legal backbone:** Contracts Act 1950 + RTA 2026 + Stamp Act 1949 + SDSAS + Section 90A. Cross-references the `agreement_clauses` knowledge topic (to be added in next session).
 
-**Tech considerations:**
-- Hashing: Web Crypto API (browser-side SHA-256)
-- Timestamps: NTP server query or trusted time source
-- PDF generation: jsPDF or server-side
-- Storage: Need to decide — localStorage won't work for images at scale. Consider IndexedDB, cloud storage, or IPFS.
+**Hand-off:** If agreement passes, Case Memory stores rent + term + parties → prefills SDSAS Calculator.
+
+**Source of truth:** `src/components/tools/AgreementHealth.jsx` (dormant, needs rewire + PDF export + clause library).
 
 ---
 
-### MODULE C: CN-MY Enterprise Trust Link [BUILT]
-**Status:** MVP complete — manual USCC input + risk scoring. No live API yet.
+### TOOL 3 — SDSAS 2026 Calculator  [logic built, UI dormant]
+**Question answered:** *"Am I paying the correct stamp duty under the 2026 Self-Assessment System?"*
 
-**What it does:** Cross-border tenant verification for Chinese companies renting Malaysian industrial property. User enters 18-digit USCC + company details manually → system validates USCC format → generates Trust Grade (A/B/C/D) with risk score.
+**Inputs:** Monthly rent + lease term (years) + execution date.
 
-**Risk scoring (100 pts):**
-- Paid-in Capital (30 pts): ≥10M RMB = 30, ≥1M = 20, ≥100K = 10
-- Tax Credit Rating (25 pts): A=25, B=18, C=8, D=0
-- Years in Operation (20 pts): ≥10yr=20, ≥5yr=15, ≥2yr=8
-- Abnormal Operations List (15 pts): Not listed=15, Listed=0 (critical flag)
-- Court/Legal Records (10 pts): None=10, Has records=0
+**Logic:** `Math.ceil(annual_rent / 250) × rate_tier` where rate_tier = RM1/3/5/7 depending on years. Minimum RM10. No RM2,400 exemption. 30-day stamping deadline. RM10,000 fine per incorrect assessment under SDSAS.
 
-**Trust Grades:** A (≥80) Low Risk | B (≥60) Moderate | C (≥35) Elevated | D (<35) High Risk
+**Outputs:** Stamp duty amount + old-vs-new comparison + e-Duti Setem (STAMPS portal) walkthrough + **"Find.ai Tax Accuracy Certificate PDF"** — this is the audit-protection artifact that proves landlord self-assessed correctly.
 
-**Outputs:** Trust grade, score breakdown, risk/positive factors, downloadable HTML report
+**Verification:** `sdsas_2026_calculator.py` is the reference implementation. UI calculator must match exactly.
 
-**Future:** Connect to NECIPS API or alternative Chinese company databases for auto-fill.
-
-**Files:** `src/app/calculators.js` (CNMYTrustLink component)
+**Source of truth:** Logic in `sdsas_2026_calculator.py` and knowledge.js `stamp_duty` topic (4KB deep, including STAMPS portal steps). UI in `src/components/tools/StampDuty.jsx` (dormant).
 
 ---
 
-### MODULE D: Situation Navigator [BUILT]
-**Status:** MVP complete — 3 dispute flows with step-by-step guides + document templates.
+### TOOL 4 — Chatbox (Cakap 1.0)  [LIVE]
+**Question answered:** *everything else — Sabah/Sarawak edge cases, dialect questions, dispute scenarios, clause nuances, RTA interpretation, cross-border issues.*
 
-**What it does:** User picks their situation → system shows full legal process with steps, warnings, timeline, costs, and ready-to-copy document templates.
+**Role in Phase 1:** The chatbox is NOT the front door. It sits alongside the three tools as the **"Ask anything else" card** on the landing/tools hub. It fills gaps between the tool journey.
 
-**Situations built:**
-1. Rent default — 4 steps (reminder → LOD → Form 198 → distress warrant). Includes LOD template.
-2. Deposit disputes — 4 steps (document → demand itemized list → LOD → tribunal). Includes deposit demand template.
-3. Eviction process — 4 steps (notice → possession order → hearing → writ). Includes notice to vacate template.
+**Inputs:** Plain-language question + 48 knowledge topics (knowledge.js v3.2) + Case Memory from any active case.
 
-**Outputs:**
-- Step-by-step legal guide with warnings at each step
-- Legal basis, timeline, and cost estimate per situation
-- Ready-to-copy Letter of Demand (LOD)
-- Ready-to-copy Deposit Demand Letter
-- Ready-to-copy Notice to Vacate
-- All in EN/BM/中文
+**Outputs:** Icon-based answer (⚖️ / ✅ / 🚫 / 💰 / 📋) in EN/BM/中文. Copy-to-WhatsApp button. Save-as-HTML button. No PDF yet (chatbox conversations are supporting, not the viral artifact).
 
-**Future:** Add agent disputes, strata issues, subletting. Add Form 198 PDF pre-fill.
+**Completed features:** 15 Phase 1 UX features including voice input, 3-way language toggle, state-aware knowledge, dialect understanding, session memory, Case File system, PDPA consent gating.
 
-**Files:** `src/app/calculators.js` (SituationNavigator component, SITUATIONS data object)
+**Source of truth:** `src/app/page.js` (main UI), `src/app/api/chat/route.js` (backend), `src/app/api/knowledge.js` (48 topics), `src/app/caseMemory.js` (per-case context).
 
 ---
 
-### MODULE E: "Can I Do This?" Compliance Checker [BUILT]
-**Status:** Complete — 7 goals with full compliance roadmaps in EN/BM/中文.
+## Shared Infrastructure (to be built)
 
-**What it does:** Chinese investors/tenants pick what they want to do in Malaysia → system tells them exactly what licenses, permits, and approvals they need, which departments to contact, estimated timeline, cost, and warns about "China Assumption Traps" (things that work differently than in China).
+**`src/lib/pdfExport.js`** — single PDF generator used by all three tools. Consistent Find.ai letterhead, shield brand mark, footer disclaimer ("Support tool only, not legal advice"), report ID (UUID), QR code pointing to `find.ai/r/{reportId}` for viral loop.
 
-**Goals covered (7 total):**
-1. **Rent a House/Condo** — Visa requirements, stamped tenancy agreement, deposit (2+1), Evidence Vault integration
-2. **Rent an Office/Shop** — SSM company registration, stamped lease, PBT license, lease registration (>3 years)
-3. **Rent a Factory/Warehouse** — Land use conversion (NLC S.124), DOE license, DOSH registration, PBT, Bomba, foreign worker permits, MIDA license
-4. **Buy a House/Condo** — Foreign price thresholds (per state), State Authority consent, stamp duty (SDSAS), RPGT awareness, title search, timeline view
-5. **Buy Land** — Land status verification (Malay Reserved/NCR), State Authority consent, land use conversion, survey, environmental assessment
-6. **Open a Restaurant/F&B** — SSM, PBT premise license, food handler cert (MOH), food premise license, Bomba, signboard license, halal cert, liquor license
-7. **Set Up a Factory** — MIDA license, SSM, DOE (EIA), DOSH, PBT, Bomba, TNB industrial power, foreign workers, customs/FTZ
+**Case Memory hand-off** — already exists (`fi_chat_history[i].memory`). Tool 1 writes tenant object, Tool 2 reads tenant + writes agreement object, Tool 3 reads rent/term and writes stamp-duty result. Chatbox reads everything.
 
-**Each goal shows:**
-- Verdict: YES / CONDITIONALLY YES / NOT ALLOWED
-- China Assumption Trap warning (key differences from China's system)
-- Required licenses checklist (numbered, with department, detail, timeline, cost, warnings)
-- Recommended licenses (additional safeguards)
-- Timeline view (for buy scenarios)
-- Summary (total licenses, total time, total cost)
-- Download full checklist as text file
-
-**Files:** `src/app/calculators.js` (LegalBridge component, COMPLIANCE_GOALS data object)
-
----
-
-### CONSUMER Q&A (Original Unbelievebe) [BUILT]
-**Status:** Complete — all Phase 1 features shipped.
-
-**What it does:** User describes property situation in plain language → AI gives legal position + action steps + ready-to-copy tenancy clause.
-
-**Completed features:**
-1. Voice input
-2. BM + 中文 language toggle (3-way: EN → BM → 中文)
-3. Landing page
-4. Starter questions
-5. Copy button on clauses
-6. Save conversation as HTML
-7. Chat UX (empty + active states)
-8. Dialect understanding (Kelantanese, Terengganu, Kedah, N9, Sarawak, Sabah)
-9. State-aware legal knowledge (Peninsular vs Sabah/Sarawak)
-10. WhatsApp share button
-11. Privacy badge
-12. Property profile (role, state, property type, rent — localStorage)
-13. Session memory (chat + language + profile persist)
-14. Profile context sent to API for personalized answers
-15. Property tools (stamp duty, yield, screening, agreement health check)
-
-**Answer format:** Icon-based (⚖️ law, ✅ do this, 🚫 don't, 💰 cost, 📋 clause). Not essay-style.
-
-**System prompt:** Located in `src/app/api/chat/route.js`. Covers money, legal, damage, tax, tenant management verticals. Prevention-first approach.
+**Tools hub route** — `src/app/page.js` landing state needs 3 bento tiles (Screen / Audit / Stamp) above an "Ask anything else" chat tile, not the other way around.
 
 ---
 
@@ -219,48 +154,49 @@ find-ai/
 
 ---
 
-## Strategic Blueprint — "The Compliance Shield"
+## Strategic Blueprint — 4-Phase Roadmap
 
-**Core concept:** Find.ai is NOT a property app. It is a Risk Mitigation Engine.
-- Problem: Landlords in 2026 are legally liable for tax math (SDSAS) and face heavy fines for self-help evictions and deposit mismanagement (RTA).
-- Solution: Automate legal compliance, digitize physical evidence, verify international tenants before a single ringgit is exchanged.
+Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are internal planning only — never mentioned in marketing, landing copy, or user-facing content.
 
-**The "Trojan Horse" 3-Phase Roadmap:**
+### Phase 1 — PRE-SIGNING WEDGE (now → +90 days) — public
+**Positioning:** "Don't sign blind." The Malaysian property compliance toolkit.
+**Ship:** 4 tools (Screen / Audit / Stamp / Chatbox), each producing a branded PDF.
+**Goal:** Become the default Malaysian pre-signing check. Not a chatbot. Not a listing site. A utility toolkit.
+**Wedge:** Landlords and SME tenants need certainty BEFORE signing — that's the one job we do.
+**Success metric:** PDF share rate. Every shared PDF is a user-acquisition event.
 
-Phase I — THE TOOL (Utility First):
-Solve the "Tax Headache." Every landlord needs the SDSAS Calculator. Once they use it, they're in our ecosystem.
+### Phase 2 — POST-SIGNING CUSTODIAN (Q3-Q4 2026) — internal only
+**Next layer:** Digital Evidence Vault (check-in/check-out photography with Section 90A CoA) + Situation Navigator (dispute toolkits) + recurring compliance reminders (stamp renewal, cukai taksiran, insurance).
+**Goal:** Become the default record-keeper after signing. Deepen data lock-in.
+**Not mentioned publicly during Phase 1.**
 
-Phase II — THE MANAGER (Data Lock-in):
-Provide the Evidence Vault. By storing their property's digital history (photos/leases) with us, switching cost becomes too high.
+### Phase 3 — CROSS-BORDER B2B (2027) — internal only
+**Next layer:** CN-MY Enterprise Trust Link (USCC verification, Trust Grade A-D) for industrial landlords renting to PRC manufacturers. "Can I Do This?" compliance roadmap for PRC investors.
+**Goal:** Own the China-Malaysia industrial corridor as the pre-verified counterparty layer.
+**Not mentioned publicly during Phase 1.**
 
-Phase III — THE GIANT (Platform Pivot):
-Once we manage thousands of units, open the Direct Advertisement marketplace. Landlords "Auto-List" properties the moment a lease expires.
+### Phase 4 — VERIFIED-ONLY MARKETPLACE (2027-2028) — endgame, internal only
+**Vision:** A listings marketplace where every landlord has a Compliance Score (from Phases 1-2) and every tenant has a Trust Grade (from Phase 3). No unverified listings. No unverified tenants. Closed-loop, high-trust dataset — the most valuable real-estate graph in Southeast Asia.
+**Goal:** A PropertyGuru alternative that PropertyGuru cannot copy, because they don't have our three prior data moats.
+**This is the endgame. Never discussed publicly until Phase 4 launches.**
 
-**End Game Vision (end of 2026):**
-Find.ai = the only platform where a tenant from Shanghai can find a factory in Penang that is "Pre-Verified."
-- Tenant sees a "Compliance Score" for the landlord.
-- Landlord sees a "Trust Grade" for the tenant.
-- Marketplace = "Closed-Loop" of high-trust individuals = most valuable real estate dataset in Southeast Asia.
+---
 
-**Killer Features:**
-A. SDSAS 2026 Calculator → "Tax Accuracy Certificate" for audit protection [BUILT]
-B. CN-MY Enterprise Trust Link → Manual USCC + risk scoring, Trust Grade A-D report [BUILT]
-C. Digital Evidence Vault → SHA-256 hashed photos, Section 90A court-ready report [BUILT]
-D. Situation Navigator → 3 dispute flows, step-by-step guides + LOD/notice templates [BUILT]
-E. "Can I Do This?" Compliance Checker → 7 goals, full license/permit roadmaps, China Trap warnings [BUILT]
+## Design Direction — "Mature Minimalism"
 
-**Design Direction — "Mature Minimalism":**
 - NOT startup green vibes. Bank-level trust.
-- Deep navies, charcoal greys, crisp white space.
-- "Thumb Zone" design: all high-stakes buttons (Submit, Verify, Pay) at bottom for one-handed pro use.
-- Security icons (shield) throughout — remind users sensitive data (TIN, credit scores) is encrypted.
+- Deep navies, charcoal greys, crisp white space. (Shield icons throughout.)
+- "Thumb Zone" design: all high-stakes buttons at the bottom for one-handed pro use.
+- Security icons (shield) near any sensitive input — reassure users their IC / CCRIS / USCC is encrypted.
 - No cartoonish elements. Professional. Serious. Trustworthy.
+- Every PDF export uses the SAME Find.ai letterhead + shield brand mark + disclaimer footer — consistency = trust.
 
-**Competitive positioning:**
-- Zero direct competition in Malaysia for this niche
-- Don't compete with PropertyGuru on day one — infiltrate with utility, expand to marketplace
-- China-MY corridor = unique positioning no one else has
-- Compliance tools (SDSAS, Section 90A) = moat no listing site can copy quickly
+## Competitive positioning (Phase 1 only)
+
+- Zero direct competition in Malaysia for a pre-signing compliance toolkit.
+- Do NOT compete with PropertyGuru, iProperty, or Mudah on listings — that's Phase 4 and we stay silent about it.
+- Compete with generic templates on Shopee/Carousell, screenshots of old tenancy agreements, and lawyer consultations at RM200-500/hour. Our wedge is *speed + correctness + a shareable artifact.*
+- Compliance tools (SDSAS, Section 90A, CCRIS-consented screening) = moat that listing sites cannot copy quickly.
 
 ---
 
@@ -298,3 +234,8 @@ E. "Can I Do This?" Compliance Checker → 7 goals, full license/permit roadmaps
 - **v1.0** — Unbelievebe launched. Landlord Q&A chatbot.
 - **v1.1** — Added calculators (stamp duty, yield, screening, health check), voice, BM, 中文, profiles, session memory.
 - **v2.0** — Rebranded to Find.ai. SDSAS 2026 calculator updated. Project restructured for multi-module platform.
+- **v2.1** — Tools stripped; went chatbox-only to land the core consumer Q&A wedge. 7 tool components preserved as dormant code.
+- **v3.0** — Case Memory / Case File system shipped. Persistent per-chat context for follow-ups.
+- **v3.1** — knowledge.js hardened (R100 stress test 100%); chat memory refresh-persistence bug fixed; mobile voice recording fixed (iOS Safari + Android Chrome).
+- **v3.2** — `digital_evidence` topic added (48th topic); Section 90A framework fully documented for the Agreement Health Check tool.
+- **v3.3 (in progress) — Phase 1 doctrine lock.** Repositioned from "AI chatbot" to "pre-signing compliance toolkit." Four tools (Screen / Audit / Stamp / Chatbox), each with branded PDF export. Marketplace (Phase 4) moved to internal-only roadmap.
