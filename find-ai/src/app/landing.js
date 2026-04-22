@@ -10,7 +10,7 @@
 
 import { useState } from 'react';
 
-export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedChat, onContinueChat }) {
+export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp, lang, setLang, hasSavedChat, onContinueChat }) {
   const [step, setStep] = useState('welcome'); // 'welcome' | 'pick'
 
   const t = {
@@ -97,12 +97,10 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
   const handlePick = (id) => {
     if (id === 'audit') return; // soon — no-op for now
     haptic([20, 40, 20]); // confirm-tap buzz, matches launching-the-tool feel
-    if (id === 'chat') {
-      // Chat skips the profile gate
-      if (onOpenChat) onOpenChat(); else onStart && onStart();
-      return;
-    }
-    // screen & stamp — go straight into the tool, no Ready screen
+    // Each tile routes to its own tool. Fallback to onStart so nothing breaks if a handler is missing.
+    if (id === 'screen' && onOpenScreen) { onOpenScreen(); return; }
+    if (id === 'stamp'  && onOpenStamp)  { onOpenStamp();  return; }
+    if (id === 'chat'   && onOpenChat)   { onOpenChat();   return; }
     onStart && onStart();
   };
 
