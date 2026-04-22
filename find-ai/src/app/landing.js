@@ -1,10 +1,11 @@
 'use client';
 
-// Find.ai Landing — v9 Guided Flow (One Thing Per Screen)
+// Find.ai Landing — v9 Guided Flow (One Thing Per Screen) · Warm Navy Trust palette
 // Previous versions preserved:
 //   src/app/landing-v8-four-equals.js  (v8 Four Equals, chat co-equal)
 //   src/app/landing-v2-warm.js         (v2 Warm Editorial, cream/navy/gold)
 // This version: 3-screen wizard — Welcome → Pick → Ready. Plain human language. 5-year-old-proof.
+// Palette: Cream #FAF8F3 · Navy #0F1E3F · Gold #B8893A · Slate #3F4E6B · Tea #F3EFE4 · Border #E7E1D2
 
 import { useState } from 'react';
 
@@ -127,7 +128,7 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
 
   const styles = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap');
-    .v9-root { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #0A0A0A; -webkit-font-smoothing: antialiased; background: #F5F5F1; min-height: 100vh; }
+    .v9-root { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #0F1E3F; -webkit-font-smoothing: antialiased; background: #FAF8F3; min-height: 100vh; }
     .v9-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
     .v9-tight { letter-spacing: -0.03em; }
     .v9-tighter { letter-spacing: -0.045em; }
@@ -137,32 +138,32 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
       display: flex; flex-direction: column;
       background: #FFFFFF;
     }
-    .v9-dot { width: 8px; height: 8px; border-radius: 999px; background: #E2E8F0; transition: width .3s ease, background .3s ease; }
-    .v9-dot.on { background: #0A0A0A; width: 24px; }
+    .v9-dot { width: 8px; height: 8px; border-radius: 999px; background: #E7E1D2; transition: width .3s ease, background .3s ease; }
+    .v9-dot.on { background: #0F1E3F; width: 24px; }
     .v9-tile {
       background: #FFFFFF; border-radius: 24px; padding: 20px;
-      border: 2px solid #F1F5F9;
+      border: 2px solid #F3EFE4;
       transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
       cursor: pointer; text-align: left; width: 100%;
       display: block;
     }
-    .v9-tile:hover { border-color: #0A0A0A; transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(15,23,42,0.15); }
+    .v9-tile:hover { border-color: #0F1E3F; transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(15,30,63,0.18); }
     .v9-tile:active { transform: scale(0.98); }
     .v9-tile.disabled { opacity: 0.55; cursor: not-allowed; }
-    .v9-tile.disabled:hover { border-color: #F1F5F9; transform: none; box-shadow: none; }
+    .v9-tile.disabled:hover { border-color: #F3EFE4; transform: none; box-shadow: none; }
     .v9-btn-primary {
       width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 700;
-      color: white; background: #0A0A0A; border: none; cursor: pointer;
-      box-shadow: 0 10px 25px -5px rgba(15,23,42,0.25);
+      color: white; background: #0F1E3F; border: none; cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(15,30,63,0.28);
       transition: transform .1s ease;
     }
     .v9-btn-primary:active { transform: scale(0.98); }
     .v9-btn-ghost {
       width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600;
-      color: #0A0A0A; background: #F1F5F9; border: none; cursor: pointer; margin-top: 10px;
+      color: #0F1E3F; background: #F3EFE4; border: none; cursor: pointer; margin-top: 10px;
     }
     .v9-back {
-      width: 40px; height: 40px; border-radius: 999px; background: #F1F5F9;
+      width: 40px; height: 40px; border-radius: 999px; background: #F3EFE4;
       display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
     }
     .v9-fade { animation: v9Fade .4s cubic-bezier(0.2,0.7,0.2,1) both; }
@@ -181,7 +182,7 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
   const Brand = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0A0A0A"/>
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F1E3F"/>
         <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
       </svg>
       <span className="v9-tight" style={{ fontWeight: 700, fontSize: 14 }}>Find.ai</span>
@@ -189,7 +190,7 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
   );
 
   const LangBtn = () => (
-    <button onClick={nextLang} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 999, fontWeight: 600, background: '#F1F5F9', color: '#334155', border: 'none', cursor: 'pointer' }}>{c.langBtn}</button>
+    <button onClick={nextLang} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 999, fontWeight: 600, background: '#F3EFE4', color: '#3F4E6B', border: 'none', cursor: 'pointer' }}>{c.langBtn}</button>
   );
 
   // --------- SCREEN 1 — WELCOME ---------
@@ -209,13 +210,13 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', padding: '32px 0' }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>👋</div>
-            <h1 className="v9-tighter" style={{ fontSize: 42, fontWeight: 900, lineHeight: 0.95, color: '#0A0A0A', marginBottom: 20 }}>
+            <h1 className="v9-tighter" style={{ fontSize: 42, fontWeight: 900, lineHeight: 0.95, color: '#0F1E3F', marginBottom: 20 }}>
               {c.hi}
             </h1>
-            <p style={{ fontSize: 17, lineHeight: 1.55, color: '#475569', maxWidth: 320, margin: '0 auto' }}>
-              {c.welcomeBefore}<span style={{ color: '#0A0A0A', fontWeight: 600 }}>{c.welcomeStrong}</span>{c.welcomeEnd}
+            <p style={{ fontSize: 17, lineHeight: 1.55, color: '#3F4E6B', maxWidth: 320, margin: '0 auto' }}>
+              {c.welcomeBefore}<span style={{ color: '#0F1E3F', fontWeight: 700, borderBottom: '2px solid #B8893A', paddingBottom: '2px' }}>{c.welcomeStrong}</span>{c.welcomeEnd}
             </p>
-            <p className="v9-mono" style={{ fontSize: 11, color: '#94A3B8', marginTop: 16, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+            <p className="v9-mono" style={{ fontSize: 11, color: '#9A9484', marginTop: 16, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
               {c.welcomeFine}
             </p>
           </div>
@@ -246,15 +247,15 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
         <div className="v9-screen v9-fade">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
             <button className="v9-back" onClick={handleBack} aria-label={c.back}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F1E3F" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
             <ProgressDots active={2} />
             <LangBtn />
           </div>
 
           <div style={{ marginBottom: 28 }}>
-            <h2 className="v9-tighter" style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.05, color: '#0A0A0A', marginBottom: 6 }}>{c.pickTitle}</h2>
-            <p style={{ fontSize: 14, color: '#64748B' }}>{c.pickSub}</p>
+            <h2 className="v9-tighter" style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.05, color: '#0F1E3F', marginBottom: 6 }}>{c.pickTitle}</h2>
+            <p style={{ fontSize: 14, color: '#5A6780' }}>{c.pickSub}</p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
@@ -269,15 +270,15 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
                   <div style={{ fontSize: 36, lineHeight: 1 }}>{p.emoji}</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <span className="v9-tight" style={{ fontSize: 17, fontWeight: 900, color: '#0A0A0A' }}>{p.name}</span>
+                      <span className="v9-tight" style={{ fontSize: 17, fontWeight: 900, color: '#0F1E3F' }}>{p.name}</span>
                       {p.soon && (
-                        <span className="v9-mono" style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 999, background: '#F1F5F9', color: '#64748B' }}>{c.soon}</span>
+                        <span className="v9-mono" style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 999, background: '#F3EFE4', color: '#5A6780' }}>{c.soon}</span>
                       )}
                     </div>
-                    <div style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>{p.q}</div>
+                    <div style={{ fontSize: 13, color: '#5A6780', marginTop: 2 }}>{p.q}</div>
                   </div>
                   {!p.soon && (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><path d="m9 18 6-6-6-6"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F1E3F" strokeWidth="2" strokeLinecap="round"><path d="m9 18 6-6-6-6"/></svg>
                   )}
                 </div>
               </button>
@@ -285,8 +286,8 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
           </div>
 
           <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span className="v9-mono" style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#94A3B8' }}>{c.pickPrivacy}</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9A9484" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span className="v9-mono" style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#9A9484' }}>{c.pickPrivacy}</span>
           </div>
         </div>
       </div>
@@ -303,7 +304,7 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
       <div className="v9-screen v9-fade">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <button className="v9-back" onClick={handleBack} aria-label={c.back}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F1E3F" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
           </button>
           <ProgressDots active={3} />
           <LangBtn />
@@ -312,29 +313,29 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center', marginBottom: 28 }}>
             <div style={{ fontSize: 64, marginBottom: 12 }}>{emoji}</div>
-            <h2 className="v9-tighter" style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.05, color: '#0A0A0A', marginBottom: 14 }}>
+            <h2 className="v9-tighter" style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.05, color: '#0F1E3F', marginBottom: 14 }}>
               {ready.titleA}<br/>{ready.titleB}
             </h2>
-            <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6, maxWidth: 320, margin: '0 auto' }}>
-              {ready.sub}<span style={{ color: '#0A0A0A', fontWeight: 600 }}>{ready.subStrong}</span>{ready.subEnd}
+            <p style={{ fontSize: 14, color: '#3F4E6B', lineHeight: 1.6, maxWidth: 320, margin: '0 auto' }}>
+              {ready.sub}<span style={{ color: '#0F1E3F', fontWeight: 600 }}>{ready.subStrong}</span>{ready.subEnd}
             </p>
           </div>
 
-          <div style={{ background: '#F8FAFC', borderRadius: 20, padding: 18, marginBottom: 20 }}>
-            <div className="v9-mono" style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#64748B', marginBottom: 12 }}>{c.readyLabelList}</div>
+          <div style={{ background: '#F3EFE4', borderRadius: 20, padding: 18, marginBottom: 20 }}>
+            <div className="v9-mono" style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5A6780', marginBottom: 12 }}>{c.readyLabelList}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {ready.items.map((it, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 26, height: 26, borderRadius: 999, background: '#FFFFFF', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: 999, background: '#FFFFFF', border: '1px solid #E7E1D2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span className="v9-mono" style={{ fontSize: 10, fontWeight: 700 }}>{i + 1}</span>
                   </div>
-                  <span style={{ fontSize: 13, color: '#334155' }}>{it}</span>
+                  <span style={{ fontSize: 13, color: '#3F4E6B' }}>{it}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <p style={{ textAlign: 'center', fontSize: 11.5, color: '#64748B', marginBottom: 16 }}>{c.readyTime}</p>
+          <p style={{ textAlign: 'center', fontSize: 11.5, color: '#5A6780', marginBottom: 16 }}>{c.readyTime}</p>
         </div>
 
         <button className="v9-btn-primary" onClick={handleStart}>{c.readyCta}</button>
