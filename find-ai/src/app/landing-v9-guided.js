@@ -1,17 +1,17 @@
 'use client';
 
-// Find.ai Landing — v9.1 Direct Flow · Warm Navy Trust palette
+// Find.ai Landing — v9 Guided Flow (One Thing Per Screen) · Warm Navy Trust palette
 // Previous versions preserved:
-//   src/app/landing-v9-guided.js       (v9 3-screen: Welcome → Pick → Ready → Tool)
 //   src/app/landing-v8-four-equals.js  (v8 Four Equals, chat co-equal)
 //   src/app/landing-v2-warm.js         (v2 Warm Editorial, cream/navy/gold)
-// This version: 2-screen wizard — Welcome → Pick → Tool (straight in, no Ready screen).
+// This version: 3-screen wizard — Welcome → Pick → Ready. Plain human language. 5-year-old-proof.
 // Palette: Cream #FAF8F3 · Navy #0F1E3F · Gold #B8893A · Slate #3F4E6B · Tea #F3EFE4 · Border #E7E1D2
 
 import { useState } from 'react';
 
 export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedChat, onContinueChat }) {
-  const [step, setStep] = useState('welcome'); // 'welcome' | 'pick'
+  const [step, setStep] = useState('welcome'); // 'welcome' | 'pick' | 'ready'
+  const [pick, setPick] = useState(null);      // 'screen' | 'audit' | 'stamp' | 'chat'
 
   const t = {
     en: {
@@ -26,13 +26,20 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
       continueCase: 'Continue last case',
       // Pick
       pickTitle: 'What do you need?',
-      pickSub: 'Pick one. Goes straight in — no extra step.',
+      pickSub: 'Pick one. You can always change later.',
       pickPrivacy: 'Your info stays private',
       p1: 'Check a tenant',       p1q: '"Can I trust this person?"',
       p2: 'Review an agreement',  p2q: '"Is this contract fair?"',
       p3: 'Calculate stamp duty', p3q: '"How much do I owe LHDN?"',
       p4: 'Just ask a question',  p4q: '"I have a specific situation…"',
       soon: 'Soon',
+      // Ready
+      readyLabelList: 'What we\'ll ask',
+      readyTime: '⏱ Takes 2 minutes · Free',
+      readyCta: 'Start →',
+      readyScreen: { titleA: "Let's check", titleB: 'your tenant.', sub: 'I\'ll ask you 4 simple questions. Then I\'ll give you a ', subStrong: 'Trust Grade (A to D)', subEnd: ' and a shareable report.', items: ['Did they show up on time?', 'Were their questions reasonable?', 'Did they try to negotiate?', 'Who came with them?'] },
+      readyAudit:  { titleA: "Let's review", titleB: 'the agreement.', sub: 'Paste the agreement text. I\'ll flag ', subStrong: 'unfair or risky clauses', subEnd: ' with suggested rewrites.', items: ['Deposit amount', 'Notice period', 'Eviction clause', 'Stamp duty clause'] },
+      readyStamp:  { titleA: "Let's calculate", titleB: 'stamp duty.', sub: 'Three quick numbers. I\'ll show you ', subStrong: 'exactly what to pay LHDN', subEnd: ' and how to stamp via STAMPS portal.', items: ['Monthly rent', 'Lease term (years)', 'Execution date', 'Old-vs-new comparison'] },
       back: 'Back',
       langBtn: 'BM',
     },
@@ -46,13 +53,19 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
       letsGo: 'Jom mula →',
       continueCase: 'Sambung kes terakhir',
       pickTitle: 'Apa yang anda perlukan?',
-      pickSub: 'Pilih satu. Terus mula — tiada langkah tambahan.',
+      pickSub: 'Pilih satu. Boleh tukar bila-bila.',
       pickPrivacy: 'Maklumat anda kekal privasi',
       p1: 'Semak penyewa',          p1q: '"Boleh saya percaya dia?"',
       p2: 'Periksa perjanjian',     p2q: '"Adakah kontrak ini adil?"',
       p3: 'Kira duti setem',        p3q: '"Berapa saya patut bayar LHDN?"',
       p4: 'Tanya soalan sahaja',    p4q: '"Saya ada situasi khusus…"',
       soon: 'Tidak lama',
+      readyLabelList: 'Apa yang kami akan tanya',
+      readyTime: '⏱ Ambil 2 minit · Percuma',
+      readyCta: 'Mula →',
+      readyScreen: { titleA: 'Mari semak', titleB: 'penyewa anda.', sub: 'Saya akan tanya 4 soalan mudah. Kemudian saya beri anda ', subStrong: 'Gred Kepercayaan (A hingga D)', subEnd: ' dan laporan yang boleh dikongsi.', items: ['Adakah mereka hadir tepat masa?', 'Adakah soalan mereka munasabah?', 'Adakah mereka cuba rundingan?', 'Siapa datang bersama mereka?'] },
+      readyAudit:  { titleA: 'Mari periksa', titleB: 'perjanjian itu.', sub: 'Tampal teks perjanjian. Saya akan tanda ', subStrong: 'fasal tidak adil atau berisiko', subEnd: ' dengan cadangan tulisan semula.', items: ['Jumlah deposit', 'Tempoh notis', 'Fasal pengusiran', 'Fasal duti setem'] },
+      readyStamp:  { titleA: 'Mari kira', titleB: 'duti setem.', sub: 'Tiga nombor pantas. Saya tunjukkan anda ', subStrong: 'tepat apa yang perlu dibayar LHDN', subEnd: ' dan cara setem melalui portal STAMPS.', items: ['Sewa bulanan', 'Tempoh pajakan (tahun)', 'Tarikh penyempurnaan', 'Perbandingan lama vs baru'] },
       back: 'Kembali',
       langBtn: '中',
     },
@@ -66,13 +79,19 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
       letsGo: '开始 →',
       continueCase: '继续上次案件',
       pickTitle: '您需要什么?',
-      pickSub: '选一个。直接进入 — 无需多一步。',
+      pickSub: '选一个。之后可以随时更换。',
       pickPrivacy: '您的信息保持私密',
       p1: '查租客',           p1q: '"这个人可信吗?"',
       p2: '看合同',           p2q: '"这份合同公平吗?"',
       p3: '算印花税',         p3q: '"我该交多少给 LHDN?"',
       p4: '随便问问题',       p4q: '"我有特殊情况……"',
       soon: '即将',
+      readyLabelList: '我们会问的',
+      readyTime: '⏱ 2 分钟 · 免费',
+      readyCta: '开始 →',
+      readyScreen: { titleA: '来查一下', titleB: '您的租客。', sub: '我会问您 4 个简单问题。然后给您一个', subStrong: '信任等级(A 到 D)', subEnd: '和一份可分享的报告。', items: ['他们准时到了吗?', '他们的问题合理吗?', '他们有试着谈价吗?', '谁和他们一起来?'] },
+      readyAudit:  { titleA: '来看看', titleB: '这份合同。', sub: '粘贴合同文字。我会标出', subStrong: '不公或有风险的条款', subEnd: ',并给出改写建议。', items: ['押金金额', '通知期', '驱逐条款', '印花税条款'] },
+      readyStamp:  { titleA: '来算一下', titleB: '印花税。', sub: '三个数字。我告诉您', subStrong: '该付 LHDN 多少钱', subEnd: ',以及怎样用 STAMPS 平台盖章。', items: ['月租', '租期(年)', '合同日期', '新旧对比'] },
       back: '返回',
       langBtn: 'EN',
     },
@@ -93,18 +112,19 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
   // Flow handlers
   const handleLetsGo   = () => { haptic(12); setStep('pick'); };
   const handleContinue = () => { haptic(12); onContinueChat && onContinueChat(); };
-  const handleBack     = () => { haptic(8); setStep('welcome'); };
+  const handleBack     = () => { haptic(8); if (step === 'ready') setStep('pick'); else setStep('welcome'); };
   const handlePick = (id) => {
-    if (id === 'audit') return; // soon — no-op for now
-    haptic([20, 40, 20]); // confirm-tap buzz, matches launching-the-tool feel
+    haptic(12);
     if (id === 'chat') {
-      // Chat skips the profile gate
+      // Chat goes straight — no profile gate, no confirm screen
       if (onOpenChat) onOpenChat(); else onStart && onStart();
       return;
     }
-    // screen & stamp — go straight into the tool, no Ready screen
-    onStart && onStart();
+    if (id === 'audit') return; // soon — no-op for now
+    setPick(id);
+    setStep('ready');
   };
+  const handleStart = () => { haptic([20, 40, 20]); onStart && onStart(); };
 
   const styles = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap');
@@ -155,6 +175,7 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
       <span className={`v9-dot ${active === 1 ? 'on' : ''}`}></span>
       <span className={`v9-dot ${active === 2 ? 'on' : ''}`}></span>
+      <span className={`v9-dot ${active === 3 ? 'on' : ''}`}></span>
     </div>
   );
 
@@ -273,6 +294,52 @@ export default function Landing({ onStart, onOpenChat, lang, setLang, hasSavedCh
     );
   }
 
-  // Fallback — should not reach here with current step values
-  return null;
+  // --------- SCREEN 3 — READY ---------
+  const ready = pick === 'audit' ? c.readyAudit : pick === 'stamp' ? c.readyStamp : c.readyScreen;
+  const emoji = pick === 'audit' ? '📄' : pick === 'stamp' ? '💰' : '👤';
+
+  return (
+    <div className="v9-root">
+      <style dangerouslySetInnerHTML={{ __html: styles }} />
+      <div className="v9-screen v9-fade">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <button className="v9-back" onClick={handleBack} aria-label={c.back}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F1E3F" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <ProgressDots active={3} />
+          <LangBtn />
+        </div>
+
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            <div style={{ fontSize: 64, marginBottom: 12 }}>{emoji}</div>
+            <h2 className="v9-tighter" style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.05, color: '#0F1E3F', marginBottom: 14 }}>
+              {ready.titleA}<br/>{ready.titleB}
+            </h2>
+            <p style={{ fontSize: 14, color: '#3F4E6B', lineHeight: 1.6, maxWidth: 320, margin: '0 auto' }}>
+              {ready.sub}<span style={{ color: '#0F1E3F', fontWeight: 600 }}>{ready.subStrong}</span>{ready.subEnd}
+            </p>
+          </div>
+
+          <div style={{ background: '#F3EFE4', borderRadius: 20, padding: 18, marginBottom: 20 }}>
+            <div className="v9-mono" style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5A6780', marginBottom: 12 }}>{c.readyLabelList}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {ready.items.map((it, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: 999, background: '#FFFFFF', border: '1px solid #E7E1D2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span className="v9-mono" style={{ fontSize: 10, fontWeight: 700 }}>{i + 1}</span>
+                  </div>
+                  <span style={{ fontSize: 13, color: '#3F4E6B' }}>{it}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ textAlign: 'center', fontSize: 11.5, color: '#5A6780', marginBottom: 16 }}>{c.readyTime}</p>
+        </div>
+
+        <button className="v9-btn-primary" onClick={handleStart}>{c.readyCta}</button>
+      </div>
+    </div>
+  );
 }
