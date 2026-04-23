@@ -8,6 +8,7 @@ import StampDutyCalc from '../components/tools/StampDutyCalc';
 import TenantScreen from '../components/tools/TenantScreen';
 import TenantRegister from '../components/tools/TenantRegister';
 import { L as toolLabels } from '../components/tools/labels';
+import ChatDrawer from '../components/ChatDrawer';
 
 const STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -692,6 +693,11 @@ export default function Home() {
   const [showStampTool, setShowStampTool] = useState(false);
   const [showScreenTool, setShowScreenTool] = useState(false);
   const [showTenantRegister, setShowTenantRegister] = useState(false);
+  // v9.2 Floating Chat — bottom-sheet drawer that overlays the active tool.
+  // Tool stays mounted underneath, so closing the drawer returns the user
+  // to the exact step they were on. Ephemeral by design (messages clear on close).
+  const [showChatDrawer, setShowChatDrawer] = useState(false);
+  const [chatDrawerContext, setChatDrawerContext] = useState('');
   // Voice state (Option C)
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
@@ -1542,20 +1548,60 @@ export default function Home() {
     setShowStampTool(true);
   };
 
+  // v9.2 — peek-and-return chat. Leaves any active tool mounted underneath;
+  // the drawer overlays at z-70 so closing returns to the exact step.
+  // Also used by Landing's Ask FAB (no tool underneath, just the landing).
+  const openChatDrawer = (ctx) => {
+    if (!activeChatId) setActiveChatId(generateChatId());
+    setChatDrawerContext(ctx || '');
+    setShowChatDrawer(true);
+  };
+
+  // Escalate the drawer conversation to the full chat page (ephemeral → persistent).
+  const escalateDrawerToFullChat = () => {
+    setShowChatDrawer(false);
+    // Close any open tool so the full chat comes to the foreground cleanly.
+    setShowScreenTool(false);
+    setShowStampTool(false);
+    setShowChat(true);
+  };
+
   if (!ready) return null;
+
+  // v9.2 — ChatDrawer needs to render from EVERY top-level branch (Landing,
+  // Profile, Chat) because the FAB can be tapped from any of them. Defining
+  // the node once here keeps the three return sites DRY.
+  const chatDrawerNode = (
+    <ChatDrawer
+      open={showChatDrawer}
+      lang={lang}
+      context={chatDrawerContext}
+      activeMemory={activeMemory}
+      profile={profile}
+      caseType={activeCaseType}
+      onClose={() => setShowChatDrawer(false)}
+      onOpenFull={escalateDrawerToFullChat}
+    />
+  );
 
   // Landing
   if (!showChat && !showProfile)
-    return <Landing
-      onStart={startChat}
-      onOpenChat={openChatDirect}
-      onOpenScreen={openScreenDirect}
-      onOpenStamp={openStampDirect}
-      lang={lang}
-      setLang={setLang}
-      hasSavedChat={hasSavedChat}
-      onContinueChat={loadChat}
-    />;
+    return (
+      <>
+        <Landing
+          onStart={startChat}
+          onOpenChat={openChatDirect}
+          onOpenChatDrawer={openChatDrawer}
+          onOpenScreen={openScreenDirect}
+          onOpenStamp={openStampDirect}
+          lang={lang}
+          setLang={setLang}
+          hasSavedChat={hasSavedChat}
+          onContinueChat={loadChat}
+        />
+        {chatDrawerNode}
+      </>
+    );
 
   // Profile — Bento onboarding (v1: landlord-first)
   if (showProfile) {
@@ -1758,14 +1804,14 @@ export default function Home() {
       />
 
       {/* Phase 1 — SDSAS 2026 Stamp Duty Calculator (TOOL 3)
-          v9.2: onAsk closes the tool + opens chat so side-questions don't
-          strand the user mid-flow. Case memory is persisted, so reopening
-          the tool later resumes where they left off. */}
+          v9.2+: onAsk opens the bottom-sheet ChatDrawer (z-70) so the tool
+          stays mounted underneath. Closing the drawer returns the user to
+          the exact step they were on — no context loss, no re-entry. */}
       {showStampTool && (
         <StampDutyCalc
           lang={lang}
           onClose={() => setShowStampTool(false)}
-          onAsk={() => { setShowStampTool(false); openChatDirect(); }}
+          onAsk={() => openChatDrawer(lang === 'en' ? 'Stamp Duty' : lang === 'bm' ? 'Duti Setem' : '印花税')}
           askLabel={lang === 'en' ? 'Ask' : lang === 'bm' ? 'Tanya' : '问'}
           activeMemory={activeMemory}
           onSaveMemory={(nextMemory) => saveCaseMemory(nextMemory, activeCaseType)}
@@ -1779,7 +1825,7 @@ export default function Home() {
         <TenantScreen
           lang={lang}
           onClose={() => setShowScreenTool(false)}
-          onAsk={() => { setShowScreenTool(false); openChatDirect(); }}
+          onAsk={() => openChatDrawer(lang === 'en' ? 'Tenant Screening' : lang === 'bm' ? 'Saringan Penyewa' : '租客审查')}
           askLabel={lang === 'en' ? 'Ask' : lang === 'bm' ? 'Tanya' : '问'}
           activeMemory={activeMemory}
           onSaveMemory={(nextMemory) => saveCaseMemory(nextMemory, activeCaseType)}
@@ -1787,6 +1833,11 @@ export default function Home() {
           property={activeMemory?.property?.nickname || activeMemory?.property?.address || ''}
         />
       )}
+
+      {/* v9.2 Floating Chat — bottom-sheet drawer.
+          Sits at z-70 so it overlays tool modals (z-50) without unmounting them.
+          Opened by: tool AskBtn (tool-context chip) or Landing FAB (no context). */}
+      {chatDrawerNode}
 
       {/* Path D — Tenant Pre-Registration (reusable trust profile) */}
       {showTenantRegister && (

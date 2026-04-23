@@ -14,7 +14,7 @@
 
 import { useState } from 'react';
 
-export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp, lang, setLang, hasSavedChat, onContinueChat }) {
+export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenScreen, onOpenStamp, lang, setLang, hasSavedChat, onContinueChat }) {
   const [step, setStep] = useState('welcome'); // 'welcome' | 'pick'
 
   const t = {
@@ -108,7 +108,14 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
   const handleLetsGo   = () => { haptic(12); setStep('pick'); };
   const handleContinue = () => { haptic(12); onContinueChat && onContinueChat(); };
   const handleBack     = () => { haptic(8); setStep('welcome'); };
-  const handleFab      = () => { haptic([12, 30, 12]); onOpenChat ? onOpenChat() : (onStart && onStart()); };
+  // Prefer the bottom-sheet drawer (peek-and-return) over full-page chat.
+  // Falls back to onOpenChat / onStart for older parents that don't wire the drawer.
+  const handleFab      = () => {
+    haptic([12, 30, 12]);
+    if (onOpenChatDrawer) { onOpenChatDrawer(step === 'pick' ? 'Landing · Pick' : 'Landing · Welcome'); return; }
+    if (onOpenChat)       { onOpenChat(); return; }
+    onStart && onStart();
+  };
   const handlePick = (id) => {
     haptic([20, 40, 20]); // confirm-tap buzz, matches launching-the-tool feel
     if (id === 'screen' && onOpenScreen) { onOpenScreen(); return; }
