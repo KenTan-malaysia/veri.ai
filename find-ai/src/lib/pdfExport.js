@@ -620,26 +620,37 @@ function renderHTML(p) {
 // Keeps tool files thin: build a plain object, pass to buildXReport, export.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ── Tenant-screening specific i18n (Payment Discipline Scan) ─────────────────
+// ── Tenant-screening specific i18n (Track Record — dossier-framed) ────────
+// v3.3.3 T13 dossier pivot: the report no longer leads with a 0-100 score
+// on the tenant's name. The hero badge now states what evidence is on file
+// ("4 of 4 signals on file"). Score is retained internally for sort order
+// but is NEVER surfaced as the headline number. Headings reframed from
+// "Payment Discipline Index" → "Track record" to describe the tenant's
+// DOCUMENTED evidence, not a verdict on them.
 const SCREEN_I18N = {
   en: {
-    indexHeading: 'Payment Discipline Index',
-    indexLabel: 'Behaviour score',
-    coverage: 'Based on {n} of 4 signals',
+    trackRecordHeading: 'Track record',
+    trackRecordLabel: 'Evidence on file',
+    coverage4: '4 of 4 signals on file',
+    coverage3: '3 of 4 signals on file',
+    coverage2: '2 of 4 signals on file',
+    coverage1: '1 of 4 signals on file',
+    coverage0: 'No signals on file',
+    coverageSub: 'Signals captured during the viewing with tenant\'s verbal consent.',
     tenantHeading: 'Tenant at the viewing',
     tenantName: 'Full name (per MyKad)',
     tenantIC: 'IC last 4',
     tenantPhone: 'Mobile',
-    signalsHeading: 'Payment behaviour captured',
+    signalsHeading: 'Evidence captured',
     colSignal: 'Signal',
     colVendor: 'App / Vendor',
     colAccount: 'Name on account',
     colOnTime: 'On-time (of 12 mo)',
     colTenure: 'Tenure',
     colArrears: 'Arrears now?',
-    findingsHeading: 'Findings',
+    findingsHeading: 'Observations',
     notesHeading: 'Notes',
-    noVerdict: 'This report is NOT a credit score and NOT a recommendation. The Payment Discipline Index describes observed behaviour only — the decision to enter into a tenancy rests entirely with the landlord.',
+    noVerdict: 'This report is NOT a credit score, NOT a grade, and NOT a recommendation. The track record describes documented evidence only — the decision to enter into a tenancy rests entirely with the landlord.',
     subDna: 'Find.ai surfaces payment behaviour captured at the viewing. Signals shown were displayed on the tenant\'s own device under their verbal consent. No data was pulled from CCRIS, CTOS or any credit bureau.',
     signalElectricity: 'Electricity',
     signalMobile: 'Mobile postpaid',
@@ -648,27 +659,32 @@ const SCREEN_I18N = {
     yes: 'Yes', no: 'No', dash: '—',
     behaviourHeading: 'Behavioural observations',
     confidenceLabel: 'Confidence',
-    adjustBonus: '+{n} consistency bonus applied to the index',
-    adjustPenalty: '{n} priority-misalignment penalty applied to the index',
+    adjustBonus: '+{n} consistency factor noted',
+    adjustPenalty: '{n} priority-misalignment factor noted',
   },
   bm: {
-    indexHeading: 'Indeks Disiplin Pembayaran',
-    indexLabel: 'Skor tingkah laku',
-    coverage: 'Berdasarkan {n} daripada 4 isyarat',
+    trackRecordHeading: 'Rekod jejak',
+    trackRecordLabel: 'Bukti dalam fail',
+    coverage4: '4 daripada 4 isyarat dalam fail',
+    coverage3: '3 daripada 4 isyarat dalam fail',
+    coverage2: '2 daripada 4 isyarat dalam fail',
+    coverage1: '1 daripada 4 isyarat dalam fail',
+    coverage0: 'Tiada isyarat dalam fail',
+    coverageSub: 'Isyarat direkod semasa tinjauan dengan kebenaran lisan penyewa.',
     tenantHeading: 'Penyewa semasa tinjauan',
     tenantName: 'Nama penuh (ikut MyKad)',
     tenantIC: '4 digit akhir IC',
     tenantPhone: 'Mudah alih',
-    signalsHeading: 'Tingkah laku pembayaran direkod',
+    signalsHeading: 'Bukti direkod',
     colSignal: 'Isyarat',
     colVendor: 'Aplikasi / Vendor',
     colAccount: 'Nama pada akaun',
     colOnTime: 'Tepat masa (12 bln)',
     colTenure: 'Tempoh',
     colArrears: 'Tunggakan sekarang?',
-    findingsHeading: 'Penemuan',
+    findingsHeading: 'Pemerhatian',
     notesHeading: 'Nota',
-    noVerdict: 'Laporan ini BUKAN skor kredit dan BUKAN cadangan. Indeks Disiplin Pembayaran hanya menggambarkan tingkah laku yang diperhatikan — keputusan untuk meneruskan sewaan sepenuhnya di tangan tuan rumah.',
+    noVerdict: 'Laporan ini BUKAN skor kredit, BUKAN gred, dan BUKAN cadangan. Rekod jejak ini hanya menggambarkan bukti yang didokumenkan — keputusan untuk meneruskan sewaan sepenuhnya di tangan tuan rumah.',
     subDna: 'Find.ai hanya memaparkan tingkah laku bayaran yang direkod semasa tinjauan. Isyarat ditunjukkan pada peranti penyewa sendiri dengan kebenaran lisan. Tiada data diambil daripada CCRIS, CTOS atau mana-mana biro kredit.',
     signalElectricity: 'Elektrik',
     signalMobile: 'Pascabayar mudah alih',
@@ -677,27 +693,32 @@ const SCREEN_I18N = {
     yes: 'Ya', no: 'Tidak', dash: '—',
     behaviourHeading: 'Pemerhatian tingkah laku',
     confidenceLabel: 'Keyakinan',
-    adjustBonus: 'Bonus konsistensi +{n} ditambah pada indeks',
-    adjustPenalty: 'Penalti misalignment keutamaan {n} ditolak daripada indeks',
+    adjustBonus: 'Faktor konsistensi +{n} dicatat',
+    adjustPenalty: 'Faktor misalignment keutamaan {n} dicatat',
   },
   zh: {
-    indexHeading: '付款纪律指数',
-    indexLabel: '行为评分',
-    coverage: '基于4项信号中的{n}项',
+    trackRecordHeading: '履历',
+    trackRecordLabel: '已归档证据',
+    coverage4: '已归档 4 / 4 项信号',
+    coverage3: '已归档 3 / 4 项信号',
+    coverage2: '已归档 2 / 4 项信号',
+    coverage1: '已归档 1 / 4 项信号',
+    coverage0: '尚未归档任何信号',
+    coverageSub: '信号于看房时经租客口头同意后在其本人设备上展示。',
     tenantHeading: '看房当天的租客',
     tenantName: '全名（按身份证）',
     tenantIC: '身份证后4位',
     tenantPhone: '手机',
-    signalsHeading: '已记录的付款行为',
+    signalsHeading: '已记录证据',
     colSignal: '信号',
     colVendor: '应用 / 服务商',
     colAccount: '账户姓名',
     colOnTime: '按时（12个月）',
     colTenure: '账户时长',
     colArrears: '当前欠款？',
-    findingsHeading: '发现事项',
+    findingsHeading: '观察',
     notesHeading: '说明',
-    noVerdict: '本报告并非信用评分，也不是推荐建议。付款纪律指数仅描述观察到的行为——是否签约完全由房东自行决定。',
+    noVerdict: '本报告并非信用评分、并非评级、也不是推荐建议。履历仅描述已归档的证据——是否签约完全由房东自行决定。',
     subDna: 'Find.ai 仅展示看房时记录的付款行为。所有信号均在租客本人设备上、经其口头同意后展示。未从 CCRIS、CTOS 或任何征信机构拉取数据。',
     signalElectricity: '电费',
     signalMobile: '手机后付',
@@ -706,18 +727,30 @@ const SCREEN_I18N = {
     yes: '是', no: '否', dash: '—',
     behaviourHeading: '行为观察',
     confidenceLabel: '置信度',
-    adjustBonus: '一致性加分 +{n} 已计入指数',
-    adjustPenalty: '优先级错位扣分 {n} 已计入指数',
+    adjustBonus: '已记录一致性因素 +{n}',
+    adjustPenalty: '已记录优先级错位因素 {n}',
   },
 };
 
-function indexTone(n) {
-  const v = Number(n);
+// Tone band now driven by COVERAGE (evidence completeness), not by score.
+// This is the doctrinal pivot — we reward a COMPLETE record, not a "good"
+// tenant. Slate for 0-1 signals (incomplete but not bad), amber for 2/4,
+// blue for 3/4, green for 4/4. No red, ever — a sparse record is not a
+// verdict on the tenant.
+function coverageTone(c) {
+  const v = Number(c);
   if (Number.isNaN(v)) return 'navy';
-  if (v >= 80) return 'green';
-  if (v >= 60) return 'blue';
-  if (v >= 40) return 'yellow';
-  return 'red';
+  if (v >= 4) return 'green';
+  if (v >= 3) return 'blue';
+  if (v >= 2) return 'yellow';
+  return 'navy';
+}
+
+// Human-readable coverage statement for the badge value. Returns the full
+// "X of 4 signals on file" string in the active language.
+function coverageBadgeValue(t, c) {
+  const v = Math.max(0, Math.min(4, Number(c) || 0));
+  return ([t.coverage0, t.coverage1, t.coverage2, t.coverage3, t.coverage4])[v];
 }
 
 function signalLabel(t, key) {
@@ -773,14 +806,18 @@ export function buildScreenReport({ tenant, index, signals, flags, behaviour, la
     },
   } : null;
 
-  const indexBadge = index != null ? {
-    heading: t.indexHeading,
+  // Dossier-framed badge: headline is coverage statement, not score.
+  // The internal numeric score (index.score) is intentionally NOT shown
+  // anywhere in the PDF — doctrine says the report describes evidence
+  // on file, not a grade on the tenant.
+  const trackRecordBadge = index != null ? {
+    heading: t.trackRecordHeading,
     kind: 'badge',
     data: {
-      label: t.indexLabel,
-      value: `${Number(index.score ?? 0)}/100`,
-      tone: indexTone(index.score),
-      sub: t.coverage.replace('{n}', String(index.coverage ?? 0)),
+      label: t.trackRecordLabel,
+      value: coverageBadgeValue(t, index.coverage),
+      tone: coverageTone(index.coverage),
+      sub: t.coverageSub,
     },
   } : null;
 
@@ -809,7 +846,7 @@ export function buildScreenReport({ tenant, index, signals, flags, behaviour, la
     title: KIND_LABELS.screen[lang] || KIND_LABELS.screen.en,
     meta: { preparedFor: tenant?.landlord || '', property },
     sections: [
-      indexBadge,
+      trackRecordBadge,
       behaviourSection,
       tenantKV,
       sigTable,

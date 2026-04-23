@@ -1,26 +1,29 @@
 'use client';
 
 // ═══════════════════════════════════════════════════════════════════════
-// Find.ai — "Your scans" history view (v9.6 T12)
+// Find.ai — "Your scans" history view (v9.6 T12 + T13 dossier pivot)
 //
-// A landlord who's run 3 Payment Discipline Scans on 3 different prospects
-// wants to compare them side-by-side before signing. Up until now the scan
-// artifact was write-only: Scan → PDF → hope the landlord saves the PDF.
-// Case Memory quietly persisted every scan inside
+// A landlord who's run 3 scans on 3 different prospects wants to compare
+// them side-by-side before signing. Up until now the scan artifact was
+// write-only: Scan → PDF → hope the landlord saves the PDF. Case Memory
+// quietly persisted every scan inside
 //   fi_chat_history[i].memory.screening
 // but nothing surfaced it back to the user.
 //
-// This component reads all cases from chatHistory, pulls out the screening
-// payloads, and renders them as a tilted scatter-card grid. Each card is:
-//   • Tappable → opens a full scan detail modal
-//   • Re-exportable → regenerates the same branded PDF via buildScreenReport
+// v9.6 T13 — DOSSIER PIVOT. The prior v9.6 T12 build surfaced a big
+// 0-100 "Payment Discipline Index" as the card hero, which read as a
+// grade ON the tenant. Ken's directive (2026-04-23): swap from "this
+// tenant scores X" to "this is what this tenant HAS." Scatter cards now
+// lead with evidence on file; the 0-100 number is hidden from the UI
+// entirely (still persisted internally for PDF + legacy data). The tone
+// band is now driven by COVERAGE (signals captured) not by score — so the
+// visual accent reads as "evidence completeness" not "tenant quality."
 //
 // DNA: bullseye. Pre-signing trust — the user compares multiple prospects
 // before committing. Not post-signing admin (that's Phase 2).
 //
 // No verdict, no recommendation — same doctrine as TenantScreen.js. The
-// Payment Discipline Index describes observed behaviour only. The landlord
-// decides.
+// track record describes observed behaviour only. The landlord decides.
 // ═══════════════════════════════════════════════════════════════════════
 
 import { useState, useMemo } from 'react';
@@ -30,7 +33,7 @@ import { buildScreenReport, exportReport } from '../lib/pdfExport';
 const UI = {
   en: {
     title: 'Your scans',
-    sub: 'Every Payment Discipline Scan you\'ve run — tap any card to re-export its PDF.',
+    sub: 'Every track record you\'ve captured — tap any card to see the evidence or re-export its PDF.',
     empty: 'No scans yet.',
     emptySub: 'Every tenant you screen shows up here so you can compare prospects before signing.',
     close: 'Close',
@@ -39,9 +42,15 @@ const UI = {
     openDetail: 'Open detail',
     countOne: '1 scan saved',
     countMany: '{n} scans saved',
-    pdi: 'Payment Discipline Index',
-    coverage: '{n}/4 signals',
-    signalsHeading: 'Payment behaviour captured',
+    trackRecord: 'Track record',
+    trackRecordFor: 'Track record for',
+    onFile: 'on file',
+    coverage4: '4 of 4 signals on file',
+    coverage3: '3 of 4 signals on file',
+    coverage2: '2 of 4 signals on file',
+    coverage1: '1 of 4 signals on file',
+    coverage0: 'No signals on file',
+    evidenceHeading: 'Evidence on file',
     tenantHeading: 'Tenant',
     propertyHeading: 'Property',
     tenantName: 'Name',
@@ -61,11 +70,11 @@ const UI = {
     tenure: 'Tenure',
     arrears: 'Arrears',
     yes: 'Yes', no: 'No', dash: '—',
-    disclaimer: 'This index describes observed behaviour only. It is NOT a credit score and NOT a recommendation.',
+    disclaimer: 'This track record describes observed behaviour only. It is NOT a credit score, NOT a grade, and NOT a recommendation.',
   },
   bm: {
     title: 'Saringan anda',
-    sub: 'Setiap Saringan Disiplin Pembayaran yang anda telah jalankan — ketuk kad untuk eksport semula PDF.',
+    sub: 'Setiap rekod jejak yang anda telah kumpulkan — ketuk kad untuk lihat bukti atau eksport semula PDF.',
     empty: 'Belum ada saringan.',
     emptySub: 'Setiap penyewa yang anda saring muncul di sini supaya anda boleh bandingkan calon sebelum tandatangan.',
     close: 'Tutup',
@@ -74,9 +83,15 @@ const UI = {
     openDetail: 'Buka butiran',
     countOne: '1 saringan disimpan',
     countMany: '{n} saringan disimpan',
-    pdi: 'Indeks Disiplin Pembayaran',
-    coverage: '{n}/4 isyarat',
-    signalsHeading: 'Tingkah laku pembayaran direkod',
+    trackRecord: 'Rekod jejak',
+    trackRecordFor: 'Rekod jejak untuk',
+    onFile: 'dalam fail',
+    coverage4: '4 daripada 4 isyarat dalam fail',
+    coverage3: '3 daripada 4 isyarat dalam fail',
+    coverage2: '2 daripada 4 isyarat dalam fail',
+    coverage1: '1 daripada 4 isyarat dalam fail',
+    coverage0: 'Tiada isyarat dalam fail',
+    evidenceHeading: 'Bukti dalam fail',
     tenantHeading: 'Penyewa',
     propertyHeading: 'Hartanah',
     tenantName: 'Nama',
@@ -96,11 +111,11 @@ const UI = {
     tenure: 'Tempoh',
     arrears: 'Tunggakan',
     yes: 'Ya', no: 'Tidak', dash: '—',
-    disclaimer: 'Indeks ini hanya menggambarkan tingkah laku yang diperhatikan. Ia BUKAN skor kredit dan BUKAN cadangan.',
+    disclaimer: 'Rekod jejak ini hanya menggambarkan tingkah laku yang diperhatikan. Ia BUKAN skor kredit, BUKAN gred dan BUKAN cadangan.',
   },
   zh: {
     title: '您的筛查',
-    sub: '您运行过的每一次付款纪律扫描——点击任意卡片可重新导出 PDF。',
+    sub: '您收集到的每份履历 — 点击任意卡片查看证据或重新导出 PDF。',
     empty: '尚无筛查记录。',
     emptySub: '您筛查过的每位租客都会出现在这里，方便您在签约前对比候选人。',
     close: '关闭',
@@ -109,9 +124,15 @@ const UI = {
     openDetail: '查看详情',
     countOne: '已保存 1 次筛查',
     countMany: '已保存 {n} 次筛查',
-    pdi: '付款纪律指数',
-    coverage: '{n}/4 项信号',
-    signalsHeading: '已记录的付款行为',
+    trackRecord: '履历',
+    trackRecordFor: '履历 —',
+    onFile: '已归档',
+    coverage4: '已归档 4 / 4 项信号',
+    coverage3: '已归档 3 / 4 项信号',
+    coverage2: '已归档 2 / 4 项信号',
+    coverage1: '已归档 1 / 4 项信号',
+    coverage0: '尚未归档任何信号',
+    evidenceHeading: '已归档证据',
     tenantHeading: '租客',
     propertyHeading: '房产',
     tenantName: '姓名',
@@ -131,7 +152,7 @@ const UI = {
     tenure: '账户时长',
     arrears: '欠款',
     yes: '是', no: '否', dash: '—',
-    disclaimer: '本指数仅描述观察到的行为。它不是信用评分，也不是推荐建议。',
+    disclaimer: '本履历仅描述观察到的行为。它不是信用评分、不是评级、也不是推荐建议。',
   },
 };
 
@@ -151,6 +172,8 @@ export function collectScans(chatHistory) {
       caseTitle: ch.title || '',
       ref: sc.ref || '',
       date: sc.date || '',
+      // pdi retained internally for sort tie-break + PDF backward compat;
+      // it is NEVER displayed in the UI post-T13 pivot.
       pdi: Number(sc.index) || 0,
       coverage: Number(sc.coverage) || 0,
       signals: Array.isArray(sc.signals) ? sc.signals : [],
@@ -164,17 +187,24 @@ export function collectScans(chatHistory) {
   return out;
 }
 
-// ─── Tone per PDI band — matches TenantScreen.js and pdfExport.js ──────
-// Warm Navy Trust palette overlays on top of the tone so cards read as
-// "Find.ai scan" first, tone band second. A subtle accent bar + dot tells
-// the landlord the band at a glance without the card shouting a verdict.
-function toneForPdi(n) {
-  const v = Number(n);
-  if (Number.isNaN(v)) return { band: 'navy',  accent: '#0F1E3F', dot: '#9A9484', label: '—' };
-  if (v >= 80)          return { band: 'green', accent: '#2F6B3E', dot: '#4F9D5F', label: '80+' };
-  if (v >= 60)          return { band: 'blue',  accent: '#1E3A8A', dot: '#5B7CC9', label: '60+' };
-  if (v >= 40)          return { band: 'amber', accent: '#92400E', dot: '#D19845', label: '40+' };
-  return                       { band: 'red',   accent: '#991B1B', dot: '#C66464', label: '<40' };
+// ─── Tone per COVERAGE band — dossier pivot ───────────────────────────
+// The accent now communicates "how complete is the evidence" not "how
+// good is the tenant." Warm Navy Trust palette overlays stay the same.
+// 4/4 = complete green · 3/4 = solid blue · 2/4 = partial amber ·
+// 0-1/4 = sparse slate (no alarming red — coverage gaps aren't a verdict).
+function toneForCoverage(c) {
+  const v = Number(c);
+  if (Number.isNaN(v)) return { band: 'slate', accent: '#3F4E6B', dot: '#9A9484' };
+  if (v >= 4)          return { band: 'green', accent: '#2F6B3E', dot: '#4F9D5F' };
+  if (v >= 3)          return { band: 'blue',  accent: '#1E3A8A', dot: '#5B7CC9' };
+  if (v >= 2)          return { band: 'amber', accent: '#92400E', dot: '#D19845' };
+  return                      { band: 'slate', accent: '#3F4E6B', dot: '#9A9484' };
+}
+
+// Human-readable coverage label — "4 of 4 signals on file" style.
+function coverageLabel(t, c) {
+  const v = Math.max(0, Math.min(4, Number(c) || 0));
+  return ([t.coverage0, t.coverage1, t.coverage2, t.coverage3, t.coverage4])[v];
 }
 
 // Deterministic tilt per card index — -2°, +1.5°, -1°, +2°, -1.5°, +1°…
@@ -283,10 +313,14 @@ export default function ScansHistory({ open, lang = 'en', chatHistory, onClose }
             <p className="ts-intro">{t.sub}</p>
             <div className="ts-grid">
               {scans.map((s, i) => {
-                const tone = toneForPdi(s.pdi);
+                const tone = toneForCoverage(s.coverage);
                 const tilt = tiltForIndex(i);
                 const name = (s.tenant?.name || '').trim() || t.noTenantName;
                 const prop = (s.property?.nickname || s.property?.address || '').trim();
+                const covLab = coverageLabel(t, s.coverage);
+                // Vendor chips — first 3 signals on file so the card leads
+                // with CONCRETE evidence not an abstract score.
+                const chips = (s.signals || []).slice(0, 3);
                 return (
                   <button
                     key={s.id}
@@ -294,7 +328,7 @@ export default function ScansHistory({ open, lang = 'en', chatHistory, onClose }
                     className={`ts-card ts-card-${tone.band}`}
                     style={{ '--ts-tilt': `${tilt}deg` }}
                     onClick={() => openCard(s.id)}
-                    aria-label={`${t.openDetail}: ${name}, ${s.pdi}/100`}
+                    aria-label={`${t.openDetail}: ${name}, ${covLab}`}
                   >
                     {/* Top row — accent bar + band dot */}
                     <div className="ts-card-top">
@@ -302,19 +336,31 @@ export default function ScansHistory({ open, lang = 'en', chatHistory, onClose }
                       <span className="ts-card-date">{s.date || t.dash}</span>
                     </div>
 
-                    {/* PDI — big number, tone-coloured accent */}
-                    <div className="ts-card-pdi" style={{ color: tone.accent }}>
-                      {s.pdi}
-                      <span className="ts-card-pdi-slash">/100</span>
-                    </div>
-                    <div className="ts-card-pdi-lab">
-                      {t.coverage.replace('{n}', String(s.coverage))}
+                    {/* Tenant name + Track record eyebrow — the card now
+                        leads with WHO + WHAT'S ON FILE, not a number. */}
+                    <div className="ts-card-eyebrow">{t.trackRecord}</div>
+                    <div className="ts-card-name">{name}</div>
+                    {prop ? <div className="ts-card-prop">{prop}</div> : null}
+
+                    {/* Coverage chip — the only tonal signal we surface. */}
+                    <div className="ts-card-cov" style={{ color: tone.accent, borderColor: tone.accent + '33' }}>
+                      <span className="ts-card-cov-num">{s.coverage}</span>
+                      <span className="ts-card-cov-slash">/4</span>
+                      <span className="ts-card-cov-lab">{t.onFile}</span>
                     </div>
 
-                    {/* Tenant + property */}
+                    {/* Evidence vendor chips — concrete, non-judgmental. */}
+                    {chips.length > 0 && (
+                      <div className="ts-card-chips">
+                        {chips.map((sig, ci) => (
+                          <span key={ci} className="ts-card-chip">
+                            {sig.vendor || signalLabel(t, sig.key)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="ts-card-foot">
-                      <div className="ts-card-name">{name}</div>
-                      {prop ? <div className="ts-card-prop">{prop}</div> : null}
                       {s.ref ? <div className="ts-card-ref">{s.ref}</div> : null}
                     </div>
                   </button>
@@ -341,14 +387,17 @@ export default function ScansHistory({ open, lang = 'en', chatHistory, onClose }
             </div>
 
             <div className="ts-detail-body">
-              {/* PDI hero */}
-              <div className={`ts-hero ts-card-${toneForPdi(selected.pdi).band}`}>
-                <div className="ts-hero-lab">{t.pdi}</div>
-                <div className="ts-hero-val" style={{ color: toneForPdi(selected.pdi).accent }}>
-                  {selected.pdi}
-                  <span className="ts-hero-slash">/100</span>
+              {/* Dossier hero — name first, "Track record" label, coverage
+                  statement. No 0-100 number anywhere in the UI. */}
+              <div className={`ts-hero ts-card-${toneForCoverage(selected.coverage).band}`}>
+                <div className="ts-hero-lab">{t.trackRecordFor}</div>
+                <div className="ts-hero-name">{selected.tenant?.name || t.noTenantName}</div>
+                <div
+                  className="ts-hero-cov"
+                  style={{ color: toneForCoverage(selected.coverage).accent }}
+                >
+                  {coverageLabel(t, selected.coverage)}
                 </div>
-                <div className="ts-hero-cov">{t.coverage.replace('{n}', String(selected.coverage))}</div>
               </div>
 
               {/* Meta rows */}
@@ -376,10 +425,12 @@ export default function ScansHistory({ open, lang = 'en', chatHistory, onClose }
                 </div>
               </div>
 
-              {/* Signals */}
+              {/* Evidence on file — elevated from "captured signals" to the
+                  primary dossier. This is what the tenant HAS, not what
+                  they SCORE. */}
               {selected.signals.length > 0 && (
                 <div className="ts-section">
-                  <div className="ts-section-h">{t.signalsHeading}</div>
+                  <div className="ts-section-h">{t.evidenceHeading}</div>
                   <div className="ts-signals">
                     {selected.signals.map((s, i) => (
                       <div key={i} className="ts-signal">
@@ -498,7 +549,7 @@ const styles = `
     transform: rotate(var(--ts-tilt));
     transition: transform .22s cubic-bezier(0.2,0.7,0.2,1), box-shadow .22s ease, border-color .18s ease;
     box-shadow: 0 2px 6px -2px rgba(15,30,63,0.08);
-    min-height: 168px;
+    min-height: 188px;
     display: flex; flex-direction: column;
   }
   .ts-card:hover {
@@ -509,7 +560,8 @@ const styles = `
   .ts-card:active { transform: rotate(0deg) scale(0.98); }
   .ts-card:focus-visible { outline: 3px solid #B8893A; outline-offset: 3px; }
 
-  /* Tone-band accent bar along the top-left corner. */
+  /* Tone-band accent bar along the top-left corner. Tone now driven by
+     COVERAGE (evidence completeness), not by score. */
   .ts-card::before {
     content: ''; position: absolute; top: 0; left: 18px; right: 18px;
     height: 3px; border-radius: 0 0 6px 6px;
@@ -518,7 +570,7 @@ const styles = `
   .ts-card-green::before { opacity: 1; color: #4F9D5F; }
   .ts-card-blue::before  { opacity: 1; color: #5B7CC9; }
   .ts-card-amber::before { opacity: 1; color: #D19845; }
-  .ts-card-red::before   { opacity: 1; color: #C66464; }
+  .ts-card-slate::before { opacity: 1; color: #9A9484; }
 
   .ts-card-top {
     display: flex; align-items: center; justify-content: space-between;
@@ -533,32 +585,62 @@ const styles = `
     color: #9A9484;
   }
 
-  .ts-card-pdi {
-    font-size: 34px; font-weight: 900; line-height: 1;
-    letter-spacing: -0.03em;
-  }
-  .ts-card-pdi-slash {
-    font-size: 14px; font-weight: 700; opacity: 0.55; margin-left: 3px;
-  }
-  .ts-card-pdi-lab {
+  .ts-card-eyebrow {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.14em;
-    color: #9A9484; margin-top: 4px;
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.16em;
+    color: #9A9484; margin-bottom: 4px;
   }
-
-  .ts-card-foot { margin-top: auto; padding-top: 12px; }
   .ts-card-name {
-    font-size: 13px; font-weight: 800; color: #0F1E3F;
-    letter-spacing: -0.01em;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 15px; font-weight: 800; color: #0F1E3F;
+    letter-spacing: -0.02em; line-height: 1.2;
+    overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
   .ts-card-prop {
-    font-size: 11px; color: #3F4E6B; margin-top: 2px;
+    font-size: 11px; color: #3F4E6B; margin-top: 3px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+
+  .ts-card-cov {
+    display: inline-flex; align-items: baseline; gap: 3px;
+    margin-top: 12px; padding: 5px 9px 5px 10px;
+    border: 1px solid; border-radius: 999px;
+    background: rgba(255,255,255,0.5);
+    font-weight: 800;
+    align-self: flex-start;
+  }
+  .ts-card-cov-num {
+    font-size: 16px; letter-spacing: -0.02em;
+  }
+  .ts-card-cov-slash {
+    font-size: 11px; opacity: 0.55; margin-right: 3px;
+  }
+  .ts-card-cov-lab {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 700; opacity: 0.85;
+  }
+
+  .ts-card-chips {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 8px;
+  }
+  .ts-card-chip {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 3px 7px;
+    background: #F3EFE4;
+    color: #3F4E6B;
+    border-radius: 6px;
+    font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .ts-card-foot { margin-top: auto; padding-top: 10px; }
   .ts-card-ref {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 9px; color: #B8893A; margin-top: 4px; letter-spacing: 0.04em;
+    font-size: 9px; color: #B8893A; letter-spacing: 0.04em;
   }
 
   /* Empty state */
@@ -618,9 +700,10 @@ const styles = `
     display: flex; flex-direction: column; gap: 16px;
   }
 
+  /* Dossier hero — no 0-100 number, just name + coverage statement. */
   .ts-hero {
     background: #FFFFFF; border: 1.5px solid #E7E1D2;
-    border-radius: 18px; padding: 18px 20px;
+    border-radius: 18px; padding: 20px 22px 22px;
     position: relative;
   }
   .ts-hero::before {
@@ -631,22 +714,21 @@ const styles = `
   .ts-hero.ts-card-green::before { opacity: 1; color: #4F9D5F; }
   .ts-hero.ts-card-blue::before  { opacity: 1; color: #5B7CC9; }
   .ts-hero.ts-card-amber::before { opacity: 1; color: #D19845; }
-  .ts-hero.ts-card-red::before   { opacity: 1; color: #C66464; }
+  .ts-hero.ts-card-slate::before { opacity: 1; color: #9A9484; }
 
   .ts-hero-lab {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
     color: #9A9484;
   }
-  .ts-hero-val {
-    font-size: 56px; font-weight: 900; line-height: 1;
-    letter-spacing: -0.04em; margin-top: 6px;
-  }
-  .ts-hero-slash {
-    font-size: 20px; font-weight: 700; opacity: 0.6; margin-left: 4px;
+  .ts-hero-name {
+    font-size: 26px; font-weight: 900; line-height: 1.15;
+    letter-spacing: -0.03em; margin-top: 4px;
+    color: #0F1E3F;
   }
   .ts-hero-cov {
-    font-size: 12px; color: #3F4E6B; margin-top: 6px;
+    font-size: 14px; font-weight: 700; margin-top: 10px;
+    letter-spacing: -0.01em;
   }
 
   .ts-section { display: flex; flex-direction: column; gap: 8px; }

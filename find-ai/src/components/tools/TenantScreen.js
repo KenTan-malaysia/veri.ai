@@ -473,7 +473,8 @@ export default function TenantScreen({
         ...(prev.disputes || []),
         {
           date: ymd,
-          action: `Payment Discipline Scan: ${index.score}/100 (${index.coverage}/4 signals)`,
+          // v3.3.3 T13 dossier framing — log evidence captured, not a score.
+          action: `Track record captured: ${index.coverage} of 4 signals on file`,
           note: `Ref ${stableCaseRef}`,
         },
       ],
@@ -486,12 +487,48 @@ export default function TenantScreen({
   const goNext = () => setPhase(p => Math.min(5, p + 1));
   const goBack = () => setPhase(p => Math.max(0, p - 1));
 
-  const indexTone = (n) => {
-    if (n >= 80) return { bg: '#d1fae5', ink: '#065f46', accent: '#10b981' };
-    if (n >= 60) return { bg: '#dbeafe', ink: '#1e40af', accent: '#3b82f6' };
-    if (n >= 40) return { bg: '#fef3c7', ink: '#92400e', accent: '#f59e0b' };
-    return { bg: '#fee2e2', ink: '#991b1b', accent: '#ef4444' };
+  // v3.3.3 T13 dossier pivot: tone band now driven by COVERAGE (evidence
+  // completeness), not by score. The doctrinal shift — the hero reads as
+  // "here's what's on file for this tenant," not as a grade ON the tenant.
+  // No red band: a sparse record is not a verdict.
+  const coverageTone = (c) => {
+    if (c >= 4) return { bg: '#d1fae5', ink: '#065f46', accent: '#10b981' };
+    if (c >= 3) return { bg: '#dbeafe', ink: '#1e40af', accent: '#3b82f6' };
+    if (c >= 2) return { bg: '#fef3c7', ink: '#92400e', accent: '#f59e0b' };
+    return         { bg: '#f1f5f9', ink: '#475569', accent: '#94a3b8' };
   };
+  const coverageStatement = (c) => {
+    const v = Math.max(0, Math.min(4, Number(c) || 0));
+    if (lang === 'bm') {
+      return ([
+        'Tiada isyarat dalam fail',
+        '1 daripada 4 isyarat dalam fail',
+        '2 daripada 4 isyarat dalam fail',
+        '3 daripada 4 isyarat dalam fail',
+        '4 daripada 4 isyarat dalam fail',
+      ])[v];
+    }
+    if (lang === 'zh') {
+      return ([
+        '尚未归档任何信号',
+        '已归档 1 / 4 项信号',
+        '已归档 2 / 4 项信号',
+        '已归档 3 / 4 项信号',
+        '已归档 4 / 4 项信号',
+      ])[v];
+    }
+    return ([
+      'No signals on file',
+      '1 of 4 signals on file',
+      '2 of 4 signals on file',
+      '3 of 4 signals on file',
+      '4 of 4 signals on file',
+    ])[v];
+  };
+  const trackRecordEyebrow =
+    lang === 'bm' ? 'REKOD JEJAK UNTUK' :
+    lang === 'zh' ? '履历 —' :
+    'TRACK RECORD FOR';
 
   return (
     <Modal>
@@ -656,23 +693,31 @@ export default function TenantScreen({
       {/* ── PHASE 5 — Review ───────────────────────────────────────── */}
       {phase === 5 && (
         <div className="space-y-4 fade-in">
-          {/* Index hero */}
+          {/* Dossier hero — v3.3.3 T13. Leads with tenant name + evidence
+              statement, NOT a 0-100 number. The score is retained
+              internally for PDF compatibility + sort order but is never
+              shown as a grade on the tenant in the UI. */}
           {(() => {
-            const tone = indexTone(index.score);
+            const tone = coverageTone(index.coverage);
+            const displayName = (tenantName || '').trim() || (
+              lang === 'bm' ? 'Penyewa tanpa nama' :
+              lang === 'zh' ? '未命名租客' :
+              'Unnamed tenant'
+            );
             return (
-              <div className="p-5 rounded-2xl" style={{ background: '#0f172a' }}>
-                <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  {t.screenIndexLabel}
+              <div className="p-5 rounded-2xl" style={{ background: '#0f172a', borderTop: `3px solid ${tone.accent}` }}>
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {trackRecordEyebrow}
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-4xl font-bold" style={{ color: tone.accent }}>{index.score}</div>
-                  <div className="text-[14px]" style={{ color: 'rgba(255,255,255,0.4)' }}>/ 100</div>
+                <div className="text-[22px] leading-tight font-extrabold tracking-tight" style={{ color: '#ffffff' }}>
+                  {displayName}
                 </div>
-                <div className="w-full rounded-full h-1.5 mt-3" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                  <div className="h-1.5 rounded-full transition-all" style={{ width: `${index.score}%`, background: tone.accent }} />
-                </div>
-                <div className="text-[11px] mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {t.screenCoverage.replace('{n}', String(index.coverage))}
+                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${tone.accent}40` }}>
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: tone.accent }} aria-hidden="true" />
+                  <span className="text-[12px] font-bold" style={{ color: tone.accent }}>
+                    {coverageStatement(index.coverage)}
+                  </span>
                 </div>
               </div>
             );
