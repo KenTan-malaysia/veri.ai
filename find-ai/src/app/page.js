@@ -758,7 +758,12 @@ export default function Home() {
       const activeEntry = history.find(ch => ch.id === savedActiveId);
       if (activeEntry?.messages?.length) setMessages(activeEntry.messages);
     }
-    if (load('fi_messages', []).length > 0) setHasSavedChat(true);
+    // BUGFIX: also treat modern fi_chat_history as a "saved chat" source so the
+    // "Continue last case" button still appears for users whose data never lived
+    // in the legacy fi_messages store.
+    const hasLegacyMessages = load('fi_messages', []).length > 0;
+    const hasModernHistory = history.length > 0;
+    if (hasLegacyMessages || hasModernHistory) setHasSavedChat(true);
     setReady(true);
   }, []);
 
@@ -1521,14 +1526,19 @@ export default function Home() {
       save('fi_profile', seeded);
     }
   };
+  // BUGFIX: setShowChat(true) is required — the tool modal JSX lives inside the
+  // chat render branch. Without it, the Landing branch keeps rendering and the
+  // modal never mounts, so taps on Screen/Stamp tiles look dead.
   const openScreenDirect = () => {
     if (!activeChatId) setActiveChatId(generateChatId());
     seedLandlordRole();
+    setShowChat(true);
     setShowScreenTool(true);
   };
   const openStampDirect = () => {
     if (!activeChatId) setActiveChatId(generateChatId());
     seedLandlordRole();
+    setShowChat(true);
     setShowStampTool(true);
   };
 
