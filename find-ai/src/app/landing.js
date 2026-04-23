@@ -1,20 +1,20 @@
 'use client';
 
-// Find.ai Landing — v9.2 Floating Chat · Warm Navy Trust palette
+// Find.ai Landing — v9.3 Persistent Chat Dock · Warm Navy Trust palette
 // Previous versions preserved:
 //   src/app/landing-v9-guided.js       (v9 3-screen: Welcome → Pick → Ready → Tool)
 //   src/app/landing-v8-four-equals.js  (v8 Four Equals, chat co-equal)
 //   src/app/landing-v2-warm.js         (v2 Warm Editorial, cream/navy/gold)
-// v9.2 cut:
+// v9.3 cut:
 //   • Pick screen has TWO primary tiles only — Screen + Stamp (tools that produce a PDF).
 //   • Agreement Audit = teaser strip below tiles (coming next, not a dead tile).
-//   • Chat = floating action button bottom-right, follows users into the tools
-//     (doctrine: chat is support, tools are the product).
+//   • Chat = persistent PeekChat dock at the bottom of the viewport, mounted
+//     by page.js. Landing no longer owns a chat button/FAB itself.
 // Palette: Cream #FAF8F3 · Navy #0F1E3F · Gold #B8893A · Slate #3F4E6B · Tea #F3EFE4 · Border #E7E1D2
 
 import { useState } from 'react';
 
-export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenScreen, onOpenStamp, lang, setLang, hasSavedChat, onContinueChat }) {
+export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp, lang, setLang, hasSavedChat, onContinueChat }) {
   const [step, setStep] = useState('welcome'); // 'welcome' | 'pick'
 
   const t = {
@@ -36,11 +36,9 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
       p2: 'Review an agreement',  p2q: '"Is this contract fair?"',
       p3: 'Calculate stamp duty', p3q: '"How much do I owe LHDN?"',
       p4: 'Ask a question',       p4q: '"I have a specific situation…"',
-      // Audit teaser + FAB
+      // Audit teaser
       auditComingLabel: 'Coming next',
       auditComingDesc:  'Agreement Audit — catch dangerous clauses before you sign.',
-      fabLabel: 'Ask',
-      fabHint: 'Got a question? Tap Ask →',
       back: 'Back',
       langBtn: 'BM',
     },
@@ -62,8 +60,6 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
       p4: 'Tanya soalan',           p4q: '"Saya ada situasi khusus…"',
       auditComingLabel: 'Akan datang',
       auditComingDesc:  'Periksa Perjanjian — kesan klausa berbahaya sebelum tandatangan.',
-      fabLabel: 'Tanya',
-      fabHint: 'Ada soalan? Tekan Tanya →',
       back: 'Kembali',
       langBtn: '中',
     },
@@ -85,8 +81,6 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
       p4: '问问题',           p4q: '"我有特殊情况……"',
       auditComingLabel: '即将推出',
       auditComingDesc:  '合同审核 — 签约前识别危险条款。',
-      fabLabel: '问',
-      fabHint: '有问题? 点"问" →',
       back: '返回',
       langBtn: 'EN',
     },
@@ -108,14 +102,6 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
   const handleLetsGo   = () => { haptic(12); setStep('pick'); };
   const handleContinue = () => { haptic(12); onContinueChat && onContinueChat(); };
   const handleBack     = () => { haptic(8); setStep('welcome'); };
-  // Prefer the bottom-sheet drawer (peek-and-return) over full-page chat.
-  // Falls back to onOpenChat / onStart for older parents that don't wire the drawer.
-  const handleFab      = () => {
-    haptic([12, 30, 12]);
-    if (onOpenChatDrawer) { onOpenChatDrawer(step === 'pick' ? 'Landing · Pick' : 'Landing · Welcome'); return; }
-    if (onOpenChat)       { onOpenChat(); return; }
-    onStart && onStart();
-  };
   const handlePick = (id) => {
     haptic([20, 40, 20]); // confirm-tap buzz, matches launching-the-tool feel
     if (id === 'screen' && onOpenScreen) { onOpenScreen(); return; }
@@ -172,32 +158,10 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
     @keyframes v9Fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) { .v9-fade { animation: none; } }
 
-    /* Chat FAB — bottom-right on Welcome + Pick. Absolute to screen container
-       so it stays inside the 512px centered column. */
-    .v9-fab {
-      position: absolute; right: 20px; bottom: 24px; z-index: 40;
-      display: inline-flex; align-items: center; gap: 8px;
-      height: 52px; padding: 0 18px 0 16px; border-radius: 999px;
-      background: #0F1E3F; color: #FFFFFF; border: none; cursor: pointer;
-      box-shadow: 0 14px 28px -10px rgba(15,30,63,0.42);
-      transition: transform .15s ease, box-shadow .2s ease;
-      font-weight: 700;
-    }
-    .v9-fab:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -10px rgba(15,30,63,0.5); }
-    .v9-fab:active { transform: scale(0.96); }
-    .v9-fab-label { font-size: 13px; letter-spacing: -0.01em; }
-    .v9-fab-pulse::after {
-      content: ''; position: absolute; inset: 0; border-radius: 999px;
-      box-shadow: 0 0 0 0 rgba(184,137,58,0.55);
-      animation: v9FabPulse 2.4s cubic-bezier(0.4,0,0.6,1) infinite;
-      pointer-events: none;
-    }
-    @keyframes v9FabPulse {
-      0%   { box-shadow: 0 0 0 0 rgba(184,137,58,0.45); }
-      70%  { box-shadow: 0 0 0 14px rgba(184,137,58,0); }
-      100% { box-shadow: 0 0 0 0 rgba(184,137,58,0); }
-    }
-    @media (prefers-reduced-motion: reduce) { .v9-fab-pulse::after { animation: none; } }
+    /* v9.3 — reserve ~96px of bottom padding so the persistent PeekChat dock
+       (mounted by page.js, ~56-64px tall) never covers the primary CTA or
+       progress dots. The dock sits at position:fixed bottom:0. */
+    .v9-screen-peek-safe { padding-bottom: 96px; }
   `;
 
   const ProgressDots = ({ active }) => (
@@ -221,23 +185,15 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
     <button onClick={nextLang} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 999, fontWeight: 600, background: '#F3EFE4', color: '#3F4E6B', border: 'none', cursor: 'pointer' }}>{c.langBtn}</button>
   );
 
-  // Floating Ask button — chat as ambient support, not a competing tile.
-  // Gold-pulse ring draws the eye to tell first-time users "chat lives here."
-  const ChatFab = () => (
-    <button className="v9-fab v9-fab-pulse" onClick={handleFab} aria-label={c.fabLabel}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span className="v9-fab-label">{c.fabLabel}</span>
-    </button>
-  );
+  // v9.3 — no FAB. Chat lives as a persistent PeekChat dock mounted by page.js
+  // at the bottom of the viewport, so Landing doesn't need its own chat button.
 
   // --------- SCREEN 1 — WELCOME ---------
   if (step === 'welcome') {
     return (
       <div className="v9-root">
         <style dangerouslySetInnerHTML={{ __html: styles }} />
-        <div className="v9-screen v9-fade">
+        <div className="v9-screen v9-screen-peek-safe v9-fade">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Brand />
             <LangBtn />
@@ -266,8 +222,6 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
               <button className="v9-btn-ghost" onClick={handleContinue}>{c.continueCase}</button>
             )}
           </div>
-
-          <ChatFab />
         </div>
       </div>
     );
@@ -275,7 +229,8 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
 
   // --------- SCREEN 2 — PICK SITUATION ---------
   if (step === 'pick') {
-    // v9.2 — only tools that produce a PDF live in the tile grid. Chat = FAB.
+    // v9.3 — only tools that produce a PDF live in the tile grid.
+    // Chat = persistent PeekChat dock at the bottom of the viewport (mounted by page.js).
     const picks = [
       { id: 'screen', emoji: '👤', name: c.p1, q: c.p1q },
       { id: 'stamp',  emoji: '💰', name: c.p3, q: c.p3q },
@@ -284,7 +239,7 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
     return (
       <div className="v9-root">
         <style dangerouslySetInnerHTML={{ __html: styles }} />
-        <div className="v9-screen v9-fade">
+        <div className="v9-screen v9-screen-peek-safe v9-fade">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
             <button className="v9-back" onClick={handleBack} aria-label={c.back}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F1E3F" strokeWidth="2" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -336,9 +291,6 @@ export default function Landing({ onStart, onOpenChat, onOpenChatDrawer, onOpenS
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9A9484" strokeWidth="2.5" strokeLinecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <span className="v9-mono" style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#9A9484' }}>{c.pickPrivacy}</span>
           </div>
-
-          {/* Chat-anywhere FAB */}
-          <ChatFab />
         </div>
       </div>
     );

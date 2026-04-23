@@ -8,7 +8,7 @@ import StampDutyCalc from '../components/tools/StampDutyCalc';
 import TenantScreen from '../components/tools/TenantScreen';
 import TenantRegister from '../components/tools/TenantRegister';
 import { L as toolLabels } from '../components/tools/labels';
-import ChatDrawer from '../components/ChatDrawer';
+import PeekChat from '../components/PeekChat';
 
 const STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -693,11 +693,11 @@ export default function Home() {
   const [showStampTool, setShowStampTool] = useState(false);
   const [showScreenTool, setShowScreenTool] = useState(false);
   const [showTenantRegister, setShowTenantRegister] = useState(false);
-  // v9.2 Floating Chat — bottom-sheet drawer that overlays the active tool.
-  // Tool stays mounted underneath, so closing the drawer returns the user
-  // to the exact step they were on. Ephemeral by design (messages clear on close).
-  const [showChatDrawer, setShowChatDrawer] = useState(false);
-  const [chatDrawerContext, setChatDrawerContext] = useState('');
+  // v9.3 — track whether the user opened the current tool FROM Landing.
+  // If yes, closing the tool should return them to Landing (not the chat
+  // page that we had to briefly flip on so the modal could mount).
+  // Fixes Ken's "everything forces me into chat" complaint.
+  const [landingToTool, setLandingToTool] = useState(false);
   // Voice state (Option C)
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceError, setVoiceError] = useState(null);        // 'denied' | 'nohardware' | null
@@ -1538,49 +1538,84 @@ export default function Home() {
   const openScreenDirect = () => {
     if (!activeChatId) setActiveChatId(generateChatId());
     seedLandlordRole();
+    setLandingToTool(true);
     setShowChat(true);
     setShowScreenTool(true);
   };
   const openStampDirect = () => {
     if (!activeChatId) setActiveChatId(generateChatId());
     seedLandlordRole();
+    setLandingToTool(true);
     setShowChat(true);
     setShowStampTool(true);
   };
 
-  // v9.2 — peek-and-return chat. Leaves any active tool mounted underneath;
-  // the drawer overlays at z-70 so closing returns to the exact step.
-  // Also used by Landing's Ask FAB (no tool underneath, just the landing).
-  const openChatDrawer = (ctx) => {
-    if (!activeChatId) setActiveChatId(generateChatId());
-    setChatDrawerContext(ctx || '');
-    setShowChatDrawer(true);
+  // Close tool + return to wherever the user came from.
+  // If they launched the tool from Landing, they go back to Landing.
+  // If they launched it from inside chat, they stay in chat.
+  const closeToolSmart = (setter) => {
+    setter(false);
+    if (landingToTool) {
+      setShowChat(false);
+      setLandingToTool(false);
+    }
   };
 
-  // Escalate the drawer conversation to the full chat page (ephemeral → persistent).
-  const escalateDrawerToFullChat = () => {
-    setShowChatDrawer(false);
-    // Close any open tool so the full chat comes to the foreground cleanly.
+  // v9.3 PeekChat escalation — user taps "Open full chat →" inside the peek.
+  // Bring them to the full chat page, close any tool underneath. If they
+  // came from Landing, keep the Landing-to-chat flag cleared since they're
+  // now explicitly asking for full chat.
+  const openFullChatFromPeek = () => {
     setShowScreenTool(false);
     setShowStampTool(false);
+    setLandingToTool(false);
     setShowChat(true);
   };
 
   if (!ready) return null;
 
-  // v9.2 — ChatDrawer needs to render from EVERY top-level branch (Landing,
-  // Profile, Chat) because the FAB can be tapped from any of them. Defining
-  // the node once here keeps the three return sites DRY.
-  const chatDrawerNode = (
-    <ChatDrawer
-      open={showChatDrawer}
+  // v9.3 — PeekChat renders from EVERY top-level branch (Landing, Profile, Chat).
+  // It's a persistent dock at the bottom of the viewport — chat follows the
+  // user everywhere instead of being a destination they have to navigate to.
+  // Defining the node once keeps the three return sites DRY.
+  //
+  // Context label tells the peek header which screen the user is currently on,
+  // so Claude's answer can be framed appropriately ("while you're in Stamp
+  // Duty…"). On the full chat page we pass undefined so the peek just says
+  // "Ask Find.ai" — because you're already there.
+  const peekContext = showStampTool
+    ? (lang === 'en' ? 'Stamp Duty'       : lang === 'bm' ? 'Duti Setem'        : '印花税')
+    : showScreenTool
+      ? (lang === 'en' ? 'Tenant Screening' : lang === 'bm' ? 'Saringan Penyewa' : '租客审查')
+      : !showChat
+        ? (lang === 'en' ? 'Home'            : lang === 'bm' ? 'Laman Utama'      : '首页')
+        : undefined;
+
+  // Last 3 messages for the peek's "Recent" preview strip.
+  // Falls back to the most-recently-updated chat in history if the current
+  // chat is empty (common case: user on Landing, never chatted before or
+  // started a fresh case).
+  const latestPriorChat = chatHistory.length > 0
+    ? [...chatHistory].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0]
+    : null;
+  const peekRecentHistory = latestPriorChat?.messages || [];
+
+  // Hide the peek dock during full-screen modals where it would collide with
+  // tool-internal inputs or keyboards (Profile onboarding, Case Memory editor,
+  // Tenant Register wizard, sidebar overlay).
+  const peekHidden = showProfile || showCaseMemory || showTenantRegister || showSidebar;
+
+  const peekChatNode = (
+    <PeekChat
       lang={lang}
-      context={chatDrawerContext}
+      messages={messages}
+      recentHistory={peekRecentHistory}
       activeMemory={activeMemory}
       profile={profile}
       caseType={activeCaseType}
-      onClose={() => setShowChatDrawer(false)}
-      onOpenFull={escalateDrawerToFullChat}
+      context={peekContext}
+      hidden={peekHidden}
+      onOpenFull={openFullChatFromPeek}
     />
   );
 
@@ -1591,7 +1626,6 @@ export default function Home() {
         <Landing
           onStart={startChat}
           onOpenChat={openChatDirect}
-          onOpenChatDrawer={openChatDrawer}
           onOpenScreen={openScreenDirect}
           onOpenStamp={openStampDirect}
           lang={lang}
@@ -1599,7 +1633,7 @@ export default function Home() {
           hasSavedChat={hasSavedChat}
           onContinueChat={loadChat}
         />
-        {chatDrawerNode}
+        {peekChatNode}
       </>
     );
 
@@ -1804,15 +1838,14 @@ export default function Home() {
       />
 
       {/* Phase 1 — SDSAS 2026 Stamp Duty Calculator (TOOL 3)
-          v9.2+: onAsk opens the bottom-sheet ChatDrawer (z-70) so the tool
-          stays mounted underneath. Closing the drawer returns the user to
-          the exact step they were on — no context loss, no re-entry. */}
+          v9.3: no more Ask chip — the persistent PeekChat dock at the bottom
+          of the viewport handles all side-questions. Closing this tool uses
+          closeToolSmart so users who launched from Landing return to Landing
+          (not the chat page). */}
       {showStampTool && (
         <StampDutyCalc
           lang={lang}
-          onClose={() => setShowStampTool(false)}
-          onAsk={() => openChatDrawer(lang === 'en' ? 'Stamp Duty' : lang === 'bm' ? 'Duti Setem' : '印花税')}
-          askLabel={lang === 'en' ? 'Ask' : lang === 'bm' ? 'Tanya' : '问'}
+          onClose={() => closeToolSmart(setShowStampTool)}
           activeMemory={activeMemory}
           onSaveMemory={(nextMemory) => saveCaseMemory(nextMemory, activeCaseType)}
           profileLandlord={profile.role === 'landlord' ? t.roles.landlord : ''}
@@ -1824,9 +1857,7 @@ export default function Home() {
       {showScreenTool && (
         <TenantScreen
           lang={lang}
-          onClose={() => setShowScreenTool(false)}
-          onAsk={() => openChatDrawer(lang === 'en' ? 'Tenant Screening' : lang === 'bm' ? 'Saringan Penyewa' : '租客审查')}
-          askLabel={lang === 'en' ? 'Ask' : lang === 'bm' ? 'Tanya' : '问'}
+          onClose={() => closeToolSmart(setShowScreenTool)}
           activeMemory={activeMemory}
           onSaveMemory={(nextMemory) => saveCaseMemory(nextMemory, activeCaseType)}
           profileLandlord={profile.role === 'landlord' ? t.roles.landlord : ''}
@@ -1834,10 +1865,9 @@ export default function Home() {
         />
       )}
 
-      {/* v9.2 Floating Chat — bottom-sheet drawer.
-          Sits at z-70 so it overlays tool modals (z-50) without unmounting them.
-          Opened by: tool AskBtn (tool-context chip) or Landing FAB (no context). */}
-      {chatDrawerNode}
+      {/* v9.3 Persistent Chat Dock — collapsed bar at bottom, expands into a
+          peek pane on tap. Replaces the v9.2 modal ChatDrawer. */}
+      {peekChatNode}
 
       {/* Path D — Tenant Pre-Registration (reusable trust profile) */}
       {showTenantRegister && (
