@@ -1,5 +1,5 @@
 # FIND.AI — COMPRESSED MEMORY
-> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-21 (v3.3.1 — Cakap 2.0 naming lock + DNA filter: TRUST BEFORE SIGNING).
+> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-23 (v3.3.2 — UI v9.3 Persistent PeekChat Dock lock + Cakap 2.0 naming + DNA filter: TRUST BEFORE SIGNING).
 
 ## 🔴 PICK UP HERE (2026-04-21 EOD)
 
@@ -69,7 +69,47 @@ Pushed to GitHub → Vercel auto-deployed. Five files in that commit:
 - iPhone Safari voice: speak with mid-sentence pause → waits ~2s after final stop → auto-sends full text
 - Android Chrome voice: same test, recovers if engine drops
 
-### 🟢 v3.3.1 IN-FLIGHT — TOOL 3 LIVE (2026-04-21, awaiting deploy)
+### 🟢 v3.3.2 IN-FLIGHT — UI v9.3 Persistent PeekChat Dock (2026-04-23, awaiting push)
+
+**Ken's verdict: "this version is great, save everything." Locked as a stable UI pattern.**
+
+**Problem solved:** User feedback was *"it's always forcing me to the messaging chat, doesn't make sense at all."* Three simultaneous root causes fixed:
+
+1. The v9.2 modal `ChatDrawer` hijacked the full screen — retired.
+2. `openScreenDirect` / `openStampDirect` flipped `showChat=true` to mount the modal, but closing the tool didn't reset it → user stranded on chat page. Fixed with a `landingToTool` state flag + `closeToolSmart(setter)` helper.
+3. Chat felt like a destination, not support → replaced with an always-visible bottom bar.
+
+**The pattern (lock this):** 56px dock at `position:fixed; bottom:0` centered in a 512px column. Three states:
+- **Dock** — single 56px bar with placeholder ("Ask anything…") + mic + send icons. Tapping any element expands.
+- **Peek** — ~48vh sheet showing the last 3 messages from the most-recently-updated chat as a ghost "Recent" preview, plus live input. No full history.
+- **Full** — "Open full chat →" button escalates via `onOpenFull`, flipping `showChat=true` and clearing tool modals.
+
+**Files in this commit (ready to push):**
+
+1. **src/components/PeekChat.js** (NEW, ~523 lines) — self-contained component with `pc-*` CSS namespace, SSE streaming from `/api/chat`, EN/BM/中文 translations, haptic feedback, z-index 60 (backdrop 59), ephemeral `localMessages` cleared on collapse.
+2. **src/app/page.js** — imports `PeekChat` (not `ChatDrawer`); computes `peekContext` (Stamp Duty / Tenant Screening / Home / undefined); `peekRecentHistory` from most-recently-updated chat; `peekHidden` hides dock during Profile / CaseMemory / TenantRegister / Sidebar overlays; `peekChatNode` mounts on all three top-level branches (Landing / Profile / Chat); `closeToolSmart` + `openFullChatFromPeek` + `landingToTool` flag wired.
+3. **src/app/landing.js** — header rev'd to "v9.3 Persistent Chat Dock"; `ChatFab` component + both render sites removed; `fabLabel` / `fabHint` translations stripped from EN/BM/ZH; `.v9-fab` / `.v9-fab-pulse` CSS + `@keyframes v9FabPulse` removed; `.v9-screen-peek-safe { padding-bottom: 96px; }` added to reserve clearance for the dock; both Welcome + Pick screens use `v9-screen-peek-safe`.
+4. **src/components/ChatDrawer.js** — stubbed to a 4-line no-op (sandbox couldn't delete). Delete on commit via `git rm`.
+
+**Git commands for Ken (PowerShell):**
+
+```powershell
+cd "C:\Users\Tan Ken Yap\Documents\data collection\OneDrive\Desktop\Claude\find-ai"
+git status
+git rm src/components/ChatDrawer.js
+git add src/app/landing.js src/app/page.js src/components/PeekChat.js FINDAI_MEMORY.md CLAUDE.md
+git commit -m "v9.3 — Persistent PeekChat dock replaces ChatDrawer modal"
+git push origin main
+```
+
+**Smoke test on https://find-ai-lovat.vercel.app after deploy:**
+1. Landing loads → 56px chat bar pinned to bottom. Progress dots and "Let's go →" CTA not covered.
+2. Tap bar → peek sheet slides up showing last 3 messages as "Recent" preview (if any chat history exists) or empty-state card. Input focused.
+3. Type + send → message streams inside the peek. Tap "Open full chat →" → escalates to full chat page, message continues.
+4. Tap Let's go → Pick → Stamp Duty. Dock still visible at bottom. Close tool → returns to Landing (not to Chat).
+5. Toggle EN → BM → 中文: dock placeholder updates across all three.
+
+### 🟢 v3.3.1 SHIPPED — TOOL 3 LIVE (2026-04-21)
 
 **Task #78 (StampDuty resurrection) — DONE.** First end-to-end Phase 1 tool wired into production app.
 
@@ -318,7 +358,9 @@ Stamp Act 1949 (incl. s.52, s.36A, s.62 as amended), Finance Act 2025 (SDSAS), B
 - **v3.0 (2026-04-21)** — Knowledge base expanded to 40+ topics. R100 stress harness built. 100/100 FULL pass.
 - **v3.1 (2026-04-21)** — R5-R100 keyword patches. Chat-memory persistence fix (`fi_active_chat_id`). Mobile voice recording hardened (en-US, isIOS single-utterance, amplitude silence timer, 45s watchdog).
 - **v3.2 (2026-04-21)** — `digital_evidence` topic added (Module 48). Section 90A Evidence Act 1950 full workflow. 25/25 stress test. R100 still 100%. Topic count = 48.
-- **v3.3 (2026-04-21 — THIS SAVE POINT)** — **Phase 1 doctrine lock.** Find.ai reframed as a toolkit (Screen/Audit/Stamp/Chat), not a chatbot. Tagline "Don't sign blind." CLAUDE.md rewritten to define 4 Phase 1 tools + 4-Phase internal roadmap (Phases 2-4 never mentioned publicly). Each tool produces a branded PDF with QR viral loop. 90-day pre-signing wedge focus.
+- **v3.3 (2026-04-21)** — **Phase 1 doctrine lock.** Find.ai reframed as a toolkit (Screen/Audit/Stamp/Chat), not a chatbot. Tagline "Don't sign blind." CLAUDE.md rewritten to define 4 Phase 1 tools + 4-Phase internal roadmap (Phases 2-4 never mentioned publicly). Each tool produces a branded PDF with QR viral loop. 90-day pre-signing wedge focus.
+- **v3.3.1 (2026-04-21)** — StampDuty (TOOL 3) wired into live app. Shared `buildStampReport` + `exportReport` ship the first end-to-end branded PDF. "Pre-signing toolkit" bento launcher row added to chat empty state.
+- **v3.3.2 (2026-04-23 — THIS SAVE POINT)** — **UI v9.3 Persistent PeekChat Dock locked.** ChatDrawer modal retired. New `src/components/PeekChat.js` ships a 56px bottom-anchored dock → peek preview (last 3 messages) → full chat escalation. Mounted on every top-level branch (Landing / Profile / Chat). `closeToolSmart` + `landingToTool` flag fix the "tool close returns me to chat, not Landing" bug. Landing FAB removed; `.v9-screen-peek-safe` reserves 96px bottom padding. Chat feels ambient, not destination. Ken's verdict: *"this version is great."*
 
 ---
 
@@ -365,7 +407,7 @@ Vercel auto-deploys within ~60 seconds.
 When Ken opens a new session with this file:
 
 1. Read this file end-to-end — **start with the "🧭 PHASE 1 DOCTRINE" block at the top**. That's the operating system.
-2. Greet: "Resuming Find.ai — Phase 1 doctrine locked (v3.3). Toolkit, not chatbot. 4 tools: Screen → Audit → Stamp → Chat. Ready to resurrect TenantScreen, AgreementHealth, StampDuty + build pdfExport.js, or push pending v3.2/v3.3 commits first?"
+2. Greet: "Resuming Find.ai — v3.3.2 save point. Phase 1 doctrine + UI v9.3 Persistent PeekChat Dock locked. Toolkit not chatbot, chat is ambient not destination. Next open threads: TOOL 2 AgreementHealth resurrection (#77 + #81 agreement_clauses topic), Case Memory hand-off (#80), Path D tenant pre-registration (#88). What's the priority?"
 3. Do NOT re-scan codebase unless Ken asks or this file is clearly stale.
 4. **Phase 1 tool resurrection is the primary backlog** — see the numbered list in the PICK UP HERE section.
 5. Common next tasks Ken may request:
