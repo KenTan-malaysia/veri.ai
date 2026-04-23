@@ -1380,7 +1380,9 @@ export default function Home() {
   // Hide the peek dock during full-screen modals where it would collide with
   // tool-internal inputs or keyboards (Profile onboarding, Case Memory editor,
   // Tenant Register wizard, sidebar overlay).
-  const peekHidden = showProfile || showCaseMemory || showTenantRegister || showSidebar;
+  // Also hide on full chat page — otherwise the dock input and the chat
+  // composer stack and the user sees two input columns ("继续提问" + "随便问").
+  const peekHidden = showChat || showProfile || showCaseMemory || showTenantRegister || showSidebar;
 
   const peekChatNode = (
     <PeekChat
