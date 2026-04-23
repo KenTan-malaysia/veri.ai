@@ -34,6 +34,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { buildCaseMemoryContext, hasPdpaConsent } from '../app/caseMemory';
+import { fmt } from '../lib/chatFormat';
 
 const T = {
   en: {
@@ -109,12 +110,21 @@ function escapeHtml(s) {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
   );
 }
+// T15 (2026-04-23) — use the shared src/lib/chatFormat fmt() so PeekChat
+// and the full chat page render assistant output identically. Previously
+// this was a minimal **bold**/\n→<br/> pass, which meant the icon callout
+// framework (✅ / ⚖️ / 🚫 / 💰 / 📋 / 🔒 / ⚠️ / 🔴) silently degraded to
+// flat text in the peek dock and list items fell outside their coloured
+// callout containers.
+//
+// Safety note: fmt() consumes already-escaped text safely — it only
+// introduces new HTML via its own regex-driven template strings, and the
+// input has gone through escapeHtml first so any stray < > in the model's
+// output is neutered before fmt runs.
 function renderText(text) {
   if (!text) return '';
-  return escapeHtml(text)
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[FOLLOWUPS\][\s\S]*?(\[\/FOLLOWUPS\]|$)/, '')
-    .replace(/\n/g, '<br/>');
+  const withoutFollowups = text.replace(/\[FOLLOWUPS\][\s\S]*?(\[\/FOLLOWUPS\]|$)/, '');
+  return fmt(escapeHtml(withoutFollowups));
 }
 
 export default function PeekChat({
