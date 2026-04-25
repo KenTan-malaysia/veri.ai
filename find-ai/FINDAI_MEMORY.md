@@ -1,7 +1,59 @@
 # FIND.AI — COMPRESSED MEMORY
-> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-23 (v3.3.3 — UI v9.4 + v9.5 polish pass shipped · ship build · 👍 26/30 · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> Single-file project snapshot. Upload this to any new session for instant full context. Last updated: 2026-04-25 (v3.4 — TOOL 1 Credit Score spec locked · LHDN gate + utility bill behaviour score · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
-## 🔴 PICK UP HERE (2026-04-21 EOD)
+## 🟢 PICK UP HERE (2026-04-25 — v3.4 SPEC LOCK)
+
+### TOOL 1 CREDIT SCORE — SPEC LOCKED (Ken greenlight: *"ok ship it"*)
+
+**Strategic shift this session:** Utility data was originally drafted as Phase 2 (`ARCH_UTILITY_BRIDGE.md`, post-signing custodian). Through design conversation we identified that **LHDN stamp cert = government-grade tenancy gate** + **utility bills = pure paying behaviour score** = a Find.ai-proprietary credit-scoring engine that belongs in Phase 1. TOOL 1 (Tenant Screening) was rebuilt around this design. Spec locked in `ARCH_CREDIT_SCORE.md`.
+
+**The model — gate + score:**
+- **LHDN cert is the gate** (pass/fail). Tenant enters previous stamp cert # → Find.ai cross-checks against tenant's MyDigital ID-verified IC. Pass = tenancy proven. Cert itself contributes ZERO points to score.
+- **Utility bills are the score** (0-100). Pure paying behaviour from bill native fields: % paid on time (50%) + % zero carry-over (30%) + zero late charges (10%) + zero disconnections (10%). All extractable from `Bayaran Diterima`, `Tunggakan`, `Caj Lewat`, `Pemberitahuan Pemutusan`.
+
+**Design calls Ken locked this session:**
+- ✗ NO bank API linking — Find.ai is a trust app, not a payments app
+- ✗ NO bank statement upload — bills contain payment-behaviour signals natively, no extra friction needed
+- ✗ NO scoring on tenancy length / lease completion / past tenancy count — unfair to short-term tenants with perfect behaviour
+- ✓ Score (behaviour) and Confidence (data volume) are SEPARATE outputs — never blended into one number
+- ✓ Identity tiers: Gold = MyDigital ID OAuth one-tap; Silver = IC photo + selfie liveness; no Bronze
+- ✓ LHDN lookup via **Path A** (manual screenshot + OCR) for MVP; **Path C** (formal LHDN API partnership) pursued in parallel as 6-12 month track; **never Path B** (web scraping — fragile + ToS risk)
+- ✓ **Live Bound Verification (LBV)** — PDF is never sufficient alone. Landlord scans QR → tenant pushed → live face match → score revealed with live photo overlay. The PDF is an invitation to verify, not the trust artifact. (Pattern in `ARCH_UTILITY_BRIDGE.md`.)
+- ✓ **3-signal verification lattice** for landlord's utility account ownership (when Bridge ships in Phase 2): bill (≤60 days) + property address match + meter serial cross-check at baseline. No single signal trusted alone.
+
+**Tenant effort to build first verifiable credit profile: ~3 minutes total**
+(60s MyDigital ID one-time-lifetime + 30-45s LHDN cert + 60-90s bill upload). Then ~5 sec live face match per future rental application.
+
+**Strategic flywheel this unlocks:**
+TOOL 3 (SDSAS) stamps tenancies today → creates LHDN certs → those certs gate TOOL 1 credit scoring on those tenants' NEXT rentals → more landlords trust TOOL 1 → more screening adoption → more demand for TOOL 3 stamping → moat compounds. **TOOL 3 is now strategically the on-ramp to the entire credit-scoring system, not just a tax utility.** This is the moat that PropertyGuru / iProperty / CCRIS cannot copy.
+
+### 📋 NEXT SESSION — TOOL 1 Build Order (sequenced per `ARCH_CREDIT_SCORE.md`)
+
+1. Identity onboarding stack (MyDigital ID OAuth + IC/selfie liveness fallback)
+2. LHDN cert lookup flow (Path A — screenshot upload + OCR + IC cross-match)
+3. Bill upload + multi-utility OCR pipeline (TNB + water + IWK templates)
+4. Scoring engine — pure function, unit-testable
+5. Live Bound Verification (LBV) flow
+6. PDF export `buildScreenReport()` in `src/lib/pdfExport.js`
+7. Landlord-facing score card UI
+8. Replace "coming soon" Screen tile in `src/app/page.js` with live launcher
+
+### 📂 New docs this session
+
+- `ARCH_CREDIT_SCORE.md` — **NEW**, locked spec for TOOL 1 (Phase 1)
+- `ARCH_UTILITY_BRIDGE.md` — existing Phase 2 post-signing utility ledger; updated header notes the credit-scoring portion split into the new doc
+
+### 🅿️ Open questions parked from this session
+
+1. OCR vendor — in-house Claude vision API for MVP, swap to Innov8tif/Jumio when first institutional landlord asks?
+2. Score recency decay — does a 3-year-old tenancy still count? Time decay weight separate from confidence tier?
+3. Multi-tenant households — 3 housemates on one TNB account, how to attribute? Tag as "shared tenancy" + dilute confidence?
+4. Score portability pricing — free for tenants forever, or RM5/year to maintain active portable status?
+5. Marketing claim — *"Malaysia's first government-anchored tenant credit score"* — needs legal review before public copy.
+
+---
+
+## 🔴 PICK UP HERE (2026-04-21 EOD) — superseded by v3.4 above, kept for historical context
 
 ### 🧬 PRODUCT DNA — LOCKED (never drift from this)
 
@@ -410,7 +462,9 @@ Stamp Act 1949 (incl. s.52, s.36A, s.62 as amended), Finance Act 2025 (SDSAS), B
 - **v3.3 (2026-04-21)** — **Phase 1 doctrine lock.** Find.ai reframed as a toolkit (Screen/Audit/Stamp/Chat), not a chatbot. Tagline "Don't sign blind." CLAUDE.md rewritten to define 4 Phase 1 tools + 4-Phase internal roadmap (Phases 2-4 never mentioned publicly). Each tool produces a branded PDF with QR viral loop. 90-day pre-signing wedge focus.
 - **v3.3.1 (2026-04-21)** — StampDuty (TOOL 3) wired into live app. Shared `buildStampReport` + `exportReport` ship the first end-to-end branded PDF. "Pre-signing toolkit" bento launcher row added to chat empty state.
 - **v3.3.2 (2026-04-23)** — **UI v9.3 Persistent PeekChat Dock locked.** ChatDrawer modal retired. New `src/components/PeekChat.js` ships a 56px bottom-anchored dock → peek preview (last 3 messages) → full chat escalation. Mounted on every top-level branch (Landing / Profile / Chat). `closeToolSmart` + `landingToTool` flag fix the "tool close returns me to chat, not Landing" bug. Landing FAB removed; `.v9-screen-peek-safe` reserves 96px bottom padding. Chat feels ambient, not destination. Ken's verdict: *"this version is great."*
-- **v3.3.3 (2026-04-23 — THIS SAVE POINT · SHIP BUILD)** — **UI v9.4 + v9.5 polish pass locked and live on production.** Ran two 30-user simulations against v9.3 across EN/BM/ZH. Shipped 11 polish tickets. v9.4 (T1–T5): 3-pill empty peek, *"Don't sign blind"* motto on Welcome, privacy chip + lang toggle readability bump, one-time dock hint with localStorage suppression, tile eyebrows. v9.5 micro-polish (N1–N5 + T11): inline 👋 heading, 1600ms hint timing, neutral speech-bubble pill icons, quieter tile eyebrow (0.10em/9px), SVG triangle hint tail, *"SDSAS 2026"* sub-eyebrow on Stamp tile. **Aggregate: 🤔 17/30 → 4/30, 👍 13/30 → 26/30.** Four remaining 🤔 all map to P2 feature work, not first-run trust blockers. Files: `src/app/landing.js` 381 lines · `src/components/PeekChat.js` 677 lines. See `UX_REVIEW_v9.4.md` + `UX_REVIEW_v9.5.md`.
+- **v3.4 (2026-04-25 — THIS SAVE POINT · SPEC LOCK, build pending)** — **TOOL 1 Credit Score spec locked.** Ken greenlight: *"ok ship it."* Strategic shift: utility data promoted from Phase 2 (post-signing custodian, `ARCH_UTILITY_BRIDGE.md`) to Phase 1 by reframing as a **government-anchored credit-scoring engine**. Two-step model: LHDN stamp cert is the identity gate (pass/fail, zero scoring weight) + utility bills are the pure paying-behaviour score (0-100, four factors weighted from native bill fields `Bayaran Diterima` 50% / `Tunggakan` 30% / `Caj Lewat` 10% / `Pemberitahuan Pemutusan` 10%). Design calls: NO bank linking, NO bank statement upload, NO scoring on tenancy length / lease completion / past tenancy count (unfair to short-term tenants), Score and Confidence are separate outputs, Identity tiers Gold (MyDigital ID) + Silver (IC photo + selfie liveness) only — no Bronze, LHDN lookup via Path A (manual screenshot OCR) for MVP, Live Bound Verification (LBV) pattern locks score-presentation to live face match (PDF alone never sufficient), 3-signal verification lattice for landlord utility ownership when Bridge ships in Phase 2. Tenant effort to build first credit profile = ~3 minutes lifetime. Strategic flywheel: TOOL 3 stamping now becomes the on-ramp to TOOL 1 credit scoring — stamping a tenancy today creates the LHDN cert that gates that tenant's future credit score. Files: `ARCH_CREDIT_SCORE.md` (NEW, locked spec) · `ARCH_UTILITY_BRIDGE.md` (header updated to note split). Build pending — see PICK UP HERE block at top of this file for sequenced 8-step build order.
+
+- **v3.3.3 (2026-04-23)** — **UI v9.4 + v9.5 polish pass locked and live on production.** Ran two 30-user simulations against v9.3 across EN/BM/ZH. Shipped 11 polish tickets. v9.4 (T1–T5): 3-pill empty peek, *"Don't sign blind"* motto on Welcome, privacy chip + lang toggle readability bump, one-time dock hint with localStorage suppression, tile eyebrows. v9.5 micro-polish (N1–N5 + T11): inline 👋 heading, 1600ms hint timing, neutral speech-bubble pill icons, quieter tile eyebrow (0.10em/9px), SVG triangle hint tail, *"SDSAS 2026"* sub-eyebrow on Stamp tile. **Aggregate: 🤔 17/30 → 4/30, 👍 13/30 → 26/30.** Four remaining 🤔 all map to P2 feature work, not first-run trust blockers. Files: `src/app/landing.js` 381 lines · `src/components/PeekChat.js` 677 lines. See `UX_REVIEW_v9.4.md` + `UX_REVIEW_v9.5.md`.
 
 ---
 

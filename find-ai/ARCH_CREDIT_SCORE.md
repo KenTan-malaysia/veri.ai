@@ -1,0 +1,258 @@
+# ARCH — TOOL 1 Credit Score (Paying Behaviour from Utility Bills)
+
+> **Status:** SPEC LOCKED 2026-04-25 (v3.4). Ken greenlight: *"ok ship it."* Ready to build.
+> **DNA:** Bullseye — pre-signing trust score for landlord tenant screening.
+> **Phase:** 1 (public). This was originally drafted in `ARCH_UTILITY_BRIDGE.md` as Phase 2 post-signing material; the credit-scoring portion was split out and promoted to Phase 1 once the LHDN-anchored evidence chain locked the design.
+
+---
+
+## Strategic Position
+
+This spec turns **TOOL 1 (Tenant Screening)** from a generic CCRIS/CTOS + reference-call tool into a Find.ai-proprietary credit-scoring engine that uses **government-anchored tenancy proof + utility payment behaviour** as the primary signals. Competitors cannot copy this without doing the same hard work of integrating LHDN STAMPS + Malaysian utility bill OCR + the verification lattice — and Find.ai is already the dominant Malaysian e-stamping front-end via TOOL 3.
+
+**The compounding loop:**
+- TOOL 3 stamps tenancies today → creates LHDN cert
+- TOOL 1 tomorrow uses those certs as identity gates for credit scoring
+- More tenancies stamped through Find.ai = more verifiable credit history in the system
+- More credit history = more landlord trust in TOOL 1 = more screening adoption
+- More screening adoption = more demand for TOOL 3 stamping (because cert is required for the gold tier)
+
+This is the moat.
+
+---
+
+## The Model — Two Steps, Gate + Score
+
+> **The LHDN cert is the gate. The utility bills are the score. That's the whole spec.**
+
+### Step 1 — Identity Gate (Pass / Fail)
+
+The tenant proves they really lived at a specific address during a specific period. We use the LHDN stamp certificate from their previous tenancy as government-grade proof.
+
+The cert is a binary gate: pass (we have a verified tenancy to score) or fail (we don't have a verifiable foundation; tenant falls back to first-time-renter handling). **The cert itself contributes ZERO points to the final score.** We extract only the address and period — everything else (rent amount, lease length, landlord identity) is discarded for scoring purposes.
+
+### Step 2 — Paying Behaviour Score (0-100)
+
+Once identity is gated, we score the tenant purely on how they paid utilities at that address during that period. The score answers exactly one question: *"During the verified tenancy, did this tenant pay their utility obligations reliably?"* Nothing else.
+
+---
+
+## Step 1 Detail — LHDN Cert Verification
+
+### What we ask the tenant for
+
+A single field: the LHDN stamp certificate number from their most recent tenancy agreement.
+
+### What we extract
+
+From the `Pengesahan Ketulenan` (Authentication) lookup at https://stamps.hasil.gov.my:
+
+| Field | Used for |
+|---|---|
+| Tenant name + IC | Cross-match against the tenant's MyDigital ID-verified IC on Find.ai. **Must match exactly** or the gate fails. |
+| Property address | Cross-match against the address on the utility bills. **Must match** or the bills are not eligible to score. |
+| Lease period (start, end) | Defines the time window for which utility bills are eligible to score. |
+| Stamping date | Sanity check — must be reasonable relative to lease period. |
+| Document type | Must be tenancy agreement (residential or commercial). |
+
+### What we discard
+
+| Field | Why discarded |
+|---|---|
+| Rent amount | Not relevant to paying behaviour at utilities |
+| Stamp duty paid | Not relevant |
+| Landlord name / IC | We don't score on landlord (different person, different system) |
+| Lease length itself | Per Ken's design call — length doesn't determine score, only data window |
+
+### Implementation paths for LHDN lookup
+
+| Path | Description | Speed | Build risk |
+|---|---|---|---|
+| **A. Manual (MVP)** | Tenant taps "Verify on LHDN" button → opens LHDN portal in new tab with cert # pre-filled in URL → tenant takes screenshot of result page → uploads back to Find.ai → OCR extracts fields | Ship today | None |
+| **B. Web scraping** | Find.ai auto-queries LHDN portal in background when tenant submits cert # | 2 weeks | Fragile, may breach LHDN ToS, breaks when LHDN updates form |
+| **C. Formal LHDN API** | Apply for partnership API access via MAMPU / LHDN | 3-9 months | Bureaucratic but legitimate; opens deeper integration doors |
+
+**Decision:** Path A for MVP. Path C in parallel as a long-term partnership track. Never Path B.
+
+### Tenant flow for Path A
+
+1. Tenant enters previous LHDN cert number into Find.ai screen
+2. Find.ai shows: *"We'll verify this with LHDN. Tap below to open the official LHDN portal — it will pre-fill your cert number."*
+3. Tenant taps → LHDN tab opens with cert # in URL params
+4. Tenant sees LHDN's authentication result page
+5. Tenant taps "Screenshot & return" in Find.ai (or just screenshots themselves)
+6. Find.ai OCR extracts the verified fields → cross-matches against tenant's IC on file
+7. ~30-45 seconds total
+
+### Edge cases
+
+- **Cert not found in LHDN database** → fail gate, fall back to silver tier (bills + bank statement) or first-time-renter handling
+- **Cert IC doesn't match tenant's verified IC** → reject with clear message ("This certificate is for a different person")
+- **Cert is for unstamped period (pre-2018 paper era)** → fall back gracefully
+- **Tenant company-stamped (commercial tenancy)** → still works, cert names the individual signatory
+- **Tenant lived with parents / no formal agreement** → no cert exists → first-time-renter path
+
+---
+
+## Step 2 Detail — Paying Behaviour Score
+
+### What we ask the tenant for
+
+Utility bills covering the verified tenancy period, ideally all consecutive months. Minimum: TNB + water (Air Selangor / SYABAS / SADA / SAJ / LAKU / SESB / SARAWESB depending on state). IWK is optional bonus signal.
+
+### What we extract from each bill
+
+Malaysian utility bills already contain payment-behaviour signals natively. We OCR these fields:
+
+| Bill field | What it reveals |
+|---|---|
+| **Bayaran Diterima** (Payment Received) date + amount | Whether the previous bill was paid on time (i.e. before this current bill was issued) |
+| **Tunggakan** (Outstanding) carried forward | Whether previous bill was paid in full (must be RM 0 for clean) |
+| **Caj Lewat** (Late charges) | Direct evidence of late payment |
+| **Pemberitahuan Pemutusan** (Disconnection notice) | Severe non-payment — TNB sends this at 2+ months overdue |
+| **Service period continuity** | Gaps in billing or reconnection event = service was cut for non-payment |
+| **Service address** | Cross-match against LHDN cert address (must match or bill is rejected) |
+| **Account number** | For audit trail; we don't validate the account holder name |
+
+### Scoring formula
+
+100-point scale, weighted across four behaviour factors:
+
+| Factor | Weight | How calculated |
+|---|---|---|
+| **% bills paid on time** | 50% | Count of bills where "Bayaran Diterima" date is before next bill's issue date / total bills × 100 |
+| **% bills with zero outstanding** | 30% | Count of bills where "Tunggakan" = RM 0 / total bills × 100 |
+| **Zero late charges across period** | 10% | 100 if no "Caj Lewat" line items anywhere; else 100 - (10 × number of bills with late charges) |
+| **Zero disconnection events** | 10% | 100 if no disconnection notices and no service gaps; else 0 |
+
+Final score = weighted sum, rounded to nearest integer. Range: 0-100.
+
+### Multi-utility cross-check
+
+If tenant submits TNB + water + IWK, we score each utility independently and average them. This handles the edge case where one utility has an anomaly (e.g. TNB billing dispute) but the others are clean.
+
+If only one utility is submitted, score is calculated on that alone but flagged as **"Single-utility evidence"** in the landlord-facing badge — landlord knows they're seeing a partial picture.
+
+---
+
+## What the Landlord Sees
+
+```
+TENANT: Ahmad bin Ali
+✓ MyDigital ID verified
+✓ Previous tenancy verified by LHDN cert
+  14 months at Jalan Bukit Raja, Johor Bahru (2024-10 to 2025-12)
+
+PAYING BEHAVIOUR SCORE: 94 / 100  ★★★★★
+
+Sourced from utility bills at the verified address:
+✓ TNB · 14/14 bills paid on time · 0 carry-over · 0 late charges · 0 disconnections
+✓ Air Selangor · 14/14 bills paid on time · 0 carry-over · 0 late charges
+✓ IWK · 14/14 bills paid on time · 0 carry-over
+
+[ View bill details ↓ ]   [ Download Find.ai Trust Report PDF 🛡️ ]
+```
+
+The PDF is the viral artifact — branded Find.ai letterhead + QR for live re-verification (LBV — Live Bound Verification, see ARCH_UTILITY_BRIDGE.md for the full LBV pattern).
+
+---
+
+## Tenant Effort Budget
+
+| Step | Time | Frequency |
+|---|---|---|
+| Sign in with MyDigital ID (gold tier) or IC photo + selfie liveness (silver tier) | 60 sec | Once, lifetime |
+| Enter LHDN cert number + screenshot LHDN result | 30-45 sec | Once per past tenancy |
+| Upload utility bills | 60-90 sec | Once per past tenancy |
+| Live face match when presenting score to new landlord | 5 sec | Per new rental application |
+
+**Total to build first verifiable credit profile: ~3 minutes.** Re-use is near-zero effort thereafter.
+
+---
+
+## What's NOT in Scope (Removed by Ken's Design Calls)
+
+| Removed | Why |
+|---|---|
+| Bank statement upload | Bills already contain payment-behaviour signals natively. Bank statement adds friction without adding signal. |
+| Bank API linking | Find.ai stays out of the payments lane — we are a trust app, not a payments app. |
+| Lease completion rate | Identity gate concerns existence of tenancy, not whether tenant completed the term. Score is purely about paying utilities, not honoring lease length. |
+| Tenancy length as scoring factor | Unfair to short-term tenants with perfect behaviour. Length only affects confidence indicator (separate badge), never the score itself. |
+| Number of past tenancies as scoring factor | Same as above. |
+| Previous landlord countersign as required signal | Bills are sufficient evidence. Countersign remains as optional bonus only. |
+
+---
+
+## Edge Cases (Locked Handling)
+
+| Case | Handling |
+|---|---|
+| First-time renter (no LHDN cert exists) | Show as **"No verified rental history yet — alternative signals available"**; offer employer reference upload, EPF statement showing employment, MyDigital ID-verified age. Do NOT show as 0/100. |
+| Unstamped previous tenancy | Same as first-time renter. Educational nudge: *"Your next tenancy through Find.ai will be auto-stamped via TOOL 3, building your credit profile for the future."* |
+| Bills missing some months in the period | Calculate score on submitted months; show "Partial coverage: X of Y months" badge. Below 50% coverage → flag as Provisional. |
+| Bill OCR fails or low confidence | Tenant prompted to re-upload clearer image; manual review queue if persistent. |
+| Tenant has multiple past tenancies | Each tenancy scored independently; landlord sees most recent first, can expand to see history. Most recent has highest weight in confidence tier (separate from score). |
+| Tenant disputes a bill on their own record | Tenant can flag with explanation; manual review; if validated, score recalculates excluding the disputed period. |
+
+---
+
+## Confidence Tier (Separate Badge, Not in Score)
+
+Score = behaviour. Confidence = data volume. Two outputs, never blended.
+
+| Tier | Criteria |
+|---|---|
+| **Mature** | 24+ verified months across 2+ tenancies |
+| **Established** | 12-24 months, any number of tenancies |
+| **Provisional** | 6-12 months |
+| **Initial** | <6 months or single short tenancy |
+
+A perfect 6-month tenant gets `Score 95 / 100 · Confidence Provisional`. A perfect 24-month tenant gets `Score 95 / 100 · Confidence Mature`. Same score because both paid perfectly. Landlord sees both numbers and decides for themselves whether they need Mature confidence for their property.
+
+---
+
+## Build Order — TOOL 1 Resurrection
+
+This spec replaces the original TOOL 1 brief (which was just CCRIS/CTOS + references). New build order:
+
+1. **Identity onboarding** — MyDigital ID OAuth (gold tier) + IC photo + selfie liveness (silver tier). Lock the verification stack first; everything depends on it.
+2. **LHDN cert lookup flow (Path A)** — pre-fill URL, screenshot upload, OCR extraction, IC cross-match.
+3. **Bill upload + OCR pipeline** — TNB + water bill template recognition, field extraction (Bayaran Diterima, Tunggakan, Caj Lewat, disconnection flags).
+4. **Scoring engine** — pure function from extracted fields → 0-100 score. Unit-testable, no UI.
+5. **Live Bound Verification (LBV) flow** — when landlord requests the score, push to tenant's phone, live face match, score reveal. (See ARCH_UTILITY_BRIDGE.md for LBV pattern detail.)
+6. **PDF export** — `buildScreenReport()` in `src/lib/pdfExport.js` with Find.ai letterhead, QR for live re-verification, masked sensitive fields until LBV.
+7. **Landlord-facing UI** — score card, evidence breakdown, optional countersign request button.
+8. **Replace "coming soon" Screen tile** in `src/app/page.js` with live TOOL 1 launcher.
+
+---
+
+## Files Expected to Change
+
+```
+src/components/tools/
+  TenantScreen.js                    # Resurrected, rewritten around new spec
+  LHDNVerify.js                      # NEW — cert lookup + screenshot OCR
+  BillUpload.js                      # NEW — multi-utility bill upload
+  ScoreCard.js                       # NEW — landlord-facing score display
+
+src/lib/
+  utilityBillOcr.js                  # NEW — TNB/water bill template OCR
+  scoringEngine.js                   # NEW — pure scoring function
+  lhdnLookup.js                      # NEW — Path A screenshot OCR
+  pdfExport.js                       # ADD: buildScreenReport with LBV QR
+
+src/app/
+  page.js                            # Replace Screen "coming soon" tile with live launcher
+  api/screen/route.js                # NEW — orchestrates the verification + scoring
+  api/lhdn-verify/route.js           # NEW — handles screenshot OCR
+```
+
+---
+
+## Open Questions (Carry to Next Session)
+
+1. **OCR vendor** — in-house (Claude vision API) for MVP, swap to Innov8tif/Jumio when first institutional landlord asks?
+2. **Score recency decay** — does a score from a 3-year-old tenancy still count? Should we apply time decay weight separately from confidence tier?
+3. **Multi-tenant households** — when 3 housemates share one TNB account, how do we attribute the score? Tag the bills as "shared tenancy" and dilute confidence?
+4. **Score portability across landlords** — already designed (LBV at presentation), but pricing model TBD: free for tenants forever, or RM5/year to maintain active portable status?
+5. **Marketing claim** — *"Malaysia's first government-anchored tenant credit score"* — strong claim, needs legal review before public copy.
