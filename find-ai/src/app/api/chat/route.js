@@ -206,7 +206,11 @@ export async function POST(request) {
     }
 
     const stream = await client.messages.stream({
-      model: 'claude-haiku-4-5-20251001',
+      // v3.4.15 — switched from 'claude-haiku-4-5-20251001' to 'claude-haiku-4-5'
+      // because Anthropic returned 400 Bad Request on the dated alias with
+      // SDK 0.91. The undated alias resolves to the latest Haiku 4.5 snapshot
+      // and is the format Anthropic recommends for production.
+      model: 'claude-haiku-4-5',
       max_tokens: 4000,
       system: systemPrompt,
       messages: messages.map(msg => ({
