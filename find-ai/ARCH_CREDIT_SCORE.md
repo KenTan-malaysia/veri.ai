@@ -236,7 +236,49 @@ TNB · 8 months
 
 The landlord sees at a glance: *"This tenant pays before the bill is even due. They'll pay rent the same way."* — vs the flagged tenant where the variance + tier mix surfaces the real risk.
 
-The PDF is the viral artifact — branded Find.ai letterhead + QR for live re-verification (LBV — Live Bound Verification, see ARCH_UTILITY_BRIDGE.md for the full LBV pattern).
+The exported artifact is a **branded Trust Card** — see "Trust Card output format" below.
+
+---
+
+## Trust Card output format (v3.4.2 design lock)
+
+> **Why a card, not a PDF report:** Malaysian landlords verify on phones, share via WhatsApp, decide in seconds. A full A4 PDF report is overkill — most landlords would never read past the score number. A business-card-format artifact is more glanceable, more shareable, and matches how trust artifacts actually move (driver's licence, IC, credit card — all card-shaped for a reason).
+
+**Format spec:**
+
+- Dimensions: ~85 × 55 mm (credit-card / standard business-card size, aspect ratio ~1.586:1)
+- Single page, landscape orientation
+- File: PDF (printable + WhatsApp-shareable as image preview)
+- Render path: server-generates HTML at card dimensions → headless print to PDF, OR client-side via existing `pdfExport.js` infrastructure
+
+**Layout (top to bottom):**
+
+```
+┌─────────────────────────────────────────┐
+│ 🛡️ FIND.AI · TRUST CARD       2026.04.25 │  ← navy gradient header strip
+├─────────────────────────────────────────┤
+│ Ahmad bin Ali                            │  ← tenant name (bold)
+│ IC ····4321 · MyDigital ID verified      │  ← identity sub
+│                                          │
+│   94 / 100              ★★★★★            │  ← big score + star rating
+│   ✓ UPFRONT TENANT · 4 days early        │  ← timing tag (gold/green)
+│                                                  · 14 months
+├─────────────────────────────────────────┤
+│ TNB · Water · Mobile · LHDN ✓   [QR] FA-A8X9 │  ← utilities + QR + ref
+└─────────────────────────────────────────┘
+```
+
+**The QR code IS the trust mechanism — not the card itself.** The card is a verification anchor; the QR triggers Live Bound Verification (landlord scans → tenant phone push → live face match → score revealed with live photo overlay). PDF/card alone is never sufficient — see LBV pattern in `ARCH_UTILITY_BRIDGE.md`.
+
+**Why this beats a full PDF report:**
+
+| Format | File size | WhatsApp share | Glanceable | Print | Trust signal |
+|---|---|---|---|---|---|
+| ❌ Full PDF report (A4) | 200-500 KB | Awkward (preview shows page 1 only) | No (need to scroll) | Yes | Same |
+| ✓ **Trust Card (business-card PDF)** | ~30-50 KB | Native preview shows full card | Yes (one screen) | Yes | Same (QR + LBV are the real trust) |
+| ❌ Image only (PNG/JPG) | 100-200 KB | Native preview | Yes | Lossy | Weaker (no embedded data) |
+
+PDF wins because it's printable, scaleable, can embed the QR + ref + brand consistently, and stays sharp at any zoom — but at card dimensions instead of A4.
 
 ---
 
@@ -303,7 +345,7 @@ This spec replaces the original TOOL 1 brief (which was just CCRIS/CTOS + refere
 3. **Bill upload + OCR pipeline** — TNB + water bill template recognition, field extraction (Bayaran Diterima, Tunggakan, Caj Lewat, disconnection flags).
 4. **Scoring engine** — pure function from extracted fields → 0-100 score. Unit-testable, no UI.
 5. **Live Bound Verification (LBV) flow** — when landlord requests the score, push to tenant's phone, live face match, score reveal. (See ARCH_UTILITY_BRIDGE.md for LBV pattern detail.)
-6. **PDF export** — `buildScreenReport()` in `src/lib/pdfExport.js` with Find.ai letterhead, QR for live re-verification, masked sensitive fields until LBV.
+6. **Trust Card export** — `buildTrustCard()` in `src/lib/pdfExport.js` rendering at business-card dimensions (85×55mm), with Find.ai letterhead strip, score + star rating, timing tag, utility list, QR for Live Bound Verification, ref number. Replaces the originally planned `buildScreenReport()` A4 PDF — see "Trust Card output format" section above.
 7. **Landlord-facing UI** — score card, evidence breakdown, optional countersign request button.
 8. **Replace "coming soon" Screen tile** in `src/app/page.js` with live TOOL 1 launcher.
 
@@ -322,7 +364,7 @@ src/lib/
   utilityBillOcr.js                  # NEW — TNB/water bill template OCR
   scoringEngine.js                   # NEW — pure scoring function
   lhdnLookup.js                      # NEW — Path A screenshot OCR
-  pdfExport.js                       # ADD: buildScreenReport with LBV QR
+  pdfExport.js                       # ADD: buildTrustCard (85×55mm business-card format with LBV QR)
 
 src/app/
   page.js                            # Replace Screen "coming soon" tile with live launcher

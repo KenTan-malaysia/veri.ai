@@ -110,7 +110,14 @@ const STR = {
     monthsBills: 'months of utility bills at the verified address',
     confidence: 'Confidence',
     confMature: 'Mature · 14 months verified',
-    exportPdf: '🛡️ Export Trust Report PDF',
+    exportCard: '🛡️ Save Trust Card',
+    cardBrand: 'TRUST CARD',
+    cardSub: 'Business-card format · WhatsApp shareable',
+    cardVerified: 'MyDigital ID verified',
+    cardEarlyDays: '{n} days early',
+    cardLateDays: '{n} days late',
+    cardOnTime: 'On the day',
+    cardUtilities: 'TNB · Water · Mobile · LHDN ✓',
     saveCase: 'Save to case memory',
     savedCase: 'Saved to case memory',
     landlordSafetyNote: 'This score reflects payment behaviour only. The decision to enter tenancy rests with you.',
@@ -203,7 +210,14 @@ const STR = {
     monthsBills: 'bulan bil utiliti di alamat yang disahkan',
     confidence: 'Keyakinan',
     confMature: 'Matang · 14 bulan disahkan',
-    exportPdf: '🛡️ Muat turun PDF Laporan Amanah',
+    exportCard: '🛡️ Simpan Kad Amanah',
+    cardBrand: 'KAD AMANAH',
+    cardSub: 'Format kad bisnes · boleh dikongsi WhatsApp',
+    cardVerified: 'Disahkan MyDigital ID',
+    cardEarlyDays: '{n} hari awal',
+    cardLateDays: '{n} hari lewat',
+    cardOnTime: 'Pada hari itu',
+    cardUtilities: 'TNB · Air · Mudah Alih · LHDN ✓',
     saveCase: 'Simpan ke memori kes',
     savedCase: 'Disimpan ke memori kes',
     landlordSafetyNote: 'Skor ini hanya menggambarkan tingkah laku bayaran. Keputusan meneruskan sewaan terletak pada anda.',
@@ -296,7 +310,14 @@ const STR = {
     monthsBills: '个月在已验证地址的公用事业账单',
     confidence: '可信度',
     confMature: '成熟 · 14 个月已验证',
-    exportPdf: '🛡️ 下载信任报告 PDF',
+    exportCard: '🛡️ 保存信任卡',
+    cardBrand: '信任卡',
+    cardSub: '名片格式 · 可通过 WhatsApp 分享',
+    cardVerified: 'MyDigital ID 已验证',
+    cardEarlyDays: '提前 {n} 天',
+    cardLateDays: '迟 {n} 天',
+    cardOnTime: '当天',
+    cardUtilities: 'TNB · 水费 · 手机 · LHDN ✓',
     saveCase: '保存到案件记忆',
     savedCase: '已保存到案件记忆',
     landlordSafetyNote: '此评分仅反映付款行为。是否签约的决定权在您。',
@@ -695,6 +716,99 @@ function UtilityTimingCard({ utility, t }) {
   );
 }
 
+// ─── TrustCardPreview — business-card-format Trust Card visual ──────────────
+//
+// Replaces the "Export PDF Report" output with a compact business-card visual
+// (~85×55mm credit-card aspect, ~1.586:1) that's WhatsApp-shareable and
+// glanceable in 2 seconds. The actual exported artifact (Phase 1 build step
+// 6) will render this same layout as a single-page PDF at business-card
+// dimensions plus a QR code that triggers Live Bound Verification.
+function TrustCardPreview({ tenantName, tenantIC, score, lhdnResult, avgGapDays, caseRef, t }) {
+  const gapText = avgGapDays < 0
+    ? t.cardEarlyDays.replace('{n}', String(Math.abs(avgGapDays)))
+    : avgGapDays > 0
+      ? t.cardLateDays.replace('{n}', String(avgGapDays))
+      : t.cardOnTime;
+
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{
+      background: '#fff',
+      border: '1px solid #e2e8f0',
+      boxShadow: '0 8px 24px rgba(15,23,42,0.10), 0 1px 2px rgba(15,23,42,0.06)',
+    }}>
+      {/* Top strip — navy gradient with brand */}
+      <div className="px-4 py-2.5 flex items-center justify-between"
+        style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
+        <div className="flex items-center gap-2">
+          <span className="text-white text-[11px] font-black tracking-tight">🛡️ FIND.AI</span>
+          <span className="text-[8.5px] font-black uppercase tracking-widest" style={{ color: '#B8893A' }}>
+            {t.cardBrand}
+          </span>
+        </div>
+        <span className="text-[8px] font-mono" style={{ color: 'rgba(255,255,255,0.55)' }}>2026.04.25</span>
+      </div>
+
+      {/* Body */}
+      <div className="px-4 pt-3.5 pb-3 space-y-3">
+        {/* Tenant identity row */}
+        <div>
+          <div className="text-[15px] font-bold leading-tight" style={{ color: '#0f172a' }}>{tenantName || 'Tenant'}</div>
+          <div className="text-[9.5px] mt-0.5" style={{ color: '#94a3b8' }}>
+            IC ····{tenantIC || 'XXXX'} · {t.cardVerified}
+          </div>
+        </div>
+
+        {/* Score row + star rating */}
+        <div className="flex items-end justify-between pt-1">
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <div className="text-[32px] font-bold leading-none" style={{ color: '#0f172a' }}>{score}</div>
+              <div className="text-[12px]" style={{ color: '#94a3b8' }}>/ 100</div>
+            </div>
+            <div className="text-[9.5px] font-bold mt-1.5" style={{ color: '#065f46' }}>
+              {t.upfrontTag} · {gapText}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-[11px] tracking-tight" style={{ color: '#B8893A' }}>★★★★★</div>
+            <div className="text-[8.5px] mt-0.5" style={{ color: '#94a3b8' }}>{lhdnResult?.months || 14} {t.months}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom strip — utilities + QR + ref */}
+      <div className="px-4 py-2.5 flex items-center justify-between"
+        style={{ background: '#f8fafc', borderTop: '1px solid #f1f5f9' }}>
+        <div className="text-[9px] font-semibold leading-snug min-w-0 truncate" style={{ color: '#475569' }}>
+          {t.cardUtilities}
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Tiny QR placeholder — real QR triggers LBV face-match */}
+          <div className="w-7 h-7 rounded-sm relative" style={{ background: '#0f172a' }}>
+            <svg width="28" height="28" viewBox="0 0 28 28" className="absolute inset-0">
+              <rect x="3" y="3" width="6" height="6" fill="#fff"/>
+              <rect x="5" y="5" width="2" height="2" fill="#0f172a"/>
+              <rect x="19" y="3" width="6" height="6" fill="#fff"/>
+              <rect x="21" y="5" width="2" height="2" fill="#0f172a"/>
+              <rect x="3" y="19" width="6" height="6" fill="#fff"/>
+              <rect x="5" y="21" width="2" height="2" fill="#0f172a"/>
+              <rect x="11" y="11" width="6" height="6" fill="#fff"/>
+              <rect x="13" y="13" width="2" height="2" fill="#0f172a"/>
+              <rect x="11" y="3" width="2" height="2" fill="#fff"/>
+              <rect x="14" y="5" width="2" height="2" fill="#fff"/>
+              <rect x="22" y="11" width="2" height="2" fill="#fff"/>
+              <rect x="11" y="22" width="2" height="2" fill="#fff"/>
+              <rect x="19" y="19" width="3" height="3" fill="#fff"/>
+              <rect x="23" y="22" width="2" height="2" fill="#fff"/>
+            </svg>
+          </div>
+          <span className="text-[8.5px] font-mono" style={{ color: '#94a3b8' }}>{(caseRef || 'FA-XXXX').slice(0, 9)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── main component ──────────────────────────────────────────────────────────
 
 export default function TenantScreen({
@@ -1033,6 +1147,24 @@ export default function TenantScreen({
             ))}
           </div>
 
+          {/* Trust Card preview — replaces the old "PDF report" output.
+              Business-card format (~85×55mm credit-card aspect) — designed
+              for WhatsApp shareability and 2-second glanceability. */}
+          <div className="pt-2">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
+              {t.cardSub}
+            </div>
+            <TrustCardPreview
+              tenantName={tenantName}
+              tenantIC={tenantIC}
+              score={MOCK_SCORE.total}
+              lhdnResult={MOCK_LHDN_RESULT}
+              avgGapDays={MOCK_SCORE.avgGapDays}
+              caseRef={stableCaseRef}
+              t={t}
+            />
+          </div>
+
           {/* DNA disclaimer */}
           <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: '#FEF3C7', border: '1px solid #FDE68A' }}>
             <span className="text-[10px] flex-shrink-0">⚠️</span>
@@ -1042,10 +1174,10 @@ export default function TenantScreen({
           {/* Action buttons */}
           <div className="pt-2 space-y-2">
             <button
-              onClick={() => alert('PDF export coming next session — see ARCH_CREDIT_SCORE.md build step 6.')}
+              onClick={() => alert('Trust Card export coming next session — see ARCH_CREDIT_SCORE.md build step 6 (business-card format · 85×55mm PDF + LBV QR).')}
               className="w-full py-3.5 rounded-xl text-[13px] font-bold text-white transition active:scale-[0.98] flex items-center justify-center gap-2"
               style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }}>
-              {t.exportPdf}
+              {t.exportCard}
             </button>
 
             {onSaveMemory && (
