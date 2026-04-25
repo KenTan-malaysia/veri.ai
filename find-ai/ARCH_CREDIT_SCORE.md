@@ -187,9 +187,9 @@ Each payment event classifies into one of five tiers:
 | 🔴 **Very late** | Paid 8+ days after due date | Cash flow / discipline issue |
 | 💀 **Default** | Carry-over to next bill or disconnection notice | Serious risk — likely to be late on rent too |
 
-### Scoring formula
+### Scoring formula — Behaviour Score (raw)
 
-100-point scale, weighted across four timing-derived factors:
+The Behaviour Score (0-100) is the raw quality of paying behaviour from the data we have, computed across four timing-derived factors:
 
 | Factor | Weight | How calculated |
 |---|---|---|
@@ -198,9 +198,49 @@ Each payment event classifies into one of five tiers:
 | **Worst single event** | 15% | Catches "looks fine on average but had a 30-day late period." Score = 100 - (max late days × 3), floored at 0. |
 | **Disconnection events** | 10% | Binary fail flag. If any disconnection notice in the period: 0. Else: 100. Severe events trigger a hard cap on final score. |
 
-Final score = weighted sum, rounded to nearest integer. Range: 0-100.
+Behaviour Score = weighted sum, rounded to nearest integer. Range: 0-100.
 
-**Why this rewards what landlords actually want:** predictable, proactive payers. A tenant who consistently pays 5 days early with ±2 day variance scores ~95-98. A tenant who randomly pays anywhere from 10 days early to 10 days late, even if "always paid eventually," scores in the 60s — landlord sees "Erratic" badge and knows.
+### Trust Score = Behaviour × Confidence (v3.4.4 fairness lock)
+
+> **Ken's fairness call:** A tenant who provides 1 bill should NOT get the same headline score as one who provides 6 bills, even if both show perfect payment. Same behaviour quality, different confidence in our judgment. The headline score must reflect both.
+
+**Trust Score = Behaviour Score × Confidence Multiplier · Range: 0-100**
+
+The Confidence Multiplier reflects evidence depth (how much data backs the Behaviour Score):
+
+| Evidence depth | Multiplier | Confidence tier |
+|---|---|---|
+| LHDN ✓ + 3 utilities (TNB + Water + Mobile) | **1.00** | **Mature** — full data |
+| LHDN ✓ + 2 utilities | **0.85** | **Established** — solid coverage |
+| LHDN ✓ + 1 utility | **0.70** | **Provisional** — partial coverage |
+| LHDN ✓ + 0 utilities (identity-only) | **0.55** | **Initial** — minimal data |
+| LHDN ✗ + 3 utilities (behaviour-only) | **0.75** | **Provisional** |
+| LHDN ✗ + 2 utilities (behaviour-only) | **0.65** | **Provisional** |
+| LHDN ✗ + 1 utility | **0.50** | **Initial** |
+| LHDN ✗ + 0 utilities | **0.30** | **Initial** — should not reach scoring |
+
+### Worked examples — same perfect behaviour (95), different evidence
+
+| Tenant | Evidence | Behaviour | Multiplier | **Trust Score** |
+|---|---|---|---|---|
+| A — power tenant | LHDN + 3 utilities | 95 | × 1.00 | **95** |
+| B — typical | LHDN + 2 utilities | 95 | × 0.85 | **81** |
+| C — light evidence | LHDN + 1 utility | 95 | × 0.70 | **67** |
+| D — first-time renter | No LHDN + 1 utility | 95 | × 0.50 | **48** |
+| E — identity-only | LHDN + 0 utilities | n/a | × 0.55 | **52** |
+
+Same paying quality (95). Different headline scores. Fair, transparent, and motivates tenants to upload more evidence.
+
+### Why this is fair
+
+| Concern | Resolution |
+|---|---|
+| Short-term tenants penalized for tenancy LENGTH? | NO — length doesn't affect the multiplier. Only evidence COUNT does. |
+| 6-doc tenant always wins over 1-doc tenant with same behaviour? | YES — but transparently shown as Behaviour 95 × Confidence 70% = Trust 67, not as "bad behaviour." |
+| Landlord misled by single number? | NO — Trust Score IS the single number, but Behaviour + Confidence + Tier all visible in drill-in. |
+| Tenant who lost old bills can't recover? | They can re-request bills from utility provider OR accept the lower Trust Score with full Behaviour visible. |
+| Find.ai unfairly gatekeeping? | NO — landlord still decides. DNA reaffirmed: Find.ai surfaces evidence, decision rests with landlord. |
+| Tenant motivation for honesty? | YES — gamification: more uploads = higher Trust Score. Landlord-side incentive to push tenants for full evidence. |
 
 ### Multi-utility cross-check
 

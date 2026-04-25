@@ -104,7 +104,19 @@ const STR = {
     confBehaviourOnly: 'Behaviour-only · No LHDN anchor',
     confLimited: 'Limited data · {n} of 3 utilities',
 
-    s4Title: 'Paying Behaviour Score',
+    s4Title: 'Trust Score',
+    s4SubBehaviour: 'Behaviour',
+    s4SubConfidence: 'Confidence',
+    s4Formula: 'Behaviour {b} × Confidence {c}%',
+    s4EffortHint: 'Upload more bills → Trust Score rises',
+    confTierMature: 'Mature',
+    confTierEstablished: 'Established',
+    confTierProvisional: 'Provisional',
+    confTierInitial: 'Initial',
+    confDescMature: 'Full data',
+    confDescEstablished: 'Solid coverage',
+    confDescProvisional: 'Partial coverage',
+    confDescInitial: 'Minimal data',
     timingHeader: 'Average payment timing',
     gapBefore: '{n} days BEFORE due date',
     gapAfter: '{n} days AFTER due date',
@@ -221,7 +233,19 @@ const STR = {
     confBehaviourOnly: 'Tingkah laku sahaja · Tiada anchor LHDN',
     confLimited: 'Data terhad · {n} daripada 3 utiliti',
 
-    s4Title: 'Skor Tingkah Laku Bayaran',
+    s4Title: 'Skor Amanah',
+    s4SubBehaviour: 'Tingkah laku',
+    s4SubConfidence: 'Keyakinan',
+    s4Formula: 'Tingkah laku {b} × Keyakinan {c}%',
+    s4EffortHint: 'Muat naik lebih bil → Skor Amanah meningkat',
+    confTierMature: 'Matang',
+    confTierEstablished: 'Mantap',
+    confTierProvisional: 'Sementara',
+    confTierInitial: 'Awal',
+    confDescMature: 'Data penuh',
+    confDescEstablished: 'Liputan kukuh',
+    confDescProvisional: 'Liputan separa',
+    confDescInitial: 'Data minimum',
     timingHeader: 'Purata masa bayaran',
     gapBefore: '{n} hari SEBELUM tarikh akhir',
     gapAfter: '{n} hari SELEPAS tarikh akhir',
@@ -338,7 +362,19 @@ const STR = {
     confBehaviourOnly: '仅行为 · 无 LHDN 锚定',
     confLimited: '数据有限 · 3 项中的 {n} 项',
 
-    s4Title: '付款行为评分',
+    s4Title: '信任分数',
+    s4SubBehaviour: '行为',
+    s4SubConfidence: '可信度',
+    s4Formula: '行为 {b} × 可信度 {c}%',
+    s4EffortHint: '上传更多账单 → 信任分数上升',
+    confTierMature: '成熟',
+    confTierEstablished: '稳定',
+    confTierProvisional: '临时',
+    confTierInitial: '初步',
+    confDescMature: '数据完整',
+    confDescEstablished: '覆盖良好',
+    confDescProvisional: '部分覆盖',
+    confDescInitial: '数据极少',
     timingHeader: '平均付款时间',
     gapBefore: '到期日前 {n} 天',
     gapAfter: '到期日后 {n} 天',
@@ -416,6 +452,36 @@ const MOCK_SCORE = {
 };
 
 const COVERAGE_MOCK_MONTHS = 14;
+
+// ─── Confidence multiplier — Trust Score = Behaviour × Confidence ────────────
+//
+// v3.4.4 (Ken's fairness call): a perfect-paying tenant who provides 1 bill
+// should NOT get the same Trust Score as one who provides 6 bills. The
+// behaviour quality is the same, but the confidence in our judgment is not.
+//
+// Multiplier table (locked in ARCH_CREDIT_SCORE.md):
+//   LHDN ✓ + 3 utilities     → 1.00 multiplier · Mature tier
+//   LHDN ✓ + 2 utilities     → 0.85 · Established
+//   LHDN ✓ + 1 utility       → 0.70 · Provisional
+//   LHDN ✓ + 0 utilities     → 0.55 · Initial (identity-only)
+//   LHDN ✗ + 3 utilities     → 0.75 · Provisional (behaviour-only)
+//   LHDN ✗ + 2 utilities     → 0.65 · Provisional (behaviour-only)
+//   LHDN ✗ + 1 utility       → 0.50 · Initial (minimal)
+//   LHDN ✗ + 0 utilities     → 0.30 · Initial (shouldn't reach scoring)
+//
+// Returns { mul, tierKey } — caller derives tier label from STR.
+function computeConfidence(lhdnVerified, billsCount) {
+  if (lhdnVerified) {
+    if (billsCount >= 3) return { mul: 1.00, tierKey: 'Mature' };
+    if (billsCount === 2) return { mul: 0.85, tierKey: 'Established' };
+    if (billsCount === 1) return { mul: 0.70, tierKey: 'Provisional' };
+    return { mul: 0.55, tierKey: 'Initial' };
+  }
+  if (billsCount >= 3) return { mul: 0.75, tierKey: 'Provisional' };
+  if (billsCount === 2) return { mul: 0.65, tierKey: 'Provisional' };
+  if (billsCount === 1) return { mul: 0.50, tierKey: 'Initial' };
+  return { mul: 0.30, tierKey: 'Initial' };
+}
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -834,12 +900,15 @@ function ScoreScale({ score, t }) {
 // glanceable in 2 seconds. The actual exported artifact (Phase 1 build step
 // 6) will render this same layout as a single-page PDF at business-card
 // dimensions plus a QR code that triggers Live Bound Verification.
-function TrustCardPreview({ tenantName, tenantIC, score, lhdnResult, avgGapDays, caseRef, t }) {
+function TrustCardPreview({ tenantName, tenantIC, score, behaviour, tierLabel, lhdnVerified, lhdnResult, avgGapDays, caseRef, t }) {
   const gapText = avgGapDays < 0
     ? t.cardEarlyDays.replace('{n}', String(Math.abs(avgGapDays)))
     : avgGapDays > 0
       ? t.cardLateDays.replace('{n}', String(avgGapDays))
       : t.cardOnTime;
+
+  // Star rating reflects Trust Score (not raw behaviour)
+  const stars = score >= 85 ? '★★★★★' : score >= 70 ? '★★★★' : score >= 55 ? '★★★' : score >= 40 ? '★★' : '★';
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{
@@ -865,11 +934,11 @@ function TrustCardPreview({ tenantName, tenantIC, score, lhdnResult, avgGapDays,
         <div>
           <div className="text-[15px] font-bold leading-tight" style={{ color: '#0f172a' }}>{tenantName || 'Tenant'}</div>
           <div className="text-[9.5px] mt-0.5" style={{ color: '#94a3b8' }}>
-            IC ····{tenantIC || 'XXXX'} · {t.cardVerified}
+            IC ····{tenantIC || 'XXXX'} · {lhdnVerified ? t.cardVerified : t.identityUnverified}
           </div>
         </div>
 
-        {/* Score row + star rating */}
+        {/* Trust Score + Behaviour breakdown */}
         <div className="flex items-end justify-between pt-1">
           <div>
             <div className="flex items-baseline gap-1.5">
@@ -877,11 +946,11 @@ function TrustCardPreview({ tenantName, tenantIC, score, lhdnResult, avgGapDays,
               <div className="text-[12px]" style={{ color: '#94a3b8' }}>/ 100</div>
             </div>
             <div className="text-[9.5px] font-bold mt-1.5" style={{ color: '#065f46' }}>
-              {t.upfrontTag} · {gapText}
+              {t.s4SubBehaviour} {behaviour} · {tierLabel}
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[11px] tracking-tight" style={{ color: '#B8893A' }}>★★★★★</div>
+            <div className="text-[11px] tracking-tight" style={{ color: '#B8893A' }}>{stars}</div>
             <div className="text-[8.5px] mt-0.5" style={{ color: '#94a3b8' }}>{lhdnResult?.months || 14} {t.months}</div>
           </div>
         </div>
@@ -980,6 +1049,17 @@ export default function TenantScreen({
   // Landlord sees clear "limited data" badge if they proceed with partial data.
   const billsCount = (tnbState.done ? 1 : 0) + (waterState.done ? 1 : 0) + (mobileState.done ? 1 : 0);
   const billsOk = billsCount >= 1;
+
+  // v3.4.4 (Ken): Trust Score = Behaviour × Confidence. Behaviour reflects
+  // how well they paid (mock 95). Confidence reflects evidence depth (varies
+  // by LHDN status + bill count). Different evidence = different Trust Score
+  // for the same behaviour quality. Fair, transparent, motivates more uploads.
+  const lhdnVerified = !!(lhdnResult && !lhdnResult.skipped);
+  const { mul: confMul, tierKey: confTierKey } = computeConfidence(lhdnVerified, billsCount);
+  const behaviourScore = MOCK_SCORE.total;            // mock 95
+  const trustScore = Math.round(behaviourScore * confMul);
+  const confTierLabel = t[`confTier${confTierKey}`] || confTierKey;
+  const confTierDesc  = t[`confDesc${confTierKey}`]  || '';
 
   const saveToCase = () => {
     if (!onSaveMemory) return;
@@ -1247,7 +1327,8 @@ export default function TenantScreen({
       {/* ═══ STEP 4 — SCORE REVEAL ═══ */}
       {step === 4 && (
         <div className="space-y-3 fade-in">
-          {/* Hero score card — navy. LHDN badge: green if verified, amber if skipped. */}
+          {/* Hero Trust Score card — navy. Trust Score = Behaviour × Confidence.
+              LHDN badge: green if verified, amber if skipped. */}
           <div className="p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
             <div className="flex items-center justify-between mb-2">
               <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>{t.s4Title}</div>
@@ -1260,19 +1341,40 @@ export default function TenantScreen({
                 <VerifiedBadge label="LHDN" />
               )}
             </div>
+
+            {/* Big Trust Score */}
             <div className="flex items-baseline gap-2 mt-1">
-              <div className="text-5xl font-bold text-white leading-none">{MOCK_SCORE.total}</div>
+              <div className="text-5xl font-bold text-white leading-none">{trustScore}</div>
               <div className="text-[14px]" style={{ color: 'rgba(255,255,255,0.5)' }}>/ 100</div>
             </div>
-            <div className="text-[12px] mt-3 pt-3" style={{ color: 'rgba(255,255,255,0.6)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              {lhdnResult?.skipped
-                ? `${t.confBehaviourOnly}`
-                : `${t.sourcedFrom} ${MOCK_LHDN_RESULT.months} ${t.monthsBills}`}
+
+            {/* Behaviour × Confidence breakdown */}
+            <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="flex items-center gap-2 text-[11px]" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                <span>{t.s4SubBehaviour}</span>
+                <span className="font-bold text-white">{behaviourScore}</span>
+                <span style={{ color: 'rgba(255,255,255,0.35)' }}>×</span>
+                <span>{t.s4SubConfidence}</span>
+                <span className="font-bold text-white">{Math.round(confMul * 100)}%</span>
+              </div>
+              <div className="text-[10px] mt-1.5 flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest" style={{ background: 'rgba(184,137,58,0.2)', color: '#B8893A' }}>{confTierLabel}</span>
+                <span>·</span>
+                <span>{confTierDesc}</span>
+                {!lhdnVerified && <><span>·</span><span>{t.identityUnverified}</span></>}
+              </div>
             </div>
           </div>
 
-          {/* T2 — Score benchmark scale (helps landlord interpret 94 vs 70 vs 51) */}
-          <ScoreScale score={MOCK_SCORE.total} t={t} />
+          {/* T2 — Score benchmark scale (helps landlord interpret Trust Score) */}
+          <ScoreScale score={trustScore} t={t} />
+
+          {/* Effort hint — gamification: more uploads = higher Trust Score */}
+          {confMul < 1.0 && (
+            <div className="text-[10.5px] text-center italic" style={{ color: '#94a3b8' }}>
+              {t.s4EffortHint}
+            </div>
+          )}
 
           {/* Landlord-judgment chip — surfaces when LHDN skipped or partial bills */}
           {(lhdnResult?.skipped || billsCount < 3) && (
@@ -1340,7 +1442,10 @@ export default function TenantScreen({
             <TrustCardPreview
               tenantName={tenantName}
               tenantIC={tenantIC}
-              score={MOCK_SCORE.total}
+              score={trustScore}
+              behaviour={behaviourScore}
+              tierLabel={confTierLabel}
+              lhdnVerified={lhdnVerified}
               lhdnResult={MOCK_LHDN_RESULT}
               avgGapDays={MOCK_SCORE.avgGapDays}
               caseRef={stableCaseRef}
