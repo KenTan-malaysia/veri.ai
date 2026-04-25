@@ -11,14 +11,18 @@ import { makeCaseRef } from '../../lib/pdfExport';
 // Model: LHDN cert is the identity gate (pass/fail) + utility bills are the
 // pure paying-behaviour score (0-100).
 //
+// 2026-04-25 update — UX revisions per Ken:
+//   - LHDN verification step now offers both KEY-IN NUMBER and UPLOAD PDF
+//     paths (tenant picks whichever is easier).
+//   - Third utility tile changed from IWK to MOBILE POSTPAID (stronger signal:
+//     monthly cycle, faster disconnection on non-payment, near-universal).
+//
 // THIS IS A MOCK DEMO BUILD:
-//   - Any LHDN cert # entered → returns fake "verified" data after a 1.4s spin
-//   - Any uploaded file → registers as a successful bill upload
+//   - Any LHDN cert # OR uploaded file → returns fake "verified" data
+//   - Any uploaded utility file → registers as a successful bill upload
 //   - Score is hardcoded to a high number (94/100) for the demo
 //   - Real OCR + real LHDN integration happens in later sessions per the
 //     8-step build order in ARCH_CREDIT_SCORE.md
-//
-// Replaces previous "Payment Discipline Scan" design (preserved in git history).
 // ────────────────────────────────────────────────────────────────────────────
 
 const DEMO_MODE = true;
@@ -38,9 +42,14 @@ const STR = {
     icLabel: 'IC last 4 digits',
     icPh: '4321',
     s2Title: 'LHDN tenancy verification',
-    s2Sub: 'Tenant provides their previous tenancy stamp certificate number. We cross-check it against the official LHDN STAMPS portal.',
+    s2Sub: 'Tenant provides their previous tenancy stamp certificate. We cross-check it against the official LHDN STAMPS portal.',
+    methodNumber: '⌨️  Key in number',
+    methodPdf: '📎  Upload PDF',
     certLabel: 'LHDN stamp certificate number',
     certPh: 'e.g. ABC1234567890',
+    pdfDropPrompt: 'Tap to upload LHDN cert PDF',
+    pdfDropHint: 'PDF or image · max 10 MB',
+    pdfReady: 'Ready to verify',
     verify: 'Verify with LHDN',
     verifying: 'Verifying with LHDN…',
     verified: 'LHDN VERIFIED',
@@ -55,7 +64,7 @@ const STR = {
     addBill: 'Add bill',
     tnb: 'TNB (Electricity)',
     water: 'Water (Air Selangor / SYABAS / etc)',
-    iwk: 'IWK (Sewerage) — optional',
+    mobile: 'Mobile postpaid (Maxis / CelcomDigi / U Mobile / Yes)',
     monthsCovered: 'months covered',
     seeScore: 'See paying behaviour score',
     needTwo: 'Upload at least TNB + Water to continue',
@@ -95,9 +104,14 @@ const STR = {
     icLabel: '4 digit akhir IC',
     icPh: '4321',
     s2Title: 'Pengesahan sewaan LHDN',
-    s2Sub: 'Penyewa memberi nombor sijil setem sewaan terdahulu. Kami semak silang dengan portal rasmi LHDN STAMPS.',
+    s2Sub: 'Penyewa memberi sijil setem sewaan terdahulu. Kami semak silang dengan portal rasmi LHDN STAMPS.',
+    methodNumber: '⌨️  Masukkan nombor',
+    methodPdf: '📎  Muat naik PDF',
     certLabel: 'Nombor sijil setem LHDN',
     certPh: 'cth. ABC1234567890',
+    pdfDropPrompt: 'Ketuk untuk muat naik PDF sijil LHDN',
+    pdfDropHint: 'PDF atau imej · maks 10 MB',
+    pdfReady: 'Sedia untuk sahkan',
     verify: 'Sahkan dengan LHDN',
     verifying: 'Mengesah dengan LHDN…',
     verified: 'DISAHKAN LHDN',
@@ -112,7 +126,7 @@ const STR = {
     addBill: 'Tambah bil',
     tnb: 'TNB (Elektrik)',
     water: 'Air (Air Selangor / SYABAS / dll)',
-    iwk: 'IWK (Pembentungan) — pilihan',
+    mobile: 'Pascabayar mudah alih (Maxis / CelcomDigi / U Mobile / Yes)',
     monthsCovered: 'bulan diliputi',
     seeScore: 'Lihat skor tingkah laku bayaran',
     needTwo: 'Muat naik sekurang-kurangnya TNB + Air untuk teruskan',
@@ -152,9 +166,14 @@ const STR = {
     icLabel: '身份证后4位',
     icPh: '4321',
     s2Title: 'LHDN 租赁验证',
-    s2Sub: '租客提供其上一份租赁合约的印花证书编号。我们与官方 LHDN STAMPS 门户交叉验证。',
+    s2Sub: '租客提供其上一份租赁合约的印花证书。我们与官方 LHDN STAMPS 门户交叉验证。',
+    methodNumber: '⌨️  输入编号',
+    methodPdf: '📎  上传 PDF',
     certLabel: 'LHDN 印花证书编号',
     certPh: '例：ABC1234567890',
+    pdfDropPrompt: '点击上传 LHDN 证书 PDF',
+    pdfDropHint: 'PDF 或图片 · 最大 10 MB',
+    pdfReady: '准备验证',
     verify: '通过 LHDN 验证',
     verifying: '正在通过 LHDN 验证…',
     verified: 'LHDN 已验证',
@@ -169,7 +188,7 @@ const STR = {
     addBill: '添加账单',
     tnb: 'TNB（电费）',
     water: '水费（Air Selangor / SYABAS 等）',
-    iwk: 'IWK（污水处理）— 选填',
+    mobile: '手机后付（Maxis / CelcomDigi / U Mobile / Yes）',
     monthsCovered: '个月覆盖',
     seeScore: '查看付款行为评分',
     needTwo: '至少上传 TNB + 水费才能继续',
@@ -211,6 +230,8 @@ const MOCK_LHDN_RESULT = {
 };
 
 // Mock score result — what the real scoring engine would return after OCR.
+// Third utility is now Mobile Postpaid (replaced IWK per Ken's call — stronger
+// behaviour signal: monthly cycle, faster disconnection on non-payment, near-universal).
 const MOCK_SCORE = {
   total: 94,
   paidOnTimePct: 100,
@@ -220,7 +241,7 @@ const MOCK_SCORE = {
   utilities: [
     { name: 'TNB', months: 14, onTime: 14, carry: 0, late: 0, disc: 0 },
     { name: 'Air Selangor', months: 14, onTime: 14, carry: 0, late: 0, disc: 0 },
-    { name: 'IWK', months: 14, onTime: 14, carry: 0, late: 0, disc: 0 },
+    { name: 'Maxis Postpaid', months: 14, onTime: 14, carry: 0, late: 0, disc: 0 },
   ],
 };
 
@@ -270,6 +291,78 @@ function VerifiedBadge({ label }) {
       </svg>
       {label}
     </span>
+  );
+}
+
+function MethodTabs({ value, onChange, t }) {
+  const opts = [
+    { id: 'number', label: t.methodNumber },
+    { id: 'pdf', label: t.methodPdf },
+  ];
+  return (
+    <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#f1f5f9' }}>
+      {opts.map((o) => {
+        const active = value === o.id;
+        return (
+          <button
+            key={o.id}
+            onClick={() => onChange(o.id)}
+            className="flex-1 py-2.5 rounded-lg text-[12px] font-bold transition active:scale-[0.98]"
+            style={active
+              ? { background: '#fff', color: '#0f172a', boxShadow: '0 1px 3px rgba(15,23,42,0.08)' }
+              : { background: 'transparent', color: '#64748b' }
+            }
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function PdfDropZone({ pdfName, onPick, t }) {
+  return (
+    <label
+      className="block rounded-xl cursor-pointer transition active:scale-[0.99]"
+      style={pdfName
+        ? { background: '#d1fae5', border: '1px dashed #65a30d' }
+        : { background: '#f8fafc', border: '1px dashed #cbd5e1' }
+      }
+    >
+      <div className="px-4 py-6 flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ background: pdfName ? '#065f46' : '#fff', boxShadow: pdfName ? 'none' : '0 1px 2px rgba(15,23,42,0.04)' }}
+        >
+          {pdfName ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" x2="12" y1="3" y2="15" />
+            </svg>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[13px] font-bold truncate" style={{ color: pdfName ? '#065f46' : '#0f172a' }}>
+            {pdfName || t.pdfDropPrompt}
+          </div>
+          <div className="text-[10.5px] mt-0.5 truncate" style={{ color: pdfName ? '#065f46' : '#94a3b8' }}>
+            {pdfName ? t.pdfReady : t.pdfDropHint}
+          </div>
+        </div>
+      </div>
+      <input
+        type="file"
+        accept="application/pdf,image/*"
+        className="hidden"
+        onChange={(e) => { if (e.target.files?.[0]) onPick(e.target.files[0].name); }}
+      />
+    </label>
   );
 }
 
@@ -344,13 +437,15 @@ export default function TenantScreen({
   const [tenantName, setTenantName] = useState(activeMemory?.tenant?.name || (DEMO_MODE ? MOCK_LHDN_RESULT.tenantName : ''));
   const [tenantIC, setTenantIC] = useState(activeMemory?.tenant?.icLast4 || (DEMO_MODE ? '4321' : ''));
 
-  // Step 2 state
+  // Step 2 state — dual-input: tenant picks number OR pdf
+  const [lhdnMethod, setLhdnMethod] = useState('number'); // 'number' | 'pdf'
   const [certNumber, setCertNumber] = useState(DEMO_MODE ? 'ABC1234567890' : '');
+  const [lhdnPdfName, setLhdnPdfName] = useState('');
   const [verifying, setVerifying] = useState(false);
   const [lhdnResult, setLhdnResult] = useState(null);
 
-  // Step 3 state
-  const [bills, setBills] = useState({ tnb: false, water: false, iwk: false });
+  // Step 3 state — TNB + Water + Mobile (Mobile replaces IWK per Ken's call)
+  const [bills, setBills] = useState({ tnb: false, water: false, mobile: false });
 
   // Step 4 state
   const [savedToCase, setSavedToCase] = useState(false);
@@ -358,9 +453,11 @@ export default function TenantScreen({
   const goNext = () => setStep((s) => Math.min(s + 1, 4));
   const goBack = () => setStep((s) => Math.max(s - 1, 0));
 
-  // Mock LHDN verification — 1.4s spinner, then return canonical mock data.
+  // Mock LHDN verification — accepts both number and PDF paths.
+  // 1.4s spinner, then return canonical mock data.
   const verifyWithLHDN = () => {
-    if (!certNumber.trim()) return;
+    const ready = lhdnMethod === 'number' ? !!certNumber.trim() : !!lhdnPdfName;
+    if (!ready) return;
     setVerifying(true);
     setTimeout(() => {
       setLhdnResult(MOCK_LHDN_RESULT);
@@ -368,7 +465,9 @@ export default function TenantScreen({
     }, 1400);
   };
 
-  const billsOk = bills.tnb && bills.water; // IWK optional
+  const verifyDisabled = verifying || (lhdnMethod === 'number' ? !certNumber.trim() : !lhdnPdfName);
+
+  const billsOk = bills.tnb && bills.water; // Mobile is optional
 
   // Save the screen result to case memory so chatbox + future tools can reference it.
   const saveToCase = () => {
@@ -409,7 +508,7 @@ export default function TenantScreen({
           <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded"
             style={{ background: '#92400E', color: '#fff' }}>DEMO</span>
           <span className="text-[11px] font-semibold" style={{ color: '#92400E' }}>
-            v0 mock — any cert # works · any uploaded file counts · score is hardcoded
+            v0 mock — any cert # / PDF works · any uploaded bill counts · score is hardcoded
           </span>
         </div>
       )}
@@ -466,7 +565,7 @@ export default function TenantScreen({
         </div>
       )}
 
-      {/* ═══ STEP 2 — LHDN CERT VERIFICATION ═══ */}
+      {/* ═══ STEP 2 — LHDN CERT VERIFICATION (dual-input: number OR PDF) ═══ */}
       {step === 2 && (
         <div className="space-y-4">
           <div>
@@ -477,33 +576,53 @@ export default function TenantScreen({
             <p className="text-[12px] mt-1 leading-relaxed" style={{ color: '#64748b' }}>{t.s2Sub}</p>
           </div>
 
-          <TextInput label={t.certLabel} value={certNumber} onChange={(v) => { setCertNumber(v); setLhdnResult(null); }} placeholder={t.certPh} mono />
-
           {!lhdnResult && (
-            <button
-              onClick={verifyWithLHDN}
-              disabled={!certNumber.trim() || verifying}
-              className="w-full py-3.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-40 transition active:scale-[0.98] flex items-center justify-center gap-2"
-              style={{ background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }}
-            >
-              {verifying ? (
-                <>
-                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <circle cx="12" cy="12" r="10" opacity="0.25" />
-                    <path d="M22 12a10 10 0 0 1-10 10" strokeLinecap="round" />
-                  </svg>
-                  {t.verifying}
-                </>
-              ) : (
-                <>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 12l2 2 4-4" />
-                    <path d="M12 2l8.5 4.7v7c0 4.5-3 8.5-8.5 10.3-5.5-1.8-8.5-5.8-8.5-10.3V6.7L12 2z" />
-                  </svg>
-                  {t.verify}
-                </>
+            <>
+              <MethodTabs value={lhdnMethod} onChange={(v) => { setLhdnMethod(v); setLhdnResult(null); }} t={t} />
+
+              {lhdnMethod === 'number' && (
+                <TextInput
+                  label={t.certLabel}
+                  value={certNumber}
+                  onChange={(v) => { setCertNumber(v); setLhdnResult(null); }}
+                  placeholder={t.certPh}
+                  mono
+                />
               )}
-            </button>
+
+              {lhdnMethod === 'pdf' && (
+                <PdfDropZone
+                  pdfName={lhdnPdfName}
+                  onPick={(name) => { setLhdnPdfName(name); setLhdnResult(null); }}
+                  t={t}
+                />
+              )}
+
+              <button
+                onClick={verifyWithLHDN}
+                disabled={verifyDisabled}
+                className="w-full py-3.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-40 transition active:scale-[0.98] flex items-center justify-center gap-2"
+                style={{ background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.2)' }}
+              >
+                {verifying ? (
+                  <>
+                    <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <circle cx="12" cy="12" r="10" opacity="0.25" />
+                      <path d="M22 12a10 10 0 0 1-10 10" strokeLinecap="round" />
+                    </svg>
+                    {t.verifying}
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 12l2 2 4-4" />
+                      <path d="M12 2l8.5 4.7v7c0 4.5-3 8.5-8.5 10.3-5.5-1.8-8.5-5.8-8.5-10.3V6.7L12 2z" />
+                    </svg>
+                    {t.verify}
+                  </>
+                )}
+              </button>
+            </>
           )}
 
           {lhdnResult && (
@@ -544,7 +663,7 @@ export default function TenantScreen({
         </div>
       )}
 
-      {/* ═══ STEP 3 — UTILITY BILLS ═══ */}
+      {/* ═══ STEP 3 — UTILITY BILLS (TNB + Water + Mobile) ═══ */}
       {step === 3 && (
         <div className="space-y-4">
           <div>
@@ -558,7 +677,7 @@ export default function TenantScreen({
           <div className="space-y-2.5">
             <BillTile label={t.tnb} uploaded={bills.tnb} onUpload={() => setBills((b) => ({ ...b, tnb: true }))} t={t} />
             <BillTile label={t.water} uploaded={bills.water} onUpload={() => setBills((b) => ({ ...b, water: true }))} t={t} />
-            <BillTile label={t.iwk} uploaded={bills.iwk} onUpload={() => setBills((b) => ({ ...b, iwk: true }))} t={t} />
+            <BillTile label={t.mobile} uploaded={bills.mobile} onUpload={() => setBills((b) => ({ ...b, mobile: true }))} t={t} />
           </div>
 
           {!billsOk && (
