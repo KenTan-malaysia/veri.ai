@@ -14,8 +14,26 @@
 
 import { useState, useEffect } from 'react';
 
+// v3.4.12 — repeat users skip the Welcome screen.
+// Set when the user ticks "Don't show again" on Welcome before tapping Let's go.
+// Cleared from inside Pick screen via the back arrow → Welcome (so they can
+// re-see the intro any time, then re-skip on next tap of Let's go).
+const SKIP_WELCOME_KEY = 'fi_skip_welcome_v1';
+
 export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp, onOpenScans, scansCount = 0, lang, setLang, hasSavedChat, onContinueChat }) {
   const [step, setStep] = useState('welcome'); // 'welcome' | 'pick'
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+
+  // On mount: if the user previously ticked "Don't show again" and tapped
+  // Let's go, jump straight to Pick. Brief 1-frame flash of Welcome may occur
+  // — acceptable trade-off for keeping SSR output stable.
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage.getItem(SKIP_WELCOME_KEY) === '1') {
+        setStep('pick');
+      }
+    } catch (e) { /* localStorage blocked — show welcome (safe default) */ }
+  }, []);
 
   const t = {
     en: {
@@ -28,6 +46,7 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
       welcomeEnd: '.',
       welcomeFine: 'Takes 2 minutes · Free · No sign-up',
       letsGo: 'Let\'s go →',
+      dontShowAgain: "Don't show this again",
       continueCase: 'Continue last case',
       // v9.6 T12 — "Your scans" history chip (only surfaces when scansCount > 0)
       yourScansOne:  'View your scan',
@@ -68,6 +87,7 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
       welcomeEnd: '.',
       welcomeFine: 'Ambil 2 minit · Percuma · Tiada pendaftaran',
       letsGo: 'Jom mula →',
+      dontShowAgain: 'Jangan tunjuk lagi',
       continueCase: 'Sambung kes terakhir',
       yourScansOne:  'Lihat saringan anda',
       yourScansMany: 'Lihat saringan anda · {n}',
@@ -102,6 +122,7 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
       welcomeEnd: '。',
       welcomeFine: '2 分钟 · 免费 · 无需注册',
       letsGo: '开始 →',
+      dontShowAgain: '不再显示',
       continueCase: '继续上次案件',
       yourScansOne:  '查看您的筛查',
       yourScansMany: '查看您的筛查 · {n}',
@@ -142,9 +163,31 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
   const nextLang = () => { haptic(8); const i = langs.indexOf(lang); setLang(langs[(i + 1) % langs.length]); };
 
   // Flow handlers
-  const handleLetsGo   = () => { haptic(12); setStep('pick'); };
+  const handleLetsGo = () => {
+    haptic(12);
+    // If the user ticked "don't show again", remember it so next visit skips Welcome.
+    try {
+      if (typeof window !== 'undefined') {
+        if (dontShowAgain) {
+          window.localStorage.setItem(SKIP_WELCOME_KEY, '1');
+        } else {
+          window.localStorage.removeItem(SKIP_WELCOME_KEY);
+        }
+      }
+    } catch (e) { /* ignore — no harm if write fails */ }
+    setStep('pick');
+  };
   const handleContinue = () => { haptic(12); onContinueChat && onContinueChat(); };
-  const handleBack     = () => { haptic(8); setStep('welcome'); };
+  const handleBack = () => {
+    haptic(8);
+    // Going back to Welcome resets the skip flag so they can see the intro
+    // and re-decide on the checkbox. Otherwise it'd be sticky-skipped forever.
+    try {
+      if (typeof window !== 'undefined') window.localStorage.removeItem(SKIP_WELCOME_KEY);
+    } catch (e) {}
+    setDontShowAgain(false);
+    setStep('welcome');
+  };
   const handlePick = (id) => {
     haptic([20, 40, 20]); // confirm-tap buzz, matches launching-the-tool feel
     if (id === 'screen' && onOpenScreen) { onOpenScreen(); return; }
@@ -376,6 +419,35 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     .v9-tile-eye .v9-tile-eye-sub {
       color: #9C7A3A; /* slightly muted from the primary eyebrow */
     }
+
+    /* v3.4.12 — "Don't show this again" checkbox above Let's go button.
+       Quiet, tappable, ≥36px tap target. Soft slate text so it never
+       competes with the primary CTA below. Native checkbox styled lightly. */
+    .v9-skip-row {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 12px; cursor: pointer;
+      padding: 8px 12px; min-height: 36px;
+      user-select: none; -webkit-tap-highlight-color: transparent;
+    }
+    .v9-skip-row input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none;
+      width: 18px; height: 18px; border-radius: 5px;
+      border: 1.5px solid #C8BFA8; background: #FFFFFF;
+      cursor: pointer; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .v9-skip-row input[type="checkbox"]:checked {
+      background: #0F1E3F; border-color: #0F1E3F;
+    }
+    .v9-skip-row input[type="checkbox"]:checked::after {
+      content: '✓'; color: #FFFFFF; font-size: 12px; font-weight: 900;
+      line-height: 1; transform: translateY(-1px);
+    }
+    .v9-skip-row label {
+      font-size: 12.5px; color: #5A6780; font-weight: 600;
+      cursor: pointer; letter-spacing: -0.005em;
+    }
   `;
 
   const ProgressDots = ({ active }) => (
@@ -450,6 +522,18 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
           </div>
 
           <div style={{ marginTop: 'auto' }}>
+            {/* v3.4.12 — repeat-user UX. Tick → next visit skips Welcome,
+                lands directly on Pick. Tap back arrow on Pick to re-see. */}
+            <div className="v9-skip-row" onClick={() => setDontShowAgain((v) => !v)}>
+              <input
+                type="checkbox"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+                onClick={(e) => e.stopPropagation()}
+                aria-label={c.dontShowAgain}
+              />
+              <label onClick={(e) => e.stopPropagation()}>{c.dontShowAgain}</label>
+            </div>
             <button className="v9-btn-primary" onClick={handleLetsGo}>{c.letsGo}</button>
             {hasSavedChat && (
               <button className="v9-btn-ghost" onClick={handleContinue}>{c.continueCase}</button>
