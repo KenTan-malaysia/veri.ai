@@ -1,24 +1,31 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.15 — **chatbox debug saga**: fixed via Anthropic SDK upgrade 0.39 → 0.91 (Vercel Node 24 was crashing on deprecated `url.parse()`) + switched model alias from dated `claude-haiku-4-5-20251001` to undated `claude-haiku-4-5` (Anthropic returned 400 on dated alias with new SDK). **Awaiting Ken's confirmation that chat works on canonical URL `find-ai-lovat.vercel.app`** — Ken was previously testing on a stale deployment-specific URL `find-psd1pt5p3-...` which served the old broken build. Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.16 — **chatbox saga RESOLVED**: root cause was Anthropic credit balance running out (Anthropic returns 400 for billing errors). Code fully fixed along the way: SDK upgraded 0.39 → 0.91, model switched to claude-3-5-haiku-20241022, streaming errors now wrapped in try/catch with detailed logging + graceful chat-UI error display. Once Ken adds credits at console.anthropic.com/settings/billing, chat works immediately. Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
-## 🟡 PICK UP HERE — chatbox status unverified
+## ✅ CHATBOX SAGA RESOLVED — credit balance was the root cause
 
-**What happened this session:**
-1. Ken reported "chatbox not working" → I audited code (clean) → identified Vercel `FUNCTION_INVOCATION_FAILED` from outdated `@anthropic-ai/sdk@0.39.0` (used deprecated `url.parse()` that Vercel Node 24 runtime threw on)
-2. Ken upgraded to `@anthropic-ai/sdk@0.91.x` → new error: Anthropic returned 400 Bad Request on the model name
-3. Diagnosed model name issue: `claude-haiku-4-5-20251001` (dated alias) was being rejected → switched to `claude-haiku-4-5` (undated alias, latest Haiku 4.5 snapshot)
-4. Discovered Ken had been testing on a STALE Vercel deployment URL (`find-psd1pt5p3-kentan-malaysias-projects.vercel.app`) — a frozen old build — instead of the canonical `find-ai-lovat.vercel.app` → all his "still broken" tests were on the OLD code
-5. Ken left to test on the correct canonical URL — **NOT YET CONFIRMED WORKING**
+**Final diagnosis (after 3-layer debug journey):**
+1. Layer 1 — `@anthropic-ai/sdk@0.39.0` (April 2024) crashed on Vercel Node 24 due to deprecated `url.parse()`. **Fixed:** upgraded to `@anthropic-ai/sdk@^0.91.x`.
+2. Layer 2 — After SDK upgrade, function still crashed because streaming errors weren't caught (Anthropic 4xx mid-stream → `FUNCTION_INVOCATION_FAILED`). **Fixed:** wrapped `for await (const event of stream)` in try/catch with detailed `console.error` logging + graceful error message piped back to chat UI as ⚠️ assistant message.
+3. **Layer 3 (root cause)** — Anthropic API was returning 400 Bad Request with body: *"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."* The 400 isn't a code bug — Anthropic uses 400 (instead of 402) for billing errors. Ken's account ran out of credits. **Fix:** Ken needs to add credits at https://console.anthropic.com/settings/billing — once funded, chat works immediately, no code/deploy change needed.
 
-**First thing to do next session:** Ask Ken: *"Did chat work after testing on https://find-ai-lovat.vercel.app (with a hard refresh Ctrl+Shift+R)?"*
+**Code state after debugging:**
+- Anthropic SDK pinned at `^0.91.x`
+- Model alias: `claude-3-5-haiku-20241022` (cheap + stable; can experiment back to `claude-haiku-4-5` after credits funded if Ken's workspace has access)
+- Streaming error wrapper around `for await (const event of stream)` returns errors as chat messages instead of crashing
+- Detailed `console.error` lines (`=== STREAM ERROR ===`) in Vercel logs surface actual Anthropic error body for future debugging
 
-- If YES → done, move on (suggest: continue pilot recruitment, or Sprint 2 polish)
-- If STILL broken → Ken to share Vercel logs from the LATEST deployment (commit `fe0409e` or newer) showing the External APIs section. Possible next causes: Anthropic account doesn't have Haiku 4.5 access (try `claude-3-5-haiku-20241022` fallback), or system prompt is too long, or message format issue with new SDK
+**Sticky lessons added to memory for future Zeus sessions:**
 
-**Critical Vercel URL hygiene rule for Ken:** when testing the live site, ALWAYS use `https://find-ai-lovat.vercel.app` — never the deployment-specific URLs (`find-psd1pt5p3-...`, `find-ai-git-main-...`, etc.) which can be frozen to old builds.
+| Rule | Why |
+|---|---|
+| **Always test on `https://find-ai-lovat.vercel.app`** (canonical Production URL) | Vercel keeps deployment-specific URLs (`find-psd1pt5p3-...`, `find-ai-git-main-...`) frozen to specific commits. Ken spent hours testing the old broken build because he was on the wrong URL. |
+| **Wrap streaming loops in try/catch** | Without it, mid-stream errors → `FUNCTION_INVOCATION_FAILED` with no useful logs. Always catch + console.error the full error object. |
+| **Anthropic returns 400 for billing errors** (not 402) | If chat 400s with no obvious model/format issue, check `console.anthropic.com/settings/billing` first — credit balance is a common cause. |
+| **For pilot/MVP, use `claude-3-5-haiku-20241022`** | On every Anthropic account, cheap (~$0.25/$1.25 per million tokens), fast. Upgrade to Haiku 4.5 / Sonnet only when pilot demands it. |
+| **When Ken asks "save everything", regenerate FINDAI_MEMORY.md** | Doctrine from memory-management skill. |
 
 ---
 
@@ -335,7 +342,9 @@ Stamp Act 1949 (Item 32(a) + s.52, s.36A, s.62) · Finance Act 2025 (SDSAS) · B
 
 ## 8. VERSION HISTORY
 
-- **v3.4.15 (2026-04-26 — THIS SAVE POINT) — CHATBOX DEBUG SAGA.** Ken reported chat broken → systematic Vercel debug. **Root causes (3 stacked):** (1) `@anthropic-ai/sdk@^0.39.0` (April 2024) used deprecated Node `url.parse()` which Vercel Node 24 runtime crashes on → `FUNCTION_INVOCATION_FAILED`. **Fix:** upgraded to `@anthropic-ai/sdk@^0.91.x`. (2) After SDK upgrade, Anthropic returned 400 on model `claude-haiku-4-5-20251001` (dated alias). **Fix:** switched chat route to `claude-haiku-4-5` (undated alias, resolves to latest Haiku 4.5 snapshot). Comment in route.js documents why. (3) Ken had been testing on a STALE Vercel deployment-specific URL `find-psd1pt5p3-kentan-malaysias-projects.vercel.app` (frozen to commit 2bcecf0, the OLD code) instead of the canonical Production URL `find-ai-lovat.vercel.app`. All "still broken" tests were against the old build. **Fix:** told Ken to always test on `find-ai-lovat.vercel.app` with hard refresh. **Status:** fixes pushed and deployed; awaiting Ken's confirmation that chat works on canonical URL. Files: `package.json` (sdk version), `package-lock.json`, `src/app/api/chat/route.js` (model alias + comment), this file. **Vercel URL hygiene rule** added to memory for future sessions.
+- **v3.4.16 (2026-04-26 — THIS SAVE POINT) — CHATBOX SAGA RESOLVED + CREDIT BALANCE WAS ROOT CAUSE.** After all the SDK upgrade + model alias fixes, the actual root cause turned out to be Ken's Anthropic API account running out of credits. Anthropic returns 400 (not 402) for billing errors — easy to misdiagnose as a code/model bug. **The diagnostic build paid off:** v3.4.16 added a try/catch around the `for await (const event of stream)` loop with `console.error('=== STREAM ERROR ===')` block + piped the actual Anthropic error message back to the chat UI as a ⚠️ assistant message. As soon as Ken pushed v3.4.16 and tested, the chat dock displayed the literal Anthropic error: *"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."* **Fix for Ken:** add credits at https://console.anthropic.com/settings/billing — $10-25 lasts weeks for pilot traffic on Haiku 3.5. No code change or redeploy needed; once funded, chat works immediately. **Sticky lessons added to top-of-memory:** always test on canonical URL `find-ai-lovat.vercel.app` (not deployment-specific URLs), wrap streaming loops in try/catch, Anthropic returns 400 (not 402) for billing errors. Files: `src/app/api/chat/route.js` (streaming wrapper + detailed logging + comment block documenting the v3.4.15 → v3.4.16 changes), this file.
+
+- **v3.4.15 (2026-04-26)** — CHATBOX DEBUG SAGA. Ken reported chat broken → systematic Vercel debug. **Root causes (3 stacked):** (1) `@anthropic-ai/sdk@^0.39.0` (April 2024) used deprecated Node `url.parse()` which Vercel Node 24 runtime crashes on → `FUNCTION_INVOCATION_FAILED`. **Fix:** upgraded to `@anthropic-ai/sdk@^0.91.x`. (2) After SDK upgrade, Anthropic returned 400 on model `claude-haiku-4-5-20251001` (dated alias). **Fix:** switched chat route to `claude-haiku-4-5` (undated alias, resolves to latest Haiku 4.5 snapshot). Comment in route.js documents why. (3) Ken had been testing on a STALE Vercel deployment-specific URL `find-psd1pt5p3-kentan-malaysias-projects.vercel.app` (frozen to commit 2bcecf0, the OLD code) instead of the canonical Production URL `find-ai-lovat.vercel.app`. All "still broken" tests were against the old build. **Fix:** told Ken to always test on `find-ai-lovat.vercel.app` with hard refresh. **Status:** fixes pushed and deployed; awaiting Ken's confirmation that chat works on canonical URL. Files: `package.json` (sdk version), `package-lock.json`, `src/app/api/chat/route.js` (model alias + comment), this file. **Vercel URL hygiene rule** added to memory for future sessions.
 
 - **v3.4.14 (2026-04-26)** — Anthropic SDK upgraded ^0.39.0 → ^0.91.x via `npm install @anthropic-ai/sdk@latest`. Triggered by Vercel `FUNCTION_INVOCATION_FAILED` whose function logs showed `[DEP0169] DeprecationWarning: url.parse() behavior is no...`. Rotated `ANTHROPIC_API_KEY` first (Ken accidentally shared old key in chat — burned, revoked, new key generated at console.anthropic.com, added to Vercel env, redeployed). Files: `package.json`, `package-lock.json`.
 
