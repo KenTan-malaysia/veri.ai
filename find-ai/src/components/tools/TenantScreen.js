@@ -116,6 +116,14 @@ const STR = {
     methodologyTitle: 'How the Trust Score works',
     methodologyBody: 'Two parts: BEHAVIOUR (how well the tenant paid past utility bills, based on payment timing relative to due date) × CONFIDENCE (how much evidence backs that judgment — more bills + LHDN-verified tenancy = higher confidence). Both numbers are visible above. The exact algorithm is proprietary; categories are public. Read more: HOW_TRUST_SCORE_WORKS.md',
     methodologyDecision: 'Find.ai surfaces evidence. The rental decision rests with you, the landlord.',
+    scenarioHeader: 'See how the score adapts to shared evidence',
+    scenarioSub: 'Same tenant — different evidence depth = different Trust Score',
+    scenarioFull: '🌳 Full evidence',
+    scenarioPartial: '🌿 Partial evidence',
+    scenarioLimited: '🌱 Limited evidence',
+    scenarioFullDesc: 'LHDN ✓ + 3 utility bills',
+    scenarioPartialDesc: 'LHDN ✓ + 1 utility bill',
+    scenarioLimitedDesc: 'LHDN skipped + 1 utility bill',
     confTierMature: 'Mature',
     confTierEstablished: 'Established',
     confTierProvisional: 'Provisional',
@@ -132,9 +140,9 @@ const STR = {
     predictHigh: 'Highly predictable',
     predictMid: 'Somewhat predictable',
     predictLow: 'Erratic',
-    upfrontTag: '✓ Upfront tenant',
-    onTimeTag: '✓ On-time tenant',
-    lateTag: '⚠ Late tenant',
+    upfrontTag: '✓ Upfront payment pattern',
+    onTimeTag: '✓ On-time payment pattern',
+    lateTag: '⚠ Late payment pattern',
     tierUpfront: 'Upfront',
     tierOnTime: 'On-time',
     tierLate: 'Late',
@@ -254,6 +262,14 @@ const STR = {
     methodologyTitle: 'Cara Skor Amanah berfungsi',
     methodologyBody: 'Dua bahagian: TINGKAH LAKU (sebaik mana penyewa bayar bil utiliti lepas, berdasarkan masa bayaran berbanding tarikh akhir) × KEYAKINAN (banyak mana bukti menyokong penilaian — lebih bil + sewaan disahkan LHDN = keyakinan lebih tinggi). Kedua-dua nombor ditunjukkan di atas. Algoritma tepat adalah proprietari; kategori adalah awam.',
     methodologyDecision: 'Find.ai memaparkan bukti. Keputusan menyewa terletak pada anda, tuan rumah.',
+    scenarioHeader: 'Lihat bagaimana skor berubah dengan bukti yang dikongsi',
+    scenarioSub: 'Penyewa sama — kedalaman bukti berbeza = Skor Amanah berbeza',
+    scenarioFull: '🌳 Bukti penuh',
+    scenarioPartial: '🌿 Bukti separa',
+    scenarioLimited: '🌱 Bukti terhad',
+    scenarioFullDesc: 'LHDN ✓ + 3 bil utiliti',
+    scenarioPartialDesc: 'LHDN ✓ + 1 bil utiliti',
+    scenarioLimitedDesc: 'LHDN dilangkau + 1 bil utiliti',
     confTierMature: 'Matang',
     confTierEstablished: 'Mantap',
     confTierProvisional: 'Sementara',
@@ -270,9 +286,9 @@ const STR = {
     predictHigh: 'Sangat boleh diramal',
     predictMid: 'Sederhana boleh diramal',
     predictLow: 'Tidak konsisten',
-    upfrontTag: '✓ Penyewa awal',
-    onTimeTag: '✓ Penyewa tepat masa',
-    lateTag: '⚠ Penyewa lewat',
+    upfrontTag: '✓ Corak bayaran awal',
+    onTimeTag: '✓ Corak bayaran tepat masa',
+    lateTag: '⚠ Corak bayaran lewat',
     tierUpfront: 'Awal',
     tierOnTime: 'Tepat masa',
     tierLate: 'Lewat',
@@ -392,6 +408,14 @@ const STR = {
     methodologyTitle: '信任分数的工作原理',
     methodologyBody: '两部分：行为（基于付款时间相对于到期日，租客过往支付公用事业账单的表现）× 可信度（多少证据支撑此判断 — 更多账单 + LHDN 已验证租赁 = 更高可信度）。两个数字均显示在上方。具体算法专有；类别公开。',
     methodologyDecision: 'Find.ai 呈现证据。租赁决定权在您，房东。',
+    scenarioHeader: '查看分数如何随分享的证据变化',
+    scenarioSub: '同一租客 — 证据深度不同 = 信任分数不同',
+    scenarioFull: '🌳 完整证据',
+    scenarioPartial: '🌿 部分证据',
+    scenarioLimited: '🌱 有限证据',
+    scenarioFullDesc: 'LHDN ✓ + 3 项公用事业账单',
+    scenarioPartialDesc: 'LHDN ✓ + 1 项公用事业账单',
+    scenarioLimitedDesc: '已跳过 LHDN + 1 项公用事业账单',
     confTierMature: '成熟',
     confTierEstablished: '稳定',
     confTierProvisional: '临时',
@@ -408,9 +432,9 @@ const STR = {
     predictHigh: '高度可预测',
     predictMid: '中等可预测',
     predictLow: '不稳定',
-    upfrontTag: '✓ 提前付款租客',
-    onTimeTag: '✓ 准时付款租客',
-    lateTag: '⚠ 迟付款租客',
+    upfrontTag: '✓ 提前付款模式',
+    onTimeTag: '✓ 准时付款模式',
+    lateTag: '⚠ 迟付款模式',
     tierUpfront: '提前',
     tierOnTime: '准时',
     tierLate: '迟付',
@@ -776,76 +800,37 @@ function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t })
         </div>
       )}
 
-      {/* Account # input — two sub-states:
-            1. Type account # → tap "Verify on {provider}" → opens portal in new tab + sets verified=true
-            2. After verified → "Mark verified" button → done */}
+      {/* Account # input — v3.4.17 collapsed to 1-click (was 2-click).
+            Tap "Verify on {provider}" → opens portal in new tab AND
+            immediately marks tile done. User comes back from new tab and
+            sees the green completed state. No separate "Mark verified" step.
+            (Per Ken: "why need 2 click?") */}
       {method === 'acct' && (
         <div className="px-3.5 pb-3.5 space-y-2.5">
-          <TextInput value={value} onChange={(v) => setState({ ...state, value: v, verified: false })} placeholder={ph} mono inputMode="numeric" />
+          <TextInput value={value} onChange={(v) => setState({ ...state, value: v })} placeholder={ph} mono inputMode="numeric" />
 
-          {/* Sub-state 1: not yet verified — show deep-link button */}
-          {!verified && (
-            <>
-              <a
-                href={deepLinkUrl || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => { if (value.trim()) setState({ ...state, verified: true }); }}
-                className={`block w-full py-3 rounded-lg text-[13px] font-bold text-center transition active:scale-[0.98] ${value.trim() ? '' : 'pointer-events-none opacity-40'}`}
-                style={{ background: '#0f172a', color: '#fff', textDecoration: 'none' }}
-              >
-                {t.verifyOnExternal.replace('{provider}', deepLinkLabel || 'provider')}
-              </a>
-              <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
-                {t.demoNoteAcct.replace(/\{provider\}/g, deepLinkLabel || 'provider')}
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setState({ ...state, method: null })}
-                  className="flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition active:scale-95"
-                  style={{ background: '#fff', color: '#475569', border: '1px solid #e2e8f0' }}
-                >
-                  {t.back}
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* Sub-state 2: verified flag set — show "mark verified" final step */}
-          {verified && (
-            <>
-              <div className="p-3 rounded-lg flex items-start gap-2.5"
-                style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[12px] font-bold" style={{ color: '#15803d' }}>
-                    {t.portalOpened.replace('{provider}', deepLinkLabel || 'provider')}
-                  </div>
-                  <div className="text-[10.5px] mt-0.5 leading-snug" style={{ color: '#15803d' }}>
-                    {t.portalOpenedHint.replace('{provider}', deepLinkLabel || 'provider')}
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setState({ ...state, verified: false })}
-                  className="px-4 py-2.5 rounded-lg text-[12px] font-semibold transition active:scale-95"
-                  style={{ background: '#fff', color: '#475569', border: '1px solid #e2e8f0' }}
-                >
-                  {t.back}
-                </button>
-                <button
-                  onClick={() => setState({ ...state, done: true })}
-                  className="flex-1 py-2.5 rounded-lg text-[12px] font-bold text-white transition active:scale-[0.98]"
-                  style={{ background: '#0f172a' }}
-                >
-                  {t.markVerified}
-                </button>
-              </div>
-            </>
-          )}
+          <a
+            href={deepLinkUrl || '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => { if (value.trim()) setState({ ...state, done: true }); }}
+            className={`block w-full py-3 rounded-lg text-[13px] font-bold text-center transition active:scale-[0.98] ${value.trim() ? '' : 'pointer-events-none opacity-40'}`}
+            style={{ background: '#0f172a', color: '#fff', textDecoration: 'none' }}
+          >
+            {t.verifyOnExternal.replace('{provider}', deepLinkLabel || 'provider')}
+          </a>
+          <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
+            {t.demoNoteAcct.replace(/\{provider\}/g, deepLinkLabel || 'provider')}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setState({ ...state, method: null })}
+              className="flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition active:scale-95"
+              style={{ background: '#fff', color: '#475569', border: '1px solid #e2e8f0' }}
+            >
+              {t.back}
+            </button>
+          </div>
         </div>
       )}
 
@@ -1141,6 +1126,9 @@ export default function TenantScreen({
   // Step 4 state
   const [savedToCase, setSavedToCase] = useState(false);
 
+  // v3.4.17 — DEMO Evidence Scenario toggle (only active when DEMO_MODE)
+  const [demoScenario, setDemoScenario] = useState(null); // null | 'full' | 'partial' | 'limited'
+
   const goNext = () => setStep((s) => Math.min(s + 1, 4));
   const goBack = () => setStep((s) => Math.max(s - 1, 0));
 
@@ -1185,8 +1173,25 @@ export default function TenantScreen({
   // how well they paid (mock 95). Confidence reflects evidence depth (varies
   // by LHDN status + bill count). Different evidence = different Trust Score
   // for the same behaviour quality. Fair, transparent, motivates more uploads.
-  const lhdnVerified = !!(lhdnResult && !lhdnResult.skipped);
-  const { mul: confMul, tierKey: confTierKey } = computeConfidence(lhdnVerified, billsCount);
+  const actualLhdnVerified = !!(lhdnResult && !lhdnResult.skipped);
+
+  // v3.4.17 — Evidence Scenario toggle (DEMO only).
+  // Per Ken: "don't judge tenants — show how the score adapts to evidence."
+  // When demoScenario is set, override the actualLhdnVerified + billsCount
+  // with the scenario values so landlords can see how the SAME tenant gets
+  // different Trust Scores based on what they shared. Default null = use
+  // whatever the user actually clicked through.
+  const SCENARIOS = {
+    full:    { lhdnVerified: true,  billsCount: 3, shown: { tnb: true,  water: true,  mobile: true  } },
+    partial: { lhdnVerified: true,  billsCount: 1, shown: { tnb: true,  water: false, mobile: false } },
+    limited: { lhdnVerified: false, billsCount: 1, shown: { tnb: false, water: false, mobile: true  } },
+  };
+  const scenarioOverride = demoScenario ? SCENARIOS[demoScenario] : null;
+  const lhdnVerified = scenarioOverride ? scenarioOverride.lhdnVerified : actualLhdnVerified;
+  const effectiveBillsCount = scenarioOverride ? scenarioOverride.billsCount : billsCount;
+  const utilityShown = scenarioOverride ? scenarioOverride.shown : { tnb: tnbState.done, water: waterState.done, mobile: mobileState.done };
+
+  const { mul: confMul, tierKey: confTierKey } = computeConfidence(lhdnVerified, effectiveBillsCount);
   const behaviourScore = MOCK_SCORE.total;            // mock 95
   const trustScore = Math.round(behaviourScore * confMul);
   const confTierLabel = t[`confTier${confTierKey}`] || confTierKey;
@@ -1482,18 +1487,66 @@ export default function TenantScreen({
       {/* ═══ STEP 4 — SCORE REVEAL ═══ */}
       {step === 4 && (
         <div className="space-y-3 fade-in">
+
+          {/* v3.4.17 — Evidence Scenario picker (DEMO only).
+              Per Ken: "show how the score adapts to evidence, don't judge tenants."
+              Same tenant, different evidence depth → different Trust Score.
+              Lets pilots see how the system responds to evidence quality without
+              labeling anyone as a "good" or "bad" tenant. */}
+          {DEMO_MODE && (
+            <div className="p-3 rounded-xl" style={{ background: '#FEF3C7', border: '1px solid #FDE68A' }}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded" style={{ background: '#92400E', color: '#fff' }}>DEMO</span>
+                <span className="text-[10.5px] font-bold" style={{ color: '#92400E' }}>{t.scenarioHeader}</span>
+              </div>
+              <p className="text-[10px] mb-2 leading-snug" style={{ color: '#92400E' }}>{t.scenarioSub}</p>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { key: 'full',    label: t.scenarioFull,    desc: t.scenarioFullDesc },
+                  { key: 'partial', label: t.scenarioPartial, desc: t.scenarioPartialDesc },
+                  { key: 'limited', label: t.scenarioLimited, desc: t.scenarioLimitedDesc },
+                ].map((s) => {
+                  const active = demoScenario === s.key;
+                  return (
+                    <button
+                      key={s.key}
+                      onClick={() => setDemoScenario(active ? null : s.key)}
+                      className="p-2 rounded-lg text-left transition active:scale-95"
+                      style={active
+                        ? { background: '#0f172a', color: '#fff', border: '1px solid #0f172a' }
+                        : { background: '#fff', color: '#92400E', border: '1px solid #FDE68A' }
+                      }
+                    >
+                      <div className="text-[10.5px] font-bold leading-tight">{s.label}</div>
+                      <div className="text-[9px] mt-1 leading-tight" style={{ opacity: 0.75 }}>{s.desc}</div>
+                    </button>
+                  );
+                })}
+              </div>
+              {demoScenario && (
+                <button
+                  onClick={() => setDemoScenario(null)}
+                  className="text-[10px] font-semibold mt-2 underline"
+                  style={{ color: '#92400E', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  ← Back to actual data
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Hero Trust Score card — navy. Trust Score = Behaviour × Confidence.
               LHDN badge: green if verified, amber if skipped. */}
           <div className="p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
             <div className="flex items-center justify-between mb-2">
               <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>{t.s4Title}</div>
-              {lhdnResult?.skipped ? (
+              {lhdnVerified ? (
+                <VerifiedBadge label="LHDN" />
+              ) : (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest"
                   style={{ background: '#92400E', color: '#fff' }}>
                   ⊘ {t.lhdnSkipped}
                 </span>
-              ) : (
-                <VerifiedBadge label="LHDN" />
               )}
             </div>
 
@@ -1542,17 +1595,17 @@ export default function TenantScreen({
           )}
 
           {/* Landlord-judgment chip — surfaces when LHDN skipped or partial bills */}
-          {(lhdnResult?.skipped || billsCount < 3) && (
+          {(!lhdnVerified || effectiveBillsCount < 3) && (
             <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: '#FEF3C7', border: '1px solid #FDE68A' }}>
               <span className="text-[10px] flex-shrink-0">⚠️</span>
               <div className="flex-1">
                 <div className="text-[11px] font-bold" style={{ color: '#92400E' }}>{t.confLandlordJudgment}</div>
                 <div className="text-[10.5px] mt-0.5" style={{ color: '#92400E' }}>
-                  {lhdnResult?.skipped && billsCount < 3
-                    ? `${t.identityUnverified} · ${t.confLimited.replace('{n}', String(billsCount))}`
-                    : lhdnResult?.skipped
+                  {!lhdnVerified && effectiveBillsCount < 3
+                    ? `${t.identityUnverified} · ${t.confLimited.replace('{n}', String(effectiveBillsCount))}`
+                    : !lhdnVerified
                       ? t.identityUnverified
-                      : t.confLimited.replace('{n}', String(billsCount))}
+                      : t.confLimited.replace('{n}', String(effectiveBillsCount))}
                 </div>
               </div>
             </div>
@@ -1591,7 +1644,7 @@ export default function TenantScreen({
               Honest mock: if landlord skipped Water, no Water card here. */}
           <div className="space-y-2">
             {MOCK_SCORE.utilities
-              .filter((_u, i) => (i === 0 ? tnbState.done : i === 1 ? waterState.done : mobileState.done))
+              .filter((_u, i) => (i === 0 ? utilityShown.tnb : i === 1 ? utilityShown.water : utilityShown.mobile))
               .map((u) => (
                 <UtilityTimingCard key={u.name} utility={u} t={t} />
               ))}
@@ -1635,10 +1688,10 @@ export default function TenantScreen({
               const lhdnLine = lhdnVerified
                 ? `✓ LHDN tenancy verified · ${MOCK_LHDN_RESULT.months} months at ${MOCK_LHDN_RESULT.address.split(',')[0]}`
                 : '⊘ LHDN not verified — landlord judgment required';
-              const utilLine = `${billsCount} of 3 utility bills · ` + [
-                tnbState.done && 'TNB',
-                waterState.done && 'Air Selangor',
-                mobileState.done && 'Maxis Postpaid',
+              const utilLine = `${effectiveBillsCount} of 3 utility bills · ` + [
+                utilityShown.tnb && 'TNB',
+                utilityShown.water && 'Air Selangor',
+                utilityShown.mobile && 'Maxis Postpaid',
               ].filter(Boolean).join(' · ');
               const waMsg =
 `🛡️ Find.ai Trust Card
