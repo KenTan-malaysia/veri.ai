@@ -97,7 +97,10 @@ const STR = {
     monthsCovered: 'months covered',
     seeScore: 'See paying behaviour score',
     needTwo: 'Add at least 1 utility for paying-behaviour signal',
-    scaleHeader: 'Where this score sits',
+    scaleHeader: 'Trust Score breakdown',
+    scaleBehaviourLabel: 'Behaviour (paying quality)',
+    scaleTrustLabel: 'Trust Score (after confidence)',
+    scaleEquals: 'equals',
     tierRisky: 'Risky',
     tierMixed: 'Mixed',
     tierSolid: 'Solid',
@@ -253,7 +256,10 @@ const STR = {
     monthsCovered: 'bulan diliputi',
     seeScore: 'Lihat skor tingkah laku bayaran',
     needTwo: 'Tambah sekurang-kurangnya 1 utiliti untuk isyarat tingkah laku bayaran',
-    scaleHeader: 'Kedudukan skor ini',
+    scaleHeader: 'Pecahan Skor Amanah',
+    scaleBehaviourLabel: 'Tingkah laku (kualiti bayaran)',
+    scaleTrustLabel: 'Skor Amanah (selepas keyakinan)',
+    scaleEquals: 'sama dengan',
     tierRisky: 'Berisiko',
     tierMixed: 'Bercampur',
     tierSolid: 'Mantap',
@@ -409,7 +415,10 @@ const STR = {
     monthsCovered: '个月覆盖',
     seeScore: '查看付款行为评分',
     needTwo: '至少添加 1 项公用事业以获得付款行为信号',
-    scaleHeader: '此分数所处位置',
+    scaleHeader: '信任分数详解',
+    scaleBehaviourLabel: '行为（付款质量）',
+    scaleTrustLabel: '信任分数（应用可信度后）',
+    scaleEquals: '等于',
     tierRisky: '风险',
     tierMixed: '中等',
     tierSolid: '稳健',
@@ -994,28 +1003,99 @@ function HelpHint({ title, body }) {
 //
 // Horizontal gradient bar with a marker at the actual score position.
 // Helps landlords interpret "94/100" vs "70" vs "51" — what's good?
-function ScoreScale({ score, t }) {
-  const pos = Math.max(0, Math.min(100, score));
+// v3.4.20 — ScoreScale redesigned to match analyst-target-price reference
+// (Ken's screenshot of stock-analyst Avg Target Price visualization).
+// Two markers on same gradient bar:
+//   • Behaviour Score (above) — what the tenant actually paid like
+//   • Trust Score (below) — score after Confidence multiplier
+// The visual GAP between markers tells the story of evidence depth:
+//   • No gap → full evidence (markers aligned)
+//   • Big gap → partial evidence pulled the headline score down
+// Math row at bottom: Behaviour × Confidence = Trust Score (educational).
+function ScoreScale({ behaviourScore, trustScore, confMul, confTierLabel, t }) {
+  const behaviourPos = Math.max(2, Math.min(98, behaviourScore)); // clamp slightly so markers don't fall off the edge
+  const trustPos = Math.max(2, Math.min(98, trustScore));
+  const markersOverlap = Math.abs(behaviourPos - trustPos) < 4;
+
   return (
-    <div className="p-3 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #edf0f4' }}>
-      <div className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
-        {t.scaleHeader}
-      </div>
-      <div className="relative h-2 rounded-full overflow-hidden mb-2" style={{
-        background: 'linear-gradient(to right, #ef4444 0%, #f59e0b 39%, #84cc16 69%, #10b981 84%, #10b981 100%)',
-      }}>
-        {/* Marker at score position */}
-        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
-          style={{ left: `${pos}%` }}>
-          <div className="w-3 h-3 rounded-full bg-white"
-            style={{ border: '2px solid #0f172a', boxShadow: '0 1px 4px rgba(15,23,42,0.4)' }} />
+    <div className="rounded-2xl p-4" style={{ background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+      {/* Header */}
+      <div className="text-center mb-4">
+        <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#94a3b8' }}>
+          {t.scaleHeader}
         </div>
       </div>
-      <div className="flex justify-between text-[9px] font-semibold" style={{ color: '#475569' }}>
+
+      {/* Behaviour label + value (above bar) */}
+      <div className="text-center mb-1.5">
+        <div className="text-[10px]" style={{ color: '#64748b' }}>{t.scaleBehaviourLabel}</div>
+        <div className="text-[20px] font-bold leading-none mt-0.5" style={{ color: '#0f172a' }}>{behaviourScore}</div>
+      </div>
+
+      {/* The bar with two markers */}
+      <div className="relative h-3 rounded-full mb-1.5" style={{
+        background: 'linear-gradient(to right, #ef4444 0%, #f59e0b 39%, #84cc16 69%, #10b981 84%, #10b981 100%)',
+      }}>
+        {/* Behaviour marker (top, slightly above bar) */}
+        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
+          style={{ left: `${behaviourPos}%` }}>
+          <div className="rounded-full bg-white"
+            style={{
+              width: 18, height: 18,
+              border: '3px solid #0f172a',
+              boxShadow: '0 2px 6px rgba(15,23,42,0.35)',
+            }} />
+        </div>
+        {/* Trust Score marker (only show separately if not overlapping with Behaviour) */}
+        {!markersOverlap && (
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
+            style={{ left: `${trustPos}%` }}>
+            <div className="rounded-full"
+              style={{
+                width: 18, height: 18,
+                background: '#fff',
+                border: '3px solid #B8893A',
+                boxShadow: '0 2px 6px rgba(184,137,58,0.35)',
+              }} />
+          </div>
+        )}
+      </div>
+
+      {/* Trust Score label + value (below bar) */}
+      <div className="text-center mb-3">
+        <div className="text-[10px]" style={{ color: '#64748b' }}>{t.scaleTrustLabel}</div>
+        <div className="text-[20px] font-bold leading-none mt-0.5" style={{ color: '#B8893A' }}>{trustScore}</div>
+      </div>
+
+      {/* Range arrow line + tier band labels */}
+      <div className="relative mt-1 mb-2">
+        <div className="h-px" style={{ background: '#cbd5e1' }} />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2"
+          style={{ width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderRight: '6px solid #cbd5e1' }} />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2"
+          style={{ width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '6px solid #cbd5e1' }} />
+      </div>
+      <div className="flex justify-between text-[9px] font-semibold mb-3" style={{ color: '#94a3b8' }}>
         <span>{t.tierRisky}</span>
         <span>{t.tierMixed}</span>
         <span>{t.tierSolid}</span>
         <span>{t.tierOutstandingScale} ★</span>
+      </div>
+
+      {/* Math row: Behaviour × Confidence = Trust Score */}
+      <div className="grid grid-cols-3 gap-2 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
+        <div className="text-center">
+          <div className="text-[9px] uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.s4SubBehaviour}</div>
+          <div className="text-[16px] font-bold mt-0.5" style={{ color: '#0f172a' }}>{behaviourScore}</div>
+        </div>
+        <div className="text-center" style={{ borderLeft: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9' }}>
+          <div className="text-[9px] uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.s4SubConfidence}</div>
+          <div className="text-[16px] font-bold mt-0.5" style={{ color: '#0f172a' }}>{Math.round(confMul * 100)}%</div>
+        </div>
+        <div className="text-center">
+          <div className="text-[9px] uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.s4Title}</div>
+          <div className="text-[16px] font-bold mt-0.5" style={{ color: '#B8893A' }}>{trustScore}</div>
+        </div>
       </div>
     </div>
   );
@@ -1604,8 +1684,17 @@ export default function TenantScreen({
             </div>
           </div>
 
-          {/* T2 — Score benchmark scale (helps landlord interpret Trust Score) */}
-          <ScoreScale score={trustScore} t={t} />
+          {/* T2 — Score benchmark scale (v3.4.20 redesigned to dual-marker style)
+              Shows Behaviour × Confidence = Trust Score visually. Two markers
+              on the bar: Behaviour (navy) and Trust Score (gold). The gap
+              between them = how much evidence depth pulled the headline down. */}
+          <ScoreScale
+            behaviourScore={behaviourScore}
+            trustScore={trustScore}
+            confMul={confMul}
+            confTierLabel={confTierLabel}
+            t={t}
+          />
 
           {/* Methodology link — public-tier disclosure of how the Trust Score
               works. Builds trust at the moment of decision. Implementation per
