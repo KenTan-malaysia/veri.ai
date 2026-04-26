@@ -124,6 +124,16 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 utility bills',
     scenarioPartialDesc: 'LHDN ✓ + 1 utility bill',
     scenarioLimitedDesc: 'LHDN skipped + 1 utility bill',
+    verifyHeader: '🛡️ Bill verification',
+    verifyDemoNote: 'In production, each bill is checked against 5 fraud signals',
+    verifyTemplate: 'Bill template matches TNB / utility format',
+    verifyAddress: 'Service address matches LHDN tenancy',
+    verifyExif: 'Photo metadata: original capture',
+    verifyAccount: 'Account number consistent across bills',
+    verifyCycle: 'Billing dates are sequential',
+    verifyAllPassed: 'All checks passed',
+    verifyPartial: 'Partial verification',
+    verifyConfidence: 'Verification confidence',
     confTierMature: 'Mature',
     confTierEstablished: 'Established',
     confTierProvisional: 'Provisional',
@@ -270,6 +280,16 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 bil utiliti',
     scenarioPartialDesc: 'LHDN ✓ + 1 bil utiliti',
     scenarioLimitedDesc: 'LHDN dilangkau + 1 bil utiliti',
+    verifyHeader: '🛡️ Pengesahan bil',
+    verifyDemoNote: 'Dalam pengeluaran, setiap bil disemak terhadap 5 isyarat penipuan',
+    verifyTemplate: 'Templat bil sepadan dengan format TNB / utiliti',
+    verifyAddress: 'Alamat servis sepadan dengan sewaan LHDN',
+    verifyExif: 'Metadata foto: tangkapan asal',
+    verifyAccount: 'Nombor akaun konsisten merentas bil',
+    verifyCycle: 'Tarikh bil berurutan',
+    verifyAllPassed: 'Semua semakan lulus',
+    verifyPartial: 'Pengesahan sebahagian',
+    verifyConfidence: 'Keyakinan pengesahan',
     confTierMature: 'Matang',
     confTierEstablished: 'Mantap',
     confTierProvisional: 'Sementara',
@@ -416,6 +436,16 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 项公用事业账单',
     scenarioPartialDesc: 'LHDN ✓ + 1 项公用事业账单',
     scenarioLimitedDesc: '已跳过 LHDN + 1 项公用事业账单',
+    verifyHeader: '🛡️ 账单验证',
+    verifyDemoNote: '生产版中，每张账单将通过 5 项防欺诈信号检查',
+    verifyTemplate: '账单模板符合 TNB / 公用事业格式',
+    verifyAddress: '服务地址与 LHDN 租赁地址匹配',
+    verifyExif: '照片元数据：原始拍摄',
+    verifyAccount: '账户编号在多张账单间一致',
+    verifyCycle: '账单日期按顺序排列',
+    verifyAllPassed: '所有检查通过',
+    verifyPartial: '部分验证',
+    verifyConfidence: '验证可信度',
     confTierMature: '成熟',
     confTierEstablished: '稳定',
     confTierProvisional: '临时',
@@ -1669,6 +1699,39 @@ export default function TenantScreen({
               caseRef={stableCaseRef}
               t={t}
             />
+          </div>
+
+          {/* v3.4.18 — Bill Verification panel.
+              UI placeholder showing the planned Tier 1 fraud-defense lattice
+              (per ARCH_BILL_VERIFICATION.md). v0 mock simulates all checks as
+              passed; v1 production wires the actual Claude-vision OCR + EXIF
+              + address match + account consistency + cycle sequence checks.
+              Pilots see this UI to understand the planned defense AND to
+              build trust that bill photos won't be fakeable in production. */}
+          <div className="rounded-xl overflow-hidden" style={{ background: '#fff', border: '1px solid #e2e8f0' }}>
+            <div className="px-3.5 py-2.5 flex items-center justify-between" style={{ background: '#f8fafc', borderBottom: '1px solid #edf0f4' }}>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold" style={{ color: '#0f172a' }}>{t.verifyHeader}</span>
+                <span className="text-[8.5px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded" style={{ background: '#FEF3C7', color: '#92400E' }}>DEMO</span>
+              </div>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded" style={{ background: '#d1fae5', color: '#065f46' }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {t.verifyAllPassed}
+              </span>
+            </div>
+            <div className="px-3.5 py-2.5 space-y-1">
+              {[t.verifyTemplate, t.verifyAddress, t.verifyExif, t.verifyAccount, t.verifyCycle].map((check, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span className="text-[10.5px] leading-snug" style={{ color: '#475569' }}>{check}</span>
+                </div>
+              ))}
+            </div>
+            <div className="px-3.5 py-2 italic text-[9.5px]" style={{ color: '#94a3b8', borderTop: '1px solid #f1f5f9' }}>
+              {t.verifyDemoNote}
+            </div>
           </div>
 
           {/* DNA disclaimer */}
