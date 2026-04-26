@@ -225,13 +225,35 @@ export async function POST(request) {
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
-        for await (const event of stream) {
-          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
+        // v3.4.16 — wrap the streaming loop in try/catch. Without this, if the
+        // SDK throws mid-stream (e.g. Anthropic returns 4xx after we've already
+        // returned the response headers), Vercel reports
+        // FUNCTION_INVOCATION_FAILED with no useful error to the client.
+        // Now we log the full error and surface it to the chat UI gracefully.
+        try {
+          for await (const event of stream) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
+            }
           }
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        } catch (streamErr) {
+          console.error('=== STREAM ERROR ===');
+          console.error('message:', streamErr?.message);
+          console.error('status:', streamErr?.status);
+          console.error('headers:', JSON.stringify(streamErr?.headers || {}));
+          console.error('error body:', JSON.stringify(streamErr?.error || streamErr?.response || {}));
+          console.error('full error:', JSON.stringify(streamErr, Object.getOwnPropertyNames(streamErr || {})));
+          const errMsg = streamErr?.error?.error?.message
+            || streamErr?.error?.message
+            || streamErr?.message
+            || 'Streaming error from Anthropic';
+          // Push the error as a chat message so user sees it instead of "Server error"
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: `\n\n⚠️ ${errMsg}` })}\n\n`));
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
         }
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-        controller.close();
       },
     });
 
