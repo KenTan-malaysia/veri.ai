@@ -39,6 +39,17 @@ const STR = {
     of: 'of',
     s1Title: 'Tenant identity',
     s1Sub: 'Enter what the tenant told you. We will verify it next.',
+    returningTenantHeader: '🔄 Has this tenant been screened by Find.ai before?',
+    returningTenantPh: 'Phone or IC last 4',
+    returningTenantLookup: '🔍 Look up existing Trust Score',
+    returningTenantOr: '— or —',
+    returningTenantNew: '↓ Continue with new screening',
+    returningTenantFound: '✓ Found existing Trust Score',
+    returningTenantFoundDesc: 'Verified {months} months ago by Landlord {handle} · Trust Score {score}/100 ({tier})',
+    returningTenantReuse: 'Re-use this score',
+    returningTenantRefresh: 'Refresh with latest bills',
+    returningTenantNotFound: 'No existing profile found — proceed with new screening below',
+    returningTenantDemoNote: 'Demo: any phone/IC returns a mock previous score. In production, lookup queries the tenant profile DB and triggers Live Bound Verification (LBV) for the tenant to release their score.',
     nameLabel: 'Full name (per MyKad)',
     namePh: 'Ahmad bin Ali',
     icLabel: "Tenant's IC last 4 digits",
@@ -177,6 +188,7 @@ const STR = {
     cardBrand: 'TRUST CARD',
     cardSub: 'Business-card format · WhatsApp shareable',
     cardVerified: 'MyDigital ID verified',
+    cardPermanentRecord: 'Permanent record · re-usable for future rentals',
     cardEarlyDays: '{n} days early',
     cardLateDays: '{n} days late',
     cardOnTime: 'On the day',
@@ -202,6 +214,17 @@ const STR = {
     of: 'daripada',
     s1Title: 'Identiti penyewa',
     s1Sub: 'Masukkan apa yang penyewa beritahu anda. Kami akan sahkan seterusnya.',
+    returningTenantHeader: '🔄 Pernah disaring oleh Find.ai sebelum ini?',
+    returningTenantPh: 'Telefon atau 4 digit IC',
+    returningTenantLookup: '🔍 Cari Skor Amanah sedia ada',
+    returningTenantOr: '— atau —',
+    returningTenantNew: '↓ Teruskan dengan saringan baru',
+    returningTenantFound: '✓ Skor Amanah sedia ada dijumpai',
+    returningTenantFoundDesc: 'Disahkan {months} bulan lepas oleh Tuan rumah {handle} · Skor Amanah {score}/100 ({tier})',
+    returningTenantReuse: 'Guna semula skor ini',
+    returningTenantRefresh: 'Segarkan dengan bil terkini',
+    returningTenantNotFound: 'Tiada profil sedia ada — teruskan dengan saringan baru di bawah',
+    returningTenantDemoNote: 'Demo: mana-mana telefon/IC mengembalikan skor mock. Dalam pengeluaran, carian kueri DB profil penyewa dan mencetuskan Pengesahan Terikat Hidup (LBV) untuk penyewa membenarkan skor mereka.',
     nameLabel: 'Nama penuh (ikut MyKad)',
     namePh: 'Ahmad bin Ali',
     icLabel: '4 digit akhir IC penyewa',
@@ -340,6 +363,7 @@ const STR = {
     cardBrand: 'KAD AMANAH',
     cardSub: 'Format kad bisnes · boleh dikongsi WhatsApp',
     cardVerified: 'Disahkan MyDigital ID',
+    cardPermanentRecord: 'Rekod kekal · boleh diguna semula untuk sewaan akan datang',
     cardEarlyDays: '{n} hari awal',
     cardLateDays: '{n} hari lewat',
     cardOnTime: 'Pada hari itu',
@@ -365,6 +389,17 @@ const STR = {
     of: '/ 共',
     s1Title: '租客身份',
     s1Sub: '输入租客告诉您的信息。我们将在下一步验证。',
+    returningTenantHeader: '🔄 此租客之前曾被 Find.ai 筛查过吗？',
+    returningTenantPh: '电话或身份证后4位',
+    returningTenantLookup: '🔍 查询现有信任分数',
+    returningTenantOr: '— 或 —',
+    returningTenantNew: '↓ 继续新筛查',
+    returningTenantFound: '✓ 找到现有信任分数',
+    returningTenantFoundDesc: '由房东 {handle} 于 {months} 个月前验证 · 信任分数 {score}/100（{tier}）',
+    returningTenantReuse: '使用此分数',
+    returningTenantRefresh: '使用最新账单刷新',
+    returningTenantNotFound: '未找到现有档案 — 继续下方新筛查',
+    returningTenantDemoNote: '演示：任何电话/身份证返回模拟先前分数。生产版中，查询会调用租客档案数据库并触发实时绑定验证（LBV）让租客释放其分数。',
     nameLabel: '全名（按身份证）',
     namePh: 'Ahmad bin Ali',
     icLabel: '租客身份证后4位',
@@ -503,6 +538,7 @@ const STR = {
     cardBrand: '信任卡',
     cardSub: '名片格式 · 可通过 WhatsApp 分享',
     cardVerified: 'MyDigital ID 已验证',
+    cardPermanentRecord: '永久记录 · 可用于未来租赁',
     cardEarlyDays: '提前 {n} 天',
     cardLateDays: '迟 {n} 天',
     cardOnTime: '当天',
@@ -1224,6 +1260,15 @@ function TrustCardPreview({ tenantName, tenantIC, score, behaviour, tierLabel, l
           <span className="text-[8.5px] font-mono" style={{ color: '#94a3b8' }}>{(caseRef || 'FA-XXXX').slice(0, 9)}</span>
         </div>
       </div>
+
+      {/* v3.4.23 — "Permanent record" badge per ARCH_USER_PROFILES.md.
+          Signals to tenants that this Trust Score is a portable artifact —
+          they can re-use it for future rentals via Find.ai's tenant profile
+          + LBV (Live Bound Verification). Subtle, never the headline. */}
+      <div className="px-4 py-1.5 text-center text-[8px] uppercase tracking-widest font-semibold"
+        style={{ background: '#0f172a', color: 'rgba(184,137,58,0.85)' }}>
+        🔄 {t.cardPermanentRecord}
+      </div>
     </div>
   );
 }
@@ -1250,6 +1295,10 @@ export default function TenantScreen({
   // Step 1 state
   const [tenantName, setTenantName] = useState(activeMemory?.tenant?.name || (DEMO_MODE ? MOCK_LHDN_RESULT.tenantName : ''));
   const [tenantIC, setTenantIC] = useState(activeMemory?.tenant?.icLast4 || (DEMO_MODE ? '4321' : ''));
+
+  // v3.4.23 — Returning tenant lookup (DEMO placeholder for ARCH_USER_PROFILES.md)
+  const [lookupQuery, setLookupQuery] = useState('');
+  const [lookupResult, setLookupResult] = useState(null); // null | 'found' | 'notfound'
 
   // Step 2 state — dual-input: tenant picks number OR pdf
   const [lhdnMethod, setLhdnMethod] = useState('number'); // 'number' | 'pdf'
@@ -1410,6 +1459,101 @@ export default function TenantScreen({
             <h4 className="text-[16px] font-bold" style={{ color: '#0f172a' }}>{t.s1Title}</h4>
             <p className="text-[12px] mt-1" style={{ color: '#64748b' }}>{t.s1Sub}</p>
           </div>
+
+          {/* v3.4.23 — Returning tenant lookup placeholder (DEMO).
+              Shows pilots the planned portable Trust Score concept per
+              ARCH_USER_PROFILES.md. In production: queries tenant profile DB
+              + triggers LBV (push to tenant phone, live face match, then
+              score released to landlord). For demo: any input returns mock
+              result with re-use / refresh choice. */}
+          <div className="rounded-xl overflow-hidden" style={{ background: '#fff', border: '1px solid #FDE68A' }}>
+            <div className="px-3.5 py-2.5 flex items-center gap-2" style={{ background: '#FEF3C7' }}>
+              <span className="text-[11px] font-bold" style={{ color: '#92400E' }}>{t.returningTenantHeader}</span>
+              <span className="text-[8.5px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ml-auto" style={{ background: '#92400E', color: '#fff' }}>DEMO</span>
+            </div>
+            <div className="px-3.5 py-3 space-y-2">
+              {!lookupResult && (
+                <>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={lookupQuery}
+                      onChange={(e) => setLookupQuery(e.target.value)}
+                      placeholder={t.returningTenantPh}
+                      inputMode="numeric"
+                      className="flex-1 rounded-lg px-3 py-2 text-[13px] font-mono focus:outline-none"
+                      style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a' }}
+                    />
+                    <button
+                      onClick={() => {
+                        if (lookupQuery.trim()) {
+                          setLookupResult('found'); // mock always returns found in DEMO
+                        }
+                      }}
+                      disabled={!lookupQuery.trim()}
+                      className="px-3 py-2 rounded-lg text-[11.5px] font-bold text-white disabled:opacity-40 transition active:scale-95"
+                      style={{ background: '#0f172a' }}
+                    >
+                      {t.returningTenantLookup}
+                    </button>
+                  </div>
+                  <div className="text-[10px] text-center italic" style={{ color: '#94a3b8' }}>{t.returningTenantOr}</div>
+                </>
+              )}
+
+              {lookupResult === 'found' && (
+                <div className="p-3 rounded-lg space-y-2" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                  <div className="flex items-center gap-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span className="text-[12px] font-bold" style={{ color: '#15803d' }}>{t.returningTenantFound}</span>
+                  </div>
+                  <div className="text-[10.5px] leading-snug" style={{ color: '#15803d' }}>
+                    {t.returningTenantFoundDesc
+                      .replace('{months}', '2')
+                      .replace('{handle}', 'L***rd A')
+                      .replace('{score}', '95')
+                      .replace('{tier}', 'Mature')}
+                  </div>
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      onClick={() => {
+                        setTenantName(MOCK_LHDN_RESULT.tenantName);
+                        setTenantIC('4321');
+                        setLhdnResult(MOCK_LHDN_RESULT);
+                        setTnbState({ ...blank, done: true, method: 'file' });
+                        setWaterState({ ...blank, done: true, method: 'file' });
+                        setMobileState({ ...blank, done: true, method: 'file' });
+                        setStep(4); // jump straight to score reveal
+                      }}
+                      className="flex-1 py-2 rounded-lg text-[11px] font-bold text-white transition active:scale-95"
+                      style={{ background: '#0f172a' }}
+                    >
+                      {t.returningTenantReuse}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setTenantName(MOCK_LHDN_RESULT.tenantName);
+                        setTenantIC('4321');
+                        setLookupResult(null);
+                        setLookupQuery('');
+                      }}
+                      className="flex-1 py-2 rounded-lg text-[11px] font-semibold transition active:scale-95"
+                      style={{ background: '#fff', color: '#475569', border: '1px solid #e2e8f0' }}
+                    >
+                      {t.returningTenantRefresh}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <p className="text-[9.5px] italic leading-snug" style={{ color: '#94a3b8' }}>{t.returningTenantDemoNote}</p>
+            </div>
+          </div>
+
+          <div className="text-[10px] text-center font-semibold" style={{ color: '#94a3b8' }}>{t.returningTenantNew}</div>
+
           <TextInput label={t.nameLabel} value={tenantName} onChange={setTenantName} placeholder={t.namePh} />
           <div>
             <TextInput label={t.icLabel} value={tenantIC} onChange={setTenantIC} placeholder={t.icPh} mono inputMode="numeric" />
