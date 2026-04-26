@@ -59,10 +59,13 @@ const STR = {
     pdfDropPrompt: 'Tap to upload LHDN cert PDF',
     pdfDropHint: 'PDF or image · max 10 MB',
     pdfReady: 'Ready to verify',
-    verify: '🔗 Verify on LHDN STAMPS',
+    verify: '🔗 Open LHDN STAMPS',
     verifying: 'Verifying with LHDN…',
     verified: 'LHDN VERIFIED',
-    lhdnDemoNote: 'In production, this deep-links to LHDN STAMPS Pengesahan Ketulenan with the cert # pre-filled. For demo, opens the LHDN portal home — return to Find.ai after.',
+    uploadScreenshot: '📎 Upload screenshot',
+    uploadScreenshotShort: '📎 Upload',
+    screenshotUploaded: 'Screenshot uploaded · verifying',
+    lhdnDemoNote: 'Step 1: tap Open LHDN STAMPS → opens portal in new tab. Step 2: screenshot the verification page. Step 3: come back here and tap Upload screenshot. (In production, the cert # auto-fills the portal.)',
     verifiedTenancy: 'Verified previous tenancy',
     period: 'Period',
     address: 'Address',
@@ -219,10 +222,13 @@ const STR = {
     pdfDropPrompt: 'Ketuk untuk muat naik PDF sijil LHDN',
     pdfDropHint: 'PDF atau imej · maks 10 MB',
     pdfReady: 'Sedia untuk sahkan',
-    verify: '🔗 Sahkan di LHDN STAMPS',
+    verify: '🔗 Buka LHDN STAMPS',
     verifying: 'Mengesah dengan LHDN…',
     verified: 'DISAHKAN LHDN',
-    lhdnDemoNote: 'Dalam pengeluaran, ini deep-link ke LHDN STAMPS Pengesahan Ketulenan dengan no. sijil pra-isi. Untuk demo, buka portal LHDN — kembali ke Find.ai selepas itu.',
+    uploadScreenshot: '📎 Muat naik tangkapan skrin',
+    uploadScreenshotShort: '📎 Muat naik',
+    screenshotUploaded: 'Tangkapan skrin dimuat naik · mengesah',
+    lhdnDemoNote: 'Langkah 1: ketuk Buka LHDN STAMPS → buka portal dalam tab baru. Langkah 2: tangkap skrin halaman pengesahan. Langkah 3: kembali ke sini dan ketuk Muat naik tangkapan skrin. (Dalam pengeluaran, no. sijil auto-isi portal.)',
     verifiedTenancy: 'Sewaan terdahulu disahkan',
     period: 'Tempoh',
     address: 'Alamat',
@@ -379,10 +385,13 @@ const STR = {
     pdfDropPrompt: '点击上传 LHDN 证书 PDF',
     pdfDropHint: 'PDF 或图片 · 最大 10 MB',
     pdfReady: '准备验证',
-    verify: '🔗 在 LHDN STAMPS 验证',
+    verify: '🔗 打开 LHDN STAMPS',
     verifying: '正在通过 LHDN 验证…',
     verified: 'LHDN 已验证',
-    lhdnDemoNote: '生产版中，这会深度链接到 LHDN STAMPS Pengesahan Ketulenan 并预填证书编号。演示版仅打开 LHDN 主页 — 之后请返回 Find.ai。',
+    uploadScreenshot: '📎 上传截图',
+    uploadScreenshotShort: '📎 上传',
+    screenshotUploaded: '截图已上传 · 正在验证',
+    lhdnDemoNote: '步骤 1：点击打开 LHDN STAMPS → 在新标签打开门户。步骤 2：截图验证页面。步骤 3：返回此处并点击上传截图。（生产版会自动预填证书编号。）',
     verifiedTenancy: '已验证的过往租赁',
     period: '期间',
     address: '地址',
@@ -842,25 +851,44 @@ function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t })
         </div>
       )}
 
-      {/* Account # input — v3.4.17 collapsed to 1-click (was 2-click).
-            Tap "Verify on {provider}" → opens portal in new tab AND
-            immediately marks tile done. User comes back from new tab and
-            sees the green completed state. No separate "Mark verified" step.
-            (Per Ken: "why need 2 click?") */}
+      {/* Account # input — v3.4.22 side-by-side deep-link + upload pattern.
+            Per Ken: "create a UI button just beside when the link was open".
+            Two buttons in same row:
+              • Left (navy): 🔗 Open {provider} — opens portal, no auto-mark
+              • Right (gold border): 📎 Upload screenshot — file picker, marks done
+            Matches realistic Path A: deep-link → portal → screenshot → upload back. */}
       {method === 'acct' && (
         <div className="px-3.5 pb-3.5 space-y-2.5">
           <TextInput value={value} onChange={(v) => setState({ ...state, value: v })} placeholder={ph} mono inputMode="numeric" />
 
-          <a
-            href={deepLinkUrl || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => { if (value.trim()) setState({ ...state, done: true }); }}
-            className={`block w-full py-3 rounded-lg text-[13px] font-bold text-center transition active:scale-[0.98] ${value.trim() ? '' : 'pointer-events-none opacity-40'}`}
-            style={{ background: '#0f172a', color: '#fff', textDecoration: 'none' }}
-          >
-            {t.verifyOnExternal.replace('{provider}', deepLinkLabel || 'provider')}
-          </a>
+          <div className="flex gap-2">
+            <a
+              href={deepLinkUrl || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => { if (!value.trim()) e.preventDefault(); }}
+              className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold text-center transition active:scale-[0.98] ${value.trim() ? '' : 'pointer-events-none opacity-40'}`}
+              style={{ background: '#0f172a', color: '#fff', textDecoration: 'none' }}
+            >
+              {t.verifyOnExternal.replace('{provider}', deepLinkLabel || 'provider')}
+            </a>
+            <label
+              className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold text-center transition active:scale-[0.98] cursor-pointer ${value.trim() ? '' : 'pointer-events-none opacity-40'}`}
+              style={{ background: '#fff', color: '#0f172a', border: '2px solid #B8893A' }}
+            >
+              {t.uploadScreenshotShort}
+              <input
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    setState({ ...state, file: e.target.files[0].name, done: true });
+                  }
+                }}
+              />
+            </label>
+          </div>
           <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
             {t.demoNoteAcct.replace(/\{provider\}/g, deepLinkLabel || 'provider')}
           </p>
@@ -1435,28 +1463,42 @@ export default function TenantScreen({
                 />
               )}
 
-              {/* v3.4.21 — Deep-link to LHDN STAMPS portal (same 1-click pattern
-                  as TNB Account #). Tap → opens stamps.hasil.gov.my in new tab
-                  AND immediately marks LHDN as verified with mock data.
-                  No API negotiation needed — we use LHDN's public Pengesahan
-                  Ketulenan portal that anyone can access. */}
-              <a
-                href="https://stamps.hasil.gov.my"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  if (verifyDisabled) {
-                    e.preventDefault();
-                    return;
-                  }
-                  // Mark verified after a tiny delay so the new tab opens first
-                  setTimeout(() => setLhdnResult(MOCK_LHDN_RESULT), 100);
-                }}
-                className={`block w-full py-3.5 rounded-xl text-[13px] font-bold text-white text-center transition active:scale-[0.98] ${verifyDisabled ? 'pointer-events-none opacity-40' : ''}`}
-                style={{ background: '#0f172a', boxShadow: '0 4px 16px rgba(15,23,42,0.2)', textDecoration: 'none' }}
-              >
-                {t.verify}
-              </a>
+              {/* v3.4.22 — Side-by-side deep-link + upload screenshot pattern
+                  per Ken's UX call ("create a UI button just beside when the
+                  link was open"). Two buttons in same row:
+                    • Left (navy): 🔗 Open LHDN STAMPS — opens portal, no auto-mark
+                    • Right (gold border): 📎 Upload screenshot — file picker, marks verified
+                  Matches the realistic Path A workflow from ARCH_CREDIT_SCORE.md:
+                  open portal → screenshot → upload back → OCR extracts result. */}
+              <div className="flex gap-2">
+                <a
+                  href="https://stamps.hasil.gov.my"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => { if (verifyDisabled) e.preventDefault(); }}
+                  className={`flex-1 py-3 rounded-xl text-[12px] font-bold text-white text-center transition active:scale-[0.98] ${verifyDisabled ? 'pointer-events-none opacity-40' : ''}`}
+                  style={{ background: '#0f172a', textDecoration: 'none' }}
+                >
+                  {t.verify}
+                </a>
+                <label
+                  className={`flex-1 py-3 rounded-xl text-[12px] font-bold text-center transition active:scale-[0.98] cursor-pointer ${verifyDisabled ? 'pointer-events-none opacity-40' : ''}`}
+                  style={{ background: '#fff', color: '#0f172a', border: '2px solid #B8893A' }}
+                >
+                  {t.uploadScreenshot}
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        // Mock OCR pretend → returns the canonical mock LHDN result
+                        setLhdnResult(MOCK_LHDN_RESULT);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
               <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
                 {t.lhdnDemoNote}
               </p>
