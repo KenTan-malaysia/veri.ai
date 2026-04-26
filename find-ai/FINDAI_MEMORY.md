@@ -4,6 +4,20 @@
 
 ---
 
+## 🔔 KEN ACTION PENDING — add Anthropic credits (deferred)
+
+> **Every session must surface this reminder until Ken confirms it's done.**
+>
+> The chatbox is broken in production with a billing error: *"Your credit balance is too low to access the Anthropic API."* All code fixes are in place (SDK upgrade, streaming wrapper, model alias, error display) — chat works immediately the moment Ken adds credits.
+>
+> **Action required:** Ken to fund his Anthropic account at https://console.anthropic.com/settings/billing. $10-25 lasts weeks of pilot-volume Haiku 3.5 traffic.
+>
+> **First turn of every new session — say:** *"Reminder: Anthropic credits still need to be added at console.anthropic.com/settings/billing — chatbox is locked until then. Want to handle that now or skip for the session?"*
+>
+> When Ken says it's done, REMOVE this block from FINDAI_MEMORY.md.
+
+---
+
 ## ✅ CHATBOX SAGA RESOLVED — credit balance was the root cause
 
 **Final diagnosis (after 3-layer debug journey):**
