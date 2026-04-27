@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.23 — User profile architecture locked + Returning tenant lookup UI shipped + Permanent record badge on Trust Card · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.24 — Web-first strategy LOCKED: web-only push to 30,000 users → Capacitor wrap to native at Phase 4. NOT parallel build. NOT delayed launch. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -18,11 +18,15 @@
 
 ---
 
-## 🛠️ BUILD APPROACH + MONETIZATION — locked v3.4.19
+## 🛠️ BUILD APPROACH + MONETIZATION + DELIVERY — locked
 
-**Build:** Ken uses AI-assist (Zeus / Claude) for all engineering, not hiring engineers. See `BUILD_APPROACH.md`.
+**Build (v3.4.19):** Ken uses AI-assist (Zeus / Claude) for all engineering, not hiring engineers. See `BUILD_APPROACH.md`.
 
-**Monetization (FREEMIUM-AT-SCALE):** Free for individual landlords FOREVER. Premium tier launches at ~30,000 users for power users + B2B (agents, agencies, proptechs). Long-game (18-36 months to revenue). See `MONETIZATION_PLAN.md`.
+**Monetization (v3.4.19, FREEMIUM-AT-SCALE):** Free for individual landlords FOREVER. Premium tier launches at ~30,000 users for power users + B2B (agents, agencies, proptechs). Long-game (18-36 months to revenue). See `MONETIZATION_PLAN.md`.
+
+**Delivery (v3.4.24, WEB-FIRST):** Web-only push to 30,000 users. NO native iOS/Android until Phase 4. At 30k users → Capacitor wrap of existing web app (RM 5-15k, 2-4 weeks). NOT parallel web+native. NOT delayed launch waiting for native. Saves RM 45-85k Year 1-3. See `WEB_FIRST_RATIONALE.md`.
+
+**For Zeus sessions: REJECT premature native suggestions before 30k users.** When Ken (or anyone) suggests building native iOS/Android before the 30k milestone, push back and reference `WEB_FIRST_RATIONALE.md`. Exceptions: 30k reached, conversion stalled at 10k+ with native as proven bottleneck, B2B contract requiring native, competitor reaches 50k+ MY users on native.
 
 **Phased spending plan (gate each phase on USAGE signal, not revenue — there is no revenue until Phase 4):**
 - Phase 0 (now): Pilot v0 — RM 100, 4 weeks → 5-10 friendly landlord interviews
@@ -84,7 +88,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.23
+## 🟢 ACTIVE SAVE POINT — v3.4.24
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 
@@ -109,9 +113,10 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 | Doc | Purpose | Status |
 |---|---|---|
 | `CLAUDE.md` | Project brief — read first by every session | Updated through v3.4.1 |
-| `FINDAI_MEMORY.md` | This file — single-page snapshot | v3.4.23 |
+| `FINDAI_MEMORY.md` | This file — single-page snapshot | v3.4.24 |
 | `BUILD_APPROACH.md` | AI-assist build strategy + Year 1-3 spending phases | v3.4.19 (freemium-aligned) |
 | `MONETIZATION_PLAN.md` | Free-at-scale + premium tier roadmap | v3.4.19 |
+| `WEB_FIRST_RATIONALE.md` | Web-only push to 30k → Capacitor wrap. Reject premature native. | v3.4.24 |
 | `ARCH_CREDIT_SCORE.md` | TOOL 1 spec: LHDN gate + utility timing-tier scoring + Trust Score formula | v3.4.4 base + v3.4.18 bill verification + v3.4.23 user profile integration |
 | `ARCH_BILL_VERIFICATION.md` | 10-layer fraud defense lattice for bill photos (Tier 1 ships v1, Tier 2-3 later) | v3.4.18 |
 | `ARCH_USER_PROFILES.md` | Tenant + Landlord account systems + portable Trust Score lookup + LBV | v3.4.23 |
@@ -131,6 +136,7 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 | **Anthropic returns 400 for billing errors** (not 402) | If chat 400s with no obvious model/format issue, check `console.anthropic.com/settings/billing` first. |
 | **For pilot/MVP, use `claude-3-5-haiku-20241022`** | On every Anthropic account, cheap (~$0.25/$1.25 per million tokens), fast. |
 | **Web app IS a real product** — not less real than native | Same product whether delivered via browser URL or App Store. Native (Capacitor wrap) is a Phase 4+ optional add. |
+| **Web-first to 30k. No native before then.** | Locked v3.4.24. Saves RM 45-85k Year 1-3. WhatsApp link beats App Store install for 1-3 uses/year audience. Capacitor wrap (RM 5-15k) only after 30k milestone. |
 | **For ALL government / utility integrations** — deep-link to public portals | No API negotiation. Same pattern: Open [portal] in new tab → user screenshots → upload screenshot back. Scales infinitely (TNB, SYABAS, SAJ, telcos, etc.). |
 | **Describe BEHAVIOUR, not the PERSON** | Never say "Late tenant" — say "Late payment pattern". Find.ai surfaces evidence; doesn't judge people. |
 | **Don't pre-spend** | Each phase's spending must be gated on real signal from previous phase. Don't build before validating. |
@@ -185,7 +191,7 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 
 ---
 
-## 3. FILE MAP (current — v3.4.23)
+## 3. FILE MAP (current — v3.4.24)
 
 ```
 find-ai/
@@ -212,6 +218,7 @@ find-ai/
 ├── ARCH_UTILITY_BRIDGE.md        Phase 2 utility ledger
 ├── BUILD_APPROACH.md             AI-assist build strategy (v3.4.19)
 ├── MONETIZATION_PLAN.md          Freemium-at-scale plan (v3.4.19)
+├── WEB_FIRST_RATIONALE.md        Web-first to 30k → Capacitor wrap (v3.4.24)
 ├── HOW_TRUST_SCORE_WORKS.md      Public methodology disclosure
 ├── SCORING_DISCLOSURE_POLICY.md  Internal 3-tier IP rule
 ├── PILOT_RECRUITMENT_PLAN.md     Full pilot strategy
@@ -262,7 +269,8 @@ Stamp Act 1949 (Item 32(a) + s.52, s.36A, s.62) · Finance Act 2025 (SDSAS) · B
 
 ### v3.4.x — TOOL 1 v0 mock polish era (April 2026)
 
-- **v3.4.23 (2026-04-26 — THIS SAVE POINT)** — User profile architecture locked (`ARCH_USER_PROFILES.md`) + Returning tenant lookup placeholder on Step 1 + Permanent record badge on Trust Card. Tenant + Landlord accounts spec, portable Trust Score lookup mechanism, LBV (Live Bound Verification) full flow, PDPA compliance, free vs premium tier, 2-phase build plan.
+- **v3.4.24 (2026-04-26 — THIS SAVE POINT) — Web-first strategy LOCKED.** New `WEB_FIRST_RATIONALE.md` doc commits Find.ai to web-only push to 30,000 users → Capacitor wrap to native at Phase 4. NOT parallel web+native. NOT delayed launch. Saves RM 45-85k Year 1-3 vs parallel build. Winning rate analysis: 70-85% probability web-first is the right strategic bet for Find.ai's audience (35-65 yr old MY landlords, 1-3 uses/year, WhatsApp distribution, ~3 min sessions, no real-time/GPS needs). Real-world precedents: Notion, Linear, Figma, ChatGPT, Canva all went web-first → scale → native. Phase 4 trigger checklist locked (30k users + 5k monthly screenings + NPS≥40 + B2B inbound + sustainable cost + premium roadmap). Future Zeus sessions must REJECT premature native suggestions before 30k milestone.
+- **v3.4.23 (2026-04-26)** — User profile architecture locked (`ARCH_USER_PROFILES.md`) + Returning tenant lookup placeholder on Step 1 + Permanent record badge on Trust Card. Tenant + Landlord accounts spec, portable Trust Score lookup mechanism, LBV (Live Bound Verification) full flow, PDPA compliance, free vs premium tier, 2-phase build plan.
 - **v3.4.22** — Side-by-side deep-link + upload screenshot pattern for both LHDN and Account # (TNB/Water/Mobile). Two buttons in same row: 🔗 Open [portal] (navy) + 📎 Upload screenshot (gold). Deep-link no longer auto-marks done — upload is the actual verification action.
 - **v3.4.21** — LHDN verify switched to deep-link pattern (same as TNB Account #). No API negotiation. Removed `verifyWithLHDN` function + `verifying` state.
 - **v3.4.20** — ScoreScale redesigned to dual-marker style matching Ken's analyst-target-price reference. Two markers (Behaviour navy + Trust Score gold) — visual gap shows evidence depth impact. Math row at bottom.
@@ -312,9 +320,10 @@ When Ken opens a new session with this file:
 
 1. **Read this file end-to-end** — start with the **🔔 KEN ACTION PENDING** block at top, then **🛠️ BUILD APPROACH + MONETIZATION**, then **🟢 ACTIVE SAVE POINT**.
 2. **Surface the chatbox-credits reminder immediately** if not yet resolved.
-3. **Greet:** *"Resuming Find.ai v3.4.23 — TOOL 1 v0 mock fully polished, user profile architecture locked. Reminder: Anthropic credits still need to be added at console.anthropic.com/settings/billing — chatbox is locked until then. Want to handle that now or skip for the session? Also: pilot outreach is queued (5 friendly landlord WhatsApp messages) and lawyer engagement (T&C/Privacy/Consent) is overdue. Or do you want to keep building features?"*
+3. **Greet:** *"Resuming Find.ai v3.4.24 — TOOL 1 v0 mock fully polished, user profile + web-first strategy locked. Reminder: Anthropic credits still need to be added at console.anthropic.com/settings/billing — chatbox is locked until then. Want to handle that now or skip for the session? Also: pilot outreach is queued (5 friendly landlord WhatsApp messages) and lawyer engagement (T&C/Privacy/Consent) is overdue. Or do you want to keep building features?"*
 4. **Do NOT re-scan codebase** unless Ken asks or this file is clearly stale.
 5. **Reject scope creep:** any request that smells like Phase 2 (Evidence Vault), Phase 3 (CN-MY B2B), or Phase 4 (marketplace) = defer. Pre-signing wedge only.
 6. **Reject early-paid-tier suggestions** — Find.ai is freemium-at-scale. Free for individuals forever. Premium at 30k+ users.
-7. **For ALL gov/utility integrations** — deep-link to public portals + screenshot upload pattern. Never negotiate APIs.
-8. **Ken's preferences:** direct tone, short answers, no verbose explanations, token-efficient. Never assume approval.
+7. **Reject premature native suggestions** — Find.ai is web-first to 30k users. No iOS/Android until Phase 4 (Capacitor wrap). See `WEB_FIRST_RATIONALE.md`.
+8. **For ALL gov/utility integrations** — deep-link to public portals + screenshot upload pattern. Never negotiate APIs.
+9. **Ken's preferences:** direct tone, short answers, no verbose explanations, token-efficient. Never assume approval.

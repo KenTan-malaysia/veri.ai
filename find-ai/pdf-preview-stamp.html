@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SDSAS 2026 Tax Accuracy Certificate · FA-20260421-NMBR · Find.ai</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --navy: #0f172a;
+    --navy2: #1e293b;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --line: #e2e8f0;
+    --soft: #f8fafc;
+    --amber: #f59e0b;
+    --amberBg: #fef3c7;
+    --amberEdge: #fde68a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+  }
+
+  /* ── Letterhead ───────────────────────────────────────────── */
+  .head {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+    color: #fff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .head-brand { display: flex; align-items: center; gap: 12px; }
+  .shield {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: #ffffff1a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .head-name {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.015em;
+  }
+  .head-strap {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #ffffffa6; margin-top: 2px;
+  }
+  .head-right { text-align: right; }
+  .head-kind {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #ffffffa6;
+  }
+  .head-title {
+    font-size: 14px; font-weight: 700; margin-top: 2px; letter-spacing: -0.01em;
+  }
+
+  /* ── Meta table ───────────────────────────────────────────── */
+  .meta {
+    width: 100%; border-collapse: collapse; margin-top: 16px;
+    font-size: 11px;
+  }
+  .meta th, .meta td {
+    padding: 8px 12px; border-bottom: 1px solid var(--line);
+    text-align: left; vertical-align: top;
+  }
+  .meta th {
+    color: var(--faint); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px;
+    width: 30%;
+  }
+  .meta td { color: var(--ink); font-weight: 600; }
+
+  /* ── Title block ──────────────────────────────────────────── */
+  .doc-title {
+    margin-top: 22px; font-size: 22px; font-weight: 800;
+    letter-spacing: -0.02em; color: var(--navy);
+  }
+
+  /* ── Sections ─────────────────────────────────────────────── */
+  .sec { margin-top: 20px; }
+  .sec-h {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--faint); margin: 16px 0 8px;
+  }
+  .sec-p { font-size: 12px; line-height: 1.55; margin: 6px 0; color: var(--ink); }
+
+  .sec-ul { margin: 6px 0 6px 18px; padding: 0; }
+  .sec-ul li { font-size: 12px; line-height: 1.55; margin: 3px 0; color: var(--ink); }
+
+  .sec-kv { width: 100%; border-collapse: collapse; }
+  .sec-kv th, .sec-kv td {
+    padding: 7px 10px; border-bottom: 1px solid var(--line);
+    font-size: 11.5px; text-align: left; vertical-align: top;
+  }
+  .sec-kv th { color: var(--muted); font-weight: 500; width: 45%; }
+  .sec-kv td { color: var(--ink); font-weight: 600; }
+
+  .sec-tbl { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .sec-tbl th {
+    background: var(--soft); color: var(--muted);
+    text-align: left; padding: 8px 10px; font-weight: 600;
+    text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .badge {
+    border-radius: 14px; padding: 16px 18px; margin-top: 4px;
+  }
+  .badge-label {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    opacity: 0.7; font-weight: 700;
+  }
+  .badge-value { font-size: 26px; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em; }
+  .badge-sub { font-size: 11px; opacity: 0.75; margin-top: 6px; }
+
+  .score {
+    border-radius: 16px; padding: 20px 22px; display: flex;
+    align-items: baseline; gap: 16px;
+  }
+  .score-grade { font-size: 42px; font-weight: 800; letter-spacing: -0.04em; }
+  .score-label { font-size: 14px; font-weight: 700; }
+  .score-sub { font-size: 11px; opacity: 0.8; margin-left: auto; }
+
+  .flags { display: flex; flex-direction: column; gap: 8px; }
+  .flag { border-radius: 12px; padding: 10px 14px; }
+  .flag-top { display: flex; align-items: center; gap: 10px; }
+  .flag-tag {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
+    padding: 3px 7px; border-radius: 5px; background: #ffffffcc;
+  }
+  .flag-title { font-size: 12.5px; font-weight: 700; }
+  .flag-detail { font-size: 11.5px; margin-top: 6px; opacity: 0.9; line-height: 1.5; }
+
+  /* ── Footer ───────────────────────────────────────────────── */
+  .foot {
+    margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .qr {
+    flex: 0 0 120px; text-align: center;
+  }
+  .qr img {
+    width: 120px; height: 120px; border: 1px solid var(--line);
+    border-radius: 10px; background: #fff;
+  }
+  .qr-cap {
+    font-size: 9.5px; color: var(--muted); margin-top: 6px; line-height: 1.4;
+  }
+  .qr-url {
+    font-size: 9.5px; color: var(--navy); font-weight: 700; margin-top: 2px;
+    word-break: break-all;
+  }
+  .foot-body { flex: 1; }
+  .shield-chip {
+    display: inline-block; padding: 5px 10px; border-radius: 8px;
+    background: var(--amberBg); color: #92400e;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; border: 1px solid var(--amberEdge);
+  }
+  .foot-p {
+    font-size: 10.5px; line-height: 1.55; color: var(--muted);
+    margin: 8px 0 0;
+  }
+  .foot-pdpa {
+    font-size: 9.5px; color: var(--faint); margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── Print rules ──────────────────────────────────────────── */
+  @media print {
+    .page { padding: 12mm 14mm 14mm; }
+    .head { break-inside: avoid; }
+    .foot { break-inside: avoid; }
+    .badge, .score, .flag, .sec-kv, .sec-tbl { break-inside: avoid; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <div class="head-brand">
+      <div class="shield">🛡️</div>
+      <div>
+        <div class="head-name">Find.ai</div>
+        <div class="head-strap">Find.ai · Malaysian Property Compliance Toolkit</div>
+      </div>
+    </div>
+    <div class="head-right">
+      <div class="head-kind">SDSAS 2026 Tax Accuracy Certificate</div>
+      <div class="head-title">Don&#039;t sign blind.</div>
+    </div>
+  </div>
+
+  <table class="meta">
+    <tbody><tr><th>Prepared for</th><td>Mr. Ken Tan</td></tr><tr><th>Property</th><td>Lot 5, Jalan Budi, 50480 Kuala Lumpur</td></tr><tr><th>Case ref</th><td>FA-20260421-NMBR</td></tr><tr><th>Date prepared</th><td>2026-04-21</td></tr></tbody>
+  </table>
+
+  <div class="doc-title">SDSAS 2026 Tax Accuracy Certificate</div>
+
+  <div class="sec">
+    <h2 class="sec-h">Assessment</h2>
+    <div class="badge" style="background:#0f172a;color:#ffffff;border:1px solid #0f172a">
+      <div class="badge-label">Stamp duty payable (SDSAS 2026)</div>
+      <div class="badge-value">RM 144.00</div>
+      <div class="badge-sub">120 × RM3 tier · minimum RM 10</div>
+    </div>
+<h2 class="sec-h">Computation</h2><table class="sec-kv"><tbody>
+    <tr>
+      <th>Monthly rent (RM)</th>
+      <td>2,500</td>
+    </tr>
+    <tr>
+      <th>Lease term (years)</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Annual rent (RM)</th>
+      <td>30,000</td>
+    </tr>
+    <tr>
+      <th>Units (ceil(annual / 250))</th>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>Rate tier (RM per unit)</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Stamp duty payable</th>
+      <td>RM 144.00</td>
+    </tr></tbody></table>
+<h2 class="sec-h">How to stamp (STAMPS / e-Duti Setem)</h2><ul class="sec-ul"><li>Log in to stamps.hasil.gov.my with your MyDigital ID.</li><li>Submit the tenancy instrument within 30 days of execution to avoid penalty.</li><li>Pay the duty via FPX; download the e-Duti Setem QR certificate.</li><li>Attach the certificate to both counterpart copies of the tenancy agreement.</li><li>Retain digital + paper copies for at least 7 years (tax audit window).</li></ul>
+<h2 class="sec-h">Notes</h2><p class="sec-p">SDSAS 2026 removes the prior RM2,400 annual-rent exemption. Every tenancy now incurs duty, with a RM10 floor.</p><p class="sec-p">Under SDSAS self-assessment, an under-declaration attracts up to RM10,000 per incorrect assessment (Stamp Act 1949 s.62, as amended by Finance Act 2025).</p>
+  </div>
+
+  <div class="foot">
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=2&data=https%3A%2F%2Ffind.ai%2Fr%2FFA-20260421-NMBR" alt="QR to https://find.ai/r/FA-20260421-NMBR"
+           onerror="this.style.display='none'">
+      <div class="qr-cap">Scan to verify this report at find.ai</div>
+      <div class="qr-url">https://find.ai/r/FA-20260421-NMBR</div>
+    </div>
+    <div class="foot-body">
+      <span class="shield-chip">🛡️ Support tool only — not legal advice.</span>
+      <p class="foot-p">This report summarises publicly available Malaysian legal reference material together with the information you provided. It is NOT a substitute for independent legal advice from a qualified Peguambela &amp; Peguamcara. Verify critical actions with a licensed professional before relying on them.</p>
+      <p class="foot-pdpa">Personal data collected under PDPA 2010. Retained for dispute support; deletable on request. · Continue your case at find.ai</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

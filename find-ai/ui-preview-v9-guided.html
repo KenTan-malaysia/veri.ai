@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Find.ai — v9 One Thing Guided Flow</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { background: #F5F5F1; }
+  body { font-family: 'Inter', -apple-system, sans-serif; color: #0A0A0A; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .tight { letter-spacing: -0.03em; }
+  .tighter { letter-spacing: -0.045em; }
+  .screen {
+    min-height: 100vh; min-height: 100svh; min-height: 100dvh;
+    display: flex; flex-direction: column;
+    max-width: 512px; margin: 0 auto;
+    padding: 20px;
+    background: #FFFFFF;
+    border-radius: 0;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.03), 0 20px 60px -20px rgba(15,23,42,0.08);
+  }
+  .tile {
+    background: #FFFFFF; border-radius: 24px; padding: 24px 20px;
+    border: 2px solid #F1F5F9;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    cursor: pointer; text-align: left; width: 100%;
+  }
+  .tile:hover { border-color: #0A0A0A; transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(15,23,42,0.15); }
+  .tile:active { transform: scale(0.98); }
+  .progress-dot { width: 8px; height: 8px; border-radius: 999px; background: #E2E8F0; }
+  .progress-dot.on { background: #0A0A0A; width: 24px; }
+  .fade-in { animation: fade .4s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .pagebar { display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 24px; }
+</style>
+</head>
+<body style="background: #F5F5F1;">
+
+<!-- ================== SCREEN 1 — WELCOME ================== -->
+<div class="mb-8 mx-auto" style="max-width: 540px; padding: 24px 0;">
+  <div class="mono text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 mb-2 text-center">Screen 01 · Welcome</div>
+</div>
+<div class="screen fade-in">
+  <!-- Small brand -->
+  <div class="flex items-center justify-between mb-auto">
+    <div class="flex items-center gap-2">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0A0A0A"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="font-bold text-[14px] tight">Find.ai</span>
+    </div>
+    <button class="text-[11px] px-2.5 py-1 rounded-full font-semibold bg-neutral-100 text-neutral-600">EN</button>
+  </div>
+
+  <!-- Progress bar — 1 of 3 -->
+  <div class="pagebar">
+    <div class="progress-dot on"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <!-- ONE THING — big friendly greeting -->
+  <div class="flex-1 flex flex-col justify-center text-center py-8">
+    <div class="text-[56px] mb-4">👋</div>
+    <h1 class="text-[40px] font-black leading-[0.95] tighter text-neutral-900 mb-5">
+      Hi there.
+    </h1>
+    <p class="text-[17px] leading-relaxed text-neutral-600 max-w-[320px] mx-auto">
+      Before you sign anything — <span class="text-neutral-900 font-semibold">let's make sure it's safe</span>.
+    </p>
+    <p class="text-[13px] text-neutral-400 mt-3">Takes 2 minutes. Free. No sign-up.</p>
+  </div>
+
+  <!-- Single CTA — big thumb target -->
+  <button class="w-full py-5 rounded-2xl text-[16px] font-bold text-white bg-neutral-900 mt-auto" style="box-shadow: 0 10px 25px -5px rgba(15,23,42,0.25);">
+    Let's go →
+  </button>
+</div>
+
+<!-- ================== SCREEN 2 — PICK SITUATION ================== -->
+<div class="mt-12 mb-8 mx-auto" style="max-width: 540px;">
+  <div class="mono text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 mb-2 text-center">Screen 02 · Pick your situation</div>
+</div>
+<div class="screen fade-in">
+  <!-- Back arrow + progress -->
+  <div class="flex items-center justify-between mb-6">
+    <button class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <div class="pagebar" style="margin: 0;">
+      <div class="progress-dot"></div>
+      <div class="progress-dot on"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="w-9"></div>
+  </div>
+
+  <!-- The one question -->
+  <div class="mb-8">
+    <h2 class="text-[30px] font-black leading-[1.05] tighter text-neutral-900 mb-2">What do you need?</h2>
+    <p class="text-[14px] text-neutral-500">Pick one. You can always change later.</p>
+  </div>
+
+  <!-- Four BIG friendly tiles, one thing each -->
+  <div class="space-y-3 flex-1">
+
+    <!-- Option 1 -->
+    <button class="tile">
+      <div class="flex items-center gap-4">
+        <div class="text-[36px] leading-none">👤</div>
+        <div class="flex-1">
+          <div class="text-[17px] font-black tight text-neutral-900">Check a tenant</div>
+          <div class="text-[13px] text-neutral-500 mt-0.5">"Can I trust this person?"</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </button>
+
+    <!-- Option 2 -->
+    <button class="tile">
+      <div class="flex items-center gap-4">
+        <div class="text-[36px] leading-none">📄</div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <span class="text-[17px] font-black tight text-neutral-900">Review an agreement</span>
+            <span class="mono text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500">Soon</span>
+          </div>
+          <div class="text-[13px] text-neutral-500 mt-0.5">"Is this contract fair?"</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </button>
+
+    <!-- Option 3 -->
+    <button class="tile">
+      <div class="flex items-center gap-4">
+        <div class="text-[36px] leading-none">💰</div>
+        <div class="flex-1">
+          <div class="text-[17px] font-black tight text-neutral-900">Calculate stamp duty</div>
+          <div class="text-[13px] text-neutral-500 mt-0.5">"How much do I owe LHDN?"</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </button>
+
+    <!-- Option 4 -->
+    <button class="tile">
+      <div class="flex items-center gap-4">
+        <div class="text-[36px] leading-none">💬</div>
+        <div class="flex-1">
+          <div class="text-[17px] font-black tight text-neutral-900">Just ask a question</div>
+          <div class="text-[13px] text-neutral-500 mt-0.5">"I have a specific situation…"</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- Tiny reassurance -->
+  <div class="mt-6 flex items-center justify-center gap-1.5">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span class="mono text-[9px] uppercase tracking-[0.18em] text-neutral-400">Your info stays private</span>
+  </div>
+</div>
+
+<!-- ================== SCREEN 3 — CONFIRM & START ================== -->
+<div class="mt-12 mb-8 mx-auto" style="max-width: 540px;">
+  <div class="mono text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 mb-2 text-center">Screen 03 · Ready (after user picks "Check a tenant")</div>
+</div>
+<div class="screen fade-in">
+  <div class="flex items-center justify-between mb-6">
+    <button class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <div class="pagebar" style="margin: 0;">
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot on"></div>
+    </div>
+    <div class="w-9"></div>
+  </div>
+
+  <!-- ONE clear picture of what's about to happen -->
+  <div class="flex-1 flex flex-col justify-center">
+    <div class="text-center mb-8">
+      <div class="text-[64px] mb-3">👤</div>
+      <h2 class="text-[32px] font-black leading-[1.05] tighter text-neutral-900 mb-3">
+        Let's check<br/>your tenant.
+      </h2>
+      <p class="text-[14px] text-neutral-600 leading-relaxed max-w-[300px] mx-auto">
+        I'll ask you 4 simple questions. Then I'll give you a <span class="font-semibold text-neutral-900">Trust Grade (A to D)</span> and a shareable report.
+      </p>
+    </div>
+
+    <!-- What we'll check — 4 bullets, scannable -->
+    <div class="bg-neutral-50 rounded-2xl p-5 mb-6">
+      <div class="mono text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 mb-3">What we'll ask</div>
+      <div class="space-y-2.5">
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-6 rounded-full bg-white border border-neutral-200 flex items-center justify-center">
+            <span class="mono text-[10px] font-bold">1</span>
+          </div>
+          <span class="text-[13px] text-neutral-700">Did they show up on time?</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-6 rounded-full bg-white border border-neutral-200 flex items-center justify-center">
+            <span class="mono text-[10px] font-bold">2</span>
+          </div>
+          <span class="text-[13px] text-neutral-700">Were their questions reasonable?</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-6 rounded-full bg-white border border-neutral-200 flex items-center justify-center">
+            <span class="mono text-[10px] font-bold">3</span>
+          </div>
+          <span class="text-[13px] text-neutral-700">Did they try to negotiate?</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-6 rounded-full bg-white border border-neutral-200 flex items-center justify-center">
+            <span class="mono text-[10px] font-bold">4</span>
+          </div>
+          <span class="text-[13px] text-neutral-700">Who came with them?</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-center text-[11.5px] text-neutral-500 mb-4">⏱ Takes 2 minutes · Free</p>
+  </div>
+
+  <button class="w-full py-5 rounded-2xl text-[16px] font-bold text-white bg-neutral-900" style="box-shadow: 0 10px 25px -5px rgba(15,23,42,0.25);">
+    Start the check →
+  </button>
+</div>
+
+<!-- ================== DESIGN PRINCIPLES STRIP ================== -->
+<div class="max-w-[900px] mx-auto p-8 mt-10 mb-10 bg-white rounded-3xl" style="border: 1px solid #E5E7EB;">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="mono text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">v9 Guided Flow · Principles</span>
+    <span class="flex-1 h-px bg-neutral-200"></span>
+  </div>
+
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">01 · One thing per screen</div>
+      <div class="text-[15px] font-black tight mb-1">Screen 1 asks nothing. Screen 2 asks ONE question. Screen 3 previews ONE task.</div>
+      <p class="text-[12.5px] text-neutral-600 leading-relaxed">A 5-year-old can follow this. No competing elements. No menus. No stats. Just: "what do you want?" → "here's what will happen" → "start."</p>
+    </div>
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">02 · Progress bar (3 dots)</div>
+      <div class="text-[15px] font-black tight mb-1">User always knows where they are.</div>
+      <p class="text-[12.5px] text-neutral-600 leading-relaxed">Three dots at the top of every screen. "You are on 2 of 3." Reduces anxiety — people stay to the end when they know it ends.</p>
+    </div>
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">03 · Plain human language</div>
+      <div class="text-[15px] font-black tight mb-1">"Check a tenant" — not "Tenant Screening Report."</div>
+      <p class="text-[12.5px] text-neutral-600 leading-relaxed">Every label is how a friend would describe it. No jargon. No product names on the front surface. "SDSAS" becomes "How much do I owe LHDN?"</p>
+    </div>
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">04 · Big thumb targets</div>
+      <div class="text-[15px] font-black tight mb-1">Giant emoji + giant button + giant spacing.</div>
+      <p class="text-[12.5px] text-neutral-600 leading-relaxed">Every tap target ≥56px tall. Emojis carry meaning faster than words. Back button is a ring, not text. Everything thumb-reachable.</p>
+    </div>
+  </div>
+
+  <div class="rounded-2xl p-5 text-white" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);">
+    <div class="mono text-[10.5px] uppercase tracking-[0.18em] mb-2" style="color: #A5B4FC;">The key shift</div>
+    <div class="text-[17px] font-black tight mb-2">From "show everything" to "ask one thing."</div>
+    <p class="text-[12.5px] leading-relaxed" style="color: rgba(255,255,255,0.75);">
+      v8 showed all four tools at once. v9 asks "what do you want?" first, then shows ONLY that tool. Same 4 tools underneath — but the user never sees 3 of them on the first screen. Zero cognitive load. Typeform / Duolingo / Headspace all structure onboarding this way.
+    </p>
+    <p class="text-[12.5px] leading-relaxed mt-3" style="color: rgba(255,255,255,0.6);">
+      Implementation: split <span class="mono text-white/80">src/app/page.js</span> chat empty state into three sequential screens. Landing stays as feature showcase (or becomes Screen 1 + 2 merged). Case Memory carries the picked situation forward.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

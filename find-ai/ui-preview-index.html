@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find.ai — UI Preview Hub</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:wght@700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #FAFAFA; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .serif { font-family: 'Fraunces', serif; }
+  .card { transition: transform .25s ease, box-shadow .25s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.2); }
+  iframe { width: 100%; height: 380px; border: 0; background: white; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<header class="max-w-[1240px] mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-5">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#050B1A"/>
+      <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <span class="font-bold text-[20px]">Find.ai</span>
+    <span class="mono text-[10.5px] tracking-[0.18em] uppercase text-slate-500">· UI Preview Hub</span>
+  </div>
+  <h1 class="font-bold text-[48px] leading-tight tracking-tight">Pick your Phase 1 bento direction.</h1>
+  <p class="text-slate-600 mt-3 text-[16px] max-w-[640px]">
+    Three design directions — same Phase 1 mission (Screen / Audit / Stamp / Chat + tenant registration). Open each in full size. Tell me which goes into <span class="mono text-slate-900 bg-slate-100 px-1.5 py-0.5 rounded">page.js</span>.
+  </p>
+</header>
+
+<main class="max-w-[1240px] mx-auto px-6 pb-16">
+
+  <!-- Comparison table -->
+  <div class="mb-10 border border-slate-200 rounded-2xl overflow-hidden bg-white">
+    <table class="w-full text-[13px]">
+      <thead class="bg-slate-50 border-b border-slate-200">
+        <tr class="text-left mono tracking-wider uppercase text-[10.5px]">
+          <th class="px-5 py-3 text-slate-500">Direction</th>
+          <th class="px-5 py-3 text-slate-500">Mood</th>
+          <th class="px-5 py-3 text-slate-500">Best for</th>
+          <th class="px-5 py-3 text-slate-500">Risk</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        <tr>
+          <td class="px-5 py-4">
+            <div class="font-bold">v2 · Warm Editorial</div>
+            <div class="text-slate-500 text-[12px]">Cream + navy · Inter Tight · grain</div>
+          </td>
+          <td class="px-5 py-4">Bank-trust · approachable</td>
+          <td class="px-5 py-4">First-time landlords · SMEs</td>
+          <td class="px-5 py-4 text-amber-700">Can feel soft vs. "compliance" brief</td>
+        </tr>
+        <tr class="bg-slate-50/40">
+          <td class="px-5 py-4">
+            <div class="font-bold">v3 · Dark Editorial</div>
+            <div class="text-slate-500 text-[12px]">Ink + gold · Fraunces serif · gravitas</div>
+          </td>
+          <td class="px-5 py-4">Luxury · legal · premium</td>
+          <td class="px-5 py-4">Agents · commercial tenants · enterprise</td>
+          <td class="px-5 py-4 text-amber-700">May feel aloof to first-timer landlords</td>
+        </tr>
+        <tr>
+          <td class="px-5 py-4">
+            <div class="font-bold">v4 · Swiss Minimal</div>
+            <div class="text-slate-500 text-[12px]">Pure black/white · typographic · grid-lines</div>
+          </td>
+          <td class="px-5 py-4">Modern · precise · Linear/Vercel</td>
+          <td class="px-5 py-4">Tech-forward agents · investors</td>
+          <td class="px-5 py-4 text-amber-700">Less warmth · may feel cold in MY market</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Three cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+    <!-- v2 -->
+    <a href="ui-preview-v2.html" target="_blank" class="card block rounded-2xl overflow-hidden bg-white border border-slate-200">
+      <div class="h-[240px] bg-gradient-to-br from-amber-50 via-white to-white relative overflow-hidden">
+        <iframe src="ui-preview-v2.html" scrolling="no" style="transform:scale(0.4);transform-origin:top left;width:250%;height:950px;pointer-events:none"></iframe>
+      </div>
+      <div class="p-6">
+        <div class="mono text-[10.5px] uppercase tracking-wider text-slate-500 mb-2">v2 — Warm Editorial</div>
+        <div class="font-bold text-[20px] tracking-tight">Cream + Navy Bento</div>
+        <p class="text-slate-600 text-[13px] mt-1.5 leading-relaxed">
+          Inter Tight display at 76px, warm cream bg, embedded preview cards. Bank-trust with editorial warmth.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-900">
+          Open full preview <span>→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- v3 -->
+    <a href="ui-preview-v3-dark.html" target="_blank" class="card block rounded-2xl overflow-hidden border border-slate-200" style="background:#050B1A">
+      <div class="h-[240px] relative overflow-hidden" style="background:#050B1A">
+        <iframe src="ui-preview-v3-dark.html" scrolling="no" style="transform:scale(0.4);transform-origin:top left;width:250%;height:950px;pointer-events:none"></iframe>
+      </div>
+      <div class="p-6 bg-[#0A1528] text-white">
+        <div class="mono text-[10.5px] uppercase tracking-wider mb-2" style="color:#C9A96A">v3 — Dark Editorial</div>
+        <div class="serif font-black text-[22px] tracking-tight">Ink + <em class="italic" style="color:#C9A96A">Gold</em> Bento</div>
+        <p class="text-slate-300 text-[13px] mt-1.5 leading-relaxed">
+          Fraunces serif. Gold hairline accents. Grain texture. Luxury-compliance feel. Premium + legal gravitas.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold" style="color:#C9A96A">
+          Open full preview <span>→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- v4 -->
+    <a href="ui-preview-v4-swiss.html" target="_blank" class="card block rounded-2xl overflow-hidden bg-white border border-black">
+      <div class="h-[240px] bg-white relative overflow-hidden border-b border-black">
+        <iframe src="ui-preview-v4-swiss.html" scrolling="no" style="transform:scale(0.4);transform-origin:top left;width:250%;height:950px;pointer-events:none"></iframe>
+      </div>
+      <div class="p-6">
+        <div class="mono text-[10.5px] uppercase tracking-wider text-slate-900 mb-2">v4 — Swiss Minimal</div>
+        <div class="font-bold text-[20px] tracking-tight">Black + White Grid</div>
+        <p class="text-slate-600 text-[13px] mt-1.5 leading-relaxed">
+          Pure Helvetica-feel. Gridlines, typographic hierarchy, mono numerics. Modern · precise · Linear/Vercel energy.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-black">
+          Open full preview <span>→</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Recommendation -->
+  <div class="mt-10 rounded-2xl bg-white border border-slate-200 p-6">
+    <div class="mono text-[10.5px] uppercase tracking-wider text-slate-500 mb-2">Zeus's recommendation</div>
+    <div class="font-bold text-[18px] tracking-tight mb-2">
+      v2 (Warm Editorial) for landlord/tenant audiences · v3 (Dark) for agent/enterprise pages
+    </div>
+    <p class="text-slate-600 text-[14px] leading-relaxed">
+      CLAUDE.md says "bank-level trust, not startup green vibes." v2 hits that — warm enough for a first-time landlord, serious enough to earn trust. v3 is stronger for agent-acquisition copy and commercial pitches because Fraunces + gold reads as "legal-grade." v4 is beautiful but risks feeling cold to MY audiences who tend to read stark black/white as Chinese-funeral/clinical.
+    </p>
+    <p class="text-slate-500 text-[13px] mt-3">
+      Pick one for the public landing, or commit to <strong>v2 now + v3 as an "Agents" page variant</strong>. Say the word.
+    </p>
+  </div>
+
+  <!-- Terminal block -->
+  <div class="mt-8 rounded-2xl bg-slate-900 text-slate-100 p-6 font-mono text-[13px] leading-relaxed">
+    <div class="text-slate-500 mb-2"># Run the dev app + all 3 previews locally (Windows PowerShell):</div>
+    <div><span class="text-emerald-400">PS&gt;</span> cd "C:\Users\Tan Ken Yap\Documents\data collection\OneDrive\Desktop\Claude\find-ai"</div>
+    <div><span class="text-emerald-400">PS&gt;</span> .\preview-all.ps1</div>
+    <div class="text-slate-500 mt-4"># Or open each preview directly in browser (no server needed):</div>
+    <div><span class="text-emerald-400">PS&gt;</span> start ui-preview-v2.html</div>
+    <div><span class="text-emerald-400">PS&gt;</span> start ui-preview-v3-dark.html</div>
+    <div><span class="text-emerald-400">PS&gt;</span> start ui-preview-v4-swiss.html</div>
+    <div><span class="text-emerald-400">PS&gt;</span> start ui-preview-index.html</div>
+  </div>
+
+</main>
+
+</body>
+</html>

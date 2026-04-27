@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tenant Screening Report · FA-20260421-BHQ5 · Find.ai</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --navy: #0f172a;
+    --navy2: #1e293b;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --line: #e2e8f0;
+    --soft: #f8fafc;
+    --amber: #f59e0b;
+    --amberBg: #fef3c7;
+    --amberEdge: #fde68a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm 20mm;
+    margin: 0 auto;
+    background: #fff;
+  }
+
+  /* ── Letterhead ───────────────────────────────────────────── */
+  .head {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+    color: #fff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .head-brand { display: flex; align-items: center; gap: 12px; }
+  .shield {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: #ffffff1a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .head-name {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.015em;
+  }
+  .head-strap {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #ffffffa6; margin-top: 2px;
+  }
+  .head-right { text-align: right; }
+  .head-kind {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #ffffffa6;
+  }
+  .head-title {
+    font-size: 14px; font-weight: 700; margin-top: 2px; letter-spacing: -0.01em;
+  }
+
+  /* ── Meta table ───────────────────────────────────────────── */
+  .meta {
+    width: 100%; border-collapse: collapse; margin-top: 16px;
+    font-size: 11px;
+  }
+  .meta th, .meta td {
+    padding: 8px 12px; border-bottom: 1px solid var(--line);
+    text-align: left; vertical-align: top;
+  }
+  .meta th {
+    color: var(--faint); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px;
+    width: 30%;
+  }
+  .meta td { color: var(--ink); font-weight: 600; }
+
+  /* ── Title block ──────────────────────────────────────────── */
+  .doc-title {
+    margin-top: 22px; font-size: 22px; font-weight: 800;
+    letter-spacing: -0.02em; color: var(--navy);
+  }
+
+  /* ── Sections ─────────────────────────────────────────────── */
+  .sec { margin-top: 20px; }
+  .sec-h {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--faint); margin: 16px 0 8px;
+  }
+  .sec-p { font-size: 12px; line-height: 1.55; margin: 6px 0; color: var(--ink); }
+
+  .sec-ul { margin: 6px 0 6px 18px; padding: 0; }
+  .sec-ul li { font-size: 12px; line-height: 1.55; margin: 3px 0; color: var(--ink); }
+
+  .sec-kv { width: 100%; border-collapse: collapse; }
+  .sec-kv th, .sec-kv td {
+    padding: 7px 10px; border-bottom: 1px solid var(--line);
+    font-size: 11.5px; text-align: left; vertical-align: top;
+  }
+  .sec-kv th { color: var(--muted); font-weight: 500; width: 45%; }
+  .sec-kv td { color: var(--ink); font-weight: 600; }
+
+  .sec-tbl { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .sec-tbl th {
+    background: var(--soft); color: var(--muted);
+    text-align: left; padding: 8px 10px; font-weight: 600;
+    text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .badge {
+    border-radius: 14px; padding: 16px 18px; margin-top: 4px;
+  }
+  .badge-label {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    opacity: 0.7; font-weight: 700;
+  }
+  .badge-value { font-size: 26px; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em; }
+  .badge-sub { font-size: 11px; opacity: 0.75; margin-top: 6px; }
+
+  .score {
+    border-radius: 16px; padding: 20px 22px; display: flex;
+    align-items: baseline; gap: 16px;
+  }
+  .score-grade { font-size: 42px; font-weight: 800; letter-spacing: -0.04em; }
+  .score-label { font-size: 14px; font-weight: 700; }
+  .score-sub { font-size: 11px; opacity: 0.8; margin-left: auto; }
+
+  .flags { display: flex; flex-direction: column; gap: 8px; }
+  .flag { border-radius: 12px; padding: 10px 14px; }
+  .flag-top { display: flex; align-items: center; gap: 10px; }
+  .flag-tag {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
+    padding: 3px 7px; border-radius: 5px; background: #ffffffcc;
+  }
+  .flag-title { font-size: 12.5px; font-weight: 700; }
+  .flag-detail { font-size: 11.5px; margin-top: 6px; opacity: 0.9; line-height: 1.5; }
+
+  /* ── Footer ───────────────────────────────────────────────── */
+  .foot {
+    margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .qr {
+    flex: 0 0 120px; text-align: center;
+  }
+  .qr img {
+    width: 120px; height: 120px; border: 1px solid var(--line);
+    border-radius: 10px; background: #fff;
+  }
+  .qr-cap {
+    font-size: 9.5px; color: var(--muted); margin-top: 6px; line-height: 1.4;
+  }
+  .qr-url {
+    font-size: 9.5px; color: var(--navy); font-weight: 700; margin-top: 2px;
+    word-break: break-all;
+  }
+  .foot-body { flex: 1; }
+  .shield-chip {
+    display: inline-block; padding: 5px 10px; border-radius: 8px;
+    background: var(--amberBg); color: #92400e;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; border: 1px solid var(--amberEdge);
+  }
+  .foot-p {
+    font-size: 10.5px; line-height: 1.55; color: var(--muted);
+    margin: 8px 0 0;
+  }
+  .foot-pdpa {
+    font-size: 9.5px; color: var(--faint); margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── Print rules ──────────────────────────────────────────── */
+  @media print {
+    .page { padding: 12mm 14mm 14mm; }
+    .head { break-inside: avoid; }
+    .foot { break-inside: avoid; }
+    .badge, .score, .flag, .sec-kv, .sec-tbl { break-inside: avoid; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <div class="head-brand">
+      <div class="shield">🛡️</div>
+      <div>
+        <div class="head-name">Find.ai</div>
+        <div class="head-strap">Find.ai · Malaysian Property Compliance Toolkit</div>
+      </div>
+    </div>
+    <div class="head-right">
+      <div class="head-kind">Tenant Screening Report</div>
+      <div class="head-title">Don&#039;t sign blind.</div>
+    </div>
+  </div>
+
+  <table class="meta">
+    <tbody><tr><th>Prepared for</th><td>Mr. Ken Tan</td></tr><tr><th>Property</th><td>Unit 12-03 Damansara</td></tr><tr><th>Case ref</th><td>FA-20260421-BHQ5</td></tr><tr><th>Date prepared</th><td>2026-04-21</td></tr></tbody>
+  </table>
+
+  <div class="doc-title">Tenant Screening Report</div>
+
+  <div class="sec">
+    <h2 class="sec-h">Trust score</h2>
+    <div class="score" style="background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe">
+      <div class="score-grade">B</div>
+      <div class="score-label">Good</div>
+      <div class="score-sub">2 amber flags</div>
+    </div>
+<h2 class="sec-h">Tenant</h2><table class="sec-kv"><tbody>
+    <tr>
+      <th>Name</th>
+      <td>Lee Wei Ming</td>
+    </tr>
+    <tr>
+      <th>IC / Passport</th>
+      <td>900101-10-1234</td>
+    </tr>
+    <tr>
+      <th>Employer</th>
+      <td>Ace Tech Sdn Bhd</td>
+    </tr>
+    <tr>
+      <th>Monthly income (RM)</th>
+      <td>6500</td>
+    </tr>
+    <tr>
+      <th>References</th>
+      <td>2 prior landlords</td>
+    </tr>
+    <tr>
+      <th>CTOS / CCRIS consent</th>
+      <td>Yes</td>
+    </tr></tbody></table>
+<h2 class="sec-h">Findings</h2><div class="flags">
+      <div class="flag" style="background:#d1fae5;color:#065f46;border:1px solid #a7f3d0">
+        <div class="flag-top">
+          <span class="flag-tag">OK</span>
+          <span class="flag-title">Stable employment</span>
+        </div>
+        <div class="flag-detail">4 years at current employer</div>
+      </div>
+      <div class="flag" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a">
+        <div class="flag-top">
+          <span class="flag-tag">REVIEW</span>
+          <span class="flag-title">Limited credit history</span>
+        </div>
+        <div class="flag-detail">CCRIS shows 1 facility only</div>
+      </div></div>
+  </div>
+
+  <div class="foot">
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=2&data=https%3A%2F%2Ffind.ai%2Fr%2FFA-20260421-BHQ5" alt="QR to https://find.ai/r/FA-20260421-BHQ5"
+           onerror="this.style.display='none'">
+      <div class="qr-cap">Scan to verify this report at find.ai</div>
+      <div class="qr-url">https://find.ai/r/FA-20260421-BHQ5</div>
+    </div>
+    <div class="foot-body">
+      <span class="shield-chip">🛡️ Support tool only — not legal advice.</span>
+      <p class="foot-p">This report summarises publicly available Malaysian legal reference material together with the information you provided. It is NOT a substitute for independent legal advice from a qualified Peguambela &amp; Peguamcara. Verify critical actions with a licensed professional before relying on them.</p>
+      <p class="foot-pdpa">Personal data collected under PDPA 2010. Retained for dispute support; deletable on request. · Continue your case at find.ai</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

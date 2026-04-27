@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Find.ai — v5c Thumb Zone + Scroll Momentum</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { -webkit-font-smoothing: antialiased; background: #FFFFFF; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; padding-bottom: 88px; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
+  .tight { letter-spacing: -0.035em; }
+  .tighter { letter-spacing: -0.05em; }
+  .act { min-height: 100svh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; }
+  .shadow-float { box-shadow: 0 10px 25px -5px rgba(15,23,42,0.1), 0 40px 80px -30px rgba(15,23,42,0.2); }
+  .shadow-card { box-shadow: 0 1px 3px rgba(15,23,42,0.05), 0 20px 40px -20px rgba(15,23,42,0.12); }
+  .fade-bg { background: radial-gradient(ellipse at top, #FAFAFA 0%, #FFFFFF 40%, #F8FAFC 100%); }
+  /* Thumb-zone sticky CTA bar */
+  .cta-bar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid rgba(226,232,240,0.8);
+    z-index: 50;
+  }
+  .thumb-btn {
+    width: 100%; padding: 16px;
+    border-radius: 16px;
+    background: #0F172A; color: white;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: -0.01em;
+    box-shadow: 0 10px 30px -10px rgba(15,23,42,0.4);
+    transition: transform .15s ease;
+  }
+  .thumb-btn:active { transform: scale(0.98); }
+  .scroll-hint { animation: bounce 1.8s ease-in-out infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  .grid-floor { background-image: linear-gradient(#F1F5F9 1px, transparent 1px), linear-gradient(90deg, #F1F5F9 1px, transparent 1px); background-size: 32px 32px; }
+</style>
+</head>
+<body class="fade-bg">
+
+<!-- Header — sticky top, small -->
+<header class="sticky top-0 z-40 backdrop-blur-md" style="background: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(226,232,240,0.5)">
+  <div class="max-w-lg mx-auto flex items-center justify-between px-5 py-3">
+    <div class="flex items-center gap-2">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F172A"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="font-bold text-[14px] tight text-slate-900">Find.ai</span>
+    </div>
+    <button class="text-[11px] px-2.5 py-1 rounded-full font-medium text-slate-600 bg-slate-100">BM</button>
+  </div>
+</header>
+
+<main class="max-w-lg mx-auto px-5">
+
+  <!-- ============================================ -->
+  <!-- ACT 1 · HERO                                 -->
+  <!-- ============================================ -->
+  <section class="act">
+    <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-indigo-600 mb-4">
+      · Cakap 2.0
+    </div>
+    <h1 class="text-[62px] font-black leading-[0.88] tighter text-slate-900 mb-5">
+      Don't sign<br/>blind.
+    </h1>
+    <p class="text-[16px] leading-relaxed text-slate-600 max-w-[380px]">
+      The Malaysian pre-signing compliance toolkit — built for landlords, tenants, and agents who want certainty before the ink dries.
+    </p>
+    <div class="mt-14 flex flex-col items-center scroll-hint">
+      <div class="mono text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400 mb-2">Scroll</div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ACT 2 · STAKES                               -->
+  <!-- ============================================ -->
+  <section class="act">
+    <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-red-600 mb-4">
+      · The cost of signing blind
+    </div>
+    <h2 class="text-[40px] font-black leading-[0.95] tighter text-slate-900 mb-8">
+      One wrong<br/>signature.<br/>Three ways<br/>to lose.
+    </h2>
+
+    <div class="space-y-3">
+      <div class="rounded-2xl p-5 bg-white shadow-card" style="border: 1px solid #FEE2E2">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background: #FEE2E2">
+            <span class="text-[18px]">🚪</span>
+          </div>
+          <div>
+            <div class="mono text-[10px] font-bold uppercase tracking-wider text-red-700 mb-0.5">Risk 01 · Bad tenant</div>
+            <div class="text-[14px] font-bold text-slate-900 tight">Fake IC. Past CCRIS flags. Disappears in month three.</div>
+            <div class="text-[12px] text-slate-600 mt-1">Average loss: <strong class="mono text-slate-900">RM 8,400</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl p-5 bg-white shadow-card" style="border: 1px solid #FEF3C7">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background: #FEF3C7">
+            <span class="text-[18px]">📄</span>
+          </div>
+          <div>
+            <div class="mono text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">Risk 02 · Unfair clause</div>
+            <div class="text-[14px] font-bold text-slate-900 tight">Deposit trap. Missing notice clause. No exit path.</div>
+            <div class="text-[12px] text-slate-600 mt-1">Average loss: <strong class="mono text-slate-900">RM 3,600</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl p-5 bg-white shadow-card" style="border: 1px solid #DBEAFE">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background: #DBEAFE">
+            <span class="text-[18px]">⚖️</span>
+          </div>
+          <div>
+            <div class="mono text-[10px] font-bold uppercase tracking-wider text-blue-700 mb-0.5">Risk 03 · Wrong stamp</div>
+            <div class="text-[14px] font-bold text-slate-900 tight">SDSAS 2026 self-assessment. Mis-calculate and LHDN fines.</div>
+            <div class="text-[12px] text-slate-600 mt-1">Fine per wrong assessment: <strong class="mono text-slate-900">RM 10,000</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ACT 3 · TOOLKIT REVEAL                       -->
+  <!-- ============================================ -->
+  <section class="act">
+    <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-emerald-600 mb-4">
+      · The answer
+    </div>
+    <h2 class="text-[44px] font-black leading-[0.92] tighter text-slate-900 mb-3">
+      Three tools.<br/>One spine.
+    </h2>
+    <p class="text-[14px] leading-relaxed text-slate-600 max-w-[360px] mb-8">
+      Screen the tenant. Audit the terms. Stamp it right. Each produces a branded PDF you can share on WhatsApp.
+    </p>
+
+    <div class="space-y-3">
+      <!-- Tool 01 -->
+      <div class="flex items-center gap-4 rounded-2xl p-4 bg-white shadow-card" style="border: 1px solid #F1F5F9">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style="background: linear-gradient(135deg, #10B981, #059669)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-slate-500">01 · Screen</div>
+          <div class="text-[15px] font-bold tight text-slate-900">Trust the tenant</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+
+      <!-- Tool 02 -->
+      <div class="flex items-center gap-4 rounded-2xl p-4 bg-white shadow-card" style="border: 1px solid #F1F5F9">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style="background: linear-gradient(135deg, #6366F1, #4F46E5)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-slate-500">02 · Audit</div>
+          <div class="text-[15px] font-bold tight text-slate-900">Audit the terms</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+
+      <!-- Tool 03 -->
+      <div class="flex items-center gap-4 rounded-2xl p-4 bg-white shadow-card" style="border: 1px solid #F1F5F9">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style="background: linear-gradient(135deg, #F59E0B, #D97706)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+            <path d="M12 6v2m0 8v2"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-slate-500">03 · Stamp</div>
+          <div class="text-[15px] font-bold tight text-slate-900">Stamp it right</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center mono text-[10px] uppercase tracking-[0.2em] text-slate-400">
+      + Chatbox · Ask anything else
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ACT 4 · PDF PROOF                            -->
+  <!-- ============================================ -->
+  <section class="act">
+    <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-slate-700 mb-4">
+      · The artifact
+    </div>
+    <h2 class="text-[40px] font-black leading-[0.95] tighter text-slate-900 mb-3">
+      Every tool<br/>produces a PDF.
+    </h2>
+    <p class="text-[14px] leading-relaxed text-slate-600 max-w-[360px] mb-8">
+      Branded. Shareable. Legally defensible. Forward it on WhatsApp — your recipient becomes a user.
+    </p>
+
+    <!-- Floating PDF preview -->
+    <div class="relative mx-auto" style="max-width: 300px">
+      <div class="absolute inset-0 rounded-2xl grid-floor opacity-50" style="transform: translate(12px, 12px)"></div>
+      <div class="relative rounded-2xl bg-white shadow-float p-5" style="border: 1px solid #E2E8F0">
+        <div class="flex items-center gap-2 mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F172A"/>
+            <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <span class="font-bold text-[11px] tight">Find.ai</span>
+          <span class="mono text-[8px] uppercase tracking-wider text-slate-400 ml-auto">Report #A-7F3K</span>
+        </div>
+        <div class="mono text-[8.5px] uppercase tracking-wider text-slate-500 mb-1">Tenant Screening Report</div>
+        <div class="text-[15px] font-black tight text-slate-900 mb-4">Chong Wei Ming</div>
+
+        <div class="rounded-xl p-4 flex items-center gap-4 mb-4"
+          style="background: linear-gradient(135deg, #064E3B, #065F46)">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+            style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2)">
+            <span class="mono text-[26px] font-black text-white">A</span>
+          </div>
+          <div>
+            <div class="mono text-[8.5px] uppercase tracking-wider text-emerald-200">Trust grade</div>
+            <div class="text-[12px] font-bold text-white">Verified · Low risk</div>
+          </div>
+        </div>
+
+        <div class="space-y-2 mb-4">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-600">Payment history</span>
+            <span class="mono font-bold text-emerald-700">98%</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-600">Reference check</span>
+            <span class="mono font-bold text-emerald-700">Verified</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-600">Red flags</span>
+            <span class="mono font-bold text-slate-900">0</span>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+          <div class="w-8 h-8 rounded grid-floor"></div>
+          <div class="flex-1">
+            <div class="mono text-[8px] uppercase tracking-wider text-slate-400">Scan to verify</div>
+            <div class="mono text-[9px] text-slate-600">find.ai/r/A-7F3K</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ACT 5 · LEGAL GROUNDING                      -->
+  <!-- ============================================ -->
+  <section class="act">
+    <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-slate-500 mb-4">
+      · Grounded in statute
+    </div>
+    <h2 class="text-[40px] font-black leading-[0.95] tighter text-slate-900 mb-8">
+      Five Acts<br/>of Parliament.<br/>Zero guesswork.
+    </h2>
+
+    <div class="space-y-2">
+      <div class="rounded-xl p-4 flex items-center justify-between bg-white" style="border: 1px solid #E2E8F0">
+        <div>
+          <div class="text-[13px] font-bold text-slate-900 tight">Contracts Act 1950</div>
+          <div class="text-[11px] text-slate-500">Tenancy agreement validity</div>
+        </div>
+        <span class="mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">s.10–24</span>
+      </div>
+      <div class="rounded-xl p-4 flex items-center justify-between bg-white" style="border: 1px solid #E2E8F0">
+        <div>
+          <div class="text-[13px] font-bold text-slate-900 tight">RTA 2026</div>
+          <div class="text-[11px] text-slate-500">Residential Tenancy Act</div>
+        </div>
+        <span class="mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">New law</span>
+      </div>
+      <div class="rounded-xl p-4 flex items-center justify-between bg-white" style="border: 1px solid #E2E8F0">
+        <div>
+          <div class="text-[13px] font-bold text-slate-900 tight">Stamp Act 1949</div>
+          <div class="text-[11px] text-slate-500">SDSAS self-assessment</div>
+        </div>
+        <span class="mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">Item 32(a)</span>
+      </div>
+      <div class="rounded-xl p-4 flex items-center justify-between bg-white" style="border: 1px solid #E2E8F0">
+        <div>
+          <div class="text-[13px] font-bold text-slate-900 tight">PDPA 2010</div>
+          <div class="text-[11px] text-slate-500">Data protection</div>
+        </div>
+        <span class="mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">s.6–7</span>
+      </div>
+      <div class="rounded-xl p-4 flex items-center justify-between bg-white" style="border: 1px solid #E2E8F0">
+        <div>
+          <div class="text-[13px] font-bold text-slate-900 tight">Evidence Act</div>
+          <div class="text-[11px] text-slate-500">Digital records admissibility</div>
+        </div>
+        <span class="mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">s.90A</span>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-slate-100 text-center">
+      <div class="mono text-[9px] font-medium uppercase tracking-[0.22em] text-slate-400 mb-1">
+        Support tool · not legal advice
+      </div>
+      <div class="mono text-[9px] font-medium uppercase tracking-[0.22em] text-slate-400">
+        Conversations stay on your device
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================ -->
+<!-- STICKY THUMB-ZONE CTA                        -->
+<!-- ============================================ -->
+<div class="cta-bar">
+  <div class="max-w-lg mx-auto">
+    <button class="thumb-btn">
+      Open the toolkit  →
+    </button>
+    <div class="text-center mt-1.5 mono text-[9px] uppercase tracking-[0.18em] text-slate-400">
+      No sign-up · Free · Thumb zone
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

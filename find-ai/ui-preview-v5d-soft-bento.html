@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Find.ai — v5d Tenant Trust Dashboard (Soft Bento)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { -webkit-font-smoothing: antialiased; background: #F1F5F9; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
+  .tight { letter-spacing: -0.035em; }
+  .tighter { letter-spacing: -0.05em; }
+
+  /* Soft Bento — no hard borders, background defines cells */
+  .cell          { background: #FFFFFF; border-radius: 24px; padding: 20px; box-shadow: 0 1px 2px rgba(15,23,42,0.02), 0 10px 35px -12px rgba(15,23,42,0.06); transition: transform .2s ease, box-shadow .2s ease; }
+  .cell:active   { transform: scale(0.985); box-shadow: 0 1px 2px rgba(15,23,42,0.02), 0 6px 20px -8px rgba(15,23,42,0.12); }
+  .cell-muted    { background: #F8FAFC; }
+  .cell-dark     { background: #0F172A; color: white; }
+  .cell-accent-g { background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); }
+  .cell-accent-a { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); }
+  .cell-accent-r { background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%); }
+  .cell-accent-b { background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); }
+
+  /* Ghost Mode — blur private numbers */
+  .ghost-hide    { filter: blur(10px); transition: filter .18s ease; user-select: none; }
+  .ghost-peek    { filter: blur(0); }
+
+  /* Bottom sheet */
+  .sheet-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 40; backdrop-filter: blur(2px); }
+  .sheet-backdrop.on { opacity: 1; pointer-events: auto; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; background: white; border-radius: 28px 28px 0 0; max-height: 85dvh; transform: translateY(100%); transition: transform .32s cubic-bezier(0.32, 0.72, 0, 1); z-index: 50; overflow-y: auto; box-shadow: 0 -20px 60px -20px rgba(15,23,42,0.25); padding-bottom: env(safe-area-inset-bottom); }
+  .sheet.on { transform: translateY(0); }
+  .sheet-handle { width: 40px; height: 5px; background: #CBD5E1; border-radius: 999px; margin: 10px auto 4px; }
+
+  /* Sparkline */
+  .spark path { stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Toggle */
+  .toggle { width: 44px; height: 26px; border-radius: 999px; background: #CBD5E1; position: relative; transition: background .2s; cursor: pointer; }
+  .toggle::after { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 999px; background: white; top: 2px; left: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: left .2s; }
+  .toggle.on { background: #0F172A; }
+  .toggle.on::after { left: 20px; }
+
+  /* Shimmer pulse for "Live" dot */
+  .pulse { animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
+
+  /* Long-press visual feedback */
+  .long-active { background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 100%) !important; }
+
+  .safe-bottom { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+</style>
+</head>
+<body>
+
+<!-- Phone frame wrapper — for desktop preview -->
+<div class="max-w-lg mx-auto px-4 pt-3 safe-bottom">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between py-3 mb-3">
+    <div class="flex items-center gap-2">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F172A"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="font-bold text-[15px] tight text-slate-900">Trust Dashboard</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="ghostBtn" class="text-[11px] px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 bg-white shadow-sm" style="color:#0F172A">
+        <svg id="ghostIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span id="ghostLabel">Ghost</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Greeting -->
+  <div class="mb-3 px-1">
+    <div class="mono text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-1">Tuesday · 22 Apr</div>
+    <div class="text-[22px] font-black tight text-slate-900">Hi, Wei Ming.</div>
+  </div>
+
+  <!-- ═════════════════════════════════════ -->
+  <!-- 1. ANCHOR (100% width, big)           -->
+  <!-- ═════════════════════════════════════ -->
+  <button class="cell w-full text-left mb-3" onclick="openSheet('score'); haptic(10)">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <div class="mono text-[9.5px] font-bold uppercase tracking-[0.18em] text-emerald-700 mb-1.5 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse"></span>
+          Trust Grade · Live
+        </div>
+        <div class="flex items-end gap-3">
+          <div class="text-[88px] font-black leading-none tighter" style="background: linear-gradient(135deg, #059669, #047857); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">A</div>
+          <div class="pb-3">
+            <div class="mono text-[22px] font-bold text-slate-900 ghost-number">847</div>
+            <div class="mono text-[10px] text-slate-500 uppercase tracking-wider">/ 900 pts</div>
+          </div>
+        </div>
+      </div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 text-emerald-700 mt-2">
+        ↑ <span class="ghost-number">12</span>
+      </div>
+    </div>
+    <!-- Sparkline — last 6 months -->
+    <svg class="spark w-full" viewBox="0 0 300 50" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="sparkG" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10B981"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+      </defs>
+      <path d="M 0 40 L 50 38 L 100 30 L 150 28 L 200 22 L 250 15 L 300 10" stroke="url(#sparkG)"/>
+      <circle cx="300" cy="10" r="4" fill="#059669"/>
+      <circle cx="300" cy="10" r="8" fill="#059669" opacity="0.25"/>
+    </svg>
+    <div class="flex items-center justify-between mt-2 mono text-[9.5px] uppercase tracking-wider text-slate-400">
+      <span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span class="text-emerald-700 font-bold">Apr</span>
+    </div>
+  </button>
+
+  <!-- ═════════════════════════════════════ -->
+  <!-- 2. QUICK STATS (2 × 50%)              -->
+  <!-- ═════════════════════════════════════ -->
+  <div class="grid grid-cols-2 gap-3 mb-3">
+    <button class="cell cell-accent-g text-left" onclick="openSheet('id'); haptic(10)">
+      <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-emerald-800 mb-1">Identity</div>
+      <div class="text-[14px] font-black tight text-emerald-900">IC Verified</div>
+      <div class="text-[10.5px] text-emerald-800/70 mt-0.5">MyKad · 3 days ago</div>
+    </button>
+
+    <button class="cell cell-muted text-left" onclick="openSheet('payments'); haptic(10)">
+      <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-slate-500 mb-1">Late payments</div>
+      <div class="text-[34px] font-black leading-none tighter text-slate-900 ghost-number">0</div>
+      <div class="text-[10.5px] text-slate-500 mt-1">Past 12 months</div>
+    </button>
+  </div>
+
+  <!-- ═════════════════════════════════════ -->
+  <!-- 3. THE FIXER (100% wide, bold)        -->
+  <!-- ═════════════════════════════════════ -->
+  <button class="cell cell-dark w-full text-left mb-3 relative overflow-hidden" onclick="openSheet('fixer'); haptic([20, 50, 20])">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex-1 min-w-0">
+        <div class="mono text-[9.5px] font-bold uppercase tracking-[0.18em] mb-2" style="color:#A5B4FC">
+          · The Fixer · +15 pts available
+        </div>
+        <div class="text-[17px] font-black tight leading-tight mb-1">
+          Link your TNB bill to boost your grade.
+        </div>
+        <div class="text-[11.5px] leading-relaxed" style="color: rgba(255,255,255,0.65)">
+          Tap to verify utility history. Takes 30 sec. Adds 24-month payment proof to your grade.
+        </div>
+        <div class="flex items-center gap-1.5 mt-3">
+          <span class="mono text-[10px] font-bold uppercase tracking-wider" style="color:#FCD34D">Do this now</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+      <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center" style="background: linear-gradient(135deg, #FCD34D, #F59E0B)">
+        <span class="text-[24px] font-black text-slate-900 mono">+15</span>
+      </div>
+    </div>
+  </button>
+
+  <!-- ═════════════════════════════════════ -->
+  <!-- 4. BINARY ROW (2 × 50%)               -->
+  <!-- ═════════════════════════════════════ -->
+  <div class="grid grid-cols-2 gap-3 mb-3">
+    <div class="cell text-left">
+      <div class="flex items-start justify-between mb-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:#F1F5F9">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div id="lockToggle" class="toggle" onclick="toggleLock(event)"></div>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-slate-500 mb-1">Identity Lock</div>
+      <div class="text-[14px] font-black tight text-slate-900">Freeze grade</div>
+      <div id="lockStatus" class="text-[10.5px] text-slate-500 mt-0.5">Off · Anyone with link can view</div>
+    </div>
+
+    <div class="cell cell-accent-b text-left">
+      <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+        </svg>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider text-blue-900 mb-1">Next review</div>
+      <div class="text-[34px] font-black leading-none tighter text-blue-900 mono ghost-number">23</div>
+      <div class="text-[10.5px] text-blue-800/70 mt-1">days · auto-refresh</div>
+    </div>
+  </div>
+
+  <!-- Recent activity feed -->
+  <div class="mb-3 mt-6">
+    <div class="flex items-center gap-2 mb-3 px-1">
+      <span class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Recent activity</span>
+      <span class="flex-1 h-px bg-slate-200"></span>
+    </div>
+    <div class="cell !p-0 overflow-hidden">
+      <div class="p-4 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[12.5px] font-bold text-slate-900">Grade recalculated · <span class="text-emerald-700">+12 pts</span></div>
+          <div class="text-[10.5px] text-slate-500">Today · 09:14</div>
+        </div>
+      </div>
+      <div class="h-px" style="background:#F1F5F9"></div>
+      <div class="p-4 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2.3"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[12.5px] font-bold text-slate-900">IC verified via MyKad</div>
+          <div class="text-[10.5px] text-slate-500">3 days ago</div>
+        </div>
+      </div>
+      <div class="h-px" style="background:#F1F5F9"></div>
+      <div class="p-4 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[12.5px] font-bold text-slate-900">Registration completed · 5 steps</div>
+          <div class="text-[10.5px] text-slate-500">5 days ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share CTA — secondary, not the anchor -->
+  <button class="cell w-full text-center mb-6" onclick="openSheet('share'); haptic([20, 50, 20])">
+    <div class="text-[10.5px] mono uppercase tracking-[0.2em] text-slate-500 mb-1">Ready to rent</div>
+    <div class="text-[15px] font-black tight text-slate-900">Share your grade on WhatsApp →</div>
+  </button>
+
+  <!-- Hint strip -->
+  <div class="text-center px-4 pb-2">
+    <div class="mono text-[9px] uppercase tracking-[0.18em] text-slate-400">
+      Long-press any number to blur · Tap any cell for details
+    </div>
+  </div>
+
+</div>
+
+<!-- ═════════════════════════════════════ -->
+<!-- BOTTOM SHEET (Peek Interaction)       -->
+<!-- ═════════════════════════════════════ -->
+<div id="backdrop" class="sheet-backdrop" onclick="closeSheet()"></div>
+<div id="sheet" class="sheet">
+  <div class="sheet-handle"></div>
+  <div id="sheetBody" class="px-6 pb-8 pt-3"></div>
+</div>
+
+<script>
+  // ── Haptic ───────────────────────────────────────
+  function haptic(p) { if (navigator.vibrate) try { navigator.vibrate(p); } catch(e){} }
+
+  // ── Ghost Mode (long-press or toggle) ───────────
+  let ghostOn = false;
+  function setGhost(on) {
+    ghostOn = on;
+    document.querySelectorAll('.ghost-number').forEach(el => {
+      if (on) el.classList.add('ghost-hide'); else el.classList.remove('ghost-hide');
+    });
+    document.getElementById('ghostLabel').textContent = on ? 'Revealed' : 'Ghost';
+    document.getElementById('ghostIcon').innerHTML = on
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+      : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+    haptic(on ? [10, 30, 10] : 10);
+  }
+  document.getElementById('ghostBtn').onclick = () => setGhost(!ghostOn);
+
+  // Long-press anywhere with a .ghost-number to toggle
+  let pressTimer;
+  document.addEventListener('pointerdown', e => {
+    const el = e.target.closest('.ghost-number, .cell');
+    if (!el) return;
+    pressTimer = setTimeout(() => {
+      setGhost(!ghostOn);
+      el.classList.add('long-active');
+      setTimeout(() => el.classList.remove('long-active'), 250);
+    }, 500);
+  });
+  document.addEventListener('pointerup', () => clearTimeout(pressTimer));
+  document.addEventListener('pointercancel', () => clearTimeout(pressTimer));
+  document.addEventListener('pointermove', () => clearTimeout(pressTimer));
+
+  // ── Identity Lock toggle ────────────────────────
+  function toggleLock(e) {
+    e.stopPropagation();
+    const t = document.getElementById('lockToggle');
+    const s = document.getElementById('lockStatus');
+    const on = t.classList.toggle('on');
+    s.textContent = on ? 'On · Grade private until you share' : 'Off · Anyone with link can view';
+    haptic(on ? [30, 60, 30] : 15);
+  }
+
+  // ── Bottom Sheet ────────────────────────────────
+  const sheetContent = {
+    score: `
+      <div class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700 mb-1.5">Trust Grade Breakdown</div>
+      <div class="text-[28px] font-black tighter text-slate-900 mb-5">Why you're an A.</div>
+      <div class="space-y-3">
+        <div class="rounded-2xl p-4" style="background:#F8FAFC">
+          <div class="flex items-center justify-between mb-1"><span class="text-[13px] font-bold text-slate-900">Payment discipline</span><span class="mono text-[13px] font-black text-emerald-700">98%</span></div>
+          <div class="text-[11.5px] text-slate-500">24 months of on-time utility payments</div>
+        </div>
+        <div class="rounded-2xl p-4" style="background:#F8FAFC">
+          <div class="flex items-center justify-between mb-1"><span class="text-[13px] font-bold text-slate-900">Identity verification</span><span class="mono text-[13px] font-black text-emerald-700">Verified</span></div>
+          <div class="text-[11.5px] text-slate-500">MyKad matched · Bank KYC passed</div>
+        </div>
+        <div class="rounded-2xl p-4" style="background:#F8FAFC">
+          <div class="flex items-center justify-between mb-1"><span class="text-[13px] font-bold text-slate-900">References</span><span class="mono text-[13px] font-black text-emerald-700">2 of 3</span></div>
+          <div class="text-[11.5px] text-slate-500">Prior landlord confirmed · employer pending</div>
+        </div>
+        <div class="rounded-2xl p-4" style="background:#F8FAFC">
+          <div class="flex items-center justify-between mb-1"><span class="text-[13px] font-bold text-slate-900">Red flags</span><span class="mono text-[13px] font-black text-emerald-700">0</span></div>
+          <div class="text-[11.5px] text-slate-500">CCRIS clean · no eviction history</div>
+        </div>
+      </div>
+    `,
+    id: `
+      <div class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700 mb-1.5">Identity verified</div>
+      <div class="text-[28px] font-black tighter text-slate-900 mb-4">MyKad check passed.</div>
+      <div class="rounded-2xl p-4 mb-4" style="background:#ECFDF5">
+        <div class="text-[12px] text-emerald-900 leading-relaxed">IC number matched to MyKad registry · face match confirmed · issued 2019-08 · Selangor. Verified 3 days ago by PDPA-compliant partner.</div>
+      </div>
+      <div class="mono text-[9.5px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Document on file</div>
+      <div class="rounded-2xl p-4 flex items-center gap-3" style="background:#F8FAFC">
+        <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center">📄</div>
+        <div class="flex-1 min-w-0"><div class="text-[12.5px] font-bold text-slate-900">mykad_front.pdf</div><div class="text-[10px] text-slate-500 mono">2.1 MB · encrypted</div></div>
+      </div>
+    `,
+    payments: `
+      <div class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-700 mb-1.5">Payment history · 12 mo</div>
+      <div class="text-[28px] font-black tighter text-slate-900 mb-4">Zero late payments.</div>
+      <div class="text-[13px] text-slate-600 leading-relaxed mb-4">Across TNB, Unifi, and your bank loan. 36 consecutive on-time payments. This is the signal landlords trust most.</div>
+      <div class="rounded-2xl p-4" style="background:#F8FAFC">
+        <div class="grid grid-cols-12 gap-1 mb-2">
+          <div class="h-8 rounded bg-emerald-200"></div><div class="h-8 rounded bg-emerald-200"></div><div class="h-8 rounded bg-emerald-200"></div><div class="h-8 rounded bg-emerald-300"></div><div class="h-8 rounded bg-emerald-300"></div><div class="h-8 rounded bg-emerald-300"></div><div class="h-8 rounded bg-emerald-400"></div><div class="h-8 rounded bg-emerald-400"></div><div class="h-8 rounded bg-emerald-400"></div><div class="h-8 rounded bg-emerald-500"></div><div class="h-8 rounded bg-emerald-500"></div><div class="h-8 rounded bg-emerald-600"></div>
+        </div>
+        <div class="flex justify-between mono text-[9.5px] uppercase tracking-wider text-slate-500"><span>May '25</span><span>Apr '26</span></div>
+      </div>
+    `,
+    fixer: `
+      <div class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700 mb-1.5">The Fixer</div>
+      <div class="text-[28px] font-black tighter text-slate-900 mb-3">+15 points.<br/>30 seconds.</div>
+      <div class="text-[13px] text-slate-600 leading-relaxed mb-5">Linking your TNB bill unlocks 24 months of verified utility payment history. This is the single biggest boost to your grade available right now.</div>
+      <div class="rounded-2xl p-5 mb-4 text-white" style="background: linear-gradient(135deg, #0F172A, #1E293B)">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#FCD34D"><span class="mono font-black text-slate-900">TNB</span></div>
+          <div><div class="mono text-[10px] uppercase tracking-wider" style="color:#A5B4FC">What we'll see</div><div class="text-[13px] font-bold">Bill amounts + payment dates only</div></div>
+        </div>
+        <div class="text-[11.5px] leading-relaxed" style="color:rgba(255,255,255,0.7)">We never see your address, appliances, or consumption. Read-only. Revoke anytime.</div>
+      </div>
+      <button onclick="closeSheet(); setTimeout(() => { haptic([30, 60, 30, 60, 30]); alert('TNB linking flow starts here'); }, 300)" class="w-full py-4 rounded-2xl text-[14.5px] font-bold text-white bg-slate-900">Link TNB bill  →</button>
+    `,
+    share: `
+      <div class="mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-700 mb-1.5">Share your grade</div>
+      <div class="text-[28px] font-black tighter text-slate-900 mb-3">One-time link.<br/>One landlord.</div>
+      <div class="text-[13px] text-slate-600 leading-relaxed mb-5">Each share creates a unique link. Landlord sees your grade + breakdown + verified factors. Link auto-expires in 7 days.</div>
+      <div class="space-y-3">
+        <button class="w-full rounded-2xl p-4 flex items-center gap-3 text-left" style="background:#25D366">
+          <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[18px]">💬</div>
+          <div class="flex-1 text-white"><div class="text-[14px] font-bold">Share on WhatsApp</div><div class="text-[11px] opacity-90">Most landlords use this</div></div>
+        </button>
+        <button class="w-full rounded-2xl p-4 flex items-center gap-3 text-left" style="background:#F8FAFC">
+          <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[18px] shadow-sm">🔗</div>
+          <div class="flex-1"><div class="text-[14px] font-bold text-slate-900">Copy link</div><div class="text-[11px] text-slate-500 mono">find.ai/g/A-7F3K</div></div>
+        </button>
+      </div>
+    `
+  };
+  function openSheet(key) {
+    document.getElementById('sheetBody').innerHTML = sheetContent[key] || '';
+    document.getElementById('backdrop').classList.add('on');
+    document.getElementById('sheet').classList.add('on');
+    haptic(10);
+  }
+  function closeSheet() {
+    document.getElementById('backdrop').classList.remove('on');
+    document.getElementById('sheet').classList.remove('on');
+    haptic(10);
+  }
+
+  // Swipe-down close
+  let startY = 0;
+  const sheetEl = document.getElementById('sheet');
+  sheetEl.addEventListener('pointerdown', e => { startY = e.clientY; });
+  sheetEl.addEventListener('pointerup', e => {
+    if (e.clientY - startY > 80) closeSheet();
+  });
+</script>
+
+</body>
+</html>

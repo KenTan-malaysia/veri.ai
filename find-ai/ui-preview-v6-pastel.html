@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find.ai — v6 Bento Pastel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #FAFAF5; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
+  .tight { letter-spacing: -0.03em; }
+  .tighter { letter-spacing: -0.045em; }
+</style>
+</head>
+<body>
+<div class="max-w-lg mx-auto px-4 py-5">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-5 px-1">
+    <div class="flex items-center gap-2">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F172A"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="font-bold text-[16px] tight text-slate-900">Find.ai</span>
+    </div>
+    <button class="text-[12px] px-3 py-1.5 rounded-full font-medium text-slate-700 bg-white" style="border: 1px solid #E5E5E0">BM</button>
+  </header>
+
+  <!-- Hero tile -->
+  <div class="rounded-[28px] bg-white p-6 mb-3" style="border: 1px solid #EFEFE9">
+    <div class="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full" style="background: #F5F5F0">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+      <span class="mono text-[9.5px] font-semibold uppercase tracking-wider text-slate-600">Cakap 2.0 Live</span>
+    </div>
+    <h1 class="text-[46px] font-black leading-[0.95] tighter text-slate-900 mb-3">
+      Don't sign<br/>blind.
+    </h1>
+    <p class="text-[14px] leading-relaxed text-slate-600 mb-5">
+      Screen the tenant. Audit the agreement. Stamp it right. Three tools, one spine — trust before signing.
+    </p>
+    <button class="w-full py-3.5 rounded-2xl text-[14.5px] font-semibold text-white bg-slate-900 transition active:scale-[0.98]">
+      Open the toolkit →
+    </button>
+  </div>
+
+  <!-- Stats row — colored pastel chips -->
+  <div class="grid grid-cols-3 gap-2 mb-3">
+    <div class="rounded-2xl p-4" style="background: #FEF3C7">
+      <div class="mono text-[24px] font-black leading-none text-amber-900 tight">48</div>
+      <div class="text-[10px] font-semibold text-amber-800 mt-1">Topics</div>
+    </div>
+    <div class="rounded-2xl p-4" style="background: #DBEAFE">
+      <div class="mono text-[24px] font-black leading-none text-blue-900 tight">3</div>
+      <div class="text-[10px] font-semibold text-blue-800 mt-1">Tools</div>
+    </div>
+    <div class="rounded-2xl p-4" style="background: #FEE2E2">
+      <div class="mono text-[22px] font-black leading-none text-red-900 tight">RM10k</div>
+      <div class="text-[10px] font-semibold text-red-800 mt-1">SDSAS fine</div>
+    </div>
+  </div>
+
+  <!-- 2x2 Pastel tool bento -->
+  <div class="grid grid-cols-2 gap-3 mb-3">
+    <!-- Screen — mint -->
+    <div class="rounded-3xl p-5 relative" style="background: #D1FAE5">
+      <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4">
+        <span class="text-[22px]">🛡️</span>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider mb-1" style="color: #047857">01 · Screen</div>
+      <div class="text-[16px] font-black tight leading-tight mb-1" style="color: #064E3B">Trust the tenant</div>
+      <div class="text-[11.5px] leading-relaxed" style="color: #065F46">Grade A–D · reference check · red-flag radar.</div>
+    </div>
+
+    <!-- Audit — sky -->
+    <div class="rounded-3xl p-5 relative" style="background: #DBEAFE">
+      <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4">
+        <span class="text-[22px]">📄</span>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider mb-1" style="color: #1D4ED8">02 · Audit</div>
+      <div class="text-[16px] font-black tight leading-tight mb-1" style="color: #1E3A8A">Audit terms</div>
+      <div class="text-[11.5px] leading-relaxed" style="color: #1E40AF">Red/amber/green clause-by-clause.</div>
+    </div>
+
+    <!-- Stamp — amber -->
+    <div class="rounded-3xl p-5 relative" style="background: #FEF3C7">
+      <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4">
+        <span class="text-[22px]">💰</span>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider mb-1" style="color: #B45309">03 · Stamp</div>
+      <div class="text-[16px] font-black tight leading-tight mb-1" style="color: #78350F">Stamp it right</div>
+      <div class="text-[11.5px] leading-relaxed" style="color: #92400E">SDSAS 2026 self-assessment.</div>
+    </div>
+
+    <!-- Chat — lavender -->
+    <div class="rounded-3xl p-5 relative" style="background: #EDE9FE">
+      <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4">
+        <span class="text-[22px]">💬</span>
+      </div>
+      <div class="mono text-[9.5px] font-bold uppercase tracking-wider mb-1" style="color: #6D28D9">04 · Chat</div>
+      <div class="text-[16px] font-black tight leading-tight mb-1" style="color: #4C1D95">Ask anything</div>
+      <div class="text-[11.5px] leading-relaxed" style="color: #5B21B6">48 topics · EN/BM/中文.</div>
+    </div>
+  </div>
+
+  <!-- Path D — coral/peach wide tile -->
+  <div class="rounded-3xl p-6 mb-3" style="background: #FCE7F3">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <div class="mono text-[9.5px] font-bold uppercase tracking-wider mb-1" style="color: #9D174D">
+          Tenant · Pre-register
+        </div>
+        <div class="text-[17px] font-black tight leading-tight" style="color: #831843">
+          Earn your own Trust Grade
+        </div>
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center flex-shrink-0">
+        <span class="mono text-[26px] font-black" style="color: #BE185D">A</span>
+      </div>
+    </div>
+    <div class="text-[12px] leading-relaxed mb-4" style="color: #9D174D">
+      5-step wizard. TNB + Telco + Bank reference. Share your grade to landlords.
+    </div>
+    <div class="flex gap-1.5 flex-wrap">
+      <span class="mono text-[10px] font-semibold px-2 py-1 rounded-lg bg-white" style="color: #9D174D">01 Phone</span>
+      <span class="mono text-[10px] font-semibold px-2 py-1 rounded-lg bg-white" style="color: #9D174D">02 IC</span>
+      <span class="mono text-[10px] font-semibold px-2 py-1 rounded-lg bg-white" style="color: #9D174D">03 TNB</span>
+      <span class="mono text-[10px] font-semibold px-2 py-1 rounded-lg bg-white" style="color: #9D174D">04 Telco</span>
+      <span class="mono text-[10px] font-semibold px-2 py-1 rounded-lg bg-white" style="color: #9D174D">05 Bank</span>
+    </div>
+  </div>
+
+  <!-- Statute strip — cream -->
+  <div class="rounded-2xl p-4 mb-3" style="background: white; border: 1px solid #EFEFE9">
+    <div class="mono text-[9.5px] font-semibold uppercase tracking-[0.18em] mb-2 text-slate-500">Grounded in</div>
+    <div class="text-[11.5px] leading-relaxed text-slate-700">
+      Contracts Act 1950 · RTA 2026 · Stamp Act 1949 · PDPA 2010 · Evidence Act s.90A
+    </div>
+  </div>
+
+  <!-- Disclaimer — soft warning -->
+  <div class="rounded-2xl p-4 flex items-start gap-3" style="background: #FEF3C7; border: 1px solid #FDE68A">
+    <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+      <span class="text-[14px]">⚠️</span>
+    </div>
+    <div>
+      <div class="text-[11.5px] font-bold leading-snug mb-0.5 text-amber-900">Support tool — not legal advice.</div>
+      <div class="text-[10.5px] text-amber-800 leading-relaxed">For decisions involving money or rights, consult a lawyer.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

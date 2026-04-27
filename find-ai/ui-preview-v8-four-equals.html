@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Find.ai — v8 Four Equals (Chat Co-equal)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { background: #FAFAF7; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #0A0A0A; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
+  .tight { letter-spacing: -0.03em; }
+  .tighter { letter-spacing: -0.05em; }
+  .shadow-cell { box-shadow: 0 1px 2px rgba(15,23,42,0.03), 0 8px 30px -10px rgba(15,23,42,0.08); }
+  .shadow-float { box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12), 0 30px 60px -20px rgba(15,23,42,0.18); }
+  .act { min-height: 100vh; min-height: 100svh; min-height: 100dvh; display: flex; flex-direction: column; }
+  .thumb-cta {
+    position: sticky; bottom: 0; left: 0; right: 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(250,250,247,0) 0%, rgba(250,250,247,0.9) 40%, #FAFAF7 100%);
+    backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
+  }
+  .tool-row { transition: transform .15s ease, box-shadow .15s ease; }
+  .tool-row:active { transform: scale(0.99); }
+  .dot-live { background: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .dot-soon { background: #CBD5E1; }
+  .grain {
+    background-image:
+      radial-gradient(rgba(10,10,10,0.022) 1px, transparent 1px),
+      radial-gradient(rgba(10,10,10,0.012) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 1px;
+  }
+</style>
+</head>
+<body class="grain">
+<div class="max-w-lg mx-auto">
+
+  <!-- =============================== -->
+  <!-- ACT 1 — HERO (earn the click) -->
+  <!-- =============================== -->
+  <section class="act px-5 pt-6">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0A0A0A"/>
+          <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="font-bold text-[15px] tight">Find.ai</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="mono text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500">Cakap 2.0</span>
+        <button class="text-[11px] px-2.5 py-1 rounded-full font-semibold bg-neutral-100 text-neutral-700">EN</button>
+      </div>
+    </header>
+
+    <!-- Hero middle -->
+    <div class="flex-1 flex flex-col justify-center py-10">
+      <div class="mono text-[10.5px] font-semibold uppercase tracking-[0.22em] text-amber-700 mb-5">
+        · Malaysia · Pre-signing toolkit ·
+      </div>
+      <h1 class="text-[68px] font-black leading-[0.86] tighter text-neutral-900 mb-5">
+        Don't sign<br/>blind.
+      </h1>
+      <p class="text-[15.5px] leading-relaxed text-neutral-600 max-w-[360px] mb-2">
+        Four sharp tools. One spine — <span class="text-neutral-900 font-semibold">trust before signing</span>. Screen tenants, audit agreements, stamp correctly, ask anything else.
+      </p>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="flex flex-col items-center pb-6">
+      <span class="mono text-[9.5px] font-semibold uppercase tracking-[0.22em] text-neutral-400 mb-2">Scroll to see the four tools</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.2" stroke-linecap="round" class="animate-bounce">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- =============================== -->
+  <!-- ACT 2 — THE FOUR (co-equal, 4×1) -->
+  <!-- =============================== -->
+  <section class="act px-5 pb-6">
+
+    <div class="pt-8">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="mono text-[10.5px] font-semibold uppercase tracking-[0.22em] text-neutral-500">The toolkit</span>
+        <span class="flex-1 h-px bg-neutral-200"></span>
+        <span class="mono text-[10.5px] font-semibold text-neutral-400">04</span>
+      </div>
+      <h2 class="text-[32px] font-black tighter leading-[0.95] text-neutral-900 mb-1">Four equal tools.</h2>
+      <p class="text-[14px] text-neutral-600 leading-relaxed mb-6">Each answers one pre-signing question. Each produces one branded PDF.</p>
+    </div>
+
+    <!-- Tool 01 · Screen -->
+    <div class="tool-row bg-white rounded-3xl p-5 mb-3 shadow-cell cursor-pointer">
+      <div class="flex items-start gap-4">
+        <div class="mono text-[11px] font-bold text-neutral-400 pt-1.5 w-6 flex-shrink-0">01</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="w-9 h-9 rounded-2xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[16px] font-black tight">Screen</span>
+                <span class="w-1.5 h-1.5 rounded-full dot-live"></span>
+                <span class="mono text-[9px] font-semibold uppercase tracking-wider text-emerald-700">Live</span>
+              </div>
+              <div class="mono text-[10px] text-neutral-500 uppercase tracking-wider">Can I trust this tenant?</div>
+            </div>
+          </div>
+          <p class="text-[12.5px] text-neutral-600 leading-relaxed mb-2.5">Trust Grade A–D · Reference check · Red-flag radar · CCRIS-consented</p>
+          <div class="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span class="mono text-[10px] text-neutral-500">Outputs Screening Report PDF</span>
+          </div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" class="mt-3 flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Tool 02 · Audit -->
+    <div class="tool-row bg-white rounded-3xl p-5 mb-3 shadow-cell cursor-pointer">
+      <div class="flex items-start gap-4">
+        <div class="mono text-[11px] font-bold text-neutral-400 pt-1.5 w-6 flex-shrink-0">02</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="w-9 h-9 rounded-2xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[16px] font-black tight">Audit</span>
+                <span class="w-1.5 h-1.5 rounded-full dot-soon"></span>
+                <span class="mono text-[9px] font-semibold uppercase tracking-wider text-neutral-500">Soon</span>
+              </div>
+              <div class="mono text-[10px] text-neutral-500 uppercase tracking-wider">Is this agreement fair?</div>
+            </div>
+          </div>
+          <p class="text-[12.5px] text-neutral-600 leading-relaxed mb-2.5">Clause-by-clause red/amber/green · Suggested rewrites · RTA 2026 grounded</p>
+          <div class="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span class="mono text-[10px] text-neutral-500">Outputs Agreement Audit PDF</span>
+          </div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" class="mt-3 flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Tool 03 · Stamp -->
+    <div class="tool-row bg-white rounded-3xl p-5 mb-3 shadow-cell cursor-pointer">
+      <div class="flex items-start gap-4">
+        <div class="mono text-[11px] font-bold text-neutral-400 pt-1.5 w-6 flex-shrink-0">03</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="w-9 h-9 rounded-2xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[16px] font-black tight">Stamp</span>
+                <span class="w-1.5 h-1.5 rounded-full dot-live"></span>
+                <span class="mono text-[9px] font-semibold uppercase tracking-wider text-emerald-700">Live</span>
+              </div>
+              <div class="mono text-[10px] text-neutral-500 uppercase tracking-wider">Am I paying correct stamp duty?</div>
+            </div>
+          </div>
+          <p class="text-[12.5px] text-neutral-600 leading-relaxed mb-2.5">SDSAS 2026 self-assessment · Old-vs-new comparison · STAMPS portal guide</p>
+          <div class="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span class="mono text-[10px] text-neutral-500">Outputs Tax Accuracy Certificate PDF</span>
+          </div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" class="mt-3 flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Tool 04 · Chat (CO-EQUAL — same card, same size, same weight) -->
+    <div class="tool-row bg-white rounded-3xl p-5 mb-3 shadow-cell cursor-pointer">
+      <div class="flex items-start gap-4">
+        <div class="mono text-[11px] font-bold text-neutral-400 pt-1.5 w-6 flex-shrink-0">04</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="w-9 h-9 rounded-2xl bg-pink-50 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE185D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[16px] font-black tight">Chat</span>
+                <span class="w-1.5 h-1.5 rounded-full dot-live"></span>
+                <span class="mono text-[9px] font-semibold uppercase tracking-wider text-emerald-700">Live</span>
+              </div>
+              <div class="mono text-[10px] text-neutral-500 uppercase tracking-wider">What about my edge case?</div>
+            </div>
+          </div>
+          <p class="text-[12.5px] text-neutral-600 leading-relaxed mb-2.5">48 topics · EN / BM / 中文 · Sabah & Sarawak edge cases · Dialect answers</p>
+          <div class="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="mono text-[10px] text-neutral-500">Outputs Copy-to-WhatsApp answer</span>
+          </div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" class="mt-3 flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Small callout: why chat is co-equal -->
+    <div class="mt-3 rounded-2xl p-3.5 flex items-start gap-3" style="background: #FEF3F2">
+      <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BE185D" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </div>
+      <div class="text-[11.5px] leading-relaxed text-pink-900">
+        <span class="font-bold">Chat fills the gaps.</span> When Screen / Audit / Stamp can't answer "what about Sabah NCR land?" or "my landlord is demanding 6 months deposit, legal?" — Chat does.
+      </div>
+    </div>
+
+    <div class="flex-1"></div>
+  </section>
+
+  <!-- =============================== -->
+  <!-- ACT 3 — PDF PROOF (why it matters) -->
+  <!-- =============================== -->
+  <section class="act px-5 pb-6 justify-center">
+    <div class="pt-10">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="mono text-[10.5px] font-semibold uppercase tracking-[0.22em] text-neutral-500">Why a toolkit, not a chatbot</span>
+        <span class="flex-1 h-px bg-neutral-200"></span>
+      </div>
+      <h2 class="text-[34px] font-black tighter leading-[0.95] text-neutral-900 mb-4">Every tool<br/>produces a PDF.</h2>
+      <p class="text-[14.5px] text-neutral-600 leading-relaxed mb-8 max-w-[380px]">
+        A chatbot answer disappears. A branded PDF is evidence you can forward to your landlord, your lawyer, LHDN, or keep as audit protection.
+      </p>
+    </div>
+
+    <!-- PDF stack visual -->
+    <div class="relative h-[260px] mb-10">
+      <div class="absolute top-0 left-4 right-4 h-[200px] bg-white rounded-2xl shadow-cell p-4 rotate-[-4deg]">
+        <div class="mono text-[9px] text-neutral-400 uppercase tracking-wider mb-1.5">Tax Accuracy Certificate</div>
+        <div class="text-[13px] font-bold tight text-neutral-900 mb-2">SDSAS 2026 · RM 168.00</div>
+        <div class="h-px bg-neutral-100 my-2"></div>
+        <div class="space-y-1">
+          <div class="h-1.5 bg-neutral-100 rounded w-[80%]"></div>
+          <div class="h-1.5 bg-neutral-100 rounded w-[65%]"></div>
+          <div class="h-1.5 bg-neutral-100 rounded w-[72%]"></div>
+        </div>
+      </div>
+      <div class="absolute top-5 left-2 right-2 h-[200px] bg-white rounded-2xl shadow-cell p-4 rotate-[2deg]">
+        <div class="mono text-[9px] text-neutral-400 uppercase tracking-wider mb-1.5">Agreement Audit</div>
+        <div class="text-[13px] font-bold tight text-neutral-900 mb-2">Health Score · 74/100</div>
+        <div class="h-px bg-neutral-100 my-2"></div>
+        <div class="space-y-1">
+          <div class="h-1.5 bg-emerald-200 rounded w-[60%]"></div>
+          <div class="h-1.5 bg-amber-200 rounded w-[75%]"></div>
+          <div class="h-1.5 bg-red-200 rounded w-[45%]"></div>
+        </div>
+      </div>
+      <div class="absolute top-10 left-0 right-0 h-[200px] bg-white rounded-2xl shadow-float p-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0A0A0A"/>
+              <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span class="mono text-[9.5px] font-bold uppercase tracking-wider">Find.ai</span>
+          </div>
+          <span class="mono text-[8.5px] text-neutral-400 uppercase tracking-wider">#FA-2026-0417-A93</span>
+        </div>
+        <div class="mono text-[9px] text-neutral-400 uppercase tracking-wider mb-1.5">Tenant Screening Report</div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center">
+            <span class="mono text-[28px] font-black text-emerald-700">A</span>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold">Tan Wei Ming</div>
+            <div class="text-[10px] text-neutral-500">IC 900823-08-5***</div>
+            <div class="mono text-[9.5px] text-emerald-700 font-semibold mt-0.5">Trust Grade · 847/900</div>
+          </div>
+        </div>
+        <div class="h-px bg-neutral-100 my-2"></div>
+        <div class="grid grid-cols-3 gap-1.5">
+          <div class="rounded-lg p-1.5" style="background: #F0FDF4">
+            <div class="text-[7.5px] text-emerald-800 font-semibold uppercase tracking-wider">IC</div>
+            <div class="mono text-[10px] font-bold text-emerald-900">Verified</div>
+          </div>
+          <div class="rounded-lg p-1.5" style="background: #F0FDF4">
+            <div class="text-[7.5px] text-emerald-800 font-semibold uppercase tracking-wider">TNB</div>
+            <div class="mono text-[10px] font-bold text-emerald-900">Clean</div>
+          </div>
+          <div class="rounded-lg p-1.5" style="background: #F0FDF4">
+            <div class="text-[7.5px] text-emerald-800 font-semibold uppercase tracking-wider">Bank</div>
+            <div class="mono text-[10px] font-bold text-emerald-900">Active</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Viral mechanic hint -->
+    <div class="rounded-2xl p-4 text-white" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%)">
+      <div class="mono text-[9.5px] font-semibold uppercase tracking-[0.2em] text-neutral-400 mb-1.5">The viral mechanic</div>
+      <div class="text-[15px] font-black tight mb-1.5">Share PDF → Recipient sees Find.ai → Becomes user.</div>
+      <div class="text-[11.5px] leading-relaxed text-neutral-300">Every forwarded report on WhatsApp is a new user acquisition. QR code on page 1 of every PDF.</div>
+    </div>
+
+    <div class="flex-1"></div>
+  </section>
+
+  <!-- =============================== -->
+  <!-- ACT 4 — LEGAL BACKBONE / FOOTER -->
+  <!-- =============================== -->
+  <section class="act px-5 pb-24 justify-center">
+    <div class="pt-10">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="mono text-[10.5px] font-semibold uppercase tracking-[0.22em] text-neutral-500">Grounded in</span>
+        <span class="flex-1 h-px bg-neutral-200"></span>
+      </div>
+      <h2 class="text-[28px] font-black tighter leading-[0.95] text-neutral-900 mb-6">Malaysian law.<br/>Line by line.</h2>
+
+      <div class="space-y-2">
+        <div class="bg-white rounded-2xl p-3.5 shadow-cell flex items-center justify-between">
+          <div>
+            <div class="text-[13px] font-bold tight">Contracts Act 1950</div>
+            <div class="text-[11px] text-neutral-500">Tenancy formation · offer / acceptance</div>
+          </div>
+          <span class="mono text-[9.5px] uppercase tracking-wider text-neutral-400">01</span>
+        </div>
+        <div class="bg-white rounded-2xl p-3.5 shadow-cell flex items-center justify-between">
+          <div>
+            <div class="text-[13px] font-bold tight">RTA 2026</div>
+            <div class="text-[11px] text-neutral-500">Residential Tenancy Act · Peninsular</div>
+          </div>
+          <span class="mono text-[9.5px] uppercase tracking-wider text-neutral-400">02</span>
+        </div>
+        <div class="bg-white rounded-2xl p-3.5 shadow-cell flex items-center justify-between">
+          <div>
+            <div class="text-[13px] font-bold tight">Stamp Act 1949 + SDSAS</div>
+            <div class="text-[11px] text-neutral-500">Self-Assessment · RM 10k fine per error</div>
+          </div>
+          <span class="mono text-[9.5px] uppercase tracking-wider text-neutral-400">03</span>
+        </div>
+        <div class="bg-white rounded-2xl p-3.5 shadow-cell flex items-center justify-between">
+          <div>
+            <div class="text-[13px] font-bold tight">PDPA 2010 + Evidence Act s.90A</div>
+            <div class="text-[11px] text-neutral-500">Data protection · digital evidence</div>
+          </div>
+          <span class="mono text-[9.5px] uppercase tracking-wider text-neutral-400">04</span>
+        </div>
+      </div>
+
+      <div class="mt-8 flex items-center gap-2 justify-center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="mono text-[9.5px] font-semibold uppercase tracking-[0.2em] text-neutral-500">Conversations stay on device</span>
+      </div>
+      <div class="mt-2 text-center text-[10.5px] text-neutral-400">
+        Support tool · not legal advice
+      </div>
+    </div>
+
+    <div class="flex-1"></div>
+  </section>
+
+</div>
+
+<!-- =============================== -->
+<!-- THUMB-ZONE STICKY CTA BAR      -->
+<!-- =============================== -->
+<div class="thumb-cta fixed bottom-0 left-0 right-0 z-40">
+  <div class="max-w-lg mx-auto px-5 pt-4 pb-2">
+    <button class="w-full py-4 rounded-2xl text-[15px] font-bold text-white bg-neutral-900 shadow-float transition active:scale-[0.98]">
+      Open the toolkit →
+    </button>
+    <div class="text-center mt-2 mono text-[9.5px] uppercase tracking-[0.18em] text-neutral-500">
+      No sign-up · Free to try · 3 tools live
+    </div>
+  </div>
+</div>
+
+<!-- =============================== -->
+<!-- DESIGN NOTES STRIP (outside phone frame) -->
+<!-- =============================== -->
+<div class="max-w-[1200px] mx-auto p-8 mt-6 mb-10 bg-white rounded-3xl" style="border: 1px solid #E5E7EB">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="mono text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">What's different in v8</span>
+    <span class="flex-1 h-px bg-neutral-200"></span>
+  </div>
+
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">01 · Chat is co-equal</div>
+      <div class="text-[14px] font-black tight mb-1 text-neutral-900">4×1 row, not 2×2 bento</div>
+      <p class="text-[12px] text-neutral-600 leading-relaxed">Chat is tile 04 with the same card, same size, same icon treatment. The "3 tools + chat" mental model dissolves. Every tile is one verb ("Can I trust...?") + one output (PDF or WhatsApp copy).</p>
+    </div>
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">02 · 4 scroll acts</div>
+      <div class="text-[14px] font-black tight mb-1 text-neutral-900">Momentum, not a poster</div>
+      <p class="text-[12px] text-neutral-600 leading-relaxed">Hero → 4 Tools → PDF Proof → Legal Backbone. Each act is 100svh/dvh so every swipe reveals a new aha. No dashboard bloat on landing (that moves to /profile).</p>
+    </div>
+    <div>
+      <div class="mono text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">03 · Thumb-zone sticky CTA</div>
+      <div class="text-[14px] font-black tight mb-1 text-neutral-900">Always bottom, always safe</div>
+      <p class="text-[12px] text-neutral-600 leading-relaxed">"Open the toolkit →" stays pinned with backdrop-blur + env(safe-area-inset-bottom). One-handed pro use, CLAUDE.md doctrine compliant.</p>
+    </div>
+  </div>
+
+  <div class="rounded-2xl p-5 text-white" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%)">
+    <div class="mono text-[10.5px] uppercase tracking-[0.18em] mb-2" style="color: #A5B4FC">The two-surface split</div>
+    <div class="text-[17px] font-black tight mb-2">Landing = feature showcase. Profile = personal dashboard.</div>
+    <p class="text-[12.5px] leading-relaxed" style="color: rgba(255,255,255,0.75)">
+      This page (v8) does ONE job: show the four tools as equals, earn the click. The dashboard-style surface (v5d soft bento) moves to <span class="mono text-white">/profile</span> — user's open cases, saved PDFs, trust grade. Two pages, two jobs, zero mixing. Linear / Notion / Stripe all structure entry flows this way.
+    </p>
+    <p class="text-[12.5px] leading-relaxed mt-3" style="color: rgba(255,255,255,0.6)">
+      Next: port v8 → <span class="mono text-white/80">src/app/page.js</span> landing state + v5d → <span class="mono text-white/80">src/app/profile/page.jsx</span>.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

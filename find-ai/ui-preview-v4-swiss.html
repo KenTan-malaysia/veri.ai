@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find.ai — v4 Swiss Minimal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { -webkit-font-smoothing: antialiased; }
+  html, body {
+    background: #FFFFFF;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "ss01", "cv11";
+  }
+  .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum"; }
+  .tight { letter-spacing: -0.035em; }
+  .tile {
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    transition: background .2s ease;
+    overflow: hidden;
+  }
+  .tile:hover { background: #FAFAFA; }
+  .tile-dark { background: #000000; color: #FFFFFF; }
+  .tile-dark:hover { background: #0A0A0A; }
+
+  .pill {
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  .num { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum"; }
+
+  .red { color: #E11D48; }
+  .amber { color: #C2410C; }
+  .green { color: #15803D; }
+
+  .bar { background: #000000; height: 2px; }
+  .barsm { background: #E5E5E5; height: 2px; }
+
+  .rule { border-bottom: 1px solid #000000; }
+  .rule-th { border-bottom: 2px solid #000000; }
+
+  .link::after {
+    content: "→"; margin-left: 6px; display: inline-block;
+    transition: transform .2s;
+  }
+  a:hover .link::after, .link-hover::after { transform: translateX(4px); }
+
+  .asterisk { color: #E11D48; font-family: 'JetBrains Mono', monospace; font-size: 1.1em; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="bg-black text-white text-[10.5px] text-center py-1.5 font-medium tracking-[0.1em] uppercase">
+  Preview v4 — Swiss Minimal — zero production code changed
+</div>
+
+<!-- NAV -->
+<header class="sticky top-0 z-20 bg-white border-b border-black">
+  <div class="max-w-[1280px] mx-auto px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="black"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="font-bold text-[17px] tight">Find.ai</span>
+      <span class="pill text-neutral-500 border border-neutral-300 px-1.5 py-0.5">Cakap 2.0</span>
+    </div>
+    <div class="flex items-center gap-5">
+      <nav class="hidden md:flex gap-5 text-[13px] font-medium">
+        <a class="hover:underline underline-offset-4">Tools</a>
+        <a class="hover:underline underline-offset-4">Pricing</a>
+        <a class="hover:underline underline-offset-4">Agents</a>
+      </nav>
+      <div class="flex items-center text-[11px] font-mono font-semibold divide-x divide-black border border-black">
+        <button class="px-2 py-1 bg-black text-white">EN</button>
+        <button class="px-2 py-1 hover:bg-neutral-100">BM</button>
+        <button class="px-2 py-1 hover:bg-neutral-100">中文</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1280px] mx-auto px-6 py-8">
+
+  <!-- Editorial byline -->
+  <div class="flex items-baseline justify-between mb-6 text-[11px] font-mono">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 bg-black rounded-full"></span>
+      <span class="font-semibold">Live · Phase 1 · Malaysia</span>
+    </div>
+    <div class="text-neutral-500">
+      <span class="font-semibold">V3.3</span> / APR 2026
+    </div>
+  </div>
+
+  <!-- BENTO -->
+  <div class="grid grid-cols-12 gap-0 border-t border-l border-black">
+
+    <!-- HERO (8 × 2) -->
+    <section class="col-span-12 md:col-span-8 md:row-span-2 p-10 md:p-14 border-r border-b border-black">
+      <div class="pill text-neutral-500 mb-5">Pre-signing compliance toolkit</div>
+      <h1 class="font-bold tight text-[80px] md:text-[110px] leading-[0.92]">
+        Don't<br/>sign blind.<span class="asterisk">*</span>
+      </h1>
+      <div class="mt-8 max-w-[540px] text-[16px] leading-[1.55] text-neutral-700">
+        Three pre-signing checks for Malaysian tenancies. Tenant trust, agreement fairness, stamp-duty accuracy — each producing a branded PDF of record.
+      </div>
+
+      <!-- Stat row -->
+      <div class="mt-14 grid grid-cols-3 border-t-2 border-black pt-6 max-w-[560px]">
+        <div>
+          <div class="pill text-neutral-500">Topics</div>
+          <div class="num text-[42px] font-bold tight mt-1">48</div>
+        </div>
+        <div>
+          <div class="pill text-neutral-500">Languages</div>
+          <div class="num text-[42px] font-bold tight mt-1">3</div>
+        </div>
+        <div>
+          <div class="pill text-neutral-500">Fine protected</div>
+          <div class="num text-[42px] font-bold tight mt-1">10k</div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-[10.5px] font-mono text-neutral-500 tracking-wider">
+        <span class="asterisk">*</span> Support tool. Not legal advice.
+      </div>
+    </section>
+
+    <!-- SCREEN (4 × 2) -->
+    <section class="col-span-12 md:col-span-4 md:row-span-2 p-7 border-r border-b border-black flex flex-col">
+      <div class="flex items-start justify-between mb-5">
+        <div>
+          <div class="num text-[11px] font-bold">01</div>
+          <div class="pill text-neutral-500">Screen</div>
+        </div>
+        <div class="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+      </div>
+      <h3 class="font-bold tight text-[28px] leading-[1.05]">
+        Can I trust this tenant?
+      </h3>
+      <p class="mt-2 text-[13px] text-neutral-600 leading-relaxed">
+        Payment-discipline scan. Four viewing-moment checks.
+      </p>
+
+      <!-- grade block -->
+      <div class="mt-6 border border-black p-5 flex-1 flex flex-col">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="pill text-neutral-500">Grade</div>
+            <div class="num font-bold tight text-[96px] leading-none mt-1 text-green-700">A</div>
+            <div class="text-[11.5px] font-mono mt-1 text-neutral-700">92 / 100 · Low risk</div>
+          </div>
+        </div>
+
+        <!-- factors table -->
+        <div class="mt-5 pt-4 border-t border-black text-[11.5px] space-y-2">
+          <div class="flex justify-between"><span class="text-neutral-600">CCRIS clean</span><span class="font-mono font-bold green">✓</span></div>
+          <div class="flex justify-between"><span class="text-neutral-600">24 mo history</span><span class="font-mono font-bold green">✓</span></div>
+          <div class="flex justify-between"><span class="text-neutral-600">References</span><span class="font-mono font-bold">2 / 2</span></div>
+        </div>
+      </div>
+
+      <div class="mt-5 flex items-center justify-between">
+        <span class="pill text-neutral-500">CCRIS · CTOS · Refs</span>
+        <a class="font-bold text-[13px] group"><span class="link">Start</span></a>
+      </div>
+    </section>
+
+    <!-- AUDIT (4 × 2) -->
+    <section class="col-span-12 md:col-span-4 md:row-span-2 p-7 border-r border-b border-black flex flex-col">
+      <div class="mb-5">
+        <div class="num text-[11px] font-bold">02</div>
+        <div class="pill text-neutral-500">Audit</div>
+      </div>
+      <h3 class="font-bold tight text-[26px] leading-[1.05]">
+        Is this agreement fair?
+      </h3>
+      <p class="mt-2 text-[13px] text-neutral-600 leading-relaxed">
+        Clause-by-clause scan with specific rewrites for dangerous terms.
+      </p>
+
+      <!-- Clause table (no bars, just typography) -->
+      <div class="mt-6 border-t-2 border-black text-[12px]">
+        <div class="flex justify-between py-2.5 border-b border-neutral-300">
+          <span class="font-semibold">Rent · deposit</span>
+          <span class="font-mono font-bold green">OK · 92</span>
+        </div>
+        <div class="flex justify-between py-2.5 border-b border-neutral-300">
+          <span class="font-semibold">Notice period</span>
+          <span class="font-mono font-bold amber">REVIEW · 62</span>
+        </div>
+        <div class="flex justify-between py-2.5 border-b border-neutral-300">
+          <span class="font-semibold">Eviction clause</span>
+          <span class="font-mono font-bold red">DANGER · 28</span>
+        </div>
+        <div class="flex justify-between py-2.5 border-b border-neutral-300">
+          <span class="font-semibold">Stamp duty</span>
+          <span class="font-mono font-bold green">OK · 88</span>
+        </div>
+      </div>
+
+      <div class="mt-auto pt-5 flex items-end justify-between">
+        <div>
+          <div class="pill text-neutral-500">Health</div>
+          <div class="num text-[36px] font-bold tight leading-none mt-1">72<span class="text-neutral-400 text-[18px]">/100</span></div>
+        </div>
+        <a class="font-bold text-[13px]"><span class="link">Start</span></a>
+      </div>
+    </section>
+
+    <!-- STAMP (4 × 2) -->
+    <section class="col-span-12 md:col-span-4 md:row-span-2 p-7 border-r border-b border-black flex flex-col">
+      <div class="flex items-start justify-between mb-5">
+        <div>
+          <div class="num text-[11px] font-bold">03</div>
+          <div class="pill text-neutral-500">Stamp</div>
+        </div>
+        <span class="pill border border-black px-2 py-0.5">SDSAS 2026</span>
+      </div>
+      <h3 class="font-bold tight text-[26px] leading-[1.05]">
+        Am I paying the right duty?
+      </h3>
+      <p class="mt-2 text-[13px] text-neutral-600 leading-relaxed">
+        Self-Assessment calculator + audit-proof certificate.
+      </p>
+
+      <!-- invoice-like preview -->
+      <div class="mt-6 border-t-2 border-black pt-3 font-mono text-[12px]">
+        <div class="flex justify-between py-1 text-neutral-600">
+          <span>Monthly rent</span><span>RM 2,500.00</span>
+        </div>
+        <div class="flex justify-between py-1 text-neutral-600">
+          <span>Term</span><span>24 months</span>
+        </div>
+        <div class="flex justify-between py-1 text-neutral-600">
+          <span>Annual basis</span><span>RM 30,000.00</span>
+        </div>
+        <div class="flex justify-between py-1 text-neutral-600">
+          <span>Old duty</span><span class="line-through">RM 264.00</span>
+        </div>
+        <div class="border-t border-black mt-2 pt-3 flex items-baseline justify-between">
+          <span class="font-bold text-[13px]">STAMP DUTY</span>
+          <span class="num font-bold text-[26px] tight">RM 240.00</span>
+        </div>
+        <div class="text-green-700 font-bold text-[11px] mt-1">You save RM 24</div>
+      </div>
+
+      <div class="mt-auto pt-5 flex items-center justify-between">
+        <span class="pill text-neutral-500">Stamp Act · e-Duti Setem</span>
+        <a class="font-bold text-[13px]"><span class="link">Start</span></a>
+      </div>
+    </section>
+
+    <!-- CHAT (4 × 2) -->
+    <section class="col-span-12 md:col-span-4 md:row-span-2 p-7 border-r border-b border-black flex flex-col">
+      <div class="flex items-start justify-between mb-5">
+        <div>
+          <div class="num text-[11px] font-bold">04</div>
+          <div class="pill text-neutral-500">Chat</div>
+        </div>
+        <span class="pill text-neutral-500">48 topics</span>
+      </div>
+      <h3 class="font-bold tight text-[26px] leading-[1.05]">
+        Ask anything else.
+      </h3>
+      <p class="mt-2 text-[13px] text-neutral-600 leading-relaxed">
+        Sabah edge cases, dialect, disputes, clause nuance.
+      </p>
+
+      <div class="mt-6 flex-1 flex flex-col justify-center gap-2">
+        <div class="flex justify-end">
+          <div class="border border-black bg-black text-white px-3 py-2 text-[12px] max-w-[200px]">
+            Boleh ke landlord tukar pagar?
+          </div>
+        </div>
+        <div class="flex justify-start">
+          <div class="border border-black px-3 py-2 text-[12px] max-w-[230px]">
+            <span class="font-mono font-bold">⚖️</span> <span class="font-semibold">Tidak boleh.</span> Renovation needs tenant consent unless clause 7b applies.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-auto pt-5 flex items-center justify-between">
+        <div class="flex gap-2 text-[13px]"><span>⚖️</span><span>💰</span><span>✅</span><span>🚫</span></div>
+        <a class="font-bold text-[13px]"><span class="link">Ask</span></a>
+      </div>
+    </section>
+
+    <!-- PATH D (8 × 1) -->
+    <section class="col-span-12 md:col-span-8 tile-dark p-10 border-r border-b border-black flex flex-col md:flex-row md:items-center gap-8">
+      <div class="flex-1">
+        <div class="flex gap-2 mb-3">
+          <span class="pill border border-white px-2 py-0.5">For tenants</span>
+          <span class="pill bg-white text-black px-2 py-0.5">NEW</span>
+        </div>
+        <h3 class="font-bold tight text-[40px] md:text-[48px] leading-[1.02]">
+          Register once.<br/>Rent anywhere.
+        </h3>
+        <p class="mt-3 text-[14px] text-neutral-400 max-w-[440px] leading-relaxed">
+          Verify phone, IC, TNB + internet bills one time. Every future landlord sees your A / B / C / D grade.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-0 border border-white font-mono text-[11px] divide-x divide-white">
+          <span class="px-2.5 py-1">01 Phone</span>
+          <span class="px-2.5 py-1">02 ID</span>
+          <span class="px-2.5 py-1">03 TNB</span>
+          <span class="px-2.5 py-1">04 Net</span>
+          <span class="px-2.5 py-1">05 Consent</span>
+        </div>
+      </div>
+      <div class="w-full md:w-[220px]">
+        <div class="border border-white p-4">
+          <div class="flex justify-between pill text-neutral-400">
+            <span>Profile</span><span>siti-8321</span>
+          </div>
+          <div class="num font-bold tight text-[88px] leading-none mt-2">A</div>
+          <div class="text-[11px] font-mono font-bold text-green-400 mt-1">92 / 100 · VERIFIED</div>
+        </div>
+        <button class="mt-3 w-full bg-white text-black font-bold py-3 text-[13px] hover:bg-neutral-200 transition">
+          Start Registration →
+        </button>
+      </div>
+    </section>
+
+    <!-- PDF viral (4 × 1) -->
+    <section class="col-span-12 md:col-span-4 p-7 border-r border-b border-black">
+      <div class="flex justify-between mb-3">
+        <span class="pill text-neutral-500">Viral artifact</span>
+        <div class="font-mono text-[10px]">REP-4821</div>
+      </div>
+      <h3 class="font-bold tight text-[19px] leading-snug">
+        Every check produces a Find.ai branded PDF.
+      </h3>
+      <p class="mt-2 text-[12px] text-neutral-600 leading-relaxed">
+        Share on WhatsApp. Shield + QR. Trust propagates.
+      </p>
+      <div class="mt-4 border border-black p-3">
+        <div class="flex items-center gap-1.5 mb-2 pb-2 border-b border-black">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="black"/></svg>
+          <span class="font-bold text-[9px]">FIND.AI</span>
+          <span class="text-[8px] font-mono ml-auto text-neutral-500">REP-4821</span>
+        </div>
+        <div class="bar w-3/4 mb-1.5"></div>
+        <div class="barsm w-full mb-1.5"></div>
+        <div class="barsm w-5/6 mb-2.5"></div>
+        <div class="flex gap-2 items-end">
+          <div class="flex-1">
+            <div class="bar w-full mb-1"></div>
+            <div class="barsm w-2/3"></div>
+          </div>
+          <div class="w-9 h-9 bg-black"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statute strip (12) -->
+    <section class="col-span-12 border-r border-b border-black p-5 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono">
+      <div class="flex gap-2 items-center">
+        <span class="asterisk">*</span>
+        <span class="text-neutral-600">Support tool · not legal advice</span>
+      </div>
+      <div class="flex gap-3 text-neutral-600">
+        <span>Contracts Act 1950</span><span>/</span>
+        <span>RTA 2026</span><span>/</span>
+        <span>Stamp Act 1949</span><span>/</span>
+        <span>PDPA 2010</span><span>/</span>
+        <span>s.90A</span><span>/</span>
+        <span>Finance Act 2025</span>
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
+<footer class="border-t border-black mt-10">
+  <div class="max-w-[1280px] mx-auto px-6 py-5 flex items-center justify-between text-[11px] font-mono">
+    <div class="flex items-center gap-2">
+      <span class="font-bold">FIND.AI</span><span class="text-neutral-500">· CAKAP 2.0 · MY · PHASE 1</span>
+    </div>
+    <div class="text-neutral-500">V3.3 · © 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>

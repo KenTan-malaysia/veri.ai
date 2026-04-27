@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Find.ai v9 — Palette Lab</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #E8E8E3; padding: 40px 20px; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .tight { letter-spacing: -0.03em; }
+  .tighter { letter-spacing: -0.045em; }
+  .phone { width: 360px; border-radius: 44px; overflow: hidden; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.3), 0 20px 40px -10px rgba(0,0,0,0.2); }
+  .screen { min-height: 640px; display: flex; flex-direction: column; padding: 24px 22px; }
+  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; }
+  .btn-ghost { width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; margin-top: 10px; }
+  .dot { width: 8px; height: 8px; border-radius: 999px; }
+  .dot.on { width: 24px; }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; }
+  .swatch { width: 18px; height: 18px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1); }
+  .palette-strip { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<div class="max-w-[1400px] mx-auto">
+  <h1 class="text-[32px] font-black tighter text-neutral-900 mb-2">v9 Palette Lab</h1>
+  <p class="text-[14px] text-neutral-600 mb-10">Three color systems applied to the v9 Welcome screen. Zeus's pick: <strong>A · Warm Navy Trust</strong>.</p>
+
+  <div class="grid grid-cols-3 gap-8">
+
+    <!-- =============== OPTION A · WARM NAVY TRUST =============== -->
+    <div>
+      <div class="label text-neutral-700">Option A · Warm Navy Trust ★</div>
+      <p class="text-[12px] text-neutral-600 mb-3 italic">Cream paper · deep sea navy · restrained warm gold. Malaysian law firm meets friendly auntie.</p>
+      <div class="phone" style="background: #FAF8F3;">
+        <div class="screen" style="background: #FFFFFF;">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F1E3F"/><path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              <span class="font-bold tight text-[14px]" style="color: #0F1E3F;">Find.ai</span>
+            </div>
+            <button class="text-[11px] px-2.5 py-1 rounded-full font-semibold" style="background: #F3EFE4; color: #3F4E6B;">BM</button>
+          </div>
+          <div class="mt-6 flex items-center justify-center gap-1.5">
+            <span class="dot on" style="background: #0F1E3F;"></span>
+            <span class="dot" style="background: #D6D0C1;"></span>
+            <span class="dot" style="background: #D6D0C1;"></span>
+          </div>
+          <div class="flex-1 flex flex-col justify-center text-center py-8">
+            <div class="text-[56px] mb-4">👋</div>
+            <h1 class="tighter text-[42px] font-black leading-[0.95] mb-5" style="color: #0F1E3F;">Hi there.</h1>
+            <p class="text-[17px] leading-[1.55] max-w-[260px] mx-auto" style="color: #3F4E6B;">
+              Before you sign anything — <span style="color: #0F1E3F; font-weight: 600; border-bottom: 2px solid #B8893A;">let's make sure it's safe</span>.
+            </p>
+            <p class="mono text-[10px] mt-4 uppercase tracking-[0.18em]" style="color: #8B95A8;">Takes 2 min · Free · No sign-up</p>
+          </div>
+          <button class="btn-primary" style="background: #0F1E3F; color: white; box-shadow: 0 10px 25px -5px rgba(15,30,63,0.3);">Let's go <span style="color: #F4D38E;">→</span></button>
+        </div>
+      </div>
+      <div class="palette-strip">
+        <div class="swatch" style="background: #FAF8F3;"></div>
+        <div class="swatch" style="background: #0F1E3F;"></div>
+        <div class="swatch" style="background: #B8893A;"></div>
+        <div class="swatch" style="background: #3F4E6B;"></div>
+        <div class="swatch" style="background: #F3EFE4;"></div>
+        <span class="text-neutral-500 ml-2">Cream · Navy · Gold · Slate · Tea</span>
+      </div>
+    </div>
+
+    <!-- =============== OPTION B · PAPER ZEN =============== -->
+    <div>
+      <div class="label text-neutral-700">Option B · Paper Zen</div>
+      <p class="text-[12px] text-neutral-600 mb-3 italic">Bone white · charcoal · soft sage. Japanese restraint, monastic calm.</p>
+      <div class="phone" style="background: #F7F4EC;">
+        <div class="screen" style="background: #FDFBF5;">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#1C1B1A"/><path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              <span class="font-bold tight text-[14px]" style="color: #1C1B1A;">Find.ai</span>
+            </div>
+            <button class="text-[11px] px-2.5 py-1 rounded-full font-semibold" style="background: #EAE5D6; color: #3B3A38;">BM</button>
+          </div>
+          <div class="mt-6 flex items-center justify-center gap-1.5">
+            <span class="dot on" style="background: #1C1B1A;"></span>
+            <span class="dot" style="background: #D1CDBF;"></span>
+            <span class="dot" style="background: #D1CDBF;"></span>
+          </div>
+          <div class="flex-1 flex flex-col justify-center text-center py-8">
+            <div class="text-[56px] mb-4">👋</div>
+            <h1 class="tighter text-[42px] font-black leading-[0.95] mb-5" style="color: #1C1B1A;">Hi there.</h1>
+            <p class="text-[17px] leading-[1.55] max-w-[260px] mx-auto" style="color: #4A4845;">
+              Before you sign anything — <span style="color: #1C1B1A; font-weight: 600; border-bottom: 2px solid #7A8B6A;">let's make sure it's safe</span>.
+            </p>
+            <p class="mono text-[10px] mt-4 uppercase tracking-[0.18em]" style="color: #86827A;">Takes 2 min · Free · No sign-up</p>
+          </div>
+          <button class="btn-primary" style="background: #1C1B1A; color: #FDFBF5; box-shadow: 0 10px 25px -5px rgba(28,27,26,0.3);">Let's go →</button>
+        </div>
+      </div>
+      <div class="palette-strip">
+        <div class="swatch" style="background: #F7F4EC;"></div>
+        <div class="swatch" style="background: #1C1B1A;"></div>
+        <div class="swatch" style="background: #7A8B6A;"></div>
+        <div class="swatch" style="background: #4A4845;"></div>
+        <div class="swatch" style="background: #EAE5D6;"></div>
+        <span class="text-neutral-500 ml-2">Bone · Sumi · Sage · Ash · Linen</span>
+      </div>
+    </div>
+
+    <!-- =============== OPTION C · OCEAN TEAL =============== -->
+    <div>
+      <div class="label text-neutral-700">Option C · Ocean Teal</div>
+      <p class="text-[12px] text-neutral-600 mb-3 italic">Cool stone · deep teal · coral spark. Modern fintech, Singapore-DBS vibe.</p>
+      <div class="phone" style="background: #F1F4F4;">
+        <div class="screen" style="background: #FFFFFF;">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0B3D3D"/><path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              <span class="font-bold tight text-[14px]" style="color: #0B3D3D;">Find.ai</span>
+            </div>
+            <button class="text-[11px] px-2.5 py-1 rounded-full font-semibold" style="background: #E7EEEE; color: #2B4949;">BM</button>
+          </div>
+          <div class="mt-6 flex items-center justify-center gap-1.5">
+            <span class="dot on" style="background: #0B3D3D;"></span>
+            <span class="dot" style="background: #CED7D7;"></span>
+            <span class="dot" style="background: #CED7D7;"></span>
+          </div>
+          <div class="flex-1 flex flex-col justify-center text-center py-8">
+            <div class="text-[56px] mb-4">👋</div>
+            <h1 class="tighter text-[42px] font-black leading-[0.95] mb-5" style="color: #0B3D3D;">Hi there.</h1>
+            <p class="text-[17px] leading-[1.55] max-w-[260px] mx-auto" style="color: #395858;">
+              Before you sign anything — <span style="color: #0B3D3D; font-weight: 600; border-bottom: 2px solid #E4735E;">let's make sure it's safe</span>.
+            </p>
+            <p class="mono text-[10px] mt-4 uppercase tracking-[0.18em]" style="color: #7A9595;">Takes 2 min · Free · No sign-up</p>
+          </div>
+          <button class="btn-primary" style="background: #0B3D3D; color: white; box-shadow: 0 10px 25px -5px rgba(11,61,61,0.3);">Let's go →</button>
+        </div>
+      </div>
+      <div class="palette-strip">
+        <div class="swatch" style="background: #F1F4F4;"></div>
+        <div class="swatch" style="background: #0B3D3D;"></div>
+        <div class="swatch" style="background: #E4735E;"></div>
+        <div class="swatch" style="background: #395858;"></div>
+        <div class="swatch" style="background: #E7EEEE;"></div>
+        <span class="text-neutral-500 ml-2">Stone · Deep Teal · Coral · Pine · Mist</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recommendation panel -->
+  <div class="mt-12 rounded-3xl p-8" style="background: linear-gradient(135deg, #0F1E3F 0%, #1A2D52 100%); color: white;">
+    <div class="mono text-[11px] uppercase tracking-[0.22em] mb-3" style="color: #F4D38E;">Zeus's recommendation</div>
+    <div class="text-[24px] font-black tighter mb-3">Option A · Warm Navy Trust</div>
+    <p class="text-[14px] leading-relaxed" style="color: rgba(255,255,255,0.8); max-width: 720px;">
+      Why: the cream canvas signals <strong class="text-white">warmth and unhurried trust</strong> — like a lawyer's office that still serves you tea. Deep sea navy ink is bank-level serious but softer than true black. Warm gold is used <strong class="text-white">once</strong> (underline on "let's make sure it's safe") so it reads as a seal of quality, not decoration. It respects CLAUDE.md doctrine (Mature Minimalism, navy + charcoal + crisp whitespace, no cartoon startup green) while adding the Malaysian hospitality warmth your users actually want when they're nervous about signing.
+    </p>
+    <p class="text-[13px] mt-4" style="color: rgba(255,255,255,0.6);">
+      Option B (Paper Zen) is beautiful but reads as upmarket wabi-sabi — wrong for a first-time accidental landlord. Option C (Ocean Teal) is clean and fintech-modern but feels like a bank app, not a trusted advisor. Warm Navy Trust threads the needle.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
