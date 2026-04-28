@@ -128,6 +128,66 @@ agentProfile = {
 
 ---
 
+## Agent self-insertion flow (locked v3.4.30)
+
+**Single-flow architecture replaces the previous two-flow split.** All Find.ai links start as landlord-generated direct links. Agents *insert themselves* into the deal after-the-fact — they are not required to be in the chain from the start.
+
+### The unified flow
+
+```
+1. Landlord generates link → landlord shares via WhatsApp / email / etc.
+   Initial state: { dealId, landlordId, agentId: null, mode: "anonymous" }
+
+2a. Path: Landlord forwards directly to tenant
+    → Tenant submits → direct-landlord flow (2-key consent for tier reveals)
+
+2b. Path: Landlord shares link with agent FIRST (e.g. "help me find tenants")
+    → Agent opens link, taps "Claim this listing" in their dashboard
+    → Landlord receives notification: "Agent {Y} (REN 12345) wants to be added
+       to this listing — Approve?"
+    → Landlord approves → dealId.agentId = "A-0421" set
+    → Agent forwards link with their attribution to tenant prospects
+    → Tenant submits → agent-mediated flow (3-key consent for tier reveals at T4)
+```
+
+### Why this is cleaner than the two-flow split (v3.4.28 doctrine)
+- **One link type, not two.** Every link starts as landlord-generated. Agent presence is a state on the link, not a different link type.
+- **No coordination problem.** Landlord doesn't have to decide upfront whether to use an agent. They generate the link; if an agent shows up, they approve or reject.
+- **Solves the BOVAEP-excluded-informal-agent problem** — see "Verified Agent vs Unverified Forwarder" below. Anyone can claim a link, but only BOVAEP-verified agents get gatekeeper authority.
+- **Compensation tracking is automatic.** First-claim-with-landlord-approval = audit-logged attribution. Agent commission claims become provable.
+
+### Claim mechanics
+
+| Step | Actor | Action |
+|---|---|---|
+| 1 | Landlord | Generates link via `/screen/new` — gets shareable URL |
+| 2 | Agent | Receives link (forwarded by landlord OR seen in agency listing flow). Opens in their dashboard → "Claim this listing" button |
+| 3 | System | Sends approval request to landlord: "Agent {name, REN, agency} wants to be added to listing {address}. Approve / Reject" |
+| 4 | Landlord | Approves OR rejects within 48 hours (default). Auto-rejects after 48hr. |
+| 5a | If approved | `dealId.agentId` set, agent gets forward-and-track URL with their attribution embedded |
+| 5b | If rejected | Agent cannot re-claim this link. Landlord sees rejection record. |
+
+### Edge cases
+
+- **Multiple agents claim same link:** First-come-first-served BUT landlord can reject and approve a different agent. UI shows landlord all pending claims for visibility.
+- **Landlord shared link with multiple agents on purpose:** Landlord can manually approve multiple agents IF they explicitly want competition. Default UI is "approve one." Power-user feature: "allow multiple agents."
+- **Agent claims but never forwards:** Auto-revert after 14 days of inactivity (`agentId` reset to null, link goes back to direct flow if landlord re-shares).
+- **Agent tries to claim link they shouldn't have:** Landlord rejects. Repeated rejection by multiple landlords = automatic agent suspension review.
+- **Verified vs Unverified claim:** Both can claim. Landlord sees badge differential at approval time ("BOVAEP-Verified Agent · REN 12345" vs "Unverified Forwarder · No registration"). Landlord makes judgment.
+
+### Verified Agent vs Unverified Forwarder (locked v3.4.30)
+
+This solves stress-test #5 from the v3.4.28 audit (BOVAEP gate excludes informal agents).
+
+| Type | BOVAEP status | Authority | Trust Card display |
+|---|---|---|---|
+| **Verified Agent** | REN/REA/PEA registered + verified | Full gatekeeper authority over T2/T3/T4 reveals · Co-branded Trust Card option (premium) · Performance dashboard · Multi-tenant management | "Verified by Agent {Name} · REN 12345 · {Agency}" badge on card |
+| **Unverified Forwarder** | None | Basic forwarding only · No tier-advance authority · Cannot co-brand · Tracked attribution for transparency | "Forwarded by {Name}" (no verification badge) |
+
+Both can claim listings. Both are tracked. The differentiation is in *what they're authorized to do* once claimed. Unverified forwarders can pass links along but cannot exercise gatekeeper authority — that requires BOVAEP registration. Solves the inclusion problem (informal agents can use Find.ai) without compromising the regulatory moat (gatekeeper authority requires registration).
+
+---
+
 ## Agent's role in the flow (visual)
 
 ```

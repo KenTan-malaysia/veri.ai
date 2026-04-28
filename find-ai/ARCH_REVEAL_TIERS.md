@@ -14,6 +14,64 @@
 
 This single decision reframes Find.ai from "tenant screening tool" to "identity layer of Malaysian rentals."
 
+> **v3.4.30 update — Mode is OPTIONAL, default is Anonymous.** Anonymous is no longer mandatory. Each deal picks one of two modes at link-creation time: **Anonymous Mode** (T0 = no name, full tier flow as below) or **Verified Mode** (T0 = name shown, but contact/employer/IC details still tier-gated). Default mode is Anonymous (recommended for tenant safety + anti-discrimination). Tenant has unilateral right to insist on Anonymous Mode regardless of landlord/agent preference. See "Mode Selection" section below.
+
+---
+
+## Mode Selection — Anonymous vs Verified (locked v3.4.30)
+
+Each deal (landlord ↔ tenant connection, with optional agent) operates in one of two modes. Mode is set at link-creation and can be re-negotiated before tenant submission.
+
+### Mode A — Anonymous (default, recommended)
+T0 default state shows: **Trust Score · Anonymous Tenant T-7841 · Last verified · LHDN-verified previous tenancy**.
+No name, no IC, no contact at T0. Identity reveals through T1-T5 tiers as the deal progresses, gated by consent. This is the structurally correct mode for protecting tenant safety and avoiding implicit discrimination.
+
+### Mode B — Verified (opt-out)
+T0 default state shows: **Trust Score · Tenant Name (e.g. "Ahmad bin Ali") · Last verified · LHDN-verified previous tenancy**.
+Name (first + last) shown from T0. But contact details (phone, email), employer, IC number, address remain tier-gated through T1-T5. So Verified Mode is "name + score from start, other PII still progressive."
+
+### Default behavior
+- Landlord-generated link defaults to **Anonymous Mode**
+- Landlord can opt-out at link-creation (UI: "Show tenant name from the start" toggle) → switches to Verified Mode
+- Once link is in flight, mode can still be re-negotiated until tenant submits (see below)
+
+### Three-party mode agreement
+Mode is a per-deal choice with the following decision rules:
+
+| Party | Authority |
+|---|---|
+| **Landlord** | Sets initial mode preference at link-creation |
+| **Agent** (if present) | Can recommend mode change to landlord (typical agent recommendation: Anonymous to protect their tenant pipeline) |
+| **Tenant** | Has **unilateral right to insist on Anonymous Mode**, regardless of landlord/agent preference |
+
+**Tenant's veto is absolute.** If a tenant lands on a Verified Mode link and chooses to switch to Anonymous, the link reverts to Anonymous Mode for that submission. No party can override this. This is the primary safety valve preventing pressure dynamics in landlord-favored markets.
+
+### When mode locks
+Mode locks when tenant clicks "Submit" on the screening flow. Pre-submission: re-negotiable. Post-submission: locked for that Trust Card. Tenant can withdraw and re-submit if mode needs to change post-lock (rare).
+
+### How tier flow differs by mode
+
+| Tier | Anonymous Mode shows | Verified Mode shows |
+|---|---|---|
+| **T0** | Score + Anonymous Tenant ID | Score + Full name (first + last) |
+| **T1** | + Categorical attributes (age range, profession category, citizenship, tenure) | + Same as Anonymous T1 (already named) |
+| **T2** | + First name | (skipped — name already shown) |
+| **T3** | + Last name | (skipped — name already shown) |
+| **T4** | + Phone, email, workplace name | + Phone, email, workplace name |
+| **T5** | + IC, address, employer letter (signing) | + IC, address, employer letter (signing) |
+
+**In Verified Mode, T2 and T3 are auto-skipped.** Tier flow is effectively T0 → T1 → T4 → T5 (3 tiers instead of 5). Faster but less private.
+
+### Adoption tracking (mandatory metric)
+We track and publish:
+- **% of deals in Anonymous Mode** (target: ≥60% — drops below = anti-discrimination narrative compromised)
+- **Tenant veto rate** (% of Verified Mode links flipped to Anonymous by tenant — high rate = pressure dynamics worth addressing)
+- **Mode by region** (KL/Selangor vs Penang vs Johor — cultural variation surfaces here)
+
+If Anonymous Mode adoption drops below 40% sustained, escalate to product review. We may need to make Anonymous mandatory or change incentives.
+
+---
+
 ---
 
 ## Why anonymous-by-default
