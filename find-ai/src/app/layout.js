@@ -1,4 +1,5 @@
 import './globals.css'
+import { ToastProvider } from '../components/ui/Toast'
 
 // v3.4.27 — All app/PWA scaffolding REMOVED. Find.ai is a website only.
 // Removed: manifest, service worker registration, apple-touch-icon, themeColor,
@@ -56,7 +57,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-white">
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   )
