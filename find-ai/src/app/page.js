@@ -97,10 +97,7 @@ const UI = {
     copied: 'Copied!',
     saved: 'Chat saved!',
     followUps: 'Related questions',
-    installTitle: 'Add to Home Screen',
-    installDesc: 'Get the full app experience',
-    installBtn: 'Install',
-    installDismiss: 'Not now',
+    // v3.4.27 — install* strings kept as unused legacy. PWA install banner retired.
     feedbackThanks: 'Thanks for your feedback!',
   },
   bm: {
@@ -173,10 +170,7 @@ const UI = {
     copied: 'Disalin!',
     saved: 'Chat disimpan!',
     followUps: 'Soalan berkaitan',
-    installTitle: 'Tambah ke Skrin Utama',
-    installDesc: 'Pengalaman penuh aplikasi',
-    installBtn: 'Pasang',
-    installDismiss: 'Nanti',
+    // v3.4.27 — install* strings kept as unused legacy. PWA install banner retired.
     feedbackThanks: 'Terima kasih atas maklum balas!',
   },
   zh: {
@@ -248,10 +242,7 @@ const UI = {
     copied: '已复制!',
     saved: '对话已保存!',
     followUps: '相关问题',
-    installTitle: '添加到主屏幕',
-    installDesc: '获得完整应用体验',
-    installBtn: '安装',
-    installDismiss: '以后再说',
+    // v3.4.27 — install* strings kept as unused legacy. PWA install banner retired.
     feedbackThanks: '感谢您的反馈！',
   },
 };
@@ -457,8 +448,8 @@ export default function Home() {
   const [lastFailedMsg, setLastFailedMsg] = useState(null);
   const [feedbackMap, setFeedbackMap] = useState({});
   const [showFeedbackToast, setShowFeedbackToast] = useState(false);
-  const [installPrompt, setInstallPrompt] = useState(null);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  // v3.4.27 — PWA install banner state RETIRED. Find.ai is a website, not an
+  // installable app. See WEB_FIRST_RATIONALE.md + WEB_UX_PATTERNS.md.
   // Chat history state
   const [chatHistory, setChatHistory] = useState([]);
   const [activeChatId, setActiveChatId] = useState(null);
@@ -504,32 +495,9 @@ export default function Home() {
   const voiceAutoSendRef = useRef(true);     // whether to auto-send on silence
   const voiceMaxRef = useRef(null);          // 45s hard watchdog — force-stop if engine hangs
 
-  // PWA install prompt
-  useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-      const dismissed = load('fi_install_dismissed', false);
-      if (!dismissed) setShowInstallBanner(true);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
-  const handleInstall = async () => {
-    if (!installPrompt) return;
-    installPrompt.prompt();
-    const { outcome } = await installPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setShowInstallBanner(false);
-      setInstallPrompt(null);
-    }
-  };
-
-  const dismissInstall = () => {
-    setShowInstallBanner(false);
-    save('fi_install_dismissed', true);
-  };
+  // v3.4.27 — PWA install handlers RETIRED. We don't prompt users to install
+  // Find.ai as an app — we are a website. Capacitor wrap arrives at Phase 4
+  // (post-30k users) per WEB_FIRST_RATIONALE.md.
 
   useEffect(() => {
     setLang(load('fi_lang', 'en'));
@@ -1784,7 +1752,7 @@ export default function Home() {
       )}
 
       {/* Header — frosted glass */}
-      <header className="no-print glass-header header-safe sticky top-0 z-10 flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid rgba(226,232,240,0.6)' }}>
+      <header className="no-print sticky top-0 z-10 flex items-center justify-between px-4 py-2.5 bg-white" style={{ borderBottom: '1px solid rgba(226,232,240,0.6)' }}>
         <div className="flex items-center gap-2.5">
           {/* History sidebar toggle */}
           <button onClick={() => setShowSidebar(true)} className="touch-target rounded-xl transition active:scale-95 -ml-1" style={{ color: '#64748b' }}>
@@ -2094,22 +2062,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* PWA Install Banner */}
-      {showInstallBanner && (
-        <div className="install-banner fixed bottom-20 left-4 right-4 max-w-lg mx-auto z-50">
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-white" style={{ boxShadow: '0 8px 32px rgba(15,23,42,0.12), 0 0 0 1px rgba(226,232,240,0.5)' }}>
-            <Logo size={40} />
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-bold" style={{ color: '#0f172a' }}>{t.installTitle}</div>
-              <div className="text-[11px]" style={{ color: '#94a3b8' }}>{t.installDesc}</div>
-            </div>
-            <button onClick={handleInstall}
-              className="px-4 py-2 rounded-xl text-[12px] font-bold text-white transition active:scale-95"
-              style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)' }}>{t.installBtn}</button>
-            <button onClick={dismissInstall} className="text-[11px] font-medium px-2" style={{ color: '#94a3b8' }}>{t.installDismiss}</button>
-          </div>
-        </div>
-      )}
+      {/* v3.4.27 — PWA Install Banner REMOVED. We are a website, not an app. */}
 
       {/* Copy toast */}
       {copied && (

@@ -337,53 +337,43 @@ export default function PeekChat({
   if (hidden) return null;
 
   const styles = `
-    /* v3.4.26 — Web-friendly positioning. Mobile keeps the bottom-anchored
-       dock that spans full width. Desktop (≥768px) becomes a corner widget
-       (Intercom-style) ~420px wide pinned bottom-right with margin. No more
-       full-width dock spanning a 1440px screen. */
+    /* v3.4.27 — Corner widget at EVERY viewport. No more mobile-dock pattern.
+       Mobile = compact corner widget bottom-right. Desktop = same corner widget
+       slightly larger. Per WEB_UX_PATTERNS.md — Find.ai is a website on every
+       device, the chat is an Intercom-style helper, not a full-width app dock. */
     .pc-root {
-      position: fixed; left: 0; right: 0; bottom: 0;
+      position: fixed; left: auto; right: 16px; bottom: 16px;
       z-index: 60; pointer-events: none;
-      display: flex; justify-content: center;
+      display: flex; justify-content: flex-end;
     }
     .pc-wrap {
-      width: 100%; max-width: 512px; pointer-events: auto;
+      width: calc(100vw - 32px); max-width: 360px; pointer-events: auto;
       display: flex; flex-direction: column;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 32px -8px rgba(15,30,63,0.24), 0 4px 12px rgba(15,30,63,0.08);
     }
     @media (min-width: 768px) {
-      .pc-root {
-        left: auto; right: 24px; bottom: 24px;
-        justify-content: flex-end;
-      }
+      .pc-root { right: 24px; bottom: 24px; }
       .pc-wrap {
         max-width: 420px;
         border-radius: 18px;
-        overflow: hidden;
         box-shadow: 0 24px 48px -12px rgba(15,30,63,0.28), 0 4px 12px rgba(15,30,63,0.08);
       }
     }
-    /* Backdrop — only shows when peek is open, so the dock feels like
-       part of the page but the peek feels like a proper overlay.
-       v3.4.26 — Hidden on desktop (≥768px). Corner widgets don't dim the page. */
-    .pc-backdrop {
-      position: fixed; inset: 0; z-index: 59;
-      background: rgba(15,30,63,0.28); backdrop-filter: blur(2px);
-      animation: pcFade .18s ease both;
-    }
-    @media (min-width: 768px) {
-      .pc-backdrop { display: none; }
-    }
+    /* v3.4.27 — Backdrop fully retired. Corner widgets never dim the page,
+       at any viewport. Web pattern = chat is ambient, not modal. */
+    .pc-backdrop { display: none; }
     @keyframes pcFade { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Dock (always) */
+    /* v3.4.27 — Dock is now the resting state of the corner widget.
+       Removed mobile safe-area-inset padding (no notch handling — websites
+       don't pretend to be apps on iOS home screen). Removed border-top
+       (corner widget doesn't sit on a page edge). */
     .pc-dock {
-      background: rgba(250,248,243,0.96);
-      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-      border-top: 1px solid #E7E1D2;
+      background: #FAF8F3;
       padding: 10px 12px;
-      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
       display: flex; align-items: center; gap: 8px;
-      box-shadow: 0 -8px 24px -10px rgba(15,30,63,0.12);
     }
     .pc-dock-input {
       flex: 1; height: 40px; padding: 0 14px; border-radius: 999px;
@@ -405,31 +395,21 @@ export default function PeekChat({
     .pc-dock-ico.ghost { background: #F3EFE4; color: #0F1E3F; }
 
     /* Peek (expanded) */
+    /* v3.4.27 — Peek is a fixed-size corner panel at every viewport.
+       No more "slide up from bottom" mobile-app sheet behavior. */
     .pc-peek {
       background: #FAF8F3; color: #0F1E3F;
-      border-top-left-radius: 22px; border-top-right-radius: 22px;
-      box-shadow: 0 -20px 60px -10px rgba(15,30,63,0.32);
-      max-height: 48vh; min-height: 300px;
+      max-height: 480px; min-height: 360px;
       display: flex; flex-direction: column;
-      animation: pcSlideUp .28s cubic-bezier(0.2,0.7,0.2,1) both;
+      animation: pcFadeIn .2s ease both;
       overflow: hidden;
     }
-    @keyframes pcSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    /* v3.4.26 — Desktop peek = a fixed-height corner panel, all 4 corners
-       rounded, no slide-from-bottom feel. */
+    @keyframes pcFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @media (min-width: 768px) {
-      .pc-peek {
-        border-radius: 18px;
-        max-height: 540px;
-        min-height: 420px;
-        box-shadow: none;
-      }
+      .pc-peek { max-height: 540px; min-height: 420px; }
     }
-    .pc-handle { width: 38px; height: 4px; border-radius: 999px; background: #E7E1D2; margin: 8px auto 0; }
-    /* Hide the mobile drag handle on desktop — corner widgets don't need it. */
-    @media (min-width: 768px) {
-      .pc-handle { display: none; }
-    }
+    /* v3.4.27 — Drag handle fully retired. No bottom-sheet anywhere. */
+    .pc-handle { display: none; }
     .pc-peek-head {
       flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px 8px;

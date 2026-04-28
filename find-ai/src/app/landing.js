@@ -255,13 +255,12 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     .v9-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
     .v9-tight { letter-spacing: -0.03em; }
     .v9-tighter { letter-spacing: -0.045em; }
-    /* v3.4.26 — Responsive container. Mobile keeps the 512px reading-column
-       feel. Desktop (≥768px) breathes to a real web layout — wider container,
-       larger padding, content centered with whitespace. No more phone-shape
-       column on a 1440px screen. */
+    /* v3.4.27 — Responsive web container. Dropped svh/dvh chained fallbacks
+       (mobile-app instinct for browser chrome handling — websites don't need
+       to fight the URL bar). Desktop card-style layout retained. */
     .v9-screen {
       position: relative;
-      min-height: 100vh; min-height: 100svh; min-height: 100dvh;
+      min-height: 100vh;
       width: 100%;
       max-width: 512px; margin: 0 auto; padding: 20px;
       display: flex; flex-direction: column;
@@ -275,7 +274,6 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
         border-radius: 24px;
         box-shadow: 0 1px 2px rgba(15,30,63,0.04), 0 24px 48px -16px rgba(15,30,63,0.10);
         min-height: calc(100vh - 64px);
-        min-height: calc(100dvh - 64px);
       }
     }
     @media (min-width: 1024px) {
@@ -284,7 +282,6 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
         padding: 56px 72px;
         margin: 48px auto;
         min-height: calc(100vh - 96px);
-        min-height: calc(100dvh - 96px);
       }
     }
     /* v3.4.26 — Hero typography scales up on desktop. On mobile a 42px h1 is
@@ -435,7 +432,10 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     /* v9.3 — reserve ~96px of bottom padding so the persistent PeekChat dock
        (mounted by page.js, ~56-64px tall) never covers the primary CTA or
        progress dots. The dock sits at position:fixed bottom:0. */
-    .v9-screen-peek-safe { padding-bottom: 96px; }
+    /* v3.4.27 — peek-safe bottom padding RETIRED. Corner-widget PeekChat
+       no longer needs 96px clearance. Leaving the class in place so render
+       paths still compile, but it's a no-op. */
+    .v9-screen-peek-safe { padding-bottom: 0; }
 
     /* v9.4 — the motto "Don't sign blind." sits under the Brand wordmark on
        Welcome. Gold, all-caps, tight mono so it reads as a tagline stamp

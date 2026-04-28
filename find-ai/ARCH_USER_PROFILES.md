@@ -1,19 +1,26 @@
-# ARCH — User Profiles (Tenant + Landlord Accounts)
+# ARCH — User Profiles (Tenant + Landlord + Agent Accounts)
 
-> **Status:** ARCHITECTURE LOCKED 2026-04-26 (v3.4.23). UI placeholder for "Returning tenant lookup" shipped in v0 mock. Full account system + auth + LBV builds in Phase 1-2 of v1 production.
+> **Status:** ARCHITECTURE LOCKED 2026-04-26 (v3.4.23, expanded v3.4.28). UI placeholder for "Returning tenant lookup" shipped in v0 mock. Full account system + auth + LBV + reveal-tier engine builds in Phase 1-2 of v1 production.
 >
-> **DNA:** Bullseye — without tenant + landlord profiles, the portable Trust Score promise (already in v3.4.4 spec) cannot mechanically work. Profiles are the foundational layer that makes the Trust Score moat actually portable.
+> **DNA:** Bullseye — without profiles, the portable Trust Score promise + agent-gatekeeper flow cannot mechanically work. Profiles are the foundational layer.
+>
+> **🆕 v3.4.28 update — anonymous-by-default + third user type:**
+> 1. **Tenant default state is "Anonymous Trust Card holder."** Identity is hidden from landlord-facing surfaces by default. Reveal happens in 5 tiers (T0 → T5), gated by consent. See `ARCH_REVEAL_TIERS.md`.
+> 2. **Agent is now a first-class user type** (third side of the platform), not a passive forwarder. Agent has gatekeeper authority over reveal tiers + their own dashboard + BOVAEP-anchored verification. See `ARCH_AGENT_PROFILE.md`.
+>
+> **What stays the same:** All data models below for Tenant + Landlord profiles, authentication flows, portable Trust Score lookup mechanism, LBV flow, free vs premium tiers, PDPA compliance, build phases. The reveal-tier engine and agent profile are *additions* on top of this foundation, not replacements.
 
 ---
 
-## The two-sided account system
+## The three-sided account system (updated v3.4.28)
 
-Find.ai is fundamentally a **two-sided platform**: landlords need accounts to track screenings, tenants need accounts to own their portable Trust Score. Both must be designed together.
+Find.ai is now a **three-sided platform**: landlords screen, tenants own their score, agents gatekeep. All three must be designed together.
 
 | Side | What they get | Why they need an account |
 |---|---|---|
-| **Landlord / Agent** | Screening dashboard, case history, premium features | Multi-property, repeat usage, B2B workflows |
-| **Tenant** | Portable Trust Score, history, control of their data | Re-use score across landlords, PDPA self-service |
+| **Tenant** | Portable Trust Score, anonymous-by-default sharing, history, audit-trail of every reveal, control of their data | Re-use score across landlords, PDPA self-service, control over identity reveal |
+| **Landlord** | Screening dashboard, anonymous Trust Card view by default, request reveal tiers as deal progresses, case history, premium features | Multi-property, repeat usage, fair-screening workflows |
+| **Agent** (NEW) | Gatekeeper dashboard, forward-and-track Trust Cards, control reveal pacing for tenants in their listings, co-branded cards (premium), BOVAEP-verified status | Industry-standard tool that protects their commercial position; multiplier of landlord acquisition |
 
 ---
 

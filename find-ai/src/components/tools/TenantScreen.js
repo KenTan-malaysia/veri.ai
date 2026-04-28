@@ -2085,9 +2085,9 @@ Ref: ${stableCaseRef}`;
             </div>
           </div>
 
-          {/* "What next?" footer — clear thumb-zone exit options.
-              Solves: after score reveal, where do I go? Don't make landlord
-              hunt for the X close button. */}
+          {/* "What next?" footer — clear exit options after score reveal.
+              v3.4.27: dropped "thumb-zone" framing. Web pattern: the user can
+              exit via browser back, the X close button, or these two buttons. */}
           <div className="pt-3 mt-2 grid grid-cols-2 gap-2" style={{ borderTop: '1px solid #f1f5f9' }}>
             <button
               onClick={resetForScreenAnother}

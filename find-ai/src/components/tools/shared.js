@@ -37,24 +37,22 @@ export const ToolHeader = ({ icon, title, desc, onClose, onAsk, askLabel }) => (
   </div>
 );
 
-// v3.4.26 — Web-friendly Modal. Mobile keeps the bottom-sheet feel (drag
-// handle + rounded top corners). Desktop becomes a proper centered dialog
-// with breathing room, wider max-width, and rounded corners on all sides.
-// Per WEB_UX_PATTERNS.md — no more phone-shaped 512px modal stuck in the
-// middle of a 1440px screen.
+// v3.4.27 — Pure web Modal. No more bottom-sheet on mobile (drag handle
+// removed entirely), no rounded-top-only corners, no app instinct. At every
+// viewport this is a centered dialog with all-corners rounded. Per
+// WEB_UX_PATTERNS.md — Find.ai is a website on every device, not an app.
 export const Modal = ({ children }) => (
-  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6" style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}>
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+    style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}
+  >
     <div
-      className="bg-white w-full rounded-t-[24px] sm:rounded-[24px] px-6 pt-5 pb-6 sm:px-10 sm:pt-8 sm:pb-10 max-h-[92vh] sm:max-h-[88vh] overflow-y-auto fade-in"
+      className="bg-white w-full rounded-2xl sm:rounded-3xl px-5 py-6 sm:px-10 sm:py-10 my-auto fade-in"
       style={{
         maxWidth: 'min(960px, 100%)',
-        boxShadow: '0 -8px 40px rgba(15,23,42,0.12)',
+        boxShadow: '0 8px 40px rgba(15,23,42,0.18)',
       }}
     >
-      {/* Drag handle — mobile only */}
-      <div className="flex justify-center mb-3 sm:hidden">
-        <div className="w-10 h-1 rounded-full" style={{ background: '#e2e8f0' }} />
-      </div>
       {/* Inner content column — readable measure on desktop, full-width on mobile */}
       <div className="mx-auto" style={{ maxWidth: 640 }}>
         {children}

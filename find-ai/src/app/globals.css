@@ -4,7 +4,8 @@
 
 /* ═══════════════════════════════════════
    FIND.AI — CLEAN WHITE DESIGN SYSTEM
-   Premium mobile-first PWA
+   v3.4.27 — Reframed: Web-first product, NOT a "mobile-first PWA."
+   Find.ai is a website. Mobile-web is a viewport, not a platform.
    ═══════════════════════════════════════ */
 
 :root {
@@ -57,13 +58,13 @@ html, body {
 
 /* ═══ ANIMATIONS — Premium easing ═══ */
 
-/* Spring ease — iOS native feel */
+/* v3.4.27 — Standard web ease-out, no more iOS-native spring overshoot. */
 .msg-in {
-  animation: msgIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: msgIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Fade in */
@@ -154,20 +155,14 @@ html, body {
   50% { opacity: 1; }
 }
 
-/* ═══ GLASS SURFACES ═══ */
+/* ═══ GLASS SURFACES — RETIRED v3.4.27 ═══
+   iOS-style frosted-glass headers/inputs were the most app-y visual
+   pattern. Dropped in favor of solid web surfaces.
+   Classes preserved as plain backgrounds so existing markup still compiles. */
+.glass-header { background: #ffffff; }
 
-/* Header — frosted glass */
-.glass-header {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-}
-
-/* Input bar — elevated glass */
 .input-elevated {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  background: #ffffff;
   box-shadow: 0 -1px 0 rgba(226, 232, 240, 0.5), 0 -4px 16px rgba(15, 23, 42, 0.03);
   position: sticky;
   bottom: 0;
@@ -318,10 +313,11 @@ textarea::placeholder {
   animation: spin 0.8s linear infinite;
 }
 
-/* ═══ CHAT SCROLL ═══ */
-
+/* ═══ CHAT SCROLL ═══
+   v3.4.27 — Dropped -webkit-overflow-scrolling: touch (iOS-momentum scroll
+   only relevant when running as a native iOS PWA shell). Standard browser
+   scroll works fine on mobile-web. */
 .chat-area {
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   overflow-anchor: none;
   will-change: scroll-position;
@@ -338,16 +334,13 @@ textarea::placeholder {
   to { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
-/* ═══ SAFE AREAS ═══ */
-
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .input-safe {
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  }
-  .header-safe {
-    padding-top: calc(12px + env(safe-area-inset-top));
-  }
-}
+/* ═══ SAFE AREAS — RETIRED v3.4.27 ═══
+   Safe-area-inset padding was for iOS PWA app-shell mode (handles the notch
+   and home indicator when running as a "Add to Home Screen" app). We are a
+   website now; the browser handles its own chrome. Classes preserved as
+   no-ops so the markup still compiles. */
+.input-safe { padding-bottom: 12px; }
+.header-safe { padding-top: 12px; }
 
 /* ═══ PRINT ═══ */
 
@@ -356,15 +349,8 @@ textarea::placeholder {
   .chat-area { max-height: none !important; overflow: visible !important; }
 }
 
-/* ═══ PWA INSTALL BANNER ═══ */
-
-.install-banner {
-  animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(100%); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* ═══ PWA INSTALL BANNER — RETIRED v3.4.27 ═══
+   Removed entirely. Find.ai is a website. No install prompt. */
 
 /* ═══ TIMESTAMP ═══ */
 
