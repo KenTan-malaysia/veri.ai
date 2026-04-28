@@ -45,6 +45,7 @@ export default function AppShell({ children, title }) {
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <Topbar title={title} />
         <main
+          id="main"
           role="main"
           style={{
             flex: 1,

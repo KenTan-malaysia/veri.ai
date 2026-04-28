@@ -132,7 +132,7 @@ export default function Landing({
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section className="ap-hero">
+      <section id="main" className="ap-hero">
         <div className="ap-section-inner">
           <div className="ap-eyebrow">{c.heroEyebrow}</div>
           <h1 className="ap-hero-h1">{c.heroH1}</h1>
@@ -160,16 +160,37 @@ export default function Landing({
             </div>
           )}
 
+          {/* Three-door entry — landlord/tenant/agent paths (P0.5 fix) */}
+          <div className="ap-doors">
+            <div className="ap-doors-eyebrow">{c.doorsEyebrow}</div>
+            <div className="ap-doors-row">
+              <DoorChip
+                label={c.door1Label}
+                sub={c.door1Sub}
+                href="/screen/new"
+                primary
+              />
+              <DoorChip
+                label={c.door2Label}
+                sub={c.door2Sub}
+                href="#help"
+              />
+              <DoorChip
+                label={c.door3Label}
+                sub={c.door3Sub}
+                href="#help"
+              />
+            </div>
+          </div>
+
           {/* Hero product visual — anchors the page above the fold */}
           <div className="ap-hero-visual">
             <HeroTrustCard c={c} />
           </div>
 
-          {/* Scroll cue */}
-          <a href="#tools" className="ap-scroll-cue" aria-label={c.scrollCue}>
-            <span>{c.scrollCue}</span>
-            <ScrollChevron />
-          </a>
+          {/* Scroll cue retired in v3.4.46 senior-audit polish — Apple/Linear/
+              Stripe don't use them; their content makes you scroll naturally.
+              Trust the composition. */}
         </div>
       </section>
 
@@ -207,9 +228,9 @@ export default function Landing({
                 <h3 className="ap-tile-h3">{c.t2Title}</h3>
                 <p className="ap-tile-sub">{c.t2Sub}</p>
                 <div className="ap-tile-cta-row">
-                  <button onClick={onOpenStamp} className="ap-btn-primary">
+                  <Link href="/stamp" className="ap-btn-primary">
                     {c.t2Cta1}
-                  </button>
+                  </Link>
                   <a href="#how" className="ap-btn-link">
                     {c.t2Cta2} <span aria-hidden="true">›</span>
                   </a>
@@ -329,19 +350,24 @@ export default function Landing({
         <div className="ap-footer-inner">
           <div className="ap-footer-grid">
             <FooterCol title={c.fcTools} links={c.fcToolsLinks} />
-            <FooterCol title={c.fcLearn} links={c.fcLearnLinks} />
             <FooterCol title={c.fcLegal} links={c.fcLegalLinks} />
             <FooterCol title={c.fcCompany} links={c.fcCompanyLinks} />
+          </div>
+          <div className="ap-founder-line">
+            {c.founderLine}
           </div>
           <div className="ap-footer-bottom">
             <div className="ap-footer-brand">
               <span className="ap-brand-find">Find</span><span className="ap-brand-ai">.ai</span>
-              <span className="ap-footer-tagline">— Don't sign blind.</span>
             </div>
             <div className="ap-footer-meta">
-              <span>© 2026 Find.ai · Malaysian property compliance toolkit</span>
+              <span>© 2026 Find.ai · Kuala Lumpur, Malaysia</span>
               <span className="ap-footer-sep">·</span>
-              <a href="#">{c.fLangLabel}: {lang.toUpperCase()}</a>
+              <a href="mailto:hello@find.ai">hello@find.ai</a>
+              <span className="ap-footer-sep">·</span>
+              <button onClick={cycleLang} className="ap-footer-lang">
+                {c.fLangLabel}: {lang.toUpperCase()}
+              </button>
             </div>
           </div>
         </div>
@@ -388,6 +414,18 @@ function HelpCard({ title, sub, cta, onClick, href }) {
     <button type="button" onClick={onClick} className="ap-help-card">
       {inner}
     </button>
+  );
+}
+
+function DoorChip({ label, sub, href, primary }) {
+  return (
+    <Link
+      href={href}
+      className={`ap-door ${primary ? 'ap-door-primary' : ''}`}
+    >
+      <div className="ap-door-label">{label}</div>
+      <div className="ap-door-sub">{sub} <span aria-hidden="true">›</span></div>
+    </Link>
   );
 }
 
@@ -553,17 +591,24 @@ function AuditVisual() {
 // ─── strings (EN/BM/中文) ───────────────────────────────────────────────────
 const STRINGS = {
   en: {
-    navTools: 'Tools', navHow: 'How it works', navTrust: 'Why us', navHelp: 'Help', navSignIn: 'Sign in',
+    navTools: 'Tools', navHow: 'How it works', navTrust: 'Why us', navHelp: 'Help', navSignIn: 'Try the demo',
     langLabel: 'Language',
-    heroEyebrow: 'PROPERTY COMPLIANCE TOOLKIT',
+    heroEyebrow: 'MALAYSIAN PROPERTY · ANONYMOUS-FIRST VERIFICATION',
     heroH1: 'Don\'t sign blind.',
-    heroSub: 'Verify a tenant in 2 minutes — before you sign anything. Free for individual landlords. No app to install.',
-    heroCtaPrimary: 'Generate Trust Card request',
-    heroCtaSecondary: 'See how it works',
+    heroSub: 'Verify a tenant\'s payment history without exposing their name. Anonymous Trust Card by default — identity reveals tier-by-tier as you decide to proceed.',
+    heroCtaPrimary: 'Start screening',
+    heroCtaSecondary: 'How it works',
     resume: 'Resume last session',
     scansOne: 'View your scan',
     scansMany: 'View your {n} scans',
     scrollCue: 'Explore tools',
+    doorsEyebrow: 'WHO ARE YOU?',
+    door1Label: "I'm a landlord",
+    door1Sub: 'Generate a Trust Card request',
+    door2Label: "I'm a tenant",
+    door2Sub: 'Submit your Trust Card',
+    door3Label: "I'm an agent",
+    door3Sub: 'Forward links to my landlords',
 
     htcMode: 'Anonymous mode',
     htcScoreLabel: 'Trust score',
@@ -573,7 +618,7 @@ const STRINGS = {
     htcChip1: 'LHDN-verified · 14 months',
     htcChip2: '3 utility bills · 3 days before due',
     htcChip3: 'Live Bound Verification ready',
-    htcFoot: "Don't sign blind.",
+    htcFoot: 'Anonymous · audit-logged',
     htcNotifApproveTitle: 'Approval logged',
     htcNotifApproveSub: '2+1 deposit · audit trail updated',
     htcNotifTierTitle: 'Ready for T1',
@@ -634,9 +679,9 @@ const STRINGS = {
     help3Sub: 'Manage your Trust Cards, tenants, and agent claims.',
     help3Cta: 'Go to dashboard',
 
-    ctaBannerH2: 'Stop signing blind.',
-    ctaBannerSub: 'Generate your first Trust Card request in under 2 minutes. Free, no sign-up needed.',
-    ctaBannerCta: 'Get started',
+    ctaBannerH2: 'Make your next tenancy your last regret-free one.',
+    ctaBannerSub: 'Generate your first Trust Card request in under 2 minutes. Free for individual landlords. No sign-up needed.',
+    ctaBannerCta: 'Start screening',
 
     fcTools: 'Tools',
     fcToolsLinks: [
@@ -661,25 +706,32 @@ const STRINGS = {
     ],
     fcCompany: 'Company',
     fcCompanyLinks: [
-      { label: 'About', href: '#' },
+      { label: 'About', href: '/about' },
+      { label: 'Pricing', href: '/pricing' },
       { label: 'Contact', href: 'mailto:hello@find.ai' },
-      { label: 'Status', href: '#' },
-      { label: 'Pilot program', href: '#' },
     ],
     fLangLabel: 'Language',
+    founderLine: 'Built by Ken Tan in Kuala Lumpur · Sdn Bhd registration pending · Pre-launch v1 · Trusted infrastructure: LHDN STAMPS · PDPA 2010 · Section 90A Evidence Act',
   },
   bm: {
-    navTools: 'Alat', navHow: 'Cara', navTrust: 'Kenapa kami', navHelp: 'Bantuan', navSignIn: 'Log masuk',
+    navTools: 'Alat', navHow: 'Cara', navTrust: 'Kenapa kami', navHelp: 'Bantuan', navSignIn: 'Cuba demo',
     langLabel: 'Bahasa',
-    heroEyebrow: 'KIT KEPATUHAN HARTANAH',
+    heroEyebrow: 'HARTANAH MALAYSIA · PENGESAHAN TANPA NAMA',
     heroH1: 'Jangan tandatangan buta.',
-    heroSub: 'Sahkan penyewa dalam 2 minit — sebelum tandatangan apa-apa. Percuma untuk tuan rumah individu.',
-    heroCtaPrimary: 'Jana permohonan Trust Card',
-    heroCtaSecondary: 'Lihat cara ia berfungsi',
+    heroSub: 'Sahkan rekod bayaran penyewa tanpa mendedahkan nama mereka. Trust Card tanpa nama secara lalai — identiti didedahkan secara berperingkat semasa anda buat keputusan.',
+    heroCtaPrimary: 'Mula saringan',
+    heroCtaSecondary: 'Cara ia berfungsi',
     resume: 'Sambung sesi terakhir',
     scansOne: 'Lihat saringan anda',
     scansMany: 'Lihat {n} saringan anda',
     scrollCue: 'Terokai alat',
+    doorsEyebrow: 'SIAPA ANDA?',
+    door1Label: 'Saya tuan rumah',
+    door1Sub: 'Jana permohonan Trust Card',
+    door2Label: 'Saya penyewa',
+    door2Sub: 'Hantar Trust Card anda',
+    door3Label: 'Saya ejen',
+    door3Sub: 'Hantar pautan kepada tuan rumah',
 
     htcMode: 'Mod tanpa nama',
     htcScoreLabel: 'Skor amanah',
@@ -689,7 +741,7 @@ const STRINGS = {
     htcChip1: 'Disahkan LHDN · 14 bulan',
     htcChip2: '3 bil utiliti · 3 hari sebelum tarikh',
     htcChip3: 'Pengesahan Langsung sedia',
-    htcFoot: 'Jangan tandatangan buta.',
+    htcFoot: 'Tanpa nama · jejak audit',
     htcNotifApproveTitle: 'Kelulusan direkod',
     htcNotifApproveSub: 'Deposit 2+1 · jejak audit dikemas',
     htcNotifTierTitle: 'Sedia untuk T1',
@@ -727,9 +779,9 @@ const STRINGS = {
     help2Title: 'Lihat Trust Card', help2Sub: 'Demo 60 saat aliran saringan sebenar.', help2Cta: 'Cuba demo',
     help3Title: 'Log masuk', help3Sub: 'Urus Trust Card, penyewa, dan ejen anda.', help3Cta: 'Pergi ke papan pemuka',
 
-    ctaBannerH2: 'Berhenti tandatangan buta.',
-    ctaBannerSub: 'Jana permohonan Trust Card pertama anda dalam masa kurang 2 minit.',
-    ctaBannerCta: 'Mula sekarang',
+    ctaBannerH2: 'Jadikan penyewaan seterusnya bebas penyesalan.',
+    ctaBannerSub: 'Jana permohonan Trust Card pertama anda dalam masa kurang 2 minit. Percuma untuk tuan rumah individu.',
+    ctaBannerCta: 'Mula saringan',
 
     fcTools: 'Alat',
     fcToolsLinks: [
@@ -754,25 +806,32 @@ const STRINGS = {
     ],
     fcCompany: 'Syarikat',
     fcCompanyLinks: [
-      { label: 'Tentang', href: '#' },
+      { label: 'Tentang', href: '/about' },
+      { label: 'Harga', href: '/pricing' },
       { label: 'Hubungi', href: 'mailto:hello@find.ai' },
-      { label: 'Status', href: '#' },
-      { label: 'Program perintis', href: '#' },
     ],
     fLangLabel: 'Bahasa',
+    founderLine: 'Dibina oleh Ken Tan di Kuala Lumpur · Pendaftaran Sdn Bhd dalam proses · Pra-pelancaran v1 · Infrastruktur dipercayai: LHDN STAMPS · PDPA 2010 · Seksyen 90A Akta Keterangan',
   },
   zh: {
-    navTools: '工具', navHow: '使用方法', navTrust: '为何选我们', navHelp: '帮助', navSignIn: '登录',
+    navTools: '工具', navHow: '使用方法', navTrust: '为何选我们', navHelp: '帮助', navSignIn: '试用演示',
     langLabel: '语言',
-    heroEyebrow: '马来西亚物业合规工具包',
+    heroEyebrow: '马来西亚物业 · 匿名优先验证',
     heroH1: '不要盲签。',
-    heroSub: '在签约前 2 分钟内验证租客。个人房东永久免费。无需安装应用。',
-    heroCtaPrimary: '生成 Trust Card 请求',
-    heroCtaSecondary: '了解原理',
+    heroSub: '在不暴露租客姓名的情况下验证其付款历史。默认匿名 Trust Card — 您决定推进时，身份按层级揭示。',
+    heroCtaPrimary: '开始审查',
+    heroCtaSecondary: '使用方法',
     resume: '继续上次会话',
     scansOne: '查看您的扫描',
     scansMany: '查看您的 {n} 个扫描',
     scrollCue: '探索工具',
+    doorsEyebrow: '您是谁？',
+    door1Label: '我是房东',
+    door1Sub: '生成 Trust Card 请求',
+    door2Label: '我是租客',
+    door2Sub: '提交您的 Trust Card',
+    door3Label: '我是经纪人',
+    door3Sub: '向房东转发链接',
 
     htcMode: '匿名模式',
     htcScoreLabel: '信任分数',
@@ -782,7 +841,7 @@ const STRINGS = {
     htcChip1: 'LHDN 已验证 · 14 个月',
     htcChip2: '3 项公用事业账单 · 提前 3 天',
     htcChip3: '实时绑定验证就绪',
-    htcFoot: '不要盲签。',
+    htcFoot: '匿名 · 审计记录',
     htcNotifApproveTitle: '批准已记录',
     htcNotifApproveSub: '2+1 押金 · 审计追踪已更新',
     htcNotifTierTitle: 'T1 准备就绪',
@@ -820,9 +879,9 @@ const STRINGS = {
     help2Title: '查看 Trust Card', help2Sub: '60 秒了解实际审查流程。', help2Cta: '试用演示',
     help3Title: '登录', help3Sub: '管理您的 Trust Card、租客和经纪人。', help3Cta: '前往仪表板',
 
-    ctaBannerH2: '不要再盲签。',
-    ctaBannerSub: '在不到 2 分钟内生成您的第一个 Trust Card 请求。',
-    ctaBannerCta: '立即开始',
+    ctaBannerH2: '让下一份租约成为您不会后悔的那份。',
+    ctaBannerSub: '在不到 2 分钟内生成您的第一个 Trust Card 请求。个人房东永久免费。',
+    ctaBannerCta: '开始审查',
 
     fcTools: '工具',
     fcToolsLinks: [
@@ -847,12 +906,12 @@ const STRINGS = {
     ],
     fcCompany: '公司',
     fcCompanyLinks: [
-      { label: '关于', href: '#' },
+      { label: '关于', href: '/about' },
+      { label: '定价', href: '/pricing' },
       { label: '联系', href: 'mailto:hello@find.ai' },
-      { label: '状态', href: '#' },
-      { label: '试点计划', href: '#' },
     ],
     fLangLabel: '语言',
+    founderLine: '由 Ken Tan 在吉隆坡构建 · Sdn Bhd 注册进行中 · 预发布 v1 · 可信基础设施：LHDN STAMPS · PDPA 2010 · 证据法第 90A 条',
   },
 };
 
@@ -1186,28 +1245,64 @@ const STYLES = `
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* Scroll cue */
-  .ap-scroll-cue {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 36px;
-    padding: 8px 14px;
-    border-radius: 999px;
-    background: transparent;
-    color: #5A6780;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: color .15s, transform .15s;
+  /* Three-door entry — landlord/tenant/agent paths (P0.5 fix) */
+  .ap-doors {
+    margin-top: 40px;
+    text-align: center;
   }
-  .ap-scroll-cue:hover { color: #0F1E3F; transform: translateY(2px); }
-  .ap-scroll-cue svg { animation: ap-bob 2s ease-in-out infinite; }
-  @keyframes ap-bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(3px); }
+  .ap-doors-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: #9A9484;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .ap-doors-row {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .ap-door {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 12px 18px;
+    background: #FFFFFF;
+    border: 1px solid #E7E1D2;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s, border-color .15s, transform .12s;
+    text-align: left;
+    min-width: 200px;
+  }
+  .ap-door:hover {
+    background: #F3EFE4;
+    border-color: #C9C0A8;
+    transform: translateY(-1px);
+  }
+  .ap-door-primary {
+    background: #F3EFE4;
+    border-color: #B8893A;
+  }
+  .ap-door-primary:hover {
+    background: #EDE6D5;
+  }
+  .ap-door-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F1E3F;
+    letter-spacing: -0.01em;
+  }
+  .ap-door-sub {
+    font-size: 11px;
+    color: #5A6780;
+  }
+  .ap-door:hover .ap-door-sub span {
+    margin-left: 4px;
   }
 
   @media (min-width: 768px) {
@@ -1574,14 +1669,28 @@ const STYLES = `
     transition: color .12s;
   }
   .ap-footer-col a:hover { color: #0F1E3F; }
+  .ap-founder-line {
+    padding: 24px 0 16px;
+    border-bottom: 1px solid rgba(231, 225, 210, 0.5);
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: #5A6780;
+    text-align: left;
+  }
   .ap-footer-bottom {
-    padding-top: 24px;
+    padding-top: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
   }
+  .ap-footer-lang {
+    background: transparent; border: none; cursor: pointer;
+    color: #5A6780; font-family: inherit; font-size: 11px;
+    padding: 0; transition: color .15s;
+  }
+  .ap-footer-lang:hover { color: #0F1E3F; }
   .ap-footer-brand { display: inline-flex; align-items: baseline; gap: 6px; font-size: 13px; }
   .ap-footer-tagline { color: #5A6780; font-style: italic; font-size: 12px; margin-left: 4px; }
   .ap-footer-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 11px; color: #9A9484; }

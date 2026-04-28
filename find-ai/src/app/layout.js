@@ -53,10 +53,65 @@ export const viewport = {
   initialScale: 1,
 }
 
+// JSON-LD structured data for SEO (P2.9 fix from senior audit).
+// Helps Google show rich results for "Malaysian tenant verification" queries.
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Find.ai',
+  applicationCategory: 'BusinessApplication',
+  description: 'Malaysian property compliance toolkit. Anonymous-first tenant verification, SDSAS 2026 stamp duty, agreement audit. Free for individual landlords.',
+  operatingSystem: 'Web',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'MYR',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Find.ai',
+    url: 'https://find-ai-lovat.vercel.app',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kuala Lumpur',
+      addressCountry: 'MY',
+    },
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body className="bg-white">
+        {/* Skip-to-content for keyboard / screen-reader users (P2.8) */}
+        <a
+          href="#main"
+          style={{
+            position: 'absolute',
+            left: '-9999px',
+            zIndex: 100,
+            padding: '8px 16px',
+            background: 'var(--color-navy)',
+            color: 'var(--color-white)',
+            textDecoration: 'none',
+            borderRadius: 4,
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.left = '8px';
+            e.currentTarget.style.top = '8px';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.left = '-9999px';
+          }}
+        >
+          Skip to main content
+        </a>
         <ToastProvider>
           {children}
         </ToastProvider>

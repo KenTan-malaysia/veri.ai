@@ -53,9 +53,9 @@ export default function DashboardPage() {
         setSavedName('');
       }
     } catch (e) { /* localStorage blocked */ }
-    // Navigate to the main chat page where the assistant lives.
-    // Using a hash so the chat page can detect intent + read the name.
-    router.push('/?assistant=open');
+    // v3.4.46 — Navigate to dedicated /chat route (P0.6 fix from senior audit).
+    // Was: /?assistant=open (landing didn't act on the param).
+    router.push('/chat');
   };
 
   const clearName = () => {
@@ -955,7 +955,7 @@ function PromptChip({ text }) {
         // Phase 3: prefill the chat input with this prompt + open assistant
         if (typeof window !== 'undefined') {
           try { window.localStorage.setItem('fa_assistant_prefill_v1', text); } catch (e) {}
-          window.location.href = '/?assistant=open';
+          window.location.href = '/chat';
         }
       }}
       aria-label={`Ask: ${text}`}

@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.45 — 100-user UX audit + P0 polish pass. New `UX_AUDIT_100USER_v3.4.45.md` doc with 20 issues across P0/P1/P2. Top 6 P0s fixed: 4 stub legal pages (Terms/Privacy/Tenant Consent/PDPA), sidebar dead-link cleanup, topbar dead-UI removal, EXAMPLE tag on hero Trust Card mockup, "spine" → "system" reword across 3 langs, /trust action row reframed for non-landlord viewers. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.47 — Senior-UX-audit iteration 2. Pricing page + About page shipped (P2.1, P2.2). Footer wired to real /about /pricing routes. Iteration 1 (v3.4.46) hero rewrite + 3-door + /stamp + /chat + JSON-LD + skip-link + CJK fonts holds. Re-audit: 14 of 23 audit items fixed; 9 remain (typography license, photography, dynamic lang attr, /screen visual consistency, etc.). · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -120,7 +120,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.45
+## 🟢 ACTIVE SAVE POINT — v3.4.47
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 
