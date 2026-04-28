@@ -606,7 +606,12 @@ export default async function TrustCardPage({ params, searchParams }) {
               </p>
             </section>
 
-            {/* Action row — Approve / Request more / Decline (per DESIGN_DIRECTION.md) */}
+            {/* Action row — Approve / Request more / Decline (per DESIGN_DIRECTION.md).
+                v3.4.45 — 100-user audit P0 #6: this URL is sometimes opened by
+                non-landlords (curious recipients, agents, even the tenant who
+                generated it). Adding a clarifying header so it's obvious these
+                actions are for the receiving landlord only. Real audit-log
+                writes + auth gating ship in Sprint 3 of the redesign plan. */}
             <section aria-label="Decision">
               <div
                 style={{
@@ -615,10 +620,19 @@ export default async function TrustCardPage({ params, searchParams }) {
                   color: '#9A9484',
                   textTransform: 'uppercase',
                   letterSpacing: '0.18em',
+                  marginBottom: 4,
+                }}
+              >
+                If you're the landlord
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: '#5A6780',
                   marginBottom: 10,
                 }}
               >
-                Make your decision
+                Each decision is logged in the tenant's audit trail.
               </div>
               <div
                 style={{

@@ -414,7 +414,10 @@ function FooterCol({ title, links }) {
 function HeroTrustCard({ c }) {
   return (
     <div className="ap-htc-wrap">
-      <div className="ap-htc-card" role="img" aria-label="Find.ai Trust Card preview">
+      <div className="ap-htc-card" role="img" aria-label="Find.ai Trust Card preview — example">
+        {/* v3.4.45 — EXAMPLE label per 100-user audit P0 #4. First-time users
+            were confusing the demo score with their own. */}
+        <div className="ap-htc-example-tag">EXAMPLE</div>
         <div className="ap-htc-mode-row">
           <span className="ap-htc-mode">{c.htcMode}</span>
           <span className="ap-htc-ref">TC-2026-04-7841</span>
@@ -576,7 +579,7 @@ const STRINGS = {
     htcNotifTierTitle: 'Ready for T1',
     htcNotifTierSub: 'Tap to request categorical reveal',
 
-    toolsH2: 'Three tools, one trust spine.',
+    toolsH2: 'Three tools, one trust system.',
     toolsSub: 'Pre-signing compliance for Malaysian landlords, agents, and tenants.',
 
     t1Eye: 'TRUST SCORE',
@@ -692,7 +695,7 @@ const STRINGS = {
     htcNotifTierTitle: 'Sedia untuk T1',
     htcNotifTierSub: 'Tekan untuk minta dedahan kategori',
 
-    toolsH2: 'Tiga alat, satu tulang belakang amanah.',
+    toolsH2: 'Tiga alat, satu sistem amanah.',
     toolsSub: 'Kepatuhan pra-tandatangan untuk tuan rumah, ejen, dan penyewa Malaysia.',
 
     t1Eye: 'SKOR AMANAH', t1Title: 'Saring penyewa.',
@@ -785,7 +788,7 @@ const STRINGS = {
     htcNotifTierTitle: 'T1 准备就绪',
     htcNotifTierSub: '点击请求分类揭示',
 
-    toolsH2: '三个工具，一条信任主线。',
+    toolsH2: '三个工具，一套信任系统。',
     toolsSub: '为马来西亚房东、经纪人和租客提供签约前合规支持。',
 
     t1Eye: '信任分数', t1Title: '审查租客。',
@@ -1039,6 +1042,21 @@ const STYLES = `
     box-shadow: 0 24px 48px -16px rgba(15,30,63,0.32), 0 6px 16px rgba(15,30,63,0.12);
     position: relative;
     z-index: 2;
+  }
+  /* "EXAMPLE" tag — top-right of card, subtle so it doesn't dominate but clear enough to prevent confusion */
+  .ap-htc-example-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.06);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.12);
   }
   .ap-htc-mode-row {
     display: flex; align-items: center; justify-content: space-between;

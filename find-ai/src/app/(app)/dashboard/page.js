@@ -277,7 +277,7 @@ export default function DashboardPage() {
             Tools
           </h2>
           <span style={{ fontSize: 12, color: 'var(--color-stone)' }}>
-            Three pre-signing tools, one trust spine
+            Three pre-signing tools, one trust system
           </span>
         </div>
         <div

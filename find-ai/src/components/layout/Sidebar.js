@@ -7,16 +7,20 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+// v3.4.45 — Audit cleanup. Only nav items that resolve to real pages are
+// visible. Tenants / Agents / Settings / Help all 404'd in the 100-user
+// audit — hidden until their pages exist (Phase 3 build target). Restore
+// them by uncommenting once the routes are real.
 const PRIMARY_NAV = [
   { href: '/dashboard',   label: 'Dashboard',    icon: 'dashboard' },
   { href: '/cards',       label: 'Trust Cards',  icon: 'card' },
-  { href: '/tenants',     label: 'Tenants',      icon: 'users' },
-  { href: '/agents',      label: 'Agents',       icon: 'handshake' },
+  // { href: '/tenants',  label: 'Tenants',      icon: 'users' },        // Phase 3
+  // { href: '/agents',   label: 'Agents',       icon: 'handshake' },    // Phase 3
 ];
 
 const SECONDARY_NAV = [
-  { href: '/settings',    label: 'Settings',     icon: 'gear' },
-  { href: '/help',        label: 'Help',         icon: 'help' },
+  // { href: '/settings', label: 'Settings',     icon: 'gear' },         // Phase 3
+  // { href: '/help',     label: 'Help',         icon: 'help' },         // Phase 3
 ];
 
 export default function Sidebar({ collapsed = false, onToggle }) {
@@ -118,25 +122,28 @@ export default function Sidebar({ collapsed = false, onToggle }) {
           <NavItem key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
         ))}
 
-        <div style={{ height: 24 }} />
-
-        {!collapsed && (
-          <div
-            style={{
-              padding: '4px 12px 8px',
-              fontSize: 10,
-              fontWeight: 500,
-              color: 'var(--color-bone)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-            }}
-          >
-            Account
-          </div>
+        {SECONDARY_NAV.length > 0 && (
+          <>
+            <div style={{ height: 24 }} />
+            {!collapsed && (
+              <div
+                style={{
+                  padding: '4px 12px 8px',
+                  fontSize: 10,
+                  fontWeight: 500,
+                  color: 'var(--color-bone)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                }}
+              >
+                Account
+              </div>
+            )}
+            {SECONDARY_NAV.map((item) => (
+              <NavItem key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
+            ))}
+          </>
         )}
-        {SECONDARY_NAV.map((item) => (
-          <NavItem key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
-        ))}
       </nav>
 
       {/* Profile / status footer */}

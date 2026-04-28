@@ -41,56 +41,13 @@ export default function Topbar({ title = 'Dashboard' }) {
         </h1>
       </div>
 
-      {/* Center: search hint (placeholder for cmd+k command palette in Phase 4) */}
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
-        <button
-          type="button"
-          aria-label="Search · ⌘K"
-          disabled
-          style={{
-            width: '100%',
-            maxWidth: 380,
-            height: 34,
-            padding: '0 12px',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--color-cream)',
-            border: '1px solid var(--color-hairline)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            color: 'var(--color-bone)',
-            fontSize: 12,
-            fontFamily: 'inherit',
-            cursor: 'not-allowed',
-            opacity: 0.7,
-          }}
-        >
-          <SearchIcon />
-          <span style={{ flex: 1, textAlign: 'left' }}>Search · cmd palette ships in Phase 4</span>
-          <kbd
-            style={{
-              fontSize: 10,
-              fontWeight: 500,
-              padding: '2px 6px',
-              borderRadius: 4,
-              background: 'var(--color-white)',
-              border: '1px solid var(--color-hairline)',
-              color: 'var(--color-stone)',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            ⌘K
-          </kbd>
-        </button>
-      </div>
-
-      {/* Right: notifications · language · avatar */}
+      {/* v3.4.45 — Audit cleanup. cmd+K palette + bell + avatar removed —
+          they were non-functional dead UI per the 100-user audit. They
+          return when their backends ship (Phase 4 cmd+K, Phase 3 auth +
+          notifications). Lang toggle stays since it's wired. */}
+      <div style={{ flex: 1 }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-        <IconButton aria-label="Notifications">
-          <BellIcon />
-        </IconButton>
         <LangToggle />
-        <AvatarButton />
       </div>
     </header>
   );
