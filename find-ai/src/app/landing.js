@@ -1038,10 +1038,11 @@ const STYLES = `
     margin-bottom: 16px;
   }
   .ap-hero-h1 {
-    font-size: 52px;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.0;
+    font-family: 'Instrument Serif', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
+    font-size: 64px;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
     color: #0F1E3F;
     margin: 0 0 16px;
   }
@@ -1307,7 +1308,7 @@ const STYLES = `
 
   @media (min-width: 768px) {
     .ap-hero { padding: 72px 0 48px; }
-    .ap-hero-h1 { font-size: 76px; }
+    .ap-hero-h1 { font-size: 92px; letter-spacing: -0.03em; }
     .ap-hero-sub { font-size: 19px; }
     .ap-htc-card { width: 380px; padding: 28px 30px 26px; }
     .ap-htc-score { font-size: 76px; }
@@ -1316,7 +1317,7 @@ const STYLES = `
   }
   @media (min-width: 1024px) {
     .ap-hero { padding: 88px 0 56px; }
-    .ap-hero-h1 { font-size: 92px; line-height: 0.96; }
+    .ap-hero-h1 { font-size: 112px; line-height: 0.95; }
     .ap-hero-visual { margin-top: 56px; min-height: 440px; }
     .ap-htc-card { width: 420px; padding: 32px 34px 28px; }
     .ap-htc-score { font-size: 88px; }
@@ -1380,10 +1381,11 @@ const STYLES = `
 
   /* ── SECTION HEADINGS ────────────────────────────────────────────── */
   .ap-section-h2 {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
+    font-family: 'Instrument Serif', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
     color: #0F1E3F;
     margin: 0 0 12px;
     text-align: center;
@@ -1398,10 +1400,10 @@ const STYLES = `
     font-weight: 400;
   }
   @media (min-width: 768px) {
-    .ap-section-h2 { font-size: 48px; }
+    .ap-section-h2 { font-size: 56px; }
   }
   @media (min-width: 1024px) {
-    .ap-section-h2 { font-size: 56px; }
+    .ap-section-h2 { font-size: 64px; letter-spacing: -0.02em; }
   }
 
   /* ── TILES ───────────────────────────────────────────────────────── */
@@ -1441,9 +1443,10 @@ const STYLES = `
   .ap-tile-dark .ap-tile-eyebrow { color: #FFD27A; }
   .ap-tile-eyebrow-amber { color: #B8893A; }
   .ap-tile-h3 {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-family: 'Instrument Serif', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
     line-height: 1.05;
     margin: 0 0 12px;
   }
@@ -1501,12 +1504,12 @@ const STYLES = `
 
   @media (min-width: 768px) {
     .ap-tile-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-    .ap-tile-h3 { font-size: 38px; }
+    .ap-tile-h3 { font-size: 44px; }
   }
   @media (min-width: 1024px) {
     .ap-tile-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .ap-tile { padding: 44px 32px; min-height: 520px; }
-    .ap-tile-h3 { font-size: 44px; }
+    .ap-tile-h3 { font-size: 52px; letter-spacing: -0.02em; }
   }
 
   /* ── HOW IT WORKS ────────────────────────────────────────────────── */
@@ -1628,9 +1631,10 @@ const STYLES = `
     text-align: center;
   }
   .ap-cta-banner-h2 {
-    font-size: 36px; font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
+    font-family: 'Instrument Serif', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
+    font-size: 44px; font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
     margin: 0 0 12px;
     color: #FFFFFF;
   }
@@ -1641,7 +1645,7 @@ const STYLES = `
     max-width: 480px;
   }
   @media (min-width: 768px) {
-    .ap-cta-banner-h2 { font-size: 48px; }
+    .ap-cta-banner-h2 { font-size: 60px; letter-spacing: -0.025em; }
   }
 
   /* ── FOOTER ──────────────────────────────────────────────────────── */

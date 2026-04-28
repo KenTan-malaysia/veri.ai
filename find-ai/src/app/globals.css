@@ -1,3 +1,9 @@
+/* v3.4.50 — Editorial typography pairing.
+   Instrument Serif (display) + Inter (body) — free Google Fonts that signal
+   "considered design" instead of "generic SaaS Inter everywhere."
+   Apple Card / Substack / NYT use the same serif/sans contrast. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -91,8 +97,9 @@
   --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  /* ── TYPE ── (CJK fallbacks added v3.4.46 P2.6 fix from senior audit) */
+  /* ── TYPE ── */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* ── Z-INDEX scale ── */

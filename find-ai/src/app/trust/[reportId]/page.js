@@ -20,6 +20,7 @@
 // v1: data fetched from Supabase by reportId.
 
 import Link from 'next/link';
+import CountUp from '../../../components/ui/CountUp';
 
 // ─── data resolver (v0 — URL-encoded) ───────────────────────────────────────
 // v0 strategy (no backend yet): Trust Card data is encoded in URL search params
@@ -479,7 +480,9 @@ export default async function TrustCardPage({ params, searchParams }) {
                   Trust score
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                  <span className="tc-score-num">{card.trustScore}</span>
+                  <span className="tc-score-num">
+                    <CountUp to={card.trustScore} duration={1400} />
+                  </span>
                   <span className="tc-score-suffix">/ 100</span>
                 </div>
               </div>
