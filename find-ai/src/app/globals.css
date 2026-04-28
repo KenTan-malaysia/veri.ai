@@ -104,6 +104,30 @@
   --z-toast: 60;
 }
 
+/* Skip-to-content link (a11y) — visually hidden until focused.
+   v3.4.48 — moved from inline JSX in layout.js (which had onFocus/onBlur
+   event handlers and broke SSG as a server component). CSS-only is the
+   standard pattern. */
+.fa-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  z-index: 100;
+  padding: 8px 16px;
+  background: var(--color-navy);
+  color: var(--color-white);
+  text-decoration: none;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+}
+.fa-skip-link:focus,
+.fa-skip-link:focus-visible {
+  left: 8px;
+  top: 8px;
+}
+
 /* Honor reduced-motion preference per DESIGN_SYSTEM.md accessibility minimums */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

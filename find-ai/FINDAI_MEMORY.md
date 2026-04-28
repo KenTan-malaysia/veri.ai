@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.47 — Senior-UX-audit iteration 2. Pricing page + About page shipped (P2.1, P2.2). Footer wired to real /about /pricing routes. Iteration 1 (v3.4.46) hero rewrite + 3-door + /stamp + /chat + JSON-LD + skip-link + CJK fonts holds. Re-audit: 14 of 23 audit items fixed; 9 remain (typography license, photography, dynamic lang attr, /screen visual consistency, etc.). · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.48 — Critical build fix. v3.4.46 added onFocus/onBlur event handlers to skip-link inside layout.js (a server component) → broke SSG with `/_not-found` build timeout. Fixed: skip-link is now CSS-only (`.fa-skip-link` class with :focus pseudo-class in globals.css). JSON-LD also moved from `<head>` to `<body>` per Next.js App Router convention. Build should pass on Vercel. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -120,7 +120,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.47
+## 🟢 ACTIVE SAVE POINT — v3.4.48
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 
@@ -173,6 +173,7 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 | **Always test on `https://find-ai-lovat.vercel.app`** — never deployment-specific URLs | Vercel keeps deployment URLs (`find-psd1pt5p3-...`, `find-ai-git-main-...`) frozen to specific commits. Ken spent hours testing the wrong URL. |
 | **Wrap streaming loops in try/catch** | Without it, mid-stream errors → `FUNCTION_INVOCATION_FAILED` with no useful logs. Always catch + console.error the full error object. |
 | **Anthropic returns 400 for billing errors** (not 402) | If chat 400s with no obvious model/format issue, check `console.anthropic.com/settings/billing` first. |
+| **No event handlers in server components** (Next.js App Router) | `onClick` / `onFocus` / `onBlur` etc. CANNOT be inline in files without `'use client'`. Symptom: build hangs on `/_not-found` SSG → "Static page generation timed out after 3 attempts." Fix: move to CSS pseudo-classes (`:focus`) or wrap the element in a separate client component. v3.4.46 broke prod with this; v3.4.48 fixed via CSS-only skip-link. |
 | **For pilot/MVP, use `claude-3-5-haiku-20241022`** | On every Anthropic account, cheap (~$0.25/$1.25 per million tokens), fast. |
 | **Web app IS a real product** — not less real than native | Same product whether delivered via browser URL or App Store. Native (Capacitor wrap) is a Phase 4+ optional add. |
 | **Web-first to 30k. No native before then.** | Locked v3.4.24. Saves RM 45-85k Year 1-3. WhatsApp link beats App Store install for 1-3 uses/year audience. Capacitor wrap (RM 5-15k) only after 30k milestone. |

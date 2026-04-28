@@ -82,36 +82,20 @@ const structuredData = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
+      <body className="bg-white">
+        {/* Skip-to-content for keyboard / screen-reader users (P2.8).
+            v3.4.48 fix — was using onFocus/onBlur in a server component,
+            which broke SSG (caused /_not-found build timeout). Now CSS-only
+            via the .fa-skip-link class in globals.css. */}
+        <a href="#main" className="fa-skip-link">
+          Skip to main content
+        </a>
+        {/* JSON-LD structured data — moved from <head> to body per Next.js
+            App Router recommendation. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-      </head>
-      <body className="bg-white">
-        {/* Skip-to-content for keyboard / screen-reader users (P2.8) */}
-        <a
-          href="#main"
-          style={{
-            position: 'absolute',
-            left: '-9999px',
-            zIndex: 100,
-            padding: '8px 16px',
-            background: 'var(--color-navy)',
-            color: 'var(--color-white)',
-            textDecoration: 'none',
-            borderRadius: 4,
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.left = '8px';
-            e.currentTarget.style.top = '8px';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.left = '-9999px';
-          }}
-        >
-          Skip to main content
-        </a>
         <ToastProvider>
           {children}
         </ToastProvider>
