@@ -141,7 +141,7 @@ Landlords cannot skip tiers — they always get whatever tier the tenant has aut
 3. All parties notified: "Full identity now visible for tenancy signing + LHDN stamping"
 4. No reveal-tier UI needed — it's a system event
 
-### Direct-landlord flow (no agent)
+### Direct-landlord flow (no agent) — Path B
 
 When tenant submits via direct landlord link (no agent in the chain), the model is **2-key consent**, not 3-key:
 - T1: same (landlord requests, tenant approves)
@@ -150,7 +150,14 @@ When tenant submits via direct landlord link (no agent in the chain), the model 
 - T4: 2-key (landlord intent + tenant approval)
 - T5: same (automatic at signing)
 
-The agent gatekeeper role is replaced by the tenant-as-self-gatekeeper. Same UX surface, fewer parties.
+The agent gatekeeper role is replaced by the tenant-as-self-gatekeeper. **Same UX surface, fewer parties, full reveal capability.**
+
+> **Path B doctrine (locked v3.4.29):** Direct-landlord flow is NOT artificially crippled to force agent adoption. Both flows are symmetrical in identity-reveal capability. A tenant + landlord can complete every tier T0→T5 without an agent in the chain. The two flows differ only in:
+> 1. **Who has gatekeeper authority** — agent in agent-flow, tenant in direct-flow.
+> 2. **Number of consent keys** — 3-key (agent + landlord + tenant) in agent-flow at T4, 2-key (landlord + tenant) in direct-flow.
+> 3. **Value-add features** agents bring (BOVAEP credibility, co-branding, curated pipeline, multi-tenant dashboard) that direct-flow doesn't get — see `ARCH_AGENT_PROFILE.md` "What agents bring."
+>
+> The agent moat under Path B is **value-add, not force-gate**. Agents win by offering more, not by being mandatory. This is the honest model — Path A (force-gating direct flow) creates resentment that finds workarounds.
 
 ---
 

@@ -10,7 +10,9 @@
 
 ## The decision in one line
 
-**Property agent is the third Find.ai user type — alongside Tenant and Landlord — with their own profile, dashboard, and identity-reveal authority. Agent adoption is the fastest path to 30k users; agent retention is the foundation of the premium tier.**
+**Property agent is the third Find.ai user type — alongside Tenant and Landlord — with their own profile, dashboard, and identity-reveal authority *when present*. Agent adoption is the fastest path to 30k users; agent retention is the foundation of the premium tier. But Find.ai works without an agent in the chain — direct-landlord flow has full reveal capability. Agents win by adding value, not by being a forced gate.**
+
+> **Path B doctrine (locked v3.4.29):** We do NOT artificially cripple direct-landlord flow to force agent adoption. Both flows are symmetrical in identity-reveal capability. Agents earn their position through value-add (co-branding, BOVAEP-verified credibility, curated tenant pipelines, professional vetting, multi-tenant management dashboards, market knowledge), not through being a mandatory bottleneck. This is the honest model — Path A (force-gating direct flow) creates resentment that finds workarounds.
 
 ---
 
@@ -29,11 +31,33 @@ Prospect sees ad → contacts Agent → Agent asks Landlord → Landlord asks fo
 
 Find.ai is *embedded* in this flow at multiple points. We can't pretend the agent is an edge case.
 
-### 2. Agent is the identity gatekeeper (per `ARCH_REVEAL_TIERS.md`)
-The agent's authority over reveal pacing (T2 first-name release, T3 viewing-confirmation, T4 contact-reveal advancement) is what makes Find.ai valuable to the agent. Without this gatekeeper role, agents have nothing to gain — and they actively *avoid* tools that risk being bypassed. With it, Find.ai is structurally aligned with the agent's commercial interest.
+### 2. Agent is the identity gatekeeper *when present* (per `ARCH_REVEAL_TIERS.md`)
+When an agent is in the chain, they have authority over reveal pacing (T2 first-name release, T3 viewing-confirmation, T4 contact-reveal advancement). This authority is real and meaningful — it's the in-flow value-add. But it's not what makes Find.ai work. Find.ai works in direct-landlord flow too, with the tenant as their own gatekeeper. **Agents win by being faster + better at gatekeeping than the tenant doing it themselves** — they bring relationship management, market knowledge, and pipeline curation. They don't win by being mandatory.
 
 ### 3. Agent acquisition is 10-50× more efficient than landlord acquisition
 A typical Malaysian property agent has 10-50 active listings + landlord relationships. Acquiring one agent who actively pushes Find.ai = pulling in their entire portfolio of landlords + tenants. To reach 30k users via direct landlord acquisition we'd need to convert ~30k landlords. Via agent acquisition, we need ~600-3,000 agents — much more achievable with industry partnerships (MIEA, REN community).
+
+---
+
+## What agents bring that direct-landlord flow does NOT (the value-add)
+
+This is the honest competitive case for agents under Path B. None of this requires us to force-gate direct flow.
+
+| Value-add | What agents offer | Why landlords pay for it |
+|---|---|---|
+| **BOVAEP-verified credibility** | Agent's REN/REA/PEA registration is displayed on the Trust Card → adds professional accountability layer | Landlord knows there's a regulated party in the chain — recourse if anything goes wrong |
+| **Tenant pipeline curation** | Agent has 5-20 prospects pre-qualified before any Trust Card is generated → landlord sees only the strongest candidates | Saves landlord time + decision fatigue |
+| **Market knowledge** | Agent knows local rental dynamics, comparable rents, demand patterns | Landlord avoids underpricing + finds tenants faster |
+| **Multi-tenant management dashboard** | Agent juggles 5-50 active screenings; their dashboard surfaces patterns landlords can't see solo | Operational efficiency for portfolio landlords |
+| **Co-branded Trust Card** (premium) | Agent name + photo + REN registration on the card itself | Tenant feels they're dealing with professionals, not a random landlord |
+| **Tenant relationship continuity** | Agent has done the cold outreach + viewing scheduling + paperwork prep — Find.ai is one piece of their service | Landlord delegates the entire flow, not just screening |
+| **Faster reveal advancement** (premium feature) | Premium agents can offer pre-consented "instant T3 unlock" with their tenants | Speed advantage in fast-moving rental markets |
+
+**Direct-landlord flow gets:** Trust Card request, anonymous-by-default screening, full reveal control via tenant consent, tenant audit trail, basic dashboard.
+
+**Direct-landlord flow does NOT get:** BOVAEP-verified credibility on the card, pre-curated tenant pipeline, agent dashboard, co-branded card, agency-grade features.
+
+The differentiation is **honest and additive** — the things agents charge for are the things they actually do that landlords self-serving can't replicate.
 
 ---
 
