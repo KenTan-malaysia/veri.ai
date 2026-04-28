@@ -77,54 +77,109 @@ Every intake field falls into one of four categories. **This is the locked princ
 
 ### Category A — Always-required (operational fit)
 
-| Field | Format | Notes |
-|---|---|---|
-| Tenant name | Per Mode (Anonymous → T-id, Verified → full name) | See `ARCH_REVEAL_TIERS.md` Mode Selection |
-| Pax (number of occupants) | 1 / 2 / 3 / 4 / 5+ | |
-| Co-tenant relationship | Family / Friends / Colleagues / Individual / Mixed | |
-| Move-in target date | Single month-year OR range (e.g. "June-July 2026") | |
-| Budget range | RM ranges, NOT single number (e.g. RM 3,000-3,500/month) | |
-| Tenancy length intention | <1yr / 1-2yr / 2-3yr / 3+yr | |
-| Pet | None / Cat / Dog / Bird / Other | |
-| Smoker | Yes / No / Outdoor only | Frequently asked, currently missing from many agent messages |
+> **Data-validated v3.4.33 against 6 real WhatsApp intake samples** (Zahail, Habeeb, Hedaya, Omar, Fatima, Mahad). Universality scores in parentheses below.
+
+| Field | Format | Universality | Notes |
+|---|---|---|---|
+| Tenant name | Per Mode (Anonymous → T-id, Verified → full name) | 6/6 | See `ARCH_REVEAL_TIERS.md` Mode Selection |
+| Pax (number of occupants) | 1 / 2 / 3 / 4 / 5+ | 6/6 | Highest-priority — every message has it |
+| Co-tenant breakdown | Adults: __ · Children: __ (with ages if any) · Relationship: Family / Friends / Colleagues / Individual / Mixed | 4/6 (kids/family explicitly mentioned) | Replaces simple "co-tenant relationship" — must capture children count for unit-bedroom-fit |
+| Move-in target date | Specific date · OR month · OR range · OR "ASAP" | 6/6 | Real practice has "ASAP", "June/July", "1 Feb 2026" — accept all formats |
+| Budget | RM single number OR range (e.g. RM 3,000 OR RM 3,000-3,500/month) | 5/6 | Most agents send single number; UI accepts both, internally normalizes to range |
+| Tenancy length intention | <1yr / 1-2yr / 2-3yr / 3+yr / "long term" | 5/6 | Accept fuzzy "long term min 2 yr" as valid input |
+| Furnishing preference | Basic / Partly / Fully / Any (allow multi-select e.g. "Partly or fully") | 5/6 | Real practice often selects multiple ("Partly or Fully") |
+| Required bedrooms | 1 / 2 / 3 / 4+ / Studio / Any | 1/6 | LOW universality but operationally critical for unit-fit. Sometimes implied via pax count. |
+| **Nationality** | Categorical: MY citizen / MY PR / Foreign (with country picker if foreign) | 6/6 | **Operational** — affects visa, contract terms, payment methods. NOT race. |
+| Pet | None / Cat / Dog / Bird / Fish / Other (with notes) | 1/6 | Low universality but high impact when relevant. Required-yes-no, optional notes. |
 
 ### Category B — Optional (operational)
 
-| Field | Format | Notes |
-|---|---|---|
-| Job location | Free text city/area | Operational — close to unit? |
-| Nationality | Categorical (MY / MY PR / Foreign) | Often operational for expat-targeted units |
-| Furniture preference | Fully / Partly / Unfurnished / Any | Operational for unit-type matching |
-| Viewing availability | Day/time preference (free text or weekday-evening / weekend / anytime) | |
+> **Data-validated v3.4.33.** Nationality moved to Category A (universal in real practice). Furnishing moved to A. Smoker moved here from Category A (0/6 in real samples — overspec'd in v3.4.32). New fields added based on real-sample insights.
+
+| Field | Format | Universality | Notes |
+|---|---|---|---|
+| Job/company location | Free text city/area (e.g. "Bandar Utama", "KL Eco City") | 2/6 | Operational — close to unit? Helps landlord assess commute fit |
+| Currently staying | Free text area (e.g. "Desa Park City") | 1/6 | **Stability signal** — tenant currently affording comparable area = creditworthy proxy |
+| Smoker | Yes / No / Outdoor only | **0/6 in real samples** | Moved here from Category A. Pilot validation: keep optional or remove. |
+| Visa / pass type (foreign tenants only) | Work permit · Dependent pass · Student pass · MM2H · Tourist · Other | 0/6 (but implied) | Auto-shown when nationality = foreign. Affects landlord's risk assessment. |
+| Reason for moving | Free text (e.g. "Company relocation", "Kid in Aberdeen International") | 0/6 explicit but 2/6 contextual | Stability anchor for foreign tenants. Often appears in free-text "anything else" field today. |
+| Length of stay in Malaysia (foreign tenants) | <6mo / 6mo-1yr / 1-3yr / 3+yr / Permanent resident | 0/6 (but implied via context) | Auto-shown when nationality = foreign. Creditworthiness proxy. |
+| Viewing availability | Day/time preference (Weekday evenings / Weekends / Anytime / Specific) | 1/6 | Coordination convenience |
 
 ### Category C — Opt-in with explicit warning (potentially discriminatory)
 
-These fields are HIDDEN BY DEFAULT. Tenant must explicitly click "Add this field" → modal warning appears → tenant confirms. Landlord-side shows the disclosure warning.
+> **🔒 LOCKED v3.4.34 — Ken's final call: Option B confirmed.** Race/religion are captured as **opt-in with discrimination warning + audit log**. Hidden by default. Tenant must actively click "Add this field." Every view logged. Landlord-side shows: *"Tenant self-disclosed. Cannot be legally used as discrimination basis. Find.ai logs every view of this field."*
+>
+> **Data-validated v3.4.33.** **Critical finding from real samples: agents conflate "Race" with "Nationality."** 3 of 4 "race" entries in real samples are actually nationality (Mahad: "Race: American", Hedaya/Omar: "Race: Arab"). Form must enforce the distinction:
+> - **Nationality** is operational (Category A above) — passport country, affects visa/contract.
+> - **Race / ethnicity** is sensitive (Category C below) — self-identified background, opt-in only.
+>
+> Religion was found in only 1/6 samples (Fatima volunteered "Islam"). Confirms it's tenant-volunteered, not landlord-demanded — Category C is correct.
+>
+> Family composition was REMOVED from Category C and SPLIT: structural family info (kids count, ages) is now in Category A (operational, needed for bedroom-fit). Only multi-generational / extended-family / dependent-care info stays in Category C.
 
-| Field | Format | Warning shown to landlord |
-|---|---|---|
-| Race / ethnicity | Free text or category | "Tenant self-disclosed. Race-based tenant rejection is not legally enforceable. This information is for tenant transparency only." |
-| Religion | Free text or category | "Tenant self-disclosed. Religion-based tenant rejection is not legally enforceable." |
-| Family composition (with-children, multi-generational, etc.) | Categorical | "Tenant self-disclosed. Use this only for unit-fit assessment (bedroom count, etc.), not as discriminatory criterion." |
+These fields are HIDDEN BY DEFAULT. Tenant must explicitly click "Add this field" → modal warning appears → tenant confirms. Landlord-side shows the disclosure warning. Every view is logged in the audit trail.
 
-> **Why opt-in with warning rather than removed entirely:** Refusing to capture race doesn't stop discrimination — agents and landlords will fill it in via WhatsApp DM, off-platform, untraceable. Capturing it WITH warning + audit log is more honest: it's harder to discriminate when the discrimination is logged, and it gives tenants who want to self-disclose (e.g. specific community housing) a controlled channel.
+| Field | Format | Universality in real samples | Warning shown to landlord |
+|---|---|---|---|
+| Race / ethnicity | Free text OR category (Malay / Chinese / Indian / Arab / Other) | 4/6 (but 3/4 conflated with nationality) | "Tenant self-disclosed. Race-based tenant rejection is not legally enforceable. This information is for tenant transparency only. Find.ai logs every view of this field." |
+| Religion | Free text OR category (Islam / Buddhism / Christianity / Hinduism / Other / None) | 1/6 (only when tenant volunteers) | "Tenant self-disclosed. Religion-based tenant rejection is not legally enforceable." |
+| Extended family / dependents | Categorical (Multi-generational / With elderly parents / With domestic help / Other) | 0/6 explicit, sometimes implied | "Tenant self-disclosed. Use only for unit-fit assessment (bedroom count, accessibility), not as discriminatory criterion." |
+
+> **Why opt-in with warning rather than removed entirely:** Refusing to capture race doesn't stop discrimination — agents and landlords fill it in via WhatsApp DM (we have 4 samples proving this). Capturing it WITH warning + audit log is more honest: it's harder to discriminate when the discrimination is logged, and it gives tenants who want to self-disclose (e.g. specific community housing) a controlled channel.
+
+> **Data discovery: race-as-nationality conflation must be UI-prevented.** When tenant types "American" / "Arab" / "Pakistani" into the race field, the form should prompt: *"Did you mean nationality? American is a nationality, not a race. Race options are: Malay, Chinese, Indian, Arab, Other. Skip this field if you prefer not to disclose."* This UX prevents the agents'-WhatsApp-mistakes from being baked into our structured data.
 
 ### Category D — Categorical only, never specific
 
+> **🔒 LOCKED v3.4.34 — Ken's final call:**
+> - **Specific employer:** ✅ Categorical at intake, specific name reveals only at T4 (per `ARCH_REVEAL_TIERS.md`).
+> - **Income / salary:** ✅ **NEVER asked at intake.** The Budget field (Category A) IS the income proxy at intake. Salary as a concept doesn't appear on the intake form at all. If a landlord wants income verification, it surfaces at T4 (contact reveal) as an opt-in tenant action — and even then framed as "income range bucket," never "salary."
+> - **Why this matters:** Asking for salary at intake is invasive and replicates exactly the data-aggregation we're trying to prevent. Real-sample data confirms: 0/6 agents asked for salary in their proposal messages. Budget is the universally-used proxy. Don't add the question Find.ai shouldn't be asking.
+>
+> **Data-validated v3.4.33.** Real samples confirm specific employer name is **volunteered only when prestigious** ("Philip Morris International", "Systems Limited") and **omitted when neutral** (housewife, business owner, student, generic "IT Consultant"). This is reputation gaming — Category D treatment correctly equalizes the field.
+
 These fields are captured as bucket on the intake form. Specific value can be opt-in revealed at higher reveal tiers per `ARCH_REVEAL_TIERS.md`.
 
-| Field | Intake form (Category D) | Reveal tier for specific value |
+| Field | Intake form (Category D) | Reveal tier for specific value | Universality in real samples |
+|---|---|---|---|
+| Employer | Category: Multinational corporate / Local SME / Government-linked / Self-employed (incorporated) / Freelance/contractor / Student/researcher / Retired / Housewife-houseman | T4 (contact reveal) — exact employer name | 3/6 volunteered name; 6/6 implied via occupation |
+| Occupation level | Executive (C-level/VP) / Senior management / Manager / Professional / Skilled trade / Service / Student / Self-employed / Homemaker / Other | T1 (categorical reveal) — exact title (e.g. "Senior Manager", "VP IT") | 6/6 |
+| Job/company location | (already Category B optional) | — | 2/6 |
+
+**Removed from Category D entirely (NOT at intake):**
+
+| Field | Why never at intake | When it surfaces |
 |---|---|---|
-| Employer | Category: Multinational corporate / Local SME / Government / Self-employed / Freelance / Student / Retired | T4 (contact reveal) — exact employer name |
-| Occupation | Level: Executive / Manager / Professional / Skilled-trade / Service / Student / Other | T1 (categorical reveal) — broader category |
-| Income | Range: <3k / 3-6k / 6-10k / 10-15k / 15k+ | T4 (contact reveal) — exact figure if landlord requests |
+| ~~Income range~~ | The word "salary" / "income" never appears on the intake form. Budget (Category A) is the income proxy. Asking salary at intake = data-aggregation we're explicitly trying to prevent. | T4 (contact reveal) only, opt-in. Framed as "income range bucket," never specific salary. |
+| Specific salary | Never on intake. Never on Find.ai by default. | T4 reveal only IF landlord requests + tenant explicitly approves. |
+| Bank statements | Never on intake. Never on Find.ai. | Off-platform between landlord and tenant if both agree. Find.ai does not collect or display. |
+| IC number | Never on intake. | T5 (signing) — legally required for stamp duty + lease. |
 
 ### Free-text optional fields
 
-- "Reason for moving" (gives context — e.g. "company relocated me")
-- "Anything else for the landlord" (catch-all)
+- "Reason for moving" (gives context — e.g. "company relocated me", "kid in Aberdeen International School")
+- "Anything else for the landlord" (catch-all — confirmed essential by real-sample analysis: stability anchors like "Husband is business owner" / "Currently staying Desa Park City" naturally land here)
 
 Both optional, both tenant-controlled.
+
+---
+
+## Foreign-tenant intake (data-discovered insight, locked v3.4.33)
+
+**5 of 6 real-sample prospects are foreign nationals** (American ×2, Syrian, Palestinian, Pakistani). This is heavily skewed toward expat housing in Ken's network — but it surfaces real fields that foreign-targeting landlords need.
+
+When `nationality ≠ Malaysian` is selected on the form, surface these auto-shown additional fields (Category B):
+
+| Field | Format | Purpose |
+|---|---|---|
+| Visa / pass type | Work permit · Dependent pass · Student pass · MM2H · Tourist · Pending · Other | Affects landlord's risk assessment + contract length permission |
+| Length of stay in Malaysia | <6mo / 6mo-1yr / 1-3yr / 3+yr / Permanent resident / Just arrived | Stability proxy. "1-3 years" + "currently staying Desa Park City" = strong creditworthiness signal even without LHDN cert |
+| Employer/sponsor in Malaysia | Free text (e.g. "Self · IT Consultant", "Sponsored by spouse — Hassan Co Sdn Bhd") | Anchors who's responsible for visa/livelihood. Critical for housewife/homemaker/student profiles where individual income isn't the indicator. |
+
+**Why this matters for the doctrine:** without these fields, foreign tenants without LHDN cert + utility history (because they're new to MY) end up with low-Confidence Trust Scores — the system fails them despite legitimate creditworthiness. Foreign-tenant intake fields restore the operational fit signal where Trust Card alone is too thin.
+
+**This dovetails with the first-time-renter problem** flagged in v3.4.28 stress-test #3. Foreign tenants are the largest segment of "new to MY rental system" tenants. Operational-fit fields here compensate for the credit-history gap.
 
 ---
 
@@ -266,25 +321,27 @@ These 5 questions cost RM 0 to add to the form, give 5-10 pilots' worth of valid
 
 ---
 
-## What's needed from Ken to advance
+## Decisions log — what's locked vs what's pending
 
-**Decision required (Ken's call, not Zeus's):**
+**🔒 LOCKED by Ken (v3.4.34):**
 
-1. **Race / religion handling** — confirm Option B (opt-in with warning + audit log) vs Option A (refuse to capture, push off-platform) vs Option C (categorical-only, no race ever). My recommendation: B.
+1. ✅ **Race / religion handling** = Option B (opt-in with warning + audit log).
+2. ✅ **Specific employer name** = categorical at intake, specific reveals at T4 only.
+3. ✅ **Income / salary at intake** = NEVER. Budget field (Category A) is the income proxy. Salary as a concept doesn't appear on intake.
 
-2. **Specific employer name** — capture at intake (Category D categorical only) and reveal at T4? Or ban specific employer at intake entirely (always category)? My recommendation: categorical only at intake, opt-in reveal at T4 if tenant chooses.
+**🔒 LOCKED by data validation (v3.4.33):**
 
-3. **Income range** — capture at intake at all? Or always at screening? My recommendation: categorical range at intake (helps landlord filter for budget match), specific only at T4 if requested.
+5. ✅ **Real WhatsApp intake samples** = 6 collected from Ken's network (Zahail, Habeeb, Hedaya, Omar, Fatima, Mahad). Field universality validated.
 
-4. **Sensitive-data PDPA budget bump** — accept Year 1 budget shift from RM 8-15k to RM 12-20k if we own intake?
+**Pending — needs Ken's call:**
 
-**Resources needed:**
+4. ⏳ **PDPA budget bump** — accept Year 1 shift from RM 8-15k to RM 12-20k for sensitive-data DPIA scope expansion?
 
-5. **Real WhatsApp intake samples** — 3-5 actual prospect messages from your network (redacted). The Zahail message you shared is gold; we need 4-5 more to triangulate field consistency, regional variations (KL vs Penang vs JB), commercial vs residential differences.
+**Pending — needs Ken's resources/scheduling:**
 
-6. **Pilot interview commitments** — 5+ landlords + 3+ agents willing to walk through their actual intake practice in a 30-min call. Without this, Sprint 4 build is theoretical.
+6. ⏳ **Pilot interview commitments** — 5+ landlords + 3+ agents in 30-min calls. Needs to be lined up within 2-4 weeks or Sprint 4 build slips.
 
-7. **Lawyer engagement greenlight** — sensitive-data PDPA review needs to happen before Sprint 4 build, not during. RM 5-8k of the bumped legal budget goes to this specifically.
+7. ⏳ **Lawyer engagement greenlight** — sensitive-data PDPA review before Sprint 4 build. RM 5-8k of the bumped legal budget. Either schedule the call OR delegate Zeus to draft the brief.
 
 ---
 
@@ -303,3 +360,5 @@ These 5 questions cost RM 0 to add to the form, give 5-10 pilots' worth of valid
 ## Document version
 
 - v1.0 — 2026-04-26 (v3.4.32) — Initial doctrine lock. 4-category field principle, field-by-field decisions, agent role redefinition, PDPA implications, phasing to Sprint 4, pilot research questions, decisions-needed list.
+- v1.1 — 2026-04-26 (v3.4.33) — Data-validated against 6 real WhatsApp samples. Field reorganization: Nationality A→A (was B), Furnishing A→A (was B), Smoker A→B (0/6 in samples), kids count C→A. New foreign-tenant fields in B. Race-as-nationality UI prevention prompt added.
+- v1.2 — 2026-04-26 (v3.4.34) — Ken's final decisions locked: Category C = Option B (opt-in with warning); Specific employer = categorical at intake, T4 reveal; Income/salary = NEVER at intake (Budget is the proxy). All 3 contested fields now locked. 6 of 7 doctrine items resolved.
