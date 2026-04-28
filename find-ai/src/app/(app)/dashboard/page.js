@@ -4,7 +4,13 @@
 // v3.4.42 — Added Personal Assistant card per Ken's directive ("dashboard add
 // a button for AI CHATBOX, describe this function as a personal assistant,
 // and user can give their name if they like").
-// Phase 3 will fill this with: recent Trust Cards · stats · quick actions.
+// v3.4.43 — Removed meaningless content per Ken's directive ("lot of tools
+// had no meaning, work on it"). Replaced: 4-card stats grid that showed only
+// 0/— (aspirational without data), and the design system playground (dev
+// debug surface, not a user feature). Added: Tools row (3 action cards),
+// Pipeline section (clearer empty state), Resources shelf (educational links).
+// Sections now have a clear job: Personal Assistant → Tools → Pipeline →
+// Resources. Stats return when real data ships in Phase 3.
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -12,7 +18,7 @@ import { useRouter } from 'next/navigation';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import Badge from '../../../components/ui/Badge';
-import Skeleton from '../../../components/ui/Skeleton';
+// Skeleton import retired in v3.4.43 — design system playground removed.
 import { useToast } from '../../../components/ui/Toast';
 
 const ASSISTANT_NAME_KEY = 'fa_assistant_name_v1';
@@ -264,105 +270,253 @@ export default function DashboardPage() {
         `}</style>
       </Card>
 
-      {/* Stats row */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: 12,
-        }}
-      >
-        <StatCard label="Trust Cards generated" value="0" hint="this month" />
-        <StatCard label="Tenants screened" value="0" hint="last 30 days" />
-        <StatCard label="Approvals" value="0" hint="last 30 days" />
-        <StatCard label="Avg trust score" value="—" hint="not enough data yet" />
-      </div>
-
-      {/* Recent Trust Cards (skeleton placeholder for v0) */}
-      <Card variant="default" size="md">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.01em', margin: 0 }}>
-            Recent Trust Cards
+      {/* ── TOOLS — 3 action cards (replaces the meaningless empty stats grid) ── */}
+      <section aria-labelledby="dash-tools-h2">
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
+          <h2 id="dash-tools-h2" style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.015em', margin: 0 }}>
+            Tools
           </h2>
-          <Badge tone="neutral" size="sm">v0 demo · empty state</Badge>
+          <span style={{ fontSize: 12, color: 'var(--color-stone)' }}>
+            Three pre-signing tools, one trust spine
+          </span>
         </div>
-        <EmptyState />
-      </Card>
-
-      {/* Design system playground — proves primitives render correctly */}
-      <Card variant="tinted" size="md">
-        <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 10, fontWeight: 500, color: 'var(--color-bone)', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 8 }}>
-            Design system playground · v3.4.37
-          </div>
-          <p style={{ fontSize: 12, color: 'var(--color-slate)', margin: 0 }}>
-            Quick visual verification that the Phase 1 component library renders.
-            This panel disappears when Phase 3 dashboard data ships.
-          </p>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 12,
+          }}
+        >
+          <ToolCard
+            icon={<ToolIconScreen />}
+            name="Screen a tenant"
+            sub="LHDN-verified tenancy + utility behavior. Anonymous Trust Card by default."
+            href="/screen/new"
+            cta="Generate request"
+            status="active"
+          />
+          <ToolCard
+            icon={<ToolIconStamp />}
+            name="Calculate stamp duty"
+            sub="SDSAS 2026 self-assessment. Avoid the RM 10,000 fine. Branded certificate."
+            href="/?tool=stamp"
+            cta="Open calculator"
+            status="active"
+          />
+          <ToolCard
+            icon={<ToolIconAudit />}
+            name="Audit an agreement"
+            sub="Paste your tenancy. We flag dangerous clauses against MY law."
+            href="/#tools"
+            cta="Notify me"
+            status="coming"
+          />
         </div>
+      </section>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {/* Buttons */}
-          <Row label="Buttons">
-            <Button variant="primary" size="sm">Primary</Button>
-            <Button variant="secondary" size="sm">Secondary</Button>
-            <Button variant="ghost" size="sm">Ghost</Button>
-            <Button variant="success" size="sm" icon={<CheckIcon />}>Approve</Button>
-            <Button variant="warning" size="sm">Request more</Button>
-            <Button variant="danger" size="sm">Decline</Button>
-            <Button variant="primary" size="sm" loading>Loading</Button>
-          </Row>
-
-          {/* Toast triggers */}
-          <Row label="Toasts">
-            <Button variant="secondary" size="sm" onClick={() => show.success('Trust Card link copied')}>
-              Show success
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => show.error('Could not copy — try again')}>
-              Show error
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => show.info('Tenant just submitted')}>
-              Show info
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => show.warning('LHDN verification pending')}>
-              Show warning
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => show.action('Approval logged', {
-                label: 'Undo',
-                onClick: () => show.info('Approval undone'),
-              })}
-            >
-              Show with action
-            </Button>
-          </Row>
-
-          {/* Badges */}
-          <Row label="Badges">
-            <Badge tone="neutral">Neutral</Badge>
-            <Badge tone="gold" uppercase>Anonymous mode</Badge>
-            <Badge tone="success" icon={<CheckIcon />}>Verified</Badge>
-            <Badge tone="warning">Pending</Badge>
-            <Badge tone="danger">Declined</Badge>
-            <Badge tone="info">T1 categorical</Badge>
-            <Badge tone="navy">Active</Badge>
-          </Row>
-
-          {/* Skeletons */}
-          <Row label="Skeletons">
-            <Skeleton variant="circle" w={32} />
-            <Skeleton variant="line" w={120} />
-            <Skeleton variant="line" w={180} h={10} />
-            <Skeleton variant="block" w={200} h={48} />
-          </Row>
+      {/* ── PIPELINE — Recent Trust Cards (only shown when there's data) ── */}
+      <section aria-labelledby="dash-pipeline-h2">
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
+          <h2 id="dash-pipeline-h2" style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.015em', margin: 0 }}>
+            Your pipeline
+          </h2>
+          <Link href="/cards" style={{ fontSize: 12, color: 'var(--color-stone)', textDecoration: 'none' }}>
+            View all Trust Cards <span aria-hidden="true">›</span>
+          </Link>
         </div>
-      </Card>
+        <Card variant="default" size="md">
+          <EmptyState />
+        </Card>
+      </section>
+
+      {/* ── RESOURCES — small links shelf ── */}
+      <section aria-labelledby="dash-resources-h2">
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 14 }}>
+          <h2 id="dash-resources-h2" style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.015em', margin: 0 }}>
+            Learn the system
+          </h2>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 12,
+          }}
+        >
+          <ResourceLink
+            title="How Trust Score works"
+            sub="Behaviour × Confidence formula, the 5-tier reveal model, and what landlords see."
+            href="/#how"
+          />
+          <ResourceLink
+            title="Anonymous mode"
+            sub="Why we hide tenant identity by default — and when reveal happens."
+            href="/#trust"
+          />
+          <ResourceLink
+            title="Privacy & PDPA"
+            sub="What we collect, how it's stored, your right to delete, and audit trail access."
+            href="/legal/privacy"
+          />
+        </div>
+      </section>
     </div>
   );
 }
 
+// ─── Tool card ─────────────────────────────────────────────────────────────
+function ToolCard({ icon, name, sub, href, cta, status }) {
+  const isComing = status === 'coming';
+  const containerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+    padding: '20px 22px',
+    background: isComing ? 'var(--color-tea)' : 'var(--color-white)',
+    border: `1px solid ${isComing ? 'var(--color-hairline)' : 'var(--color-hairline)'}`,
+    borderRadius: 'var(--radius-lg)',
+    boxShadow: isComing ? 'none' : 'var(--shadow-sm)',
+    textDecoration: 'none',
+    color: 'inherit',
+    transition: 'transform var(--motion-fast), box-shadow var(--motion-base), border-color var(--motion-fast)',
+    cursor: isComing ? 'default' : 'pointer',
+    opacity: isComing ? 0.85 : 1,
+    minHeight: 150,
+  };
+  const inner = (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 'var(--radius-md)',
+            background: isComing ? 'rgba(255,255,255,0.6)' : 'var(--color-tea)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--color-navy)',
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </div>
+        {isComing && (
+          <Badge tone="warning" size="sm" uppercase>Coming next</Badge>
+        )}
+      </div>
+      <div>
+        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.01em', marginBottom: 4 }}>
+          {name}
+        </div>
+        <p style={{ fontSize: 12, color: 'var(--color-slate)', lineHeight: 1.5, margin: 0 }}>
+          {sub}
+        </p>
+      </div>
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          fontSize: 12.5,
+          fontWeight: 500,
+          color: isComing ? 'var(--color-stone)' : 'var(--color-navy)',
+          marginTop: 'auto',
+        }}
+      >
+        {cta} <span aria-hidden="true">›</span>
+      </div>
+    </>
+  );
+  if (isComing) {
+    return <div style={containerStyle}>{inner}</div>;
+  }
+  return (
+    <Link
+      href={href}
+      style={containerStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        e.currentTarget.style.borderColor = 'var(--color-bone)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+        e.currentTarget.style.borderColor = 'var(--color-hairline)';
+      }}
+    >
+      {inner}
+    </Link>
+  );
+}
+
+function ResourceLink({ title, sub, href }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: 'block',
+        padding: '16px 18px',
+        background: 'var(--color-cream)',
+        border: '1px solid var(--color-hairline)',
+        borderRadius: 'var(--radius-md)',
+        textDecoration: 'none',
+        color: 'inherit',
+        transition: 'background var(--motion-fast), border-color var(--motion-fast)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = 'var(--color-tea)';
+        e.currentTarget.style.borderColor = 'var(--color-bone)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'var(--color-cream)';
+        e.currentTarget.style.borderColor = 'var(--color-hairline)';
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.01em' }}>{title}</span>
+        <span style={{ color: 'var(--color-stone)' }} aria-hidden="true">›</span>
+      </div>
+      <div style={{ fontSize: 11.5, color: 'var(--color-slate)', lineHeight: 1.5 }}>{sub}</div>
+    </Link>
+  );
+}
+
+// ─── Tool icons ────────────────────────────────────────────────────────────
+function ToolIconScreen() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="9" r="3.5"/>
+      <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/>
+      <circle cx="17" cy="10" r="2.5"/>
+      <path d="M14.5 19c0-2.2 2-3.5 4-3.5s2.5 1.3 2.5 3.5"/>
+    </svg>
+  );
+}
+function ToolIconStamp() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="6" width="16" height="13" rx="2"/>
+      <line x1="4" y1="11" x2="20" y2="11"/>
+      <text x="12" y="17" textAnchor="middle" fontSize="6" fontWeight="700" fill="currentColor" stroke="none">RM</text>
+    </svg>
+  );
+}
+function ToolIconAudit() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="3" width="14" height="18" rx="2"/>
+      <line x1="8" y1="8" x2="16" y2="8"/>
+      <line x1="8" y1="12" x2="14" y2="12"/>
+      <line x1="8" y1="16" x2="12" y2="16"/>
+      <circle cx="17" cy="17" r="2.5"/>
+    </svg>
+  );
+}
+
+// Legacy StatCard kept as a no-op stub so any external reference doesn't crash.
+// Actual stat cards return when real data ships in Phase 3.
 function StatCard({ label, value, hint }) {
   return (
     <Card variant="flat" size="sm">
