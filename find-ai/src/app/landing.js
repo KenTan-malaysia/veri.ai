@@ -41,6 +41,9 @@ export default function Landing({
   // ─── language strings ─────────────────────────────────────────────────────
   const c = STRINGS[lang] || STRINGS.en;
 
+  // ─── mobile nav state ────────────────────────────────────────────────────
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   // ─── notify-me state for the Audit tool teaser ───────────────────────────
   const [notifyStage, setNotifyStage] = useState('rest'); // rest | form | submitting | done | error
   const [notifyEmail, setNotifyEmail] = useState('');
@@ -96,18 +99,36 @@ export default function Landing({
             <span className="ap-brand-ai">.ai</span>
           </Link>
           <ul className="ap-nav-links">
-            <li><a href="#tools">{c.navTools}</a></li>
-            <li><a href="#how">{c.navHow}</a></li>
-            <li><a href="#trust">{c.navTrust}</a></li>
-            <li><a href="#help">{c.navHelp}</a></li>
+            <li><a href="#tools" onClick={() => setMobileNavOpen(false)}>{c.navTools}</a></li>
+            <li><a href="#how" onClick={() => setMobileNavOpen(false)}>{c.navHow}</a></li>
+            <li><a href="#trust" onClick={() => setMobileNavOpen(false)}>{c.navTrust}</a></li>
+            <li><a href="#help" onClick={() => setMobileNavOpen(false)}>{c.navHelp}</a></li>
           </ul>
           <div className="ap-nav-right">
             <button onClick={cycleLang} className="ap-lang-btn" aria-label={c.langLabel}>
               {lang === 'en' ? 'BM' : lang === 'bm' ? '中文' : 'EN'}
             </button>
             <Link href="/dashboard" className="ap-signin">{c.navSignIn}</Link>
+            <button
+              type="button"
+              className="ap-burger"
+              aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen((v) => !v)}
+            >
+              {mobileNavOpen ? <BurgerCloseIcon /> : <BurgerIcon />}
+            </button>
           </div>
         </div>
+        {/* Mobile drawer */}
+        {mobileNavOpen && (
+          <div className="ap-nav-drawer" role="menu">
+            <a href="#tools" onClick={() => setMobileNavOpen(false)}>{c.navTools}</a>
+            <a href="#how" onClick={() => setMobileNavOpen(false)}>{c.navHow}</a>
+            <a href="#trust" onClick={() => setMobileNavOpen(false)}>{c.navTrust}</a>
+            <a href="#help" onClick={() => setMobileNavOpen(false)}>{c.navHelp}</a>
+          </div>
+        )}
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
@@ -124,16 +145,31 @@ export default function Landing({
               {c.heroCtaSecondary} <span aria-hidden="true">›</span>
             </a>
           </div>
-          {hasSavedChat && (
-            <button onClick={onContinueChat} className="ap-resume">
-              {c.resume} <span aria-hidden="true">›</span>
-            </button>
+          {(hasSavedChat || scansCount > 0) && (
+            <div className="ap-hero-chips">
+              {hasSavedChat && (
+                <button onClick={onContinueChat} className="ap-chip-link">
+                  {c.resume} <span aria-hidden="true">›</span>
+                </button>
+              )}
+              {scansCount > 0 && (
+                <button onClick={onOpenScans} className="ap-chip-link">
+                  {(scansCount === 1 ? c.scansOne : c.scansMany).replace('{n}', String(scansCount))} <span aria-hidden="true">›</span>
+                </button>
+              )}
+            </div>
           )}
-          {scansCount > 0 && (
-            <button onClick={onOpenScans} className="ap-resume">
-              {(scansCount === 1 ? c.scansOne : c.scansMany).replace('{n}', String(scansCount))} <span aria-hidden="true">›</span>
-            </button>
-          )}
+
+          {/* Hero product visual — anchors the page above the fold */}
+          <div className="ap-hero-visual">
+            <HeroTrustCard c={c} />
+          </div>
+
+          {/* Scroll cue */}
+          <a href="#tools" className="ap-scroll-cue" aria-label={c.scrollCue}>
+            <span>{c.scrollCue}</span>
+            <ScrollChevron />
+          </a>
         </div>
       </section>
 
@@ -374,6 +410,97 @@ function FooterCol({ title, links }) {
   );
 }
 
+// ─── Hero Trust Card mockup — anchors the hero above-the-fold ───────────────
+function HeroTrustCard({ c }) {
+  return (
+    <div className="ap-htc-wrap">
+      <div className="ap-htc-card" role="img" aria-label="Find.ai Trust Card preview">
+        <div className="ap-htc-mode-row">
+          <span className="ap-htc-mode">{c.htcMode}</span>
+          <span className="ap-htc-ref">TC-2026-04-7841</span>
+        </div>
+        <div className="ap-htc-eyebrow">{c.htcScoreLabel}</div>
+        <div className="ap-htc-score-line">
+          <span className="ap-htc-score">87</span>
+          <span className="ap-htc-suffix">/ 100</span>
+        </div>
+        <div className="ap-htc-tenant">{c.htcTenant}</div>
+        <div className="ap-htc-meta">{c.htcLastVerified}</div>
+
+        <div className="ap-htc-divider" />
+
+        <div className="ap-htc-eyebrow">{c.htcVerifyLabel}</div>
+        <div className="ap-htc-chips">
+          <div className="ap-htc-chip"><CheckMark /> {c.htcChip1}</div>
+          <div className="ap-htc-chip"><CheckMark /> {c.htcChip2}</div>
+          <div className="ap-htc-chip ap-htc-chip-pending"><PendingMark /> {c.htcChip3}</div>
+        </div>
+
+        <div className="ap-htc-foot">
+          <span>{c.htcFoot}</span>
+          <span className="ap-htc-math">91 × 95% = <strong>87</strong></span>
+        </div>
+      </div>
+
+      {/* Floating "Approved" + "T1 unlocked" notification chips for visual interest */}
+      <div className="ap-htc-notif ap-htc-notif-approved" aria-hidden="true">
+        <span className="ap-htc-notif-ico">✓</span>
+        <div>
+          <div className="ap-htc-notif-title">{c.htcNotifApproveTitle}</div>
+          <div className="ap-htc-notif-sub">{c.htcNotifApproveSub}</div>
+        </div>
+      </div>
+      <div className="ap-htc-notif ap-htc-notif-tier" aria-hidden="true">
+        <span className="ap-htc-notif-ico ap-htc-notif-ico-amber">○</span>
+        <div>
+          <div className="ap-htc-notif-title">{c.htcNotifTierTitle}</div>
+          <div className="ap-htc-notif-sub">{c.htcNotifTierSub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CheckMark() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7FE0A2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  );
+}
+function PendingMark() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFD27A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <line x1="12" y1="7" x2="12" y2="13"/>
+      <line x1="12" y1="13" x2="15" y2="15"/>
+    </svg>
+  );
+}
+function ScrollChevron() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  );
+}
+function BurgerIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <line x1="3" y1="7" x2="21" y2="7"/>
+      <line x1="3" y1="14" x2="21" y2="14"/>
+    </svg>
+  );
+}
+function BurgerCloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18"/>
+    </svg>
+  );
+}
+
 // ─── decorative product visuals (pure SVG, no images) ───────────────────────
 function ScoreVisual() {
   return (
@@ -430,9 +557,24 @@ const STRINGS = {
     heroSub: 'Verify a tenant in 2 minutes — before you sign anything. Free for individual landlords. No app to install.',
     heroCtaPrimary: 'Generate Trust Card request',
     heroCtaSecondary: 'See how it works',
-    resume: 'Resume your last session',
+    resume: 'Resume last session',
     scansOne: 'View your scan',
     scansMany: 'View your {n} scans',
+    scrollCue: 'Explore tools',
+
+    htcMode: 'Anonymous mode',
+    htcScoreLabel: 'Trust score',
+    htcTenant: 'Anonymous tenant T-7841',
+    htcLastVerified: 'Last verified Apr 2026',
+    htcVerifyLabel: 'Verification',
+    htcChip1: 'LHDN-verified · 14 months',
+    htcChip2: '3 utility bills · 3 days before due',
+    htcChip3: 'Live Bound Verification ready',
+    htcFoot: "Don't sign blind.",
+    htcNotifApproveTitle: 'Approval logged',
+    htcNotifApproveSub: '2+1 deposit · audit trail updated',
+    htcNotifTierTitle: 'Ready for T1',
+    htcNotifTierSub: 'Tap to request categorical reveal',
 
     toolsH2: 'Three tools, one trust spine.',
     toolsSub: 'Pre-signing compliance for Malaysian landlords, agents, and tenants.',
@@ -531,9 +673,24 @@ const STRINGS = {
     heroSub: 'Sahkan penyewa dalam 2 minit — sebelum tandatangan apa-apa. Percuma untuk tuan rumah individu.',
     heroCtaPrimary: 'Jana permohonan Trust Card',
     heroCtaSecondary: 'Lihat cara ia berfungsi',
-    resume: 'Sambung sesi terakhir anda',
+    resume: 'Sambung sesi terakhir',
     scansOne: 'Lihat saringan anda',
     scansMany: 'Lihat {n} saringan anda',
+    scrollCue: 'Terokai alat',
+
+    htcMode: 'Mod tanpa nama',
+    htcScoreLabel: 'Skor amanah',
+    htcTenant: 'Penyewa tanpa nama T-7841',
+    htcLastVerified: 'Disahkan Apr 2026',
+    htcVerifyLabel: 'Pengesahan',
+    htcChip1: 'Disahkan LHDN · 14 bulan',
+    htcChip2: '3 bil utiliti · 3 hari sebelum tarikh',
+    htcChip3: 'Pengesahan Langsung sedia',
+    htcFoot: 'Jangan tandatangan buta.',
+    htcNotifApproveTitle: 'Kelulusan direkod',
+    htcNotifApproveSub: 'Deposit 2+1 · jejak audit dikemas',
+    htcNotifTierTitle: 'Sedia untuk T1',
+    htcNotifTierSub: 'Tekan untuk minta dedahan kategori',
 
     toolsH2: 'Tiga alat, satu tulang belakang amanah.',
     toolsSub: 'Kepatuhan pra-tandatangan untuk tuan rumah, ejen, dan penyewa Malaysia.',
@@ -612,6 +769,21 @@ const STRINGS = {
     resume: '继续上次会话',
     scansOne: '查看您的扫描',
     scansMany: '查看您的 {n} 个扫描',
+    scrollCue: '探索工具',
+
+    htcMode: '匿名模式',
+    htcScoreLabel: '信任分数',
+    htcTenant: '匿名租客 T-7841',
+    htcLastVerified: '最后验证 2026年4月',
+    htcVerifyLabel: '验证',
+    htcChip1: 'LHDN 已验证 · 14 个月',
+    htcChip2: '3 项公用事业账单 · 提前 3 天',
+    htcChip3: '实时绑定验证就绪',
+    htcFoot: '不要盲签。',
+    htcNotifApproveTitle: '批准已记录',
+    htcNotifApproveSub: '2+1 押金 · 审计追踪已更新',
+    htcNotifTierTitle: 'T1 准备就绪',
+    htcNotifTierSub: '点击请求分类揭示',
 
     toolsH2: '三个工具，一条信任主线。',
     toolsSub: '为马来西亚房东、经纪人和租客提供签约前合规支持。',
@@ -755,61 +927,293 @@ const STYLES = `
     transition: color .15s;
   }
   .ap-signin:hover { color: #B8893A; }
+  .ap-burger {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(15,30,63,0.1);
+    border-radius: 999px;
+    background: transparent;
+    color: #0F1E3F;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  .ap-burger:hover { background: #F3EFE4; }
+  .ap-nav-drawer {
+    border-top: 1px solid #E7E1D2;
+    background: rgba(250, 248, 243, 0.98);
+    backdrop-filter: saturate(180%) blur(14px);
+    padding: 8px 24px 16px;
+    display: flex; flex-direction: column;
+  }
+  .ap-nav-drawer a {
+    color: #0F1E3F; text-decoration: none;
+    padding: 12px 0; font-size: 15px; font-weight: 500;
+    border-bottom: 1px solid rgba(231, 225, 210, 0.6);
+  }
+  .ap-nav-drawer a:last-child { border-bottom: none; }
   @media (min-width: 768px) {
     .ap-nav-links { display: flex; }
+    .ap-burger { display: none; }
+    .ap-nav-drawer { display: none; }
+  }
+  /* Sign-in hidden on smallest mobile to save space, drawer surfaces it */
+  @media (max-width: 380px) {
+    .ap-signin { display: none; }
   }
 
   /* ── HERO ────────────────────────────────────────────────────────── */
   .ap-hero {
     text-align: center;
-    padding: 72px 0 56px;
+    padding: 56px 0 32px;
+    position: relative;
+    overflow: hidden;
   }
   .ap-eyebrow {
     font-size: 11px; font-weight: 500;
     letter-spacing: 0.18em;
     color: #5A6780;
     text-transform: uppercase;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .ap-hero-h1 {
-    font-size: 56px;
+    font-size: 52px;
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1.0;
     color: #0F1E3F;
-    margin: 0 0 18px;
+    margin: 0 0 16px;
   }
   .ap-hero-sub {
-    font-size: 19px;
-    line-height: 1.45;
+    font-size: 17px;
+    line-height: 1.5;
     color: #3F4E6B;
-    max-width: 620px;
-    margin: 0 auto 28px;
+    max-width: 580px;
+    margin: 0 auto 24px;
     font-weight: 400;
   }
   .ap-cta-row {
     display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  .ap-resume {
-    display: block;
-    margin: 24px auto 0;
+  .ap-hero-chips {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .ap-chip-link {
     background: transparent; border: none; cursor: pointer;
     color: #5A6780; font-size: 13px; font-family: inherit;
+    padding: 4px 0;
     transition: color .15s;
   }
-  .ap-resume:hover { color: #0F1E3F; }
+  .ap-chip-link:hover { color: #B8893A; }
+  .ap-chip-link span { margin-left: 4px; transition: transform .15s; display: inline-block; }
+  .ap-chip-link:hover span { transform: translateX(3px); }
+
+  /* Hero visual — Trust Card mockup */
+  .ap-hero-visual {
+    margin-top: 48px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 360px;
+  }
+  .ap-htc-wrap {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+  }
+  .ap-htc-card {
+    background: linear-gradient(135deg, #0F1E3F 0%, #1E2D52 100%);
+    color: #FFFFFF;
+    border-radius: 26px;
+    padding: 24px 26px 22px;
+    width: 320px;
+    box-shadow: 0 24px 48px -16px rgba(15,30,63,0.32), 0 6px 16px rgba(15,30,63,0.12);
+    position: relative;
+    z-index: 2;
+  }
+  .ap-htc-mode-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .ap-htc-mode {
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: rgba(184,137,58,0.18);
+    color: #FFD27A;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(184,137,58,0.32);
+  }
+  .ap-htc-ref {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.04em;
+  }
+  .ap-htc-eyebrow {
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+  }
+  .ap-htc-score-line {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 8px;
+  }
+  .ap-htc-score {
+    font-size: 64px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: #FFD27A;
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+  }
+  .ap-htc-suffix {
+    font-size: 18px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+  }
+  .ap-htc-tenant {
+    font-size: 14px; font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .ap-htc-meta {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+  .ap-htc-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.10);
+    margin: 0 0 14px;
+  }
+  .ap-htc-chips {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .ap-htc-chip {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.85);
+  }
+  .ap-htc-chip-pending { color: rgba(255,255,255,0.55); }
+  .ap-htc-foot {
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    font-style: italic;
+  }
+  .ap-htc-math {
+    font-style: normal;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+  }
+  .ap-htc-math strong { color: #FFD27A; font-weight: 700; }
+
+  /* Floating notification chips around the hero card */
+  .ap-htc-notif {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 12px 24px -8px rgba(15,30,63,0.18), 0 2px 6px rgba(15,30,63,0.06);
+    border: 1px solid rgba(231, 225, 210, 0.6);
+    z-index: 3;
+    animation: ap-float-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ap-htc-notif-approved {
+    top: -16px; left: -68px;
+    animation-delay: 200ms;
+  }
+  .ap-htc-notif-tier {
+    bottom: 36px; right: -84px;
+    animation-delay: 400ms;
+  }
+  .ap-htc-notif-ico {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #2F6B3E; color: #FFFFFF;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ap-htc-notif-ico-amber { background: #FEF3C7; color: #B8893A; border: 1.5px solid #FDE68A; }
+  .ap-htc-notif-title {
+    font-size: 12px; font-weight: 700;
+    color: #0F1E3F;
+    line-height: 1.2;
+  }
+  .ap-htc-notif-sub {
+    font-size: 10.5px;
+    color: #5A6780;
+    margin-top: 2px;
+  }
+  @keyframes ap-float-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Scroll cue */
+  .ap-scroll-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 36px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: transparent;
+    color: #5A6780;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color .15s, transform .15s;
+  }
+  .ap-scroll-cue:hover { color: #0F1E3F; transform: translateY(2px); }
+  .ap-scroll-cue svg { animation: ap-bob 2s ease-in-out infinite; }
+  @keyframes ap-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
   @media (min-width: 768px) {
-    .ap-hero { padding: 96px 0 72px; }
-    .ap-hero-h1 { font-size: 80px; }
-    .ap-hero-sub { font-size: 21px; }
+    .ap-hero { padding: 72px 0 48px; }
+    .ap-hero-h1 { font-size: 76px; }
+    .ap-hero-sub { font-size: 19px; }
+    .ap-htc-card { width: 380px; padding: 28px 30px 26px; }
+    .ap-htc-score { font-size: 76px; }
+    .ap-htc-notif-approved { left: -120px; }
+    .ap-htc-notif-tier { right: -140px; }
   }
   @media (min-width: 1024px) {
-    .ap-hero { padding: 120px 0 88px; }
-    .ap-hero-h1 { font-size: 96px; line-height: 0.96; }
+    .ap-hero { padding: 88px 0 56px; }
+    .ap-hero-h1 { font-size: 92px; line-height: 0.96; }
+    .ap-hero-visual { margin-top: 56px; min-height: 440px; }
+    .ap-htc-card { width: 420px; padding: 32px 34px 28px; }
+    .ap-htc-score { font-size: 88px; }
+    .ap-htc-notif-approved { left: -160px; top: -8px; }
+    .ap-htc-notif-tier { right: -180px; bottom: 56px; }
+  }
+  /* On smallest screens, hide floating notifs to avoid overflow */
+  @media (max-width: 599px) {
+    .ap-htc-notif { display: none; }
+    .ap-htc-card { width: 100%; max-width: 360px; }
   }
 
   /* ── BUTTONS ─────────────────────────────────────────────────────── */
@@ -889,7 +1293,10 @@ const STYLES = `
 
   /* ── TILES ───────────────────────────────────────────────────────── */
   .ap-tiles {
-    padding: 24px 0 80px;
+    padding: 56px 0 80px;
+  }
+  @media (min-width: 768px) {
+    .ap-tiles { padding: 72px 0 96px; }
   }
   .ap-tile-grid {
     margin-top: 36px;

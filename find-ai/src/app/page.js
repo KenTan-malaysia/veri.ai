@@ -1362,7 +1362,13 @@ export default function Home() {
   // Tenant Register wizard, sidebar overlay).
   // Also hide on full chat page — otherwise the dock input and the chat
   // composer stack and the user sees two input columns ("继续提问" + "随便问").
-  const peekHidden = showChat || showProfile || showCaseMemory || showTenantRegister || showSidebar;
+  // v3.4.41 — Hide on the marketing landing too. The Apple-style landing has
+  // its own help shelf + visual rhythm; an overlapping chat dock breaks the
+  // composition (Ken flagged it as "embarrassing"). Chat is reachable via the
+  // Help shelf "Open chat" card on landing, or via /dashboard for logged-in
+  // users.
+  const isOnLanding = !showChat && !showProfile && !showStampTool && !showScreenTool && !showTenantRegister && !showScansHistory;
+  const peekHidden = showChat || showProfile || showCaseMemory || showTenantRegister || showSidebar || isOnLanding;
 
   const peekChatNode = (
     <PeekChat
