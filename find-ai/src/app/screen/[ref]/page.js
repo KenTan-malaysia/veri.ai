@@ -75,7 +75,10 @@ export default function TenantScreenSubmissionPage() {
             onClick={() => {
               const next = lang === 'en' ? 'bm' : lang === 'bm' ? 'zh' : 'en';
               setLang(next);
-              try { window.localStorage.setItem('fi_lang', next); } catch (e) {}
+              try {
+                window.localStorage.setItem('fi_lang', next);
+                window.dispatchEvent(new Event('fi_lang_change'));
+              } catch (e) {}
             }}
             style={{
               padding: '6px 12px',

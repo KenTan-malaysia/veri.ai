@@ -1,5 +1,6 @@
 import './globals.css'
 import { ToastProvider } from '../components/ui/Toast'
+import LangSync from '../components/layout/LangSync'
 
 // v3.4.27 — All app/PWA scaffolding REMOVED. Find.ai is a website only.
 // Removed: manifest, service worker registration, apple-touch-icon, themeColor,
@@ -83,15 +84,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-white">
-        {/* Skip-to-content for keyboard / screen-reader users (P2.8).
-            v3.4.48 fix — was using onFocus/onBlur in a server component,
-            which broke SSG (caused /_not-found build timeout). Now CSS-only
-            via the .fa-skip-link class in globals.css. */}
+        {/* v3.4.49 — Sync <html lang> from localStorage post-hydration (P2.7). */}
+        <LangSync />
+        {/* Skip-to-content for keyboard / screen-reader users (P2.8). */}
         <a href="#main" className="fa-skip-link">
           Skip to main content
         </a>
-        {/* JSON-LD structured data — moved from <head> to body per Next.js
-            App Router recommendation. */}
+        {/* JSON-LD structured data. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

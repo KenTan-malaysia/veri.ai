@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.48 — Critical build fix. v3.4.46 added onFocus/onBlur event handlers to skip-link inside layout.js (a server component) → broke SSG with `/_not-found` build timeout. Fixed: skip-link is now CSS-only (`.fa-skip-link` class with :focus pseudo-class in globals.css). JSON-LD also moved from `<head>` to `<body>` per Next.js App Router convention. Build should pass on Vercel. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.49 — Audit-gap iteration 3. Page transitions (CSS @view-transition + main fade-in fallback). Dynamic <html lang> sync via new LangSync client component (P2.7 fixed). /screen/new refactored to use Button + useToast primitives (consistency upgrade). · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -120,7 +120,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.48
+## 🟢 ACTIVE SAVE POINT — v3.4.49
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 

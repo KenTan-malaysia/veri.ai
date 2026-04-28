@@ -1,6 +1,9 @@
 'use client';
 
 // v3.4.35 — Sprint 1-3: landlord-side Trust Card request generator.
+// v3.4.49 — Refactored to use design system primitives (Button + useToast).
+// "Copied" feedback now via toast instead of local state. Selective polish —
+// form inputs + Mode toggle kept as inline-styled (specific behaviors).
 //
 // What this is: the landlord-facing entry point to the production flow.
 //   Landlord visits → configures the request (Mode + identifier + property)
@@ -17,6 +20,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Button from '../../../components/ui/Button';
+import { useToast } from '../../../components/ui/Toast';
 
 const ORIGIN = 'https://find-ai-lovat.vercel.app';
 
@@ -32,11 +37,11 @@ function generateRef() {
 }
 
 export default function NewScreenRequestPage() {
+  const { show } = useToast();
   const [mode, setMode] = useState('anonymous'); // 'anonymous' | 'verified'
   const [landlordName, setLandlordName] = useState('');
   const [property, setProperty] = useState('');
   const [generatedUrl, setGeneratedUrl] = useState(null);
-  const [copied, setCopied] = useState(false);
 
   const canGenerate = landlordName.trim().length > 0;
 
@@ -49,17 +54,16 @@ export default function NewScreenRequestPage() {
     if (property.trim()) params.set('pp', property.trim());
     const url = `${ORIGIN}/screen/${ref}?${params.toString()}`;
     setGeneratedUrl(url);
-    setCopied(false);
+    show.success(`Link ready · ${mode === 'anonymous' ? 'Anonymous' : 'Verified'} mode`);
   };
 
   const handleCopy = async () => {
     if (!generatedUrl) return;
     try {
       await navigator.clipboard.writeText(generatedUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      show.success('Link copied to clipboard');
     } catch (e) {
-      // Clipboard blocked — fall back to selection-based copy
+      show.error('Could not copy — please select the URL manually');
     }
   };
 
@@ -142,24 +146,15 @@ export default function NewScreenRequestPage() {
 
         {/* Generate button */}
         {!generatedUrl && (
-          <button
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onClick={handleGenerate}
             disabled={!canGenerate}
-            style={{
-              padding: '16px 20px',
-              borderRadius: 14,
-              fontSize: 15,
-              fontWeight: 800,
-              color: 'white',
-              background: canGenerate ? '#0F1E3F' : '#9A9484',
-              border: 'none',
-              cursor: canGenerate ? 'pointer' : 'not-allowed',
-              transition: 'opacity .15s',
-              boxShadow: canGenerate ? '0 8px 24px -8px rgba(15,30,63,0.32)' : 'none',
-            }}
           >
             Generate request link →
-          </button>
+          </Button>
         )}
 
         {/* Generated link state */}
@@ -193,41 +188,41 @@ export default function NewScreenRequestPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <button
+              <Button
+                variant="secondary"
+                size="md"
+                fullWidth
                 onClick={handleCopy}
-                style={{
-                  flex: 1,
-                  padding: '12px 14px',
-                  borderRadius: 12,
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: '#0F1E3F',
-                  background: 'white',
-                  border: '1px solid #CFE1C7',
-                  cursor: 'pointer',
-                }}
+                icon={<CopyIcon />}
               >
-                {copied ? '✓ Copied' : '📋 Copy link'}
-              </button>
+                Copy link
+              </Button>
               <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
                   flex: 1,
-                  padding: '12px 14px',
-                  borderRadius: 12,
+                  height: 40,
+                  padding: '0 16px',
+                  borderRadius: 'var(--radius-lg)',
                   fontSize: 13,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: 'white',
                   background: 'linear-gradient(135deg, #25D366, #128C7E)',
                   border: 'none',
-                  textAlign: 'center',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
                   textDecoration: 'none',
                   boxShadow: '0 4px 12px rgba(37,211,102,0.32)',
+                  transition: 'opacity var(--motion-fast)',
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                Share via WhatsApp
+                <WhatsAppIcon /> Share via WhatsApp
               </a>
             </div>
 
@@ -237,23 +232,16 @@ export default function NewScreenRequestPage() {
               via WhatsApp. {mode === 'anonymous' ? 'Their name stays hidden — you see the score first.' : 'Their full name is on the card.'}
             </div>
 
-            <button
-              onClick={() => { setGeneratedUrl(null); setCopied(false); }}
-              style={{
-                marginTop: 14,
-                width: '100%',
-                padding: '10px',
-                borderRadius: 10,
-                fontSize: 12,
-                fontWeight: 600,
-                color: '#3F4E6B',
-                background: 'transparent',
-                border: '1px solid #CFE1C7',
-                cursor: 'pointer',
-              }}
-            >
-              Generate another link
-            </button>
+            <div style={{ marginTop: 14 }}>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                onClick={() => { setGeneratedUrl(null); }}
+              >
+                Generate another link
+              </Button>
+            </div>
           </section>
         )}
 
@@ -328,5 +316,22 @@ function Field({ label, placeholder, value, onChange, required }) {
         onBlur={(e) => (e.target.style.borderColor = '#E7E1D2')}
       />
     </label>
+  );
+}
+
+function CopyIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884z"/>
+    </svg>
   );
 }

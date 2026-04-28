@@ -522,7 +522,13 @@ export default function Home() {
     setReady(true);
   }, []);
 
-  useEffect(() => { if (ready) save('fi_lang', lang); }, [lang, ready]);
+  useEffect(() => {
+    if (ready) {
+      save('fi_lang', lang);
+      // v3.4.49 — Fire event so LangSync updates <html lang> attribute.
+      try { window.dispatchEvent(new Event('fi_lang_change')); } catch (e) {}
+    }
+  }, [lang, ready]);
   useEffect(() => { if (ready && activeChatId) save('fi_active_chat_id', activeChatId); }, [activeChatId, ready]);
   useEffect(() => {
     if (ready && messages.length > 0) {
