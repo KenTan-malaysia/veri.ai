@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.24 — Web-first strategy LOCKED: web-only push to 30,000 users → Capacitor wrap to native at Phase 4. NOT parallel build. NOT delayed launch. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.25 — Web UX patterns doctrine LOCKED + 12-issue audit produced. Web-first commitment at v3.4.24 unchanged. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -26,7 +26,11 @@
 
 **Delivery (v3.4.24, WEB-FIRST):** Web-only push to 30,000 users. NO native iOS/Android until Phase 4. At 30k users → Capacitor wrap of existing web app (RM 5-15k, 2-4 weeks). NOT parallel web+native. NOT delayed launch waiting for native. Saves RM 45-85k Year 1-3. See `WEB_FIRST_RATIONALE.md`.
 
+**Web UX patterns (v3.4.25):** Build with web-native patterns, NOT app patterns crammed into a browser. Real URLs per step, browser back works, refresh-resilient state, OG meta tags, server-rendered shareable pages, responsive desktop+mobile, hover states, keyboard nav. See `WEB_UX_PATTERNS.md` (doctrine) + `UX_AUDIT_WEB_PATTERNS.md` (12-issue audit, 3-sprint plan).
+
 **For Zeus sessions: REJECT premature native suggestions before 30k users.** When Ken (or anyone) suggests building native iOS/Android before the 30k milestone, push back and reference `WEB_FIRST_RATIONALE.md`. Exceptions: 30k reached, conversion stalled at 10k+ with native as proven bottleneck, B2B contract requiring native, competitor reaches 50k+ MY users on native.
+
+**For Zeus sessions: AUTO-SCREEN all UX work against `WEB_UX_PATTERNS.md`.** If a proposed pattern is in the "App pattern (retire)" column, push back and propose the web equivalent. Run the 7 decision tests (URL, refresh, share, back, desktop, hover, OG preview) before shipping any UI.
 
 **Phased spending plan (gate each phase on USAGE signal, not revenue — there is no revenue until Phase 4):**
 - Phase 0 (now): Pilot v0 — RM 100, 4 weeks → 5-10 friendly landlord interviews
@@ -88,7 +92,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.24
+## 🟢 ACTIVE SAVE POINT — v3.4.25
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 
@@ -113,10 +117,12 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 | Doc | Purpose | Status |
 |---|---|---|
 | `CLAUDE.md` | Project brief — read first by every session | Updated through v3.4.1 |
-| `FINDAI_MEMORY.md` | This file — single-page snapshot | v3.4.24 |
+| `FINDAI_MEMORY.md` | This file — single-page snapshot | v3.4.25 |
 | `BUILD_APPROACH.md` | AI-assist build strategy + Year 1-3 spending phases | v3.4.19 (freemium-aligned) |
 | `MONETIZATION_PLAN.md` | Free-at-scale + premium tier roadmap | v3.4.19 |
 | `WEB_FIRST_RATIONALE.md` | Web-only push to 30k → Capacitor wrap. Reject premature native. | v3.4.24 |
+| `WEB_UX_PATTERNS.md` | Web-native UX doctrine. Swap list (app pattern → web pattern). 7 decision tests. | v3.4.25 |
+| `UX_AUDIT_WEB_PATTERNS.md` | 12-issue audit of TenantScreen + Landing + PeekChat + Layout against doctrine. 3-sprint plan. | v3.4.25 |
 | `ARCH_CREDIT_SCORE.md` | TOOL 1 spec: LHDN gate + utility timing-tier scoring + Trust Score formula | v3.4.4 base + v3.4.18 bill verification + v3.4.23 user profile integration |
 | `ARCH_BILL_VERIFICATION.md` | 10-layer fraud defense lattice for bill photos (Tier 1 ships v1, Tier 2-3 later) | v3.4.18 |
 | `ARCH_USER_PROFILES.md` | Tenant + Landlord account systems + portable Trust Score lookup + LBV | v3.4.23 |
@@ -137,6 +143,7 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 | **For pilot/MVP, use `claude-3-5-haiku-20241022`** | On every Anthropic account, cheap (~$0.25/$1.25 per million tokens), fast. |
 | **Web app IS a real product** — not less real than native | Same product whether delivered via browser URL or App Store. Native (Capacitor wrap) is a Phase 4+ optional add. |
 | **Web-first to 30k. No native before then.** | Locked v3.4.24. Saves RM 45-85k Year 1-3. WhatsApp link beats App Store install for 1-3 uses/year audience. Capacitor wrap (RM 5-15k) only after 30k milestone. |
+| **Web patterns, not app patterns.** | Locked v3.4.25. Real URLs per step, browser back works, refresh-resilient, OG meta tags, server-rendered Trust Card, responsive desktop+mobile. Run the 7 tests (URL/refresh/share/back/desktop/hover/OG) before shipping any UI. See `WEB_UX_PATTERNS.md`. |
 | **For ALL government / utility integrations** — deep-link to public portals | No API negotiation. Same pattern: Open [portal] in new tab → user screenshots → upload screenshot back. Scales infinitely (TNB, SYABAS, SAJ, telcos, etc.). |
 | **Describe BEHAVIOUR, not the PERSON** | Never say "Late tenant" — say "Late payment pattern". Find.ai surfaces evidence; doesn't judge people. |
 | **Don't pre-spend** | Each phase's spending must be gated on real signal from previous phase. Don't build before validating. |
@@ -191,7 +198,7 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 
 ---
 
-## 3. FILE MAP (current — v3.4.24)
+## 3. FILE MAP (current — v3.4.25)
 
 ```
 find-ai/
@@ -219,6 +226,8 @@ find-ai/
 ├── BUILD_APPROACH.md             AI-assist build strategy (v3.4.19)
 ├── MONETIZATION_PLAN.md          Freemium-at-scale plan (v3.4.19)
 ├── WEB_FIRST_RATIONALE.md        Web-first to 30k → Capacitor wrap (v3.4.24)
+├── WEB_UX_PATTERNS.md            Web-native UX doctrine + swap list + 7 tests (v3.4.25)
+├── UX_AUDIT_WEB_PATTERNS.md      12-issue audit + 3-sprint plan (v3.4.25)
 ├── HOW_TRUST_SCORE_WORKS.md      Public methodology disclosure
 ├── SCORING_DISCLOSURE_POLICY.md  Internal 3-tier IP rule
 ├── PILOT_RECRUITMENT_PLAN.md     Full pilot strategy
@@ -269,7 +278,8 @@ Stamp Act 1949 (Item 32(a) + s.52, s.36A, s.62) · Finance Act 2025 (SDSAS) · B
 
 ### v3.4.x — TOOL 1 v0 mock polish era (April 2026)
 
-- **v3.4.24 (2026-04-26 — THIS SAVE POINT) — Web-first strategy LOCKED.** New `WEB_FIRST_RATIONALE.md` doc commits Find.ai to web-only push to 30,000 users → Capacitor wrap to native at Phase 4. NOT parallel web+native. NOT delayed launch. Saves RM 45-85k Year 1-3 vs parallel build. Winning rate analysis: 70-85% probability web-first is the right strategic bet for Find.ai's audience (35-65 yr old MY landlords, 1-3 uses/year, WhatsApp distribution, ~3 min sessions, no real-time/GPS needs). Real-world precedents: Notion, Linear, Figma, ChatGPT, Canva all went web-first → scale → native. Phase 4 trigger checklist locked (30k users + 5k monthly screenings + NPS≥40 + B2B inbound + sustainable cost + premium roadmap). Future Zeus sessions must REJECT premature native suggestions before 30k milestone.
+- **v3.4.25 (2026-04-26 — THIS SAVE POINT) — Web UX patterns doctrine LOCKED + 12-issue audit produced.** New `WEB_UX_PATTERNS.md` codifies the swap list (app pattern → web pattern: real URLs per step, browser back, refresh-resilient, OG meta tags, responsive desktop+mobile, hover states, keyboard nav) and 7 decision tests (URL / refresh / share / back / desktop / hover / OG preview). New `UX_AUDIT_WEB_PATTERNS.md` runs the doctrine against current code and finds 12 issues across 4 severity tiers. P0 (3 issues) blocks the viral mechanic — Trust Card has no shareable URL, no OG meta tags, no `/trust/[reportId]` page, WhatsApp share is plaintext-only. P1 (5 issues) — fullscreen modal not routes, max-w-lg cap on desktop, `userScalable: false`, no `<header>`/`<footer>`, PeekChat full-width on desktop. P2 (3 issues) — no hover states, no keyboard nav, no skeleton loaders. Sprint plan: S1 viral mechanic (3-5d), S2 desktop respect (3-4d), S3 web polish (2-3d). Push v3.4.25 to git BEFORE refactoring — pilot can run on current v0 mock.
+- **v3.4.24 (2026-04-26) — Web-first strategy LOCKED.** New `WEB_FIRST_RATIONALE.md` doc commits Find.ai to web-only push to 30,000 users → Capacitor wrap to native at Phase 4. NOT parallel web+native. NOT delayed launch. Saves RM 45-85k Year 1-3 vs parallel build. Winning rate analysis: 70-85% probability web-first is the right strategic bet for Find.ai's audience (35-65 yr old MY landlords, 1-3 uses/year, WhatsApp distribution, ~3 min sessions, no real-time/GPS needs). Real-world precedents: Notion, Linear, Figma, ChatGPT, Canva all went web-first → scale → native. Phase 4 trigger checklist locked (30k users + 5k monthly screenings + NPS≥40 + B2B inbound + sustainable cost + premium roadmap). Future Zeus sessions must REJECT premature native suggestions before 30k milestone.
 - **v3.4.23 (2026-04-26)** — User profile architecture locked (`ARCH_USER_PROFILES.md`) + Returning tenant lookup placeholder on Step 1 + Permanent record badge on Trust Card. Tenant + Landlord accounts spec, portable Trust Score lookup mechanism, LBV (Live Bound Verification) full flow, PDPA compliance, free vs premium tier, 2-phase build plan.
 - **v3.4.22** — Side-by-side deep-link + upload screenshot pattern for both LHDN and Account # (TNB/Water/Mobile). Two buttons in same row: 🔗 Open [portal] (navy) + 📎 Upload screenshot (gold). Deep-link no longer auto-marks done — upload is the actual verification action.
 - **v3.4.21** — LHDN verify switched to deep-link pattern (same as TNB Account #). No API negotiation. Removed `verifyWithLHDN` function + `verifying` state.
@@ -320,7 +330,7 @@ When Ken opens a new session with this file:
 
 1. **Read this file end-to-end** — start with the **🔔 KEN ACTION PENDING** block at top, then **🛠️ BUILD APPROACH + MONETIZATION**, then **🟢 ACTIVE SAVE POINT**.
 2. **Surface the chatbox-credits reminder immediately** if not yet resolved.
-3. **Greet:** *"Resuming Find.ai v3.4.24 — TOOL 1 v0 mock fully polished, user profile + web-first strategy locked. Reminder: Anthropic credits still need to be added at console.anthropic.com/settings/billing — chatbox is locked until then. Want to handle that now or skip for the session? Also: pilot outreach is queued (5 friendly landlord WhatsApp messages) and lawyer engagement (T&C/Privacy/Consent) is overdue. Or do you want to keep building features?"*
+3. **Greet:** *"Resuming Find.ai v3.4.25 — TOOL 1 v0 mock fully polished, web-first + web UX patterns doctrine both locked. UX audit produced 12 issues across 3 sprints (S1 unlocks viral mechanic — `/trust/[reportId]` + OG meta tags + WhatsApp rich preview). Reminder: Anthropic credits still need to be added at console.anthropic.com/settings/billing — chatbox is locked until then. Want to start Sprint 1 of the web-pattern refactor, or handle pilot outreach + lawyer + credits first?"*
 4. **Do NOT re-scan codebase** unless Ken asks or this file is clearly stale.
 5. **Reject scope creep:** any request that smells like Phase 2 (Evidence Vault), Phase 3 (CN-MY B2B), or Phase 4 (marketplace) = defer. Pre-signing wedge only.
 6. **Reject early-paid-tier suggestions** — Find.ai is freemium-at-scale. Free for individuals forever. Premium at 30k+ users.
