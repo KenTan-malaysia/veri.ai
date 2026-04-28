@@ -70,7 +70,16 @@ export default function DashboardPage() {
       {/* Page header */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.02em', margin: 0, marginBottom: 6 }}>
+          <h1 style={{
+            fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+            fontSize: 36,
+            fontWeight: 400,
+            color: 'var(--color-navy)',
+            letterSpacing: '-0.015em',
+            lineHeight: 1.05,
+            margin: 0,
+            marginBottom: 6,
+          }}>
             {savedName ? `Welcome back, ${savedName}` : 'Welcome back'}
           </h1>
           <p style={{ fontSize: 14, color: 'var(--color-slate)', margin: 0 }}>
@@ -110,10 +119,11 @@ export default function DashboardPage() {
             </div>
             <h2
               style={{
-                fontSize: 28,
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                lineHeight: 1.1,
+                fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+                fontSize: 36,
+                fontWeight: 400,
+                letterSpacing: '-0.015em',
+                lineHeight: 1.05,
                 margin: '0 0 10px',
                 color: 'var(--color-white)',
               }}

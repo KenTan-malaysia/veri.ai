@@ -26,7 +26,15 @@ export default function PricingPage() {
         <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14 }}>
           PRICING · TRANSPARENT
         </div>
-        <h1 style={{ fontSize: 56, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.04em', lineHeight: 1.0, margin: '0 0 16px' }}>
+        <h1 style={{
+          fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+          fontSize: 72,
+          fontWeight: 400,
+          color: '#0F1E3F',
+          letterSpacing: '-0.025em',
+          lineHeight: 0.95,
+          margin: '0 0 16px',
+        }}>
           Free for individuals.<br/>Forever.
         </h1>
         <p style={{ fontSize: 17, lineHeight: 1.5, color: '#3F4E6B', margin: 0, maxWidth: 560, marginInline: 'auto' }}>
@@ -108,7 +116,16 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <section style={{ marginTop: 64, maxWidth: 720, marginInline: 'auto' }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.025em', margin: '0 0 24px', textAlign: 'center' }}>
+          <h2 style={{
+            fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+            fontSize: 36,
+            fontWeight: 400,
+            color: '#0F1E3F',
+            letterSpacing: '-0.015em',
+            lineHeight: 1.05,
+            margin: '0 0 24px',
+            textAlign: 'center',
+          }}>
             Pricing questions
           </h2>
           <Faq q="Why is Find.ai free for individuals?">

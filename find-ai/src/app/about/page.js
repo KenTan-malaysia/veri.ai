@@ -26,7 +26,15 @@ export default function AboutPage() {
         <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14 }}>
           ABOUT FIND.AI
         </div>
-        <h1 style={{ fontSize: 48, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.04em', lineHeight: 1.0, margin: '0 0 24px' }}>
+        <h1 style={{
+          fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+          fontSize: 60,
+          fontWeight: 400,
+          color: '#0F1E3F',
+          letterSpacing: '-0.02em',
+          lineHeight: 0.95,
+          margin: '0 0 24px',
+        }}>
           Built to make Malaysian rentals safer.
         </h1>
 

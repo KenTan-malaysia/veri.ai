@@ -121,15 +121,18 @@ const Button = forwardRef(function Button(
           letter-spacing: -0.005em;
           transition: background var(--motion-fast) var(--ease-standard),
                       border-color var(--motion-fast) var(--ease-standard),
-                      transform var(--motion-fast) var(--ease-standard);
+                      transform 80ms var(--ease-standard),
+                      box-shadow var(--motion-fast) var(--ease-standard);
           outline: none;
           user-select: none;
+          -webkit-tap-highlight-color: transparent;
         }
         .fa-btn:hover:not(:disabled) {
           background: var(--hover-bg) !important;
         }
         .fa-btn:active:not(:disabled) {
-          transform: scale(0.98);
+          transform: scale(0.97);
+          transition-duration: 40ms;
         }
         .fa-btn:focus-visible {
           box-shadow: var(--shadow-focus);

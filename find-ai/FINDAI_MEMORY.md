@@ -1,6 +1,6 @@
 # FIND.AI — COMPRESSED MEMORY
 > Single-file project snapshot. Upload this to any new session for instant full context.
-> **Last updated:** 2026-04-26 (v3.4.50 — Push to 95% iteration. Editorial typography pairing (Instrument Serif headlines + Inter body) — biggest single visual upgrade. Custom on-brand 404 ("Lost the lease."). Sitemap.xml + robots.txt for SEO. Per-page metadata for /pricing /about /stamp /chat via sibling layout.js files. Score count-up animation on Trust Card hero (1.4s cubic ease-out, prefers-reduced-motion respected). · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
+> **Last updated:** 2026-04-26 (v3.4.51 — Push to 99% iteration. Scroll-triggered Reveal animations on landing tile/trust/help grids. Subtle gradient mesh atmosphere on hero. Dashboard loading skeleton. Global error boundary ("Lease void."). Transparency report page (/transparency, Apple/Stripe pattern). Refined Button microinteractions (40ms press feedback). Instrument Serif applied to dashboard H1 + Personal Assistant H2 + pricing/about hero H1s. · Cakap 2.0 · DNA: TRUST BEFORE SIGNING).
 
 ---
 
@@ -120,7 +120,7 @@ The four tools under Cakap 2.0:
 
 ---
 
-## 🟢 ACTIVE SAVE POINT — v3.4.50
+## 🟢 ACTIVE SAVE POINT — v3.4.51
 
 ### TOOL 1 (Tenant Credit Score) v0 mock state — fully polished
 

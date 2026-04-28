@@ -22,6 +22,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Reveal from '../components/ui/Reveal';
 
 const SKIP_WELCOME_KEY = 'fi_skip_welcome_v1'; // legacy — kept for compat
 const NOTIFY_KEY = 'fi_audit_notify_v1';
@@ -197,8 +198,10 @@ export default function Landing({
       {/* ── PRODUCT TILE GRID ──────────────────────────────────────────── */}
       <section id="tools" className="ap-tiles">
         <div className="ap-section-inner">
-          <h2 className="ap-section-h2">{c.toolsH2}</h2>
-          <p className="ap-section-sub">{c.toolsSub}</p>
+          <Reveal>
+            <h2 className="ap-section-h2">{c.toolsH2}</h2>
+            <p className="ap-section-sub">{c.toolsSub}</p>
+          </Reveal>
 
           <div className="ap-tile-grid">
             {/* Tile 1 — Screen Tenant (dark hero card, primary product) */}
@@ -295,13 +298,15 @@ export default function Landing({
       {/* ── HOW IT WORKS — 3 horizontal steps ──────────────────────────── */}
       <section id="how" className="ap-how">
         <div className="ap-section-inner">
-          <h2 className="ap-section-h2">{c.howH2}</h2>
-          <p className="ap-section-sub">{c.howSub}</p>
+          <Reveal>
+            <h2 className="ap-section-h2">{c.howH2}</h2>
+            <p className="ap-section-sub">{c.howSub}</p>
+          </Reveal>
 
           <div className="ap-step-grid">
-            <Step n="01" title={c.step1Title} sub={c.step1Sub} />
-            <Step n="02" title={c.step2Title} sub={c.step2Sub} />
-            <Step n="03" title={c.step3Title} sub={c.step3Sub} />
+            <Reveal delay={0}><Step n="01" title={c.step1Title} sub={c.step1Sub} /></Reveal>
+            <Reveal delay={120}><Step n="02" title={c.step2Title} sub={c.step2Sub} /></Reveal>
+            <Reveal delay={240}><Step n="03" title={c.step3Title} sub={c.step3Sub} /></Reveal>
           </div>
         </div>
       </section>
@@ -309,14 +314,16 @@ export default function Landing({
       {/* ── BUILT FOR MALAYSIAN RENTALS — trust signals ────────────────── */}
       <section id="trust" className="ap-trust">
         <div className="ap-section-inner">
-          <h2 className="ap-section-h2">{c.trustH2}</h2>
-          <p className="ap-section-sub">{c.trustSub}</p>
+          <Reveal>
+            <h2 className="ap-section-h2">{c.trustH2}</h2>
+            <p className="ap-section-sub">{c.trustSub}</p>
+          </Reveal>
 
           <div className="ap-trust-grid">
-            <TrustItem title={c.trust1Title} sub={c.trust1Sub} />
-            <TrustItem title={c.trust2Title} sub={c.trust2Sub} />
-            <TrustItem title={c.trust3Title} sub={c.trust3Sub} />
-            <TrustItem title={c.trust4Title} sub={c.trust4Sub} />
+            <Reveal delay={0}><TrustItem title={c.trust1Title} sub={c.trust1Sub} /></Reveal>
+            <Reveal delay={80}><TrustItem title={c.trust2Title} sub={c.trust2Sub} /></Reveal>
+            <Reveal delay={160}><TrustItem title={c.trust3Title} sub={c.trust3Sub} /></Reveal>
+            <Reveal delay={240}><TrustItem title={c.trust4Title} sub={c.trust4Sub} /></Reveal>
           </div>
         </div>
       </section>
@@ -708,6 +715,7 @@ const STRINGS = {
     fcCompanyLinks: [
       { label: 'About', href: '/about' },
       { label: 'Pricing', href: '/pricing' },
+      { label: 'Transparency', href: '/transparency' },
       { label: 'Contact', href: 'mailto:hello@find.ai' },
     ],
     fLangLabel: 'Language',
@@ -1030,6 +1038,20 @@ const STYLES = `
     position: relative;
     overflow: hidden;
   }
+  /* v3.4.51 — Subtle radial gradient atmosphere on hero. Apple's pattern:
+     barely-there color wash that adds depth without competing with content. */
+  .ap-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 400px at 50% 0%, rgba(184,137,58,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 300px at 80% 60%, rgba(15,30,63,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 500px 250px at 20% 80%, rgba(184,137,58,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ap-hero > * { position: relative; z-index: 1; }
   .ap-eyebrow {
     font-size: 11px; font-weight: 500;
     letter-spacing: 0.18em;
