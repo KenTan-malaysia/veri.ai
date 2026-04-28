@@ -1285,6 +1285,12 @@ export default function TenantScreen({
   caseRef,
   profileLandlord,
   property,
+  // v3.4.35 — Submission context from /screen/[ref] route.
+  // When tenant lands via a generated request link, this is populated with
+  // { ref, mode, landlordName, property } from the URL params. The score
+  // reveal step encodes these into the WhatsApp share URL so the recipient
+  // sees the proper context on /trust/[reportId].
+  submissionContext,
 }) {
   const t = STR[lang] || STR.en;
   const stableCaseRef = useMemo(() => caseRef || makeCaseRef(), [caseRef]);
@@ -2021,28 +2027,58 @@ export default function TenantScreen({
                 /trust/{reportId}, which has full OG meta tags so WhatsApp/
                 Telegram render a rich link preview. THIS is the viral mechanic
                 per WEB_UX_PATTERNS.md + ARCH_REVEAL_TIERS.md.
-                In Anonymous Mode (default), the URL renders the anonymous
-                Trust Card — no name in the preview. Recipient sees the score
-                first, identity reveals tier-by-tier as deal progresses. */}
+                v3.4.35 (Sprint 1-3): URL now encodes actual score data in
+                query params so cross-device sharing shows the real submission
+                (not hardcoded mock). Plus landlord/property context if the
+                tenant came in via /screen/{ref} link. */}
             {(() => {
-              // Canonical site origin. In production this is find-ai-lovat.vercel.app
-              // until the find.ai domain is set up.
               const ORIGIN = 'https://find-ai-lovat.vercel.app';
-              const trustUrl = `${ORIGIN}/r/${stableCaseRef}`;
+              const ctx = (typeof submissionContext !== 'undefined' && submissionContext) || {};
+              const mode = ctx.mode || 'anonymous';
+
+              // Anonymous tenant ID for this Trust Card. In v0 generated from
+              // case ref hash; in v1 issued by Supabase as part of tenant profile.
+              const anonId = `T-${(stableCaseRef || 'XXXX').slice(-4).toUpperCase()}`;
+
+              // v3.4.35 — Encode actual score data into URL query params so
+              // /trust/[reportId] renders the real submission cross-device.
+              const params = new URLSearchParams();
+              params.set('s', String(trustScore));
+              params.set('b', String(behaviourScore));
+              params.set('c', String(Math.round(confMul * 100)));
+              params.set('ct', confTierLabel || 'High');
+              params.set('t', anonId);
+              params.set('m', mode);
+              if (mode === 'verified' && tenantName) params.set('n', tenantName);
+              params.set('lh', lhdnVerified ? '1' : '0');
+              params.set('lm', String(MOCK_LHDN_RESULT.months || 14));
+              params.set('u', String(effectiveBillsCount));
+              params.set('ag', String(MOCK_SCORE.avgGapDays));
+              if (ctx.landlordName) params.set('ll', ctx.landlordName);
+              if (ctx.property) params.set('pp', ctx.property);
+
+              const trustUrl = `${ORIGIN}/trust/${stableCaseRef}?${params.toString()}`;
+
               const lhdnLine = lhdnVerified
                 ? `✓ LHDN-verified ${MOCK_LHDN_RESULT.months} months previous tenancy`
                 : '⊘ LHDN not verified — landlord judgment required';
+              const contextLine = ctx.landlordName
+                ? `For: ${ctx.landlordName}${ctx.property ? ` · ${ctx.property}` : ''}\n\n`
+                : '';
+              const modeLine = mode === 'anonymous'
+                ? 'Anonymous Mode · Identity reveals tier-by-tier as deal progresses.'
+                : 'Verified Mode · Tenant name shared.';
               const waMsg =
 `🛡️ Find.ai Trust Card
 
-Trust Score: ${trustScore} / 100
+${contextLine}Trust Score: ${trustScore} / 100
 ${lhdnLine}
 ${effectiveBillsCount}/3 utility bills · avg ${MOCK_SCORE.avgGapDays < 0 ? `${Math.abs(MOCK_SCORE.avgGapDays)} days BEFORE due` : `${MOCK_SCORE.avgGapDays} days AFTER due`}
 
 View card: ${trustUrl}
 
 — Find.ai · Don't sign blind.
-Anonymous Mode · Identity reveals tier-by-tier as deal progresses.`;
+${modeLine}`;
               const waUrl = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
               return (
                 <a

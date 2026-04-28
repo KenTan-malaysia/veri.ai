@@ -17,39 +17,85 @@
 
 import Link from 'next/link';
 
-// ─── mock data resolver (v0) ────────────────────────────────────────────────
-// In v1 this becomes: const { data } = await supabase.from('trust_cards')...
-// For v0, any reportId starting with 'demo' or 'TC-' returns mock data.
-function resolveTrustCard(reportId) {
-  // Default mock for any /trust/{anything} URL during v0 demo phase.
-  // Allows WhatsApp share + OG preview to work end-to-end before Supabase lands.
+// ─── data resolver (v0 — URL-encoded) ───────────────────────────────────────
+// v0 strategy (no backend yet): Trust Card data is encoded in URL search params
+// when the tenant submits. The URL itself carries the data. This makes the
+// flow truly cross-device functional — landlord on device A receives the URL,
+// clicks on device B, sees the real score.
+//
+// In v1 (Supabase backend): URL just contains reportId, data fetched from DB
+// with server-side signature verification. v0 URL params are unsigned and
+// trust-but-verify — fine for demo phase, NOT acceptable for production.
+//
+// Search params used (all optional — falls back to demo if missing):
+//   s  → trustScore (0-100)
+//   b  → behaviourScore (0-100)
+//   c  → confidencePct (0-100)
+//   ct → confidenceTier (Low / Med / High)
+//   t  → anonymousTenantId (e.g. T-7841)
+//   n  → tenantName (only used in Verified Mode)
+//   m  → mode (anonymous | verified)
+//   lh → lhdnVerified (1 | 0)
+//   lm → lhdnMonths (e.g. 14)
+//   u  → utilityCount (0-3)
+//   ag → avgGapDays (e.g. -3 means 3 days BEFORE due)
+//   d  → issuedAt (e.g. 2026-04-26)
+//   ll → landlordName (display, optional)
+//   pp → property (display, optional)
+function resolveTrustCard(reportId, searchParams) {
+  // Helper: read and parse search params with type coercion.
+  const sp = searchParams || {};
+  const num = (k, fallback) => {
+    const v = sp[k];
+    if (v === undefined) return fallback;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  };
+  const str = (k, fallback) => sp[k] ?? fallback;
+  const bool = (k, fallback) => {
+    const v = sp[k];
+    if (v === undefined) return fallback;
+    return v === '1' || v === 'true';
+  };
+
+  const hasUrlData = sp.s !== undefined || sp.b !== undefined;
+  const mode = str('m', 'anonymous');
+  const avgGap = num('ag', -3);
+
   return {
     reportId: reportId || 'TC-2026-04-DEMO',
-    mode: 'anonymous',           // 'anonymous' | 'verified'
-    tier: 'T0',                  // T0..T5 (per ARCH_REVEAL_TIERS.md)
-    trustScore: 87,
-    behaviourScore: 91,
-    confidencePct: 95,
-    confidenceTier: 'High',
-    anonymousTenantId: 'T-7841',
-    tenantName: null,             // Anonymous Mode → name hidden at T0
-    lastVerified: 'Apr 2026',
-    lhdnVerified: true,
-    lhdnMonths: 14,
-    utilityCount: 3,
-    avgPaymentTimingDays: -3,    // negative = days BEFORE due
-    avgPaymentTimingLabel: '3 days BEFORE due',
-    issuedAt: '2026-04-26',
+    isDemo: !hasUrlData,
+    mode,
+    tier: 'T0',
+    trustScore: num('s', 87),
+    behaviourScore: num('b', 91),
+    confidencePct: num('c', 95),
+    confidenceTier: str('ct', 'High'),
+    anonymousTenantId: str('t', 'T-7841'),
+    tenantName: mode === 'verified' ? str('n', null) : null,
+    lastVerified: str('d', 'Apr 2026'),
+    lhdnVerified: bool('lh', true),
+    lhdnMonths: num('lm', 14),
+    utilityCount: num('u', 3),
+    avgPaymentTimingDays: avgGap,
+    avgPaymentTimingLabel:
+      avgGap < 0 ? `${Math.abs(avgGap)} days BEFORE due` : `${avgGap} days AFTER due`,
+    issuedAt: str('d', '2026-04-26'),
+    landlordName: str('ll', null),
+    property: str('pp', null),
   };
 }
 
 // ─── per-page metadata for OG/Twitter rich previews ─────────────────────────
 // This is THE viral mechanic. WhatsApp/Telegram see these tags and show
 // the Trust Card as a preview when the link is shared.
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const { reportId } = await params;
-  const card = resolveTrustCard(reportId);
-  const title = `Trust Score ${card.trustScore}/100 · Anonymous Tenant ${card.anonymousTenantId}`;
+  const sp = (await searchParams) || {};
+  const card = resolveTrustCard(reportId, sp);
+  const title = card.mode === 'verified' && card.tenantName
+    ? `Trust Score ${card.trustScore}/100 · ${card.tenantName}`
+    : `Trust Score ${card.trustScore}/100 · Anonymous Tenant ${card.anonymousTenantId}`;
   const description = `Find.ai Trust Card · ${card.mode === 'anonymous' ? 'Anonymous' : 'Verified'} Mode · LHDN-verified ${card.lhdnMonths} months previous tenancy · ${card.utilityCount}/3 utility bills · Last verified ${card.lastVerified}.`;
   return {
     title,
@@ -83,9 +129,10 @@ export async function generateMetadata({ params }) {
 }
 
 // ─── page component (server-rendered) ───────────────────────────────────────
-export default async function TrustCardPage({ params }) {
+export default async function TrustCardPage({ params, searchParams }) {
   const { reportId } = await params;
-  const card = resolveTrustCard(reportId);
+  const sp = (await searchParams) || {};
+  const card = resolveTrustCard(reportId, sp);
 
   const isAnonymous = card.mode === 'anonymous';
   const tenantDisplay = isAnonymous
@@ -103,6 +150,51 @@ export default async function TrustCardPage({ params }) {
           gap: 16,
         }}
       >
+        {/* v3.4.35 — Demo banner shown when no URL data params present.
+            Tells the viewer this is a demo card, not a real submission. */}
+        {card.isDemo && (
+          <div
+            style={{
+              background: '#FEF3C7',
+              border: '1px solid #FDE68A',
+              borderRadius: 12,
+              padding: '10px 14px',
+              fontSize: 12,
+              color: '#92400E',
+              textAlign: 'center',
+            }}
+          >
+            <strong>Demo Trust Card</strong> · Mock data shown · Real cards arrive
+            here via tenant submission link
+          </div>
+        )}
+
+        {/* Landlord/property context strip — shown when present */}
+        {(card.landlordName || card.property) && (
+          <div
+            style={{
+              background: 'white',
+              border: '1px solid #E7E1D2',
+              borderRadius: 12,
+              padding: '10px 14px',
+              fontSize: 12,
+              color: '#3F4E6B',
+              textAlign: 'center',
+            }}
+          >
+            For{' '}
+            {card.landlordName && (
+              <strong style={{ color: '#0F1E3F' }}>{card.landlordName}</strong>
+            )}
+            {card.property && (
+              <>
+                {card.landlordName && ' · '}
+                <span>{card.property}</span>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Brand strip */}
         <header style={{ textAlign: 'center', marginBottom: 8 }}>
           <Link

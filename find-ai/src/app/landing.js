@@ -669,6 +669,43 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
             ))}
           </div>
 
+          {/* v3.4.35 — Production-flow entry point: "Generate a Trust Card request"
+              Distinct from the demo tiles above. This sends the landlord to
+              /screen/new where they configure a request and forward a link to
+              the actual tenant prospect via WhatsApp/agent. */}
+          <a
+            href="/screen/new"
+            style={{
+              display: 'block',
+              marginTop: 14,
+              padding: '16px 18px',
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, #0F1E3F 0%, #1E2D52 100%)',
+              color: 'white',
+              textDecoration: 'none',
+              boxShadow: '0 8px 24px -8px rgba(15,30,63,0.32)',
+              transition: 'transform .15s ease, box-shadow .2s ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ fontSize: 28, lineHeight: 1 }}>📨</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#9FB1D6', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 3 }}>
+                  Production flow
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '-0.01em', marginBottom: 2 }}>
+                  Generate a Trust Card request
+                </div>
+                <div style={{ fontSize: 12, color: '#9FB1D6', lineHeight: 1.4 }}>
+                  Send a tenant prospect a link → they submit → you get the score
+                </div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </a>
+
           {/* Audit teaser — was tile 02, now a "Coming next" strip. Keeps the
               promise alive without leaving a dead tile in the grid.
               v9.6 T6 — now interactive: 'Notify me' chip → inline email capture
