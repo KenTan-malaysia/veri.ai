@@ -255,12 +255,48 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     .v9-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
     .v9-tight { letter-spacing: -0.03em; }
     .v9-tighter { letter-spacing: -0.045em; }
+    /* v3.4.26 — Responsive container. Mobile keeps the 512px reading-column
+       feel. Desktop (≥768px) breathes to a real web layout — wider container,
+       larger padding, content centered with whitespace. No more phone-shape
+       column on a 1440px screen. */
     .v9-screen {
       position: relative;
       min-height: 100vh; min-height: 100svh; min-height: 100dvh;
+      width: 100%;
       max-width: 512px; margin: 0 auto; padding: 20px;
       display: flex; flex-direction: column;
       background: #FFFFFF;
+    }
+    @media (min-width: 768px) {
+      .v9-screen {
+        max-width: 720px;
+        padding: 40px 48px;
+        margin: 32px auto;
+        border-radius: 24px;
+        box-shadow: 0 1px 2px rgba(15,30,63,0.04), 0 24px 48px -16px rgba(15,30,63,0.10);
+        min-height: calc(100vh - 64px);
+        min-height: calc(100dvh - 64px);
+      }
+    }
+    @media (min-width: 1024px) {
+      .v9-screen {
+        max-width: 960px;
+        padding: 56px 72px;
+        margin: 48px auto;
+        min-height: calc(100vh - 96px);
+        min-height: calc(100dvh - 96px);
+      }
+    }
+    /* v3.4.26 — Hero typography scales up on desktop. On mobile a 42px h1 is
+       big; on a 1440px screen it's tiny. Web hero needs ~64-80px. */
+    @media (min-width: 768px) {
+      .v9-hero-h1 { font-size: 64px !important; }
+      .v9-hero-sub { font-size: 20px !important; max-width: 480px !important; }
+      .v9-hero-pad { padding: 48px 0 !important; }
+    }
+    @media (min-width: 1024px) {
+      .v9-hero-h1 { font-size: 80px !important; }
+      .v9-hero-sub { font-size: 22px !important; max-width: 560px !important; }
     }
     .v9-dot { width: 8px; height: 8px; border-radius: 999px; background: #E7E1D2; transition: width .3s ease, background .3s ease; }
     .v9-dot.on { background: #0F1E3F; width: 24px; }
@@ -273,6 +309,20 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     }
     .v9-tile:hover { border-color: #0F1E3F; transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(15,30,63,0.18); }
     .v9-tile:active { transform: scale(0.98); }
+    /* v3.4.26 — Tile grid: 1-col mobile · 2-col desktop. Web pattern uses
+       horizontal real estate when available instead of stacking phone-style. */
+    .v9-tile-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 768px) {
+      .v9-tile-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .v9-tile { padding: 32px 28px; }
+    }
     .v9-teaser {
       background: #FAF8F3; border-radius: 18px; padding: 14px 16px;
       border: 1px dashed #E7E1D2;
@@ -503,17 +553,18 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
             <ProgressDots active={1} />
           </div>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', padding: '32px 0' }}>
+          <div className="v9-hero-pad" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', padding: '32px 0' }}>
             {/* v9.5 — 👋 shrunk from 56px to an inline 26px accent so the gold
                 "DON'T SIGN BLIND." motto + "Hi there." heading carry the page.
                 Two re-test users said the giant wave emoji clashed with the
                 compliance-serious motto; making the wave an inline accent
-                beside the greeting keeps the friendliness without competing. */}
-            <h1 className="v9-tighter" style={{ fontSize: 42, fontWeight: 900, lineHeight: 0.95, color: '#0F1E3F', marginBottom: 20, display: 'inline-flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
+                beside the greeting keeps the friendliness without competing.
+                v3.4.26 — Hero typography scales up on desktop via .v9-hero-* classes. */}
+            <h1 className="v9-tighter v9-hero-h1" style={{ fontSize: 42, fontWeight: 900, lineHeight: 0.95, color: '#0F1E3F', marginBottom: 20, display: 'inline-flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
               <span>{c.hi}</span>
               <span aria-hidden="true" style={{ fontSize: 26, lineHeight: 1, transform: 'translateY(-2px)' }}>👋</span>
             </h1>
-            <p style={{ fontSize: 17, lineHeight: 1.55, color: '#3F4E6B', maxWidth: 320, margin: '0 auto' }}>
+            <p className="v9-hero-sub" style={{ fontSize: 17, lineHeight: 1.55, color: '#3F4E6B', maxWidth: 320, margin: '0 auto' }}>
               {c.welcomeBefore}<span style={{ color: '#0F1E3F', fontWeight: 700, borderBottom: '2px solid #B8893A', paddingBottom: '2px' }}>{c.welcomeStrong}</span>{c.welcomeEnd}
             </p>
             <p className="v9-mono" style={{ fontSize: 11, color: '#9A9484', marginTop: 16, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
@@ -590,7 +641,7 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
           </div>
 
           {/* Two primary tiles — the PDF-producing tools */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className="v9-tile-grid">
             {picks.map(p => (
               <button
                 key={p.id}

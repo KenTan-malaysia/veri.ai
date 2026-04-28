@@ -337,6 +337,10 @@ export default function PeekChat({
   if (hidden) return null;
 
   const styles = `
+    /* v3.4.26 — Web-friendly positioning. Mobile keeps the bottom-anchored
+       dock that spans full width. Desktop (≥768px) becomes a corner widget
+       (Intercom-style) ~420px wide pinned bottom-right with margin. No more
+       full-width dock spanning a 1440px screen. */
     .pc-root {
       position: fixed; left: 0; right: 0; bottom: 0;
       z-index: 60; pointer-events: none;
@@ -346,12 +350,28 @@ export default function PeekChat({
       width: 100%; max-width: 512px; pointer-events: auto;
       display: flex; flex-direction: column;
     }
+    @media (min-width: 768px) {
+      .pc-root {
+        left: auto; right: 24px; bottom: 24px;
+        justify-content: flex-end;
+      }
+      .pc-wrap {
+        max-width: 420px;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 24px 48px -12px rgba(15,30,63,0.28), 0 4px 12px rgba(15,30,63,0.08);
+      }
+    }
     /* Backdrop — only shows when peek is open, so the dock feels like
-       part of the page but the peek feels like a proper overlay. */
+       part of the page but the peek feels like a proper overlay.
+       v3.4.26 — Hidden on desktop (≥768px). Corner widgets don't dim the page. */
     .pc-backdrop {
       position: fixed; inset: 0; z-index: 59;
       background: rgba(15,30,63,0.28); backdrop-filter: blur(2px);
       animation: pcFade .18s ease both;
+    }
+    @media (min-width: 768px) {
+      .pc-backdrop { display: none; }
     }
     @keyframes pcFade { from { opacity: 0; } to { opacity: 1; } }
 
@@ -395,7 +415,21 @@ export default function PeekChat({
       overflow: hidden;
     }
     @keyframes pcSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    /* v3.4.26 — Desktop peek = a fixed-height corner panel, all 4 corners
+       rounded, no slide-from-bottom feel. */
+    @media (min-width: 768px) {
+      .pc-peek {
+        border-radius: 18px;
+        max-height: 540px;
+        min-height: 420px;
+        box-shadow: none;
+      }
+    }
     .pc-handle { width: 38px; height: 4px; border-radius: 999px; background: #E7E1D2; margin: 8px auto 0; }
+    /* Hide the mobile drag handle on desktop — corner widgets don't need it. */
+    @media (min-width: 768px) {
+      .pc-handle { display: none; }
+    }
     .pc-peek-head {
       flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px 8px;

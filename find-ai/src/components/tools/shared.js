@@ -37,14 +37,28 @@ export const ToolHeader = ({ icon, title, desc, onClose, onAsk, askLabel }) => (
   </div>
 );
 
+// v3.4.26 — Web-friendly Modal. Mobile keeps the bottom-sheet feel (drag
+// handle + rounded top corners). Desktop becomes a proper centered dialog
+// with breathing room, wider max-width, and rounded corners on all sides.
+// Per WEB_UX_PATTERNS.md — no more phone-shaped 512px modal stuck in the
+// middle of a 1440px screen.
 export const Modal = ({ children }) => (
-  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}>
-    <div className="bg-white w-full max-w-lg rounded-t-[24px] sm:rounded-[20px] px-6 pt-5 pb-6 max-h-[92vh] overflow-y-auto fade-in" style={{ boxShadow: '0 -8px 40px rgba(15,23,42,0.12)' }}>
-      {/* Drag handle */}
+  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6" style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)' }}>
+    <div
+      className="bg-white w-full rounded-t-[24px] sm:rounded-[24px] px-6 pt-5 pb-6 sm:px-10 sm:pt-8 sm:pb-10 max-h-[92vh] sm:max-h-[88vh] overflow-y-auto fade-in"
+      style={{
+        maxWidth: 'min(960px, 100%)',
+        boxShadow: '0 -8px 40px rgba(15,23,42,0.12)',
+      }}
+    >
+      {/* Drag handle — mobile only */}
       <div className="flex justify-center mb-3 sm:hidden">
         <div className="w-10 h-1 rounded-full" style={{ background: '#e2e8f0' }} />
       </div>
-      {children}
+      {/* Inner content column — readable measure on desktop, full-width on mobile */}
+      <div className="mx-auto" style={{ maxWidth: 640 }}>
+        {children}
+      </div>
     </div>
   </div>
 );
@@ -60,10 +74,15 @@ export const RMInput = ({ value, onChange, placeholder, label }) => (
   </div>
 );
 
+// v3.4.26 — Web-friendly ActionBtn. Adds hover state for desktop mouse
+// feedback + focus ring for keyboard nav, alongside the existing tap scale.
 export const ActionBtn = ({ onClick, disabled, label, color = '#0f172a' }) => (
-  <button onClick={onClick} disabled={disabled}
-    className="w-full py-4 rounded-xl text-[14px] font-bold text-white disabled:opacity-30 transition active:scale-[0.98]"
-    style={{ background: color, boxShadow: `0 4px 16px ${color}40` }}>
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className="w-full py-4 rounded-xl text-[14px] font-bold text-white disabled:opacity-30 transition active:scale-[0.98] hover:opacity-90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
+    style={{ background: color, boxShadow: `0 4px 16px ${color}40`, '--tw-ring-color': color }}
+  >
     {label}
   </button>
 );

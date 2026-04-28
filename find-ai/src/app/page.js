@@ -1457,7 +1457,7 @@ export default function Home() {
     return (
       <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #fafbfc 0%, #f1f4f8 100%)' }}>
         {/* Header */}
-        <header className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
+        <header className="flex items-center justify-between px-5 py-4 max-w-lg sm:max-w-2xl lg:max-w-3xl mx-auto w-full">
           <button onClick={() => { setShowProfile(false); }}
             className="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg transition active:scale-95"
             style={{ color: '#64748b' }}>
@@ -1472,7 +1472,7 @@ export default function Home() {
         </header>
 
         {/* Bento grid */}
-        <div className="px-4 pb-28 max-w-lg mx-auto space-y-3">
+        <div className="px-4 pb-28 max-w-lg sm:max-w-2xl lg:max-w-3xl mx-auto space-y-3">
 
           {/* Hero dark tile — greeting */}
           <div className="rounded-[24px] p-6 text-white card-up"
@@ -1594,7 +1594,7 @@ export default function Home() {
 
         {/* Sticky bottom actions */}
         <div className="fixed bottom-0 left-0 right-0 z-20" style={{ background: 'linear-gradient(180deg, rgba(241,244,248,0) 0%, #f1f4f8 40%)' }}>
-          <div className="max-w-lg mx-auto px-4 pt-5 pb-5">
+          <div className="max-w-lg sm:max-w-2xl lg:max-w-3xl mx-auto px-4 pt-5 pb-5">
             <div className="flex gap-2.5">
               <button onClick={() => { setShowProfile(false); setShowChat(true); }}
                 className="flex-1 py-3.5 rounded-2xl text-[13px] font-semibold transition active:scale-[0.98]"
@@ -1631,7 +1631,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-lg mx-auto relative" style={{ background: '#ffffff' }}>
+    <div className="flex flex-col h-screen mx-auto relative w-full max-w-lg sm:max-w-2xl lg:max-w-3xl" style={{ background: '#ffffff' }}>
       {/* Case-file memory editor (per-chat) */}
       <CaseMemoryModal
         open={showCaseMemory}
