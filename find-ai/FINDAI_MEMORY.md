@@ -240,8 +240,12 @@ The v0 mock at https://find-ai-lovat.vercel.app is heavily refined and ready for
 find-ai/
 ├── src/app/
 │   ├── page.js                   ~1700 lines — bento chat UI, sidebar, tool launcher
-│   ├── landing.js                ~430 lines — bento landing, 3 tile launcher, motto, dock, "Don't show again" checkbox
+│   ├── landing.js                ~480 lines — bento landing + "Generate Trust Card request" production CTA (v3.4.35)
 │   ├── globals.css               Global styles
+│   ├── trust/[reportId]/page.js  ~360 lines — server-rendered Trust Card with OG meta + URL-encoded data (v3.4.31, decoded v3.4.35)
+│   ├── r/[reportId]/route.js     Short URL redirect → /trust/[reportId] (v3.4.31)
+│   ├── screen/new/page.js        ~340 lines — landlord-side request generator with Mode toggle (v3.4.35)
+│   ├── screen/[ref]/page.js      ~110 lines — tenant-side submission with URL-context + Mode override (v3.4.35)
 │   └── api/
 │       ├── chat/route.js         Chat backend with streaming wrapper (v3.4.16) + claude-3-5-haiku-20241022
 │       ├── knowledge.js          5057+ lines, 48 topics
@@ -249,7 +253,7 @@ find-ai/
 ├── src/components/
 │   ├── PeekChat.js               677 lines — v9.3 persistent dock + peek pane
 │   ├── tools/
-│   │   ├── TenantScreen.js       ~1700 lines — TOOL 1 v0 mock LIVE (heavily polished v3.4.4 → v3.4.23)
+│   │   ├── TenantScreen.js       ~1730 lines — TOOL 1 v0 mock LIVE (v3.4.4 → v3.4.35; submissionContext prop + URL-encoded WhatsApp share)
 │   │   ├── StampDutyCalc.js      266 lines — TOOL 3 LIVE
 │   │   ├── AgreementHealth.js    DORMANT (TOOL 2 — needs resurrection)
 │   │   └── (other dormant tools)
