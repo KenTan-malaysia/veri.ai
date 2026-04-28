@@ -310,16 +310,16 @@ export default async function TrustCardPage({ params, searchParams }) {
             href="/"
             style={{
               display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
+              alignItems: 'baseline',
+              gap: 2,
               textDecoration: 'none',
               color: '#0F1E3F',
             }}
+            aria-label="Find.ai home"
           >
-            <span style={{ fontSize: 22 }}>🛡️</span>
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>
-              Find.ai
-            </span>
+            {/* v3.4.38 — Wordmark-only brand. */}
+            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
           <div
             style={{
@@ -728,7 +728,7 @@ export default async function TrustCardPage({ params, searchParams }) {
             ← Back to Find.ai
           </Link>
           <div style={{ marginTop: 10 }}>
-            🛡️ Find.ai · Don't sign blind. ·{' '}
+            Find.ai · Don't sign blind. ·{' '}
             <Link href="/privacy" style={{ color: '#9A9484', textDecoration: 'underline' }}>
               Privacy
             </Link>

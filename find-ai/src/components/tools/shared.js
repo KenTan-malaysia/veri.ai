@@ -21,10 +21,14 @@ export const AskBtn = ({ onClick, label = 'Ask' }) => (
   </button>
 );
 
+// v3.4.38 — Icon prop is now optional. Empty/falsy icon = no leading element,
+// no gap. Per Ken's "remove app shield" directive (web-only v1, no security-app
+// iconography). Existing call sites passing icon="" or omitting will render
+// cleanly without a hole.
 export const ToolHeader = ({ icon, title, desc, onClose, onAsk, askLabel }) => (
   <div className="flex items-center justify-between mb-6 pb-4" style={{ borderBottom: '1px solid #f1f5f9' }}>
     <div className="flex items-center gap-3 flex-1 min-w-0">
-      <span className="text-2xl">{icon}</span>
+      {icon && <span className="text-2xl">{icon}</span>}
       <div className="min-w-0">
         <h3 className="text-[16px] font-bold truncate" style={{ color: '#0f172a', letterSpacing: '-0.01em' }}>{title}</h3>
         <p className="text-[11px] mt-0.5 truncate" style={{ color: '#94a3b8' }}>{desc}</p>

@@ -142,7 +142,7 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 utility bills',
     scenarioPartialDesc: 'LHDN ✓ + 1 utility bill',
     scenarioLimitedDesc: 'LHDN skipped + 1 utility bill',
-    verifyHeader: '🛡️ Bill verification',
+    verifyHeader: 'Bill verification',
     verifyDemoNote: 'In production, each bill is checked against 5 fraud signals',
     verifyTemplate: 'Bill template matches TNB / utility format',
     verifyAddress: 'Service address matches LHDN tenancy',
@@ -317,7 +317,7 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 bil utiliti',
     scenarioPartialDesc: 'LHDN ✓ + 1 bil utiliti',
     scenarioLimitedDesc: 'LHDN dilangkau + 1 bil utiliti',
-    verifyHeader: '🛡️ Pengesahan bil',
+    verifyHeader: 'Pengesahan bil',
     verifyDemoNote: 'Dalam pengeluaran, setiap bil disemak terhadap 5 isyarat penipuan',
     verifyTemplate: 'Templat bil sepadan dengan format TNB / utiliti',
     verifyAddress: 'Alamat servis sepadan dengan sewaan LHDN',
@@ -492,7 +492,7 @@ const STR = {
     scenarioFullDesc: 'LHDN ✓ + 3 项公用事业账单',
     scenarioPartialDesc: 'LHDN ✓ + 1 项公用事业账单',
     scenarioLimitedDesc: '已跳过 LHDN + 1 项公用事业账单',
-    verifyHeader: '🛡️ 账单验证',
+    verifyHeader: '账单验证',
     verifyDemoNote: '生产版中，每张账单将通过 5 项防欺诈信号检查',
     verifyTemplate: '账单模板符合 TNB / 公用事业格式',
     verifyAddress: '服务地址与 LHDN 租赁地址匹配',
@@ -1195,7 +1195,7 @@ function TrustCardPreview({ tenantName, tenantIC, score, behaviour, tierLabel, l
       <div className="px-4 py-2.5 flex items-center justify-between"
         style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
         <div className="flex items-center gap-2">
-          <span className="text-white text-[11px] font-black tracking-tight">🛡️ FIND.AI</span>
+          <span className="text-white text-[11px] font-black tracking-tight">FIND<span style={{ color: '#B8893A' }}>.AI</span></span>
           <span className="text-[8.5px] font-black uppercase tracking-widest" style={{ color: '#B8893A' }}>
             {t.cardBrand}
           </span>
@@ -1414,7 +1414,7 @@ export default function TenantScreen({
 
   return (
     <Modal>
-      <ToolHeader icon="🛡️" title={t.title} desc={t.desc} onClose={onClose} onAsk={onAsk} askLabel={askLabel} />
+      <ToolHeader icon="" title={t.title} desc={t.desc} onClose={onClose} onAsk={onAsk} askLabel={askLabel} />
 
       {DEMO_MODE && (
         <div className="mb-4 px-3 py-2 rounded-lg flex items-center gap-2"
@@ -2069,7 +2069,7 @@ export default function TenantScreen({
                 ? 'Anonymous Mode · Identity reveals tier-by-tier as deal progresses.'
                 : 'Verified Mode · Tenant name shared.';
               const waMsg =
-`🛡️ Find.ai Trust Card
+`Find.ai Trust Card
 
 ${contextLine}Trust Score: ${trustScore} / 100
 ${lhdnLine}

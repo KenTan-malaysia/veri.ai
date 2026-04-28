@@ -47,9 +47,14 @@ export default function TenantScreenSubmissionPage() {
       {/* Top context strip — tenant sees who they're submitting for */}
       <div style={{ background: 'white', borderBottom: '1px solid #E7E1D2', padding: '14px 16px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: '#0F1E3F' }}>
-            <span style={{ fontSize: 18 }}>🛡️</span>
-            <span style={{ fontSize: 14, fontWeight: 800 }}>Find.ai</span>
+          <Link
+            href="/"
+            style={{ display: 'flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
+            aria-label="Find.ai home"
+          >
+            {/* v3.4.38 — Wordmark-only brand. */}
+            <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
           <div style={{ flex: 1, fontSize: 12, color: '#3F4E6B', minWidth: 0 }}>
             {landlordName && (

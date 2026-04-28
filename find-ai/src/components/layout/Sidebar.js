@@ -55,17 +55,21 @@ export default function Sidebar({ collapsed = false, onToggle }) {
           href="/"
           style={{
             display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
+            alignItems: 'baseline',
+            gap: 2,
             textDecoration: 'none',
             color: 'var(--color-navy)',
           }}
+          aria-label="Find.ai home"
         >
-          <span style={{ fontSize: 22 }}>🛡️</span>
-          {!collapsed && (
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>
-              Find.ai
-            </span>
+          {/* v3.4.38 — Wordmark-only brand. Shield retired. */}
+          {collapsed ? (
+            <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>F</span>
+          ) : (
+            <>
+              <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+              <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--color-gold)' }}>.ai</span>
+            </>
           )}
         </Link>
         {!collapsed && (

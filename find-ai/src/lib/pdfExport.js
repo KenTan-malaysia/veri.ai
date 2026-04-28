@@ -574,9 +574,9 @@ function renderHTML(p) {
 
   <div class="head">
     <div class="head-brand">
-      <div class="shield">🛡️</div>
+      <!-- v3.4.38 — Shield removed. Wordmark-only brand. -->
       <div>
-        <div class="head-name">Find.ai</div>
+        <div class="head-name">Find<span style="color:#B8893A">.ai</span></div>
         <div class="head-strap">${esc(t.letterhead)}</div>
       </div>
     </div>
@@ -604,7 +604,7 @@ function renderHTML(p) {
       <div class="qr-url">${esc(caseUrl(p.caseRef))}</div>
     </div>
     <div class="foot-body">
-      <span class="shield-chip">🛡️ ${esc(t.shield)}</span>
+      <span class="shield-chip">${esc(t.shield)}</span>
       <p class="foot-p">${esc(t.disclaimer)}</p>
       <p class="foot-pdpa">${esc(t.pdpa)} · ${esc(t.continue)} find.ai</p>
     </div>

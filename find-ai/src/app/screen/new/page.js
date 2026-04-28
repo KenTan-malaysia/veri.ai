@@ -73,9 +73,14 @@ export default function NewScreenRequestPage() {
       <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 18 }}>
         {/* Brand */}
         <header style={{ textAlign: 'center', marginBottom: 4 }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', color: '#0F1E3F' }}>
-            <span style={{ fontSize: 22 }}>🛡️</span>
-            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em' }}>Find.ai</span>
+          <Link
+            href="/"
+            style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
+            aria-label="Find.ai home"
+          >
+            {/* v3.4.38 — Wordmark-only brand. */}
+            <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
         </header>
 
@@ -258,7 +263,7 @@ export default function NewScreenRequestPage() {
             ← Back to Find.ai
           </Link>
           <div style={{ marginTop: 8 }}>
-            🛡️ Find.ai · Don't sign blind.
+            Find.ai · Don't sign blind.
           </div>
         </footer>
       </div>

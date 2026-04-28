@@ -507,13 +507,14 @@ export default function Landing({ onStart, onOpenChat, onOpenScreen, onOpenStamp
     </div>
   );
 
+  // v3.4.38 — Brand is wordmark-only. Shield SVG retired per Ken's directive
+  // ("remove app shield, version 1 web only"). The shield read as security-app
+  // iconography; web products lead with type. Linear / Stripe / Notion all use
+  // wordmark, not shield/badge marks.
   const Brand = () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2 L20 5 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V5 Z" fill="#0F1E3F"/>
-        <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-      </svg>
-      <span className="v9-tight" style={{ fontWeight: 700, fontSize: 14 }}>Find.ai</span>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+      <span className="v9-tighter" style={{ fontWeight: 700, fontSize: 16, color: '#0F1E3F', letterSpacing: '-0.02em' }}>Find</span>
+      <span className="v9-tighter" style={{ fontWeight: 500, fontSize: 16, color: '#B8893A', letterSpacing: '-0.02em' }}>.ai</span>
     </div>
   );
 

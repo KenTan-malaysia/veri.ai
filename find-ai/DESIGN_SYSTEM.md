@@ -70,6 +70,22 @@
 
 **Font family:** `Inter, -apple-system, BlinkMacSystemFont, sans-serif` (already in landing.js). Mono: `JetBrains Mono, ui-monospace, monospace`.
 
+### Brand wordmark (locked v3.4.38)
+
+**Brand is wordmark-only.** Shield iconography retired — it read as security-app branding, conflicts with web-product positioning. Reference: Linear, Stripe, Notion all lead with wordmark, not badge marks.
+
+Treatment:
+- `Find` — navy `#0F1E3F`, weight 700, letter-spacing -0.02em
+- `.ai` — gold `#B8893A`, weight 500, letter-spacing -0.02em
+- No leading icon, no shield, no badge
+
+Sizes:
+- Sidebar / topbar / page header: 16-18px
+- Compact contexts: 14px
+- PDF letterhead: 24px
+
+The collapsed sidebar shows just `F` in navy. No security/lock/shield icons accompany the wordmark anywhere. Trust is signaled through copy + audit-trail visibility, not iconography.
+
 ### Spacing — 4pt grid
 
 | Token | px | Usage |

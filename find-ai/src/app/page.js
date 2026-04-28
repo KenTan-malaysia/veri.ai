@@ -73,7 +73,7 @@ const UI = {
         { icon: '💸', title: "Tenant didn't pay rent", sub: 'Demand letter & legal steps', text: "My tenant hasn't paid rent for 2 months. What are my legal options?" },
         { icon: '🚪', title: 'How to evict legally', sub: 'Step-by-step process', text: "How do I legally evict my tenant?" },
         { icon: '📄', title: 'Stamp duty on tenancy', sub: 'Calculate & file correctly', text: "How much stamp duty do I need to pay for a RM2,500/month tenancy agreement?" },
-        { icon: '🛡️', title: 'Protect my property', sub: 'Clauses every landlord needs', text: "What clauses should I include in my tenancy agreement to protect myself?" },
+        { icon: '🔒', title: 'Protect my property', sub: 'Clauses every landlord needs', text: "What clauses should I include in my tenancy agreement to protect myself?" },
       ],
       tenant: [
         { icon: '🔒', title: 'Deposit not returned', sub: 'Your rights & evidence needed', text: "My landlord won't return my deposit. It's been 3 weeks since I moved out. What can I do?" },
@@ -146,7 +146,7 @@ const UI = {
         { icon: '💸', title: 'Penyewa tak bayar sewa', sub: 'Surat tuntutan & langkah undang-undang', text: 'Penyewa tak bayar sewa 2 bulan, apa boleh buat?' },
         { icon: '🚪', title: 'Cara usir penyewa', sub: 'Proses langkah demi langkah', text: 'Macam mana nak usir penyewa secara sah?' },
         { icon: '📄', title: 'Duti setem penyewaan', sub: 'Kira & failkan dengan betul', text: 'Berapa duti setem untuk perjanjian sewa RM2,500 sebulan?' },
-        { icon: '🛡️', title: 'Lindungi hartanah saya', sub: 'Klausa penting untuk tuan rumah', text: 'Apa klausa yang perlu ada dalam perjanjian sewa untuk lindungi saya?' },
+        { icon: '🔒', title: 'Lindungi hartanah saya', sub: 'Klausa penting untuk tuan rumah', text: 'Apa klausa yang perlu ada dalam perjanjian sewa untuk lindungi saya?' },
       ],
       tenant: [
         { icon: '🔒', title: 'Deposit tak dipulangkan', sub: 'Hak anda & bukti diperlukan', text: 'Tuan rumah tak pulangkan deposit saya dah 3 minggu. Apa boleh buat?' },
@@ -218,7 +218,7 @@ const UI = {
         { icon: '💸', title: '租客拖欠租金', sub: '催款信和法律步骤', text: '租客已经2个月没付租金了，我该怎么办？' },
         { icon: '🚪', title: '如何合法驱逐', sub: '分步骤流程', text: '怎样合法地驱逐租客？' },
         { icon: '📄', title: '租约印花税', sub: '计算和申报', text: '月租RM2,500的租约需要交多少印花税？' },
-        { icon: '🛡️', title: '保护我的房产', sub: '房东必备条款', text: '租约里应该加什么条款来保护自己？' },
+        { icon: '🔒', title: '保护我的房产', sub: '房东必备条款', text: '租约里应该加什么条款来保护自己？' },
       ],
       tenant: [
         { icon: '🔒', title: '押金不退还', sub: '您的权利和所需证据', text: '搬走3周了房东还不退押金，我该怎么办？' },

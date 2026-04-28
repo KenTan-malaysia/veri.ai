@@ -161,7 +161,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 ## Shared Infrastructure (to be built)
 
-**`src/lib/pdfExport.js`** — single PDF generator used by all three tools. Consistent Find.ai letterhead, shield brand mark, footer disclaimer ("Support tool only, not legal advice"), report ID (UUID), QR code pointing to `find.ai/r/{reportId}` for viral loop.
+**`src/lib/pdfExport.js`** — single PDF generator used by all three tools. Consistent Find.ai letterhead (wordmark-only — shield retired v3.4.38), footer disclaimer ("Support tool only, not legal advice"), report ID (UUID), QR code pointing to `find.ai/r/{reportId}` for viral loop.
 
 **Case Memory hand-off** — already exists (`fi_chat_history[i].memory`). Tool 1 writes tenant object, Tool 2 reads tenant + writes agreement object, Tool 3 reads rent/term and writes stamp-duty result. Chatbox reads everything.
 
@@ -207,14 +207,15 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 
 ---
 
-## Design Direction — "Mature Minimalism"
+## Design Direction — "Mature Minimalism" (updated v3.4.38)
 
 - NOT startup green vibes. Bank-level trust.
-- Deep navies, charcoal greys, crisp white space. (Shield icons throughout.)
-- "Thumb Zone" design: all high-stakes buttons at the bottom for one-handed pro use.
-- Security icons (shield) near any sensitive input — reassure users their IC / CCRIS / USCC is encrypted.
+- Deep navies, gold accent, cream background, crisp white space.
+- **Brand is wordmark-only.** Shield iconography retired v3.4.38 — read as security-app branding, conflicts with web-product positioning. Linear / Stripe / Notion all use wordmark, not badge marks. Treatment: `Find` in navy (700) + `.ai` in gold (500) — no leading mark.
+- "Thumb Zone" framing retired (v3.4.27 web-pattern purge). Web layout, not mobile-app dock.
+- Trust signals via copy + audit trail visibility, not security icons. ("LHDN-verified" / "PDPA-compliant" / "Audit-logged" badges over shield icons).
 - No cartoonish elements. Professional. Serious. Trustworthy.
-- Every PDF export uses the SAME Find.ai letterhead + shield brand mark + disclaimer footer — consistency = trust.
+- Every PDF export uses the SAME Find.ai wordmark letterhead + disclaimer footer — consistency = trust.
 
 ## Competitive positioning (Phase 1 only)
 
