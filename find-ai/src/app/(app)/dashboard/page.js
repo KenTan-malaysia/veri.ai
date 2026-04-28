@@ -314,19 +314,58 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ── PIPELINE — Recent Trust Cards (only shown when there's data) ── */}
+      {/* ── PIPELINE — sample Trust Card previews (rich visual layer) ── */}
       <section aria-labelledby="dash-pipeline-h2">
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
-          <h2 id="dash-pipeline-h2" style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.015em', margin: 0 }}>
-            Your pipeline
-          </h2>
-          <Link href="/cards" style={{ fontSize: 12, color: 'var(--color-stone)', textDecoration: 'none' }}>
+          <div>
+            <h2 id="dash-pipeline-h2" style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.015em', margin: 0 }}>
+              Your pipeline
+            </h2>
+            <p style={{ fontSize: 12, color: 'var(--color-stone)', margin: '2px 0 0' }}>
+              Sample data shown · your real Trust Cards will appear here once tenants submit
+            </p>
+          </div>
+          <Link href="/cards" style={{ fontSize: 12, color: 'var(--color-stone)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
             View all Trust Cards <span aria-hidden="true">›</span>
           </Link>
         </div>
-        <Card variant="default" size="md">
-          <EmptyState />
-        </Card>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 14,
+          }}
+        >
+          {SAMPLE_CARDS.map((card) => (
+            <SampleTrustCard key={card.id} card={card} />
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: 14,
+            padding: '14px 18px',
+            background: 'var(--color-tea)',
+            border: '1px dashed var(--color-hairline)',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ fontSize: 12.5, color: 'var(--color-slate)', lineHeight: 1.5 }}>
+            <strong style={{ color: 'var(--color-navy)' }}>Ready to start?</strong>{' '}
+            Generate a Trust Card request and send the link to a tenant prospect.
+          </div>
+          <Link href="/screen/new" style={{ textDecoration: 'none', flexShrink: 0 }}>
+            <Button variant="primary" size="sm" icon={<PlusIcon />}>
+              Generate first Trust Card
+            </Button>
+          </Link>
+        </div>
       </section>
 
       {/* ── RESOURCES — small links shelf ── */}
@@ -362,6 +401,284 @@ export default function DashboardPage() {
       </section>
     </div>
   );
+}
+
+// ─── Sample Trust Card data + preview ──────────────────────────────────────
+// Rich card previews for the Pipeline section. Each card uses the Trust Card
+// visual language (anonymous ID, score, mode badge, tier strip) so the
+// dashboard feels alive even before real data exists. Marked with a "Sample"
+// chip so users don't confuse them with their own data.
+const SAMPLE_CARDS = [
+  {
+    id: 'TC-2026-04-12345',
+    anonId: 'T-7841',
+    score: 87,
+    behaviour: 91,
+    confidence: 95,
+    mode: 'anonymous',
+    tier: 0,
+    risk: 'low',
+    submitted: 'Apr 26',
+    lhdnMonths: 14,
+    utilities: 3,
+    avgGap: -3,
+  },
+  {
+    id: 'TC-2026-04-29384',
+    anonId: 'T-3942',
+    score: 92,
+    behaviour: 96,
+    confidence: 96,
+    mode: 'anonymous',
+    tier: 2,
+    risk: 'low',
+    submitted: 'Apr 25',
+    lhdnMonths: 22,
+    utilities: 3,
+    avgGap: -5,
+  },
+  {
+    id: 'TC-2026-04-56712',
+    anonId: 'T-1284',
+    score: 64,
+    behaviour: 72,
+    confidence: 89,
+    mode: 'anonymous',
+    tier: 1,
+    risk: 'medium',
+    submitted: 'Apr 23',
+    lhdnMonths: 6,
+    utilities: 2,
+    avgGap: 4,
+  },
+];
+
+const RISK_TONES = {
+  low:    { bg: 'var(--color-success-bg)', fg: 'var(--color-success-fg)', border: 'var(--color-success-border)', label: 'Low risk' },
+  medium: { bg: 'var(--color-warning-bg)', fg: 'var(--color-warning-fg)', border: 'var(--color-warning-border)', label: 'Medium risk' },
+  high:   { bg: 'var(--color-danger-bg)',  fg: 'var(--color-danger-fg)',  border: 'var(--color-danger-border)',  label: 'High risk' },
+};
+
+function SampleTrustCard({ card }) {
+  const r = RISK_TONES[card.risk] || RISK_TONES.low;
+  const gapLabel = card.avgGap < 0 ? `${Math.abs(card.avgGap)}d before due` : `${card.avgGap}d after due`;
+
+  return (
+    <Link
+      href={`/cards/${card.id}`}
+      style={{
+        display: 'block',
+        textDecoration: 'none',
+        color: 'inherit',
+        background: 'var(--color-white)',
+        border: '1px solid var(--color-hairline)',
+        borderRadius: 'var(--radius-xl)',
+        padding: '22px 22px 18px',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'transform var(--motion-fast), box-shadow var(--motion-base), border-color var(--motion-fast)',
+        boxShadow: 'var(--shadow-sm)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-3px)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+        e.currentTarget.style.borderColor = 'var(--color-bone)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+        e.currentTarget.style.borderColor = 'var(--color-hairline)';
+      }}
+    >
+      {/* Decorative gradient circle (subtle) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: -40,
+          right: -40,
+          width: 140,
+          height: 140,
+          borderRadius: '50%',
+          background: card.risk === 'low'
+            ? 'radial-gradient(circle, rgba(184,137,58,0.10) 0%, rgba(184,137,58,0) 70%)'
+            : card.risk === 'medium'
+            ? 'radial-gradient(circle, rgba(184,137,58,0.14) 0%, rgba(184,137,58,0) 70%)'
+            : 'radial-gradient(circle, rgba(163,45,45,0.12) 0%, rgba(163,45,45,0) 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Top row: mode + sample chip */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, position: 'relative' }}>
+        <Badge tone="gold" size="sm" uppercase>Anonymous</Badge>
+        <span
+          style={{
+            fontSize: 9.5,
+            fontWeight: 500,
+            color: 'var(--color-bone)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.16em',
+          }}
+        >
+          Sample
+        </span>
+      </div>
+
+      {/* Eyebrow */}
+      <div
+        style={{
+          fontSize: 10,
+          fontWeight: 500,
+          color: 'var(--color-stone)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 4,
+          position: 'relative',
+        }}
+      >
+        Trust card
+      </div>
+
+      {/* Massive score */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8, position: 'relative' }}>
+        <span
+          style={{
+            fontSize: 64,
+            fontWeight: 500,
+            color: 'var(--color-navy)',
+            letterSpacing: '-0.04em',
+            lineHeight: 0.95,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          {card.score}
+        </span>
+        <span style={{ fontSize: 18, color: 'var(--color-stone)', fontWeight: 400 }}>/ 100</span>
+      </div>
+
+      {/* Risk badge + tenant ID row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14, flexWrap: 'wrap', position: 'relative' }}>
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 5,
+            padding: '4px 9px',
+            borderRadius: 999,
+            fontSize: 10.5,
+            fontWeight: 500,
+            background: r.bg,
+            color: r.fg,
+            border: `1px solid ${r.border}`,
+          }}
+        >
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: r.fg }} />
+          {r.label}
+        </span>
+        <span
+          style={{
+            fontSize: 12,
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--color-slate)',
+            fontWeight: 500,
+          }}
+        >
+          {card.anonId}
+        </span>
+      </div>
+
+      {/* Math row */}
+      <div
+        style={{
+          fontSize: 11,
+          color: 'var(--color-stone)',
+          marginBottom: 12,
+          fontFamily: 'var(--font-mono)',
+          position: 'relative',
+        }}
+      >
+        Behaviour {card.behaviour} × Conf {card.confidence}%
+      </div>
+
+      {/* Verification chips */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16, position: 'relative' }}>
+        <SampleChip label={`LHDN ${card.lhdnMonths}mo`} />
+        <SampleChip label={`${card.utilities} utilities`} />
+        <SampleChip label={`avg ${gapLabel}`} />
+      </div>
+
+      {/* Tier progression */}
+      <div style={{ position: 'relative' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: 9,
+            fontWeight: 500,
+            color: 'var(--color-bone)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.14em',
+            marginBottom: 6,
+          }}
+        >
+          <span>Reveal · T{card.tier} <span style={{ color: 'var(--color-stone)', textTransform: 'none', letterSpacing: 0, fontWeight: 400 }}>· {tierName(card.tier)}</span></span>
+          <span style={{ color: 'var(--color-stone)', textTransform: 'none', letterSpacing: 0, fontWeight: 400 }}>{card.submitted}</span>
+        </div>
+        <TierProgressBar tier={card.tier} />
+      </div>
+    </Link>
+  );
+}
+
+function SampleChip({ label }) {
+  return (
+    <span
+      style={{
+        fontSize: 10.5,
+        padding: '3px 8px',
+        borderRadius: 999,
+        background: 'var(--color-cream)',
+        border: '1px solid var(--color-hairline)',
+        color: 'var(--color-slate)',
+        fontWeight: 500,
+        fontFamily: 'var(--font-mono)',
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+function TierProgressBar({ tier }) {
+  const total = 5; // T0..T5 = 6 stops, progress is tier/5 (T0=0%, T5=100%)
+  const progress = (tier / total) * 100;
+  return (
+    <div
+      style={{
+        position: 'relative',
+        height: 6,
+        borderRadius: 999,
+        background: 'var(--color-tea)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          width: `${progress}%`,
+          height: '100%',
+          background: 'linear-gradient(90deg, var(--color-gold) 0%, var(--color-gold-light) 100%)',
+          borderRadius: 999,
+          transition: 'width 600ms var(--ease-standard)',
+        }}
+      />
+    </div>
+  );
+}
+
+function tierName(tier) {
+  return ['Anonymous', 'Categorical', 'First name', 'Last name', 'Contact', 'Full PII'][tier] || 'Anonymous';
 }
 
 // ─── Tool card ─────────────────────────────────────────────────────────────
