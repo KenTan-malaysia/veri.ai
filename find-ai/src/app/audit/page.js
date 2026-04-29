@@ -1,9 +1,17 @@
 'use client';
 
-// v3.5.3 — TOOL 2 v1: Real Claude-powered tenancy agreement audit.
+// v3.5.4 — TOOL 2 v1.5: file upload + paste flow.
 //
-// Major upgrade from v3.5.1 (manual checklist):
-//   - Paste agreement → POST /api/audit → Haiku 3.5 returns structured JSON
+// Major upgrade from v3.5.3 (paste-only):
+//   - Drag-and-drop OR click-to-browse for PDF / TXT / DOCX files
+//   - PDF → base64 → /api/audit (Anthropic native PDF parsing, zero deps)
+//   - DOCX → mammoth (browser build, dynamic import) → text → /api/audit
+//   - TXT → FileReader.readAsText() → text → /api/audit
+//   - Paste flow preserved as a fallback / alternative
+//   - All paths feed the same audit pipeline (clauses, facts, warnings, PDF)
+//
+// v3.5.3 backbone:
+//   - POST /api/audit → Haiku 3.5 returns structured JSON
 //   - Auto-checks the 10 clauses based on LLM detection
 //   - Extracts key facts: monthlyRent, leaseTermMonths, parties, address
 //   - Surfaces predatory/red-flag clauses as warnings (with legal citations)
@@ -16,13 +24,17 @@
 // Manual override is preserved — landlord/tenant can still toggle each clause
 // regardless of LLM call. The LLM is an assistant, not the source of truth.
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { L } from '../../components/tools/labels';
 import { exportReport, buildAuditReport, makeCaseRef } from '../../lib/pdfExport';
 
 const LANGS = ['en', 'bm', 'zh'];
 const SDSAS_HANDOFF_KEY = 'fa_sdsas_prefill_v1';
+
+// File upload limits (per route.js MAX_PDF_BASE64_BYTES)
+const MAX_FILE_BYTES = 3 * 1024 * 1024; // 3MB raw — keeps base64 under 4MB
+const ACCEPTED_TYPES = '.pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
 export default function AuditPage() {
   const [lang, setLang] = useState('en');
@@ -34,6 +46,14 @@ export default function AuditPage() {
   const [degradedMode, setDegradedMode] = useState(false);
   const [analysisError, setAnalysisError] = useState('');
   const [caseRef] = useState(() => makeCaseRef());
+
+  // File upload state (v3.5.4)
+  const [uploadedFile, setUploadedFile] = useState(null);  // {name, size, type, kind: 'pdf'|'docx'|'txt'}
+  const [pdfBase64, setPdfBase64] = useState('');           // base64-encoded PDF data, sent directly to API
+  const [fileError, setFileError] = useState('');
+  const [extracting, setExtracting] = useState(false);     // true while DOCX is being parsed client-side
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -58,20 +78,150 @@ export default function AuditPage() {
     setResult(null);
   };
 
-  // v1 — call the audit API to auto-detect clauses + extract facts
-  const runAiAudit = async () => {
-    if (agreementText.trim().length < 100) {
-      setAnalysisError('Paste at least 100 characters of agreement text.');
+  // ── File upload handlers (v3.5.4) ─────────────────────────────────────
+
+  const detectFileKind = (file) => {
+    const name = (file.name || '').toLowerCase();
+    if (name.endsWith('.pdf') || file.type === 'application/pdf') return 'pdf';
+    if (name.endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') return 'docx';
+    if (name.endsWith('.doc')) return 'doc-legacy';
+    if (name.endsWith('.txt') || file.type === 'text/plain') return 'txt';
+    return 'unknown';
+  };
+
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Strip the data URI prefix (e.g. "data:application/pdf;base64,")
+        const result = String(reader.result || '');
+        const idx = result.indexOf('base64,');
+        resolve(idx >= 0 ? result.slice(idx + 7) : result);
+      };
+      reader.onerror = () => reject(new Error('File read failed'));
+      reader.readAsDataURL(file);
+    });
+
+  const fileToText = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('File read failed'));
+      reader.readAsText(file);
+    });
+
+  const handleFile = async (file) => {
+    if (!file) return;
+    setFileError('');
+    setUploadedFile(null);
+    setPdfBase64('');
+
+    // Size guard
+    if (file.size > MAX_FILE_BYTES) {
+      setFileError(`File is ${Math.round(file.size / 1024 / 1024 * 10) / 10}MB — limit is 3MB. Save as a smaller PDF or trim the document.`);
       return;
     }
+
+    const kind = detectFileKind(file);
+
+    if (kind === 'doc-legacy') {
+      setFileError('Legacy .doc files are not supported. Save your file as .docx or .pdf in Word and re-upload.');
+      return;
+    }
+
+    if (kind === 'unknown') {
+      setFileError('Unsupported file type. Use PDF, Word (.docx), or plain text (.txt).');
+      return;
+    }
+
+    setExtracting(true);
+    try {
+      if (kind === 'pdf') {
+        // Base64-encode and stash; sent directly to API as document content block
+        const b64 = await fileToBase64(file);
+        setPdfBase64(b64);
+        setAgreementText('');  // Clear paste-mode text so we don't double-send
+        setUploadedFile({ name: file.name, size: file.size, kind });
+      } else if (kind === 'txt') {
+        const text = await fileToText(file);
+        setAgreementText(text);
+        setPdfBase64('');
+        setUploadedFile({ name: file.name, size: file.size, kind });
+      } else if (kind === 'docx') {
+        // Dynamic import — only loads mammoth bundle when user actually picks a .docx
+        let mammoth;
+        try {
+          // mammoth/mammoth.browser is the browser build with DOMParser/Image polyfills
+          mammoth = await import('mammoth/mammoth.browser');
+        } catch (e) {
+          // mammoth not installed — graceful fallback
+          setFileError('Word (.docx) support requires the mammoth dependency. Save the file as PDF and try again, or paste the text below.');
+          setExtracting(false);
+          return;
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        const text = (result.value || '').trim();
+        if (text.length < 100) {
+          setFileError('We could only extract a tiny amount of text from this Word file. The document may be image-based or empty. Save as PDF and try again.');
+          setExtracting(false);
+          return;
+        }
+        setAgreementText(text);
+        setPdfBase64('');
+        setUploadedFile({ name: file.name, size: file.size, kind });
+      }
+    } catch (err) {
+      console.error('file processing error:', err);
+      setFileError('Could not read this file. Try a different format or paste the text below.');
+    } finally {
+      setExtracting(false);
+    }
+  };
+
+  const onFileInputChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) handleFile(file);
+    // Reset input so re-uploading the same file fires onChange again
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  };
+
+  const clearUpload = () => {
+    setUploadedFile(null);
+    setPdfBase64('');
+    setFileError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // v1 — call the audit API to auto-detect clauses + extract facts
+  const runAiAudit = async () => {
+    const havePdf = pdfBase64.length > 0;
+    const haveText = agreementText.trim().length >= 100;
+
+    if (!havePdf && !haveText) {
+      setAnalysisError('Upload a file (PDF / Word / TXT) or paste at least 100 characters of agreement text.');
+      return;
+    }
+
     setAnalyzing(true);
     setAnalysisError('');
     setDegradedMode(false);
     try {
+      const requestBody = havePdf
+        ? { agreementPdfBase64: pdfBase64, lang }
+        : { agreementText: agreementText.trim(), lang };
+
       const res = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agreementText: agreementText.trim(), lang }),
+        body: JSON.stringify(requestBody),
       });
       const data = await res.json();
 
@@ -136,6 +286,7 @@ export default function AuditPage() {
     setAnalysis(null);
     setAnalysisError('');
     setDegradedMode(false);
+    clearUpload();
   };
 
   // ── PDF download (uses shared lib + buildAuditReport) ──────────────────
@@ -259,10 +410,141 @@ export default function AuditPage() {
         </h1>
 
         <p style={{ fontSize: 16, lineHeight: 1.55, color: '#3F4E6B', margin: '0 0 28px', maxWidth: 600 }}>
-          Paste your draft tenancy. Veri reads it, auto-checks {t.clauses.length} essential
-          clauses, extracts the key facts (rent, term, parties), flags predatory wording,
-          and gives you a branded PDF certificate. Free.
+          Upload your draft tenancy as PDF, Word, or paste it as text. Veri reads it,
+          auto-checks {t.clauses.length} essential clauses, extracts the key facts (rent,
+          term, parties), flags predatory wording, and gives you a branded PDF certificate.
+          Free.
         </p>
+
+        {/* ── File upload widget (v3.5.4) ───────────────────────────── */}
+        <section
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
+          onDrop={onDrop}
+          style={{
+            background: dragOver ? '#F1F6EF' : '#fff',
+            border: `2px dashed ${dragOver ? '#2F6B3E' : '#C9C0A8'}`,
+            borderRadius: 16,
+            padding: '28px 22px',
+            marginBottom: 14,
+            transition: 'background .15s, border-color .15s',
+            textAlign: 'center',
+          }}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED_TYPES}
+            onChange={onFileInputChange}
+            style={{ display: 'none' }}
+            aria-label="Upload tenancy agreement file"
+          />
+
+          {!uploadedFile && !extracting && (
+            <>
+              <div style={{ fontSize: 32, marginBottom: 8 }} aria-hidden="true">📄</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#0F1E3F', marginBottom: 6, letterSpacing: '-0.01em' }}>
+                Drop your agreement here
+              </div>
+              <div style={{ fontSize: 12.5, color: '#5A6780', marginBottom: 14, lineHeight: 1.55 }}>
+                PDF, Word (.docx), or plain text (.txt) · up to 3MB · stays on your device until analysis
+              </div>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  padding: '10px 18px',
+                  borderRadius: 999,
+                  background: '#0F1E3F',
+                  color: '#fff',
+                  border: 'none',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  boxShadow: '0 4px 12px rgba(15,30,63,0.18)',
+                }}
+              >
+                ⬆ Choose file
+              </button>
+              <div style={{ marginTop: 10, fontSize: 11, color: '#9A9484', fontStyle: 'italic' }}>
+                or paste the text directly below
+              </div>
+            </>
+          )}
+
+          {extracting && (
+            <div style={{ padding: '12px 0' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#0F1E3F', marginBottom: 6 }}>
+                <Spinner /> Reading file…
+              </div>
+              <div style={{ fontSize: 12, color: '#5A6780' }}>
+                Extracting text — this stays on your device.
+              </div>
+            </div>
+          )}
+
+          {uploadedFile && !extracting && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left', flex: 1, minWidth: 200 }}>
+                <span style={{ fontSize: 28 }} aria-hidden="true">
+                  {uploadedFile.kind === 'pdf' ? '📕' : uploadedFile.kind === 'docx' ? '📘' : '📄'}
+                </span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: '#0F1E3F', wordBreak: 'break-word', lineHeight: 1.4 }}>
+                    {uploadedFile.name}
+                  </div>
+                  <div style={{ fontSize: 11.5, color: '#5A6780', marginTop: 2 }}>
+                    {uploadedFile.kind === 'pdf'
+                      ? 'PDF · forwarded directly to Claude (no client-side parsing)'
+                      : uploadedFile.kind === 'docx'
+                      ? 'Word · text extracted into the box below'
+                      : 'Text · loaded into the box below'}
+                    {' · '}{Math.round(uploadedFile.size / 1024)} KB
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={clearUpload}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: '#5A6780',
+                  border: '1px solid #C9C0A8',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+
+          {fileError && (
+            <div
+              style={{
+                marginTop: 12,
+                padding: '10px 12px',
+                background: '#FCEBEB',
+                border: '1px solid #F7C1C1',
+                borderRadius: 8,
+                fontSize: 12,
+                color: '#7A1F1F',
+                lineHeight: 1.5,
+                textAlign: 'left',
+              }}
+            >
+              ✕ {fileError}
+            </div>
+          )}
+        </section>
 
         {/* Paste area */}
         <section
@@ -275,14 +557,22 @@ export default function AuditPage() {
           }}
         >
           <div style={{ fontSize: 11, fontWeight: 700, color: '#9A9484', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 }}>
-            Your draft agreement
+            {uploadedFile && uploadedFile.kind !== 'pdf'
+              ? 'Extracted text · review before analyzing'
+              : 'Or paste the text directly'}
           </div>
           <textarea
             value={agreementText}
             onChange={(e) => setAgreementText(e.target.value)}
-            placeholder="Paste the FULL TEXT of your tenancy agreement here. Veri will analyze every clause, extract rent and term, flag risky language, and generate a PDF audit certificate."
+            placeholder={
+              uploadedFile && uploadedFile.kind === 'pdf'
+                ? 'PDF will be analyzed directly — no need to paste text.'
+                : uploadedFile && uploadedFile.kind === 'docx'
+                ? 'Text extracted from your Word file. Edit if needed before analyzing.'
+                : 'Paste the FULL TEXT of your tenancy agreement here, OR upload a file above. Veri analyzes every clause, extracts rent and term, flags risky language, and generates a PDF audit certificate.'
+            }
             rows={8}
-            disabled={analyzing}
+            disabled={analyzing || (uploadedFile && uploadedFile.kind === 'pdf')}
             style={{
               width: '100%',
               padding: '12px 14px',
@@ -290,25 +580,29 @@ export default function AuditPage() {
               fontSize: 13,
               lineHeight: 1.55,
               color: '#0F1E3F',
-              background: '#FAF8F3',
+              background: uploadedFile && uploadedFile.kind === 'pdf' ? '#F3EFE4' : '#FAF8F3',
               border: '1.5px solid #E7E1D2',
               outline: 'none',
               fontFamily: 'inherit',
               resize: 'vertical',
               minHeight: 160,
-              opacity: analyzing ? 0.7 : 1,
+              opacity: analyzing || (uploadedFile && uploadedFile.kind === 'pdf') ? 0.6 : 1,
             }}
             onFocus={(e) => (e.target.style.borderColor = '#0F1E3F')}
             onBlur={(e) => (e.target.style.borderColor = '#E7E1D2')}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, gap: 12, flexWrap: 'wrap' }}>
             <div style={{ fontSize: 11, color: '#9A9484', fontStyle: 'italic' }}>
-              {agreementText.length === 0 ? 'Min 100 characters · Max 50,000' : `${agreementText.length.toLocaleString()} chars`}
+              {pdfBase64
+                ? `PDF ready · ~${Math.round(pdfBase64.length / 1024)} KB encoded`
+                : agreementText.length === 0
+                ? 'Upload a file above OR paste min 100 characters · max 50,000'
+                : `${agreementText.length.toLocaleString()} chars`}
             </div>
             <button
               type="button"
               onClick={runAiAudit}
-              disabled={analyzing || agreementText.trim().length < 100}
+              disabled={analyzing || (!pdfBase64 && agreementText.trim().length < 100)}
               style={{
                 padding: '10px 18px',
                 borderRadius: 999,
@@ -317,8 +611,8 @@ export default function AuditPage() {
                 border: 'none',
                 fontSize: 13,
                 fontWeight: 600,
-                cursor: analyzing || agreementText.trim().length < 100 ? 'not-allowed' : 'pointer',
-                opacity: analyzing || agreementText.trim().length < 100 ? 0.55 : 1,
+                cursor: analyzing || (!pdfBase64 && agreementText.trim().length < 100) ? 'not-allowed' : 'pointer',
+                opacity: analyzing || (!pdfBase64 && agreementText.trim().length < 100) ? 0.55 : 1,
                 fontFamily: 'inherit',
                 display: 'inline-flex',
                 alignItems: 'center',

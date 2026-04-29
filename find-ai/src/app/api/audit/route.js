@@ -1,7 +1,18 @@
-// v3.5.3 — TOOL 2 v1 backbone: Claude-powered tenancy agreement audit.
+// v3.5.4 — TOOL 2 v1.5: file-upload-aware audit. Accepts text OR PDF base64.
 //
 // POST /api/audit
-// Body: { agreementText: string, lang?: 'en'|'bm'|'zh' }
+// Body: ONE of:
+//   { agreementText: string, lang?: 'en'|'bm'|'zh' }              — paste flow
+//   { agreementPdfBase64: string, lang?: 'en'|'bm'|'zh' }          — PDF upload
+//
+// PDFs are forwarded to Claude as a `document` content block (Anthropic's
+// native PDF support — no client-side PDF parsing library needed). Claude
+// reads the PDF text + visual structure directly. Smaller payload, more
+// accurate clause detection on visually-formatted agreements.
+//
+// DOCX is parsed client-side via `mammoth` (browser build) → arrives here as
+// agreementText. TXT is read client-side via FileReader → also agreementText.
+//
 // Response 200:
 //   {
 //     ok: true,
@@ -129,6 +140,14 @@ RULES FOR WARNINGS — flag predatory or non-Malaysia-compliant clauses:
 OUTPUT ONLY THE JSON. No other text. No markdown. No code fences.`;
 }
 
+// Max base64 PDF payload — Anthropic doc input cap is ~32MB raw.
+// Base64 inflates by ~33%, so 32MB raw ≈ 43MB base64. We cap at 25MB raw
+// (≈33MB base64) to stay safely under, and to keep Vercel function payload
+// reasonable (Vercel hard cap on function body is 4.5MB on hobby tier — but
+// since we're sending base64 strings, the JSON request body counts. So
+// realistic cap is ~3MB raw / ~4MB base64. Most tenancy PDFs are <1MB.)
+const MAX_PDF_BASE64_BYTES = 4 * 1024 * 1024; // 4MB base64 ≈ 3MB raw
+
 export async function POST(request) {
   let body;
   try {
@@ -138,22 +157,62 @@ export async function POST(request) {
   }
 
   const agreementText = (body.agreementText || '').toString().trim();
+  const agreementPdfBase64 = (body.agreementPdfBase64 || '').toString();
   const lang = ['en', 'bm', 'zh'].includes(body.lang) ? body.lang : 'en';
 
-  if (agreementText.length < 100) {
+  // Decide input mode
+  const isPdfMode = agreementPdfBase64.length > 0;
+  const isTextMode = agreementText.length > 0;
+
+  if (!isPdfMode && !isTextMode) {
     return jsonResponse({
       ok: false,
-      error: 'text_too_short',
-      message: 'Paste at least 100 characters of agreement text for meaningful analysis.',
+      error: 'no_input',
+      message: 'Provide either agreementText or agreementPdfBase64.',
     }, 400);
   }
 
-  if (agreementText.length > 50000) {
+  if (isPdfMode && isTextMode) {
     return jsonResponse({
       ok: false,
-      error: 'text_too_long',
-      message: 'Agreement text exceeds 50,000 characters. Trim to the most relevant sections.',
+      error: 'conflicting_input',
+      message: 'Provide ONE of agreementText or agreementPdfBase64, not both.',
     }, 400);
+  }
+
+  if (isTextMode) {
+    if (agreementText.length < 100) {
+      return jsonResponse({
+        ok: false,
+        error: 'text_too_short',
+        message: 'Paste at least 100 characters of agreement text for meaningful analysis.',
+      }, 400);
+    }
+    if (agreementText.length > 50000) {
+      return jsonResponse({
+        ok: false,
+        error: 'text_too_long',
+        message: 'Agreement text exceeds 50,000 characters. Trim to the most relevant sections.',
+      }, 400);
+    }
+  }
+
+  if (isPdfMode) {
+    if (agreementPdfBase64.length > MAX_PDF_BASE64_BYTES) {
+      return jsonResponse({
+        ok: false,
+        error: 'pdf_too_large',
+        message: `PDF exceeds the ${Math.round(MAX_PDF_BASE64_BYTES / 1024 / 1024)}MB upload cap. Save as a smaller PDF or split into sections.`,
+      }, 400);
+    }
+    // Quick sanity check — base64 should not contain whitespace or non-base64 chars
+    if (!/^[A-Za-z0-9+/=]+$/.test(agreementPdfBase64.replace(/\s/g, ''))) {
+      return jsonResponse({
+        ok: false,
+        error: 'invalid_base64',
+        message: 'PDF data was not valid base64. Try uploading again.',
+      }, 400);
+    }
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -166,6 +225,29 @@ export async function POST(request) {
   }
 
   try {
+    // Build the message content blocks per input mode
+    const userContent = isPdfMode
+      ? [
+          {
+            type: 'document',
+            source: {
+              type: 'base64',
+              media_type: 'application/pdf',
+              data: agreementPdfBase64.replace(/\s/g, ''),
+            },
+          },
+          {
+            type: 'text',
+            text: `Audit this tenancy agreement PDF. Return STRICT JSON per the schema in your system instructions. No markdown, no commentary.`,
+          },
+        ]
+      : [
+          {
+            type: 'text',
+            text: `Audit this tenancy agreement and return JSON per the schema:\n\n---BEGIN AGREEMENT---\n${agreementText}\n---END AGREEMENT---`,
+          },
+        ];
+
     const response = await client.messages.create({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 2400,
@@ -173,7 +255,7 @@ export async function POST(request) {
       messages: [
         {
           role: 'user',
-          content: `Audit this tenancy agreement and return JSON per the schema:\n\n---BEGIN AGREEMENT---\n${agreementText}\n---END AGREEMENT---`,
+          content: userContent,
         },
       ],
     });
