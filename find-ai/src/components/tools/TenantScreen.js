@@ -108,6 +108,21 @@ const STR = {
     identityUnverified: 'Identity unverified',
     methodNumber: '⌨️  Key in number',
     methodPdf: '📎  Upload PDF',
+    methodForeign: '🌏  Foreign tenant',
+    foreignNote: 'No LHDN cert? Foreign tenants don\'t have a Malaysian stamped tenancy. Submit alternative documents instead — passport + employer letter + (optional) overseas-rental reference.',
+    foreignPassportLabel: 'Passport last 4 digits',
+    foreignPassportPh: 'e.g. 4321',
+    foreignNationalityLabel: 'Nationality',
+    foreignNationalityPh: 'e.g. Indonesian, Singaporean, Indian',
+    foreignEmployerLabel: 'Employer letter (PDF / image)',
+    foreignEmployerHint: 'Letter on company letterhead confirming employment + monthly salary',
+    foreignRentalRefLabel: 'Overseas rental reference (optional)',
+    foreignRentalRefHint: 'Letter from previous landlord overseas, or utility bill in tenant\'s name from prior country',
+    foreignSubmit: 'Submit alternative documents',
+    foreignDemoNote: 'Demo: any input counts as success. In production, employer letter is OCR-verified for company registration + salary; rental reference is checked against international tenant-screening databases (ICAS, etc.).',
+    foreignVerified: 'Identity verified · alt-doc',
+    foreignIdentityNote: 'Identity verified via foreign documents. No LHDN previous-tenancy bonus on Trust Score.',
+    foreignNoLhdnBonus: 'Note: Trust Score will rely entirely on utility-bill payment history (Step 3) since no LHDN-anchored previous-tenancy data is available for non-Malaysian tenancies.',
     certLabel: 'LHDN stamp certificate number',
     certPh: 'e.g. ABC1234567890',
     pdfDropPrompt: 'Tap to upload LHDN cert PDF',
@@ -283,6 +298,21 @@ const STR = {
     identityUnverified: 'Identiti tidak disahkan',
     methodNumber: '⌨️  Masukkan nombor',
     methodPdf: '📎  Muat naik PDF',
+    methodForeign: '🌏  Penyewa asing',
+    foreignNote: 'Tiada sijil LHDN? Penyewa asing tidak mempunyai sijil sewa Malaysia. Sila kemukakan dokumen alternatif — pasport + surat majikan + (pilihan) rujukan sewa luar negara.',
+    foreignPassportLabel: '4 digit terakhir pasport',
+    foreignPassportPh: 'cth. 4321',
+    foreignNationalityLabel: 'Kewarganegaraan',
+    foreignNationalityPh: 'cth. Indonesia, Singapura, India',
+    foreignEmployerLabel: 'Surat majikan (PDF / imej)',
+    foreignEmployerHint: 'Surat di atas kop syarikat mengesahkan pekerjaan + gaji bulanan',
+    foreignRentalRefLabel: 'Rujukan sewa luar negara (pilihan)',
+    foreignRentalRefHint: 'Surat dari tuan rumah sebelumnya di luar negara, atau bil utiliti atas nama penyewa dari negara terdahulu',
+    foreignSubmit: 'Hantar dokumen alternatif',
+    foreignDemoNote: 'Demo: sebarang input dianggap berjaya. Dalam pengeluaran, surat majikan disahkan OCR untuk pendaftaran syarikat + gaji; rujukan sewa diperiksa terhadap pangkalan data penyaringan penyewa antarabangsa.',
+    foreignVerified: 'Identiti disahkan · dok alt',
+    foreignIdentityNote: 'Identiti disahkan melalui dokumen asing. Tiada bonus tenancy LHDN pada Trust Score.',
+    foreignNoLhdnBonus: 'Nota: Trust Score akan bergantung sepenuhnya pada sejarah pembayaran bil utiliti (Langkah 3) kerana tiada data tenancy berasaskan LHDN untuk sewa bukan-Malaysia.',
     certLabel: 'Nombor sijil setem LHDN',
     certPh: 'cth. ABC1234567890',
     pdfDropPrompt: 'Ketuk untuk muat naik PDF sijil LHDN',
@@ -458,6 +488,21 @@ const STR = {
     identityUnverified: '身份未验证',
     methodNumber: '⌨️  输入编号',
     methodPdf: '📎  上传 PDF',
+    methodForeign: '🌏  外籍租客',
+    foreignNote: '没有 LHDN 印花证书？外籍租客没有马来西亚的印花租约。请提交替代文件——护照 + 雇主信件 +（可选）海外租赁推荐信。',
+    foreignPassportLabel: '护照末 4 位',
+    foreignPassportPh: '例如：4321',
+    foreignNationalityLabel: '国籍',
+    foreignNationalityPh: '例如：印尼、新加坡、印度',
+    foreignEmployerLabel: '雇主信件（PDF / 图片）',
+    foreignEmployerHint: '使用公司信纸的信件，确认雇佣关系 + 月薪',
+    foreignRentalRefLabel: '海外租赁推荐（可选）',
+    foreignRentalRefHint: '前任海外房东的信件，或以租客姓名出具的前国家水电账单',
+    foreignSubmit: '提交替代文件',
+    foreignDemoNote: '演示：任何输入均视为成功。生产环境中，雇主信件将通过 OCR 验证公司注册 + 薪资；租赁推荐将与国际租客筛选数据库进行核对。',
+    foreignVerified: '身份验证 · 替代文件',
+    foreignIdentityNote: '通过外籍文件验证身份。Trust Score 不享 LHDN 前租约加分。',
+    foreignNoLhdnBonus: '注意：由于非马来西亚租约没有 LHDN 关联的前租约数据，Trust Score 将完全依赖水电账单付款历史（步骤 3）。',
     certLabel: 'LHDN 印花证书编号',
     certPh: '例：ABC1234567890',
     pdfDropPrompt: '点击上传 LHDN 证书 PDF',
@@ -751,6 +796,8 @@ function MethodTabs({ value, onChange, t }) {
   const opts = [
     { id: 'number', label: t.methodNumber },
     { id: 'pdf', label: t.methodPdf },
+    // v3.7.3 — Foreign tenant alternative path (no LHDN cert exists for non-MY rentals)
+    { id: 'foreign', label: t.methodForeign },
   ];
   return (
     <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#f1f5f9' }}>
@@ -760,7 +807,7 @@ function MethodTabs({ value, onChange, t }) {
           <button
             key={o.id}
             onClick={() => onChange(o.id)}
-            className="flex-1 py-2.5 rounded-lg text-[12px] font-bold transition active:scale-[0.98]"
+            className="flex-1 py-2.5 rounded-lg text-[11.5px] font-bold transition active:scale-[0.98]"
             style={active
               ? { background: '#fff', color: '#0f172a', boxShadow: '0 1px 3px rgba(15,23,42,0.08)' }
               : { background: 'transparent', color: '#64748b' }
@@ -828,36 +875,113 @@ function PdfDropZone({ pdfName, onPick, t }) {
 //   { open: true, method: 'file', file: ''}  ← file picker visible
 //   { done: true, method, value | file }     ← collapsed green, with summary
 
-function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t }) {
-  const { open = false, method = null, value = '', file = '', verified = false, done = false } = state || {};
+function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t, lang = 'en', vendor = null }) {
+  const {
+    open = false,
+    method = null,
+    value = '',
+    file = '',
+    verified = false,
+    done = false,
+    extracted = null,        // v3.7.2/3 — real OCR fields, when ready
+    signals = null,          // v3.7.3 — Tier 1 verification signals
+    extracting = false,      // v3.7.3 — OCR in flight
+    extractError = '',       // v3.7.3 — degraded-mode message
+  } = state || {};
 
   // Collapsed completed state — green tile with summary.
   // Path 1 (account #): subdued — verified via deep-link to provider portal.
   // Path 2 (upload):    full green — 3 months of native bill timing data extracted.
+  // v3.7.3 — Real OCR badge + verification signal pills shown when extracted is present.
   if (done) {
     const tail = (value || '0000').slice(-4);
     const summary = method === 'acct'
       ? t.addedAcct.replace('{tail}', tail).replace('{provider}', deepLinkLabel || 'provider')
       : t.addedFile;
+    const hasOcr = !!(extracted && extracted.vendor !== undefined);
+    const sigSummary = signals ? `${signals.score}/100` : null;
     return (
-      <div className="p-3.5 rounded-xl flex items-center gap-3"
+      <div className="p-3.5 rounded-xl space-y-2"
         style={{ background: '#d1fae5', border: '1px solid #a7f3d0' }}>
-        <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#065f46' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#065f46' }}>
+            {extracting ? (
+              <span style={{
+                width: 12, height: 12, borderRadius: '50%',
+                border: '1.5px solid #fff', borderTopColor: 'transparent',
+                animation: 'screen-spin 0.7s linear infinite', display: 'inline-block',
+              }} />
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[12px] font-bold truncate" style={{ color: '#065f46' }}>{label}</div>
+            <div className="text-[10px] mt-0.5 truncate" style={{ color: '#065f46' }}>
+              {extracting ? 'Reading bill…' : summary}
+            </div>
+          </div>
+          <button
+            onClick={() => setState({ open: true, method: null, value: '', file: '', verified: false, done: false })}
+            className="text-[11px] font-bold px-3 py-1.5 rounded-lg transition active:scale-95 flex-shrink-0"
+            style={{ background: '#fff', color: '#065f46' }}
+          >
+            {t.edit}
+          </button>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[12px] font-bold truncate" style={{ color: '#065f46' }}>{label}</div>
-          <div className="text-[10px] mt-0.5 truncate" style={{ color: '#065f46' }}>{summary}</div>
-        </div>
-        <button
-          onClick={() => setState({ open: true, method: null, value: '', file: '', verified: false, done: false })}
-          className="text-[11px] font-bold px-3 py-1.5 rounded-lg transition active:scale-95 flex-shrink-0"
-          style={{ background: '#fff', color: '#065f46' }}
-        >
-          {t.edit}
-        </button>
+        {/* v3.7.3 — Real OCR badge + Tier 1 signals */}
+        {hasOcr && !extracting && (
+          <div className="space-y-1 pt-1.5" style={{ borderTop: '1px solid #a7f3d0' }}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className="inline-block px-2 py-0.5 rounded text-[8.5px] font-black uppercase tracking-widest"
+                style={{ background: '#0F1E3F', color: '#fff' }}
+              >
+                ✦ Veri AI
+              </span>
+              {sigSummary && (
+                <span className="text-[10px] font-bold" style={{ color: '#15803d' }}>
+                  Auth: {sigSummary}
+                </span>
+              )}
+              {extracted.vendor && (
+                <span className="text-[10px] font-mono" style={{ color: '#065f46' }}>
+                  · {extracted.vendor}
+                </span>
+              )}
+              {extracted.amountDue && (
+                <span className="text-[10px] font-mono" style={{ color: '#065f46' }}>
+                  · RM {extracted.amountDue}
+                </span>
+              )}
+            </div>
+            {signals && signals.signals.length > 0 && (
+              <div className="space-y-0.5">
+                {signals.signals.slice(0, 3).map((s, i) => (
+                  <div key={i} className="flex items-start gap-1 text-[10px] leading-snug">
+                    <span style={{
+                      color: s.level === 'green' ? '#16a34a' : s.level === 'amber' ? '#92400E' : '#A32D2D',
+                      flexShrink: 0,
+                    }}>
+                      {s.level === 'green' ? '✓' : s.level === 'amber' ? '⚠' : '✕'}
+                    </span>
+                    <span style={{ color: s.level === 'green' ? '#15803d' : s.level === 'amber' ? '#92400E' : '#A32D2D' }}>
+                      {s.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {/* Degraded-mode notice when OCR failed */}
+        {extractError && !extracting && (
+          <div className="pt-1.5 text-[10px] leading-snug" style={{ color: '#92400E', borderTop: '1px solid #a7f3d0' }}>
+            ⚠ {extractError}
+          </div>
+        )}
       </div>
     );
   }
@@ -960,9 +1084,33 @@ function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t })
                 type="file"
                 accept="image/*,application/pdf"
                 className="hidden"
-                onChange={(e) => {
-                  if (e.target.files?.[0]) {
-                    setState({ ...state, file: e.target.files[0].name, done: true });
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  // Optimistic UI — mark filename + done immediately so the user sees progress.
+                  // OCR runs in parallel and enriches the state when it returns.
+                  setState({ ...state, file: f.name, done: true, extracting: true, extractError: '' });
+                  const result = await extractFromFile(f, 'utility_bill', { lang, vendor });
+                  if (result.ok && result.fields) {
+                    setState((prev) => ({
+                      ...(prev || state),
+                      file: f.name,
+                      done: true,
+                      extracting: false,
+                      extracted: result.fields,
+                      signals: verifyUtilityBill(result.fields),
+                      extractError: '',
+                    }));
+                  } else {
+                    setState((prev) => ({
+                      ...(prev || state),
+                      file: f.name,
+                      done: true,
+                      extracting: false,
+                      extracted: null,
+                      signals: null,
+                      extractError: result.degradedMode ? (result.message || 'OCR unavailable. Demo data shown.') : '',
+                    }));
                   }
                 }}
               />
@@ -1010,7 +1158,32 @@ function BillTile({ label, ph, deepLinkUrl, deepLinkLabel, state, setState, t })
               type="file"
               accept="application/pdf,image/*"
               className="hidden"
-              onChange={(e) => { if (e.target.files?.[0]) setState({ ...state, file: e.target.files[0].name }); }}
+              onChange={async (e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                // Mark filename immediately so the Confirm button enables.
+                setState({ ...state, file: f.name, extracting: true, extractError: '' });
+                const result = await extractFromFile(f, 'utility_bill', { lang, vendor });
+                if (result.ok && result.fields) {
+                  setState((prev) => ({
+                    ...(prev || state),
+                    file: f.name,
+                    extracting: false,
+                    extracted: result.fields,
+                    signals: verifyUtilityBill(result.fields),
+                    extractError: '',
+                  }));
+                } else {
+                  setState((prev) => ({
+                    ...(prev || state),
+                    file: f.name,
+                    extracting: false,
+                    extracted: null,
+                    signals: null,
+                    extractError: result.degradedMode ? (result.message || 'OCR unavailable. Demo data shown.') : '',
+                  }));
+                }
+              }}
             />
           </label>
           <div className="flex gap-2">
@@ -1372,6 +1545,14 @@ export default function TenantScreen({
   const [lhdnExtracting, setLhdnExtracting] = useState(false);
   const [lhdnExtractError, setLhdnExtractError] = useState('');
 
+  // v3.7.3 — Foreign tenant alternative path state.
+  // Non-Malaysian tenants don't have an LHDN STAMPS-anchored previous tenancy.
+  // Alternative documents: passport last-4 + employer letter + (optional) overseas-rental reference.
+  const [foreignPassportLast4, setForeignPassportLast4] = useState('');
+  const [foreignEmployerLetterName, setForeignEmployerLetterName] = useState('');
+  const [foreignRentalRefName, setForeignRentalRefName] = useState('');
+  const [foreignNationality, setForeignNationality] = useState('');
+
   // Step 3 state — TNB + Water + Mobile, each with its own mini-state machine
   const blank = { open: false, method: null, value: '', file: '', done: false };
   const [tnbState, setTnbState] = useState(blank);
@@ -1402,6 +1583,10 @@ export default function TenantScreen({
     setLhdnVerifySignals(null);
     setLhdnExtracting(false);
     setLhdnExtractError('');
+    setForeignPassportLast4('');
+    setForeignEmployerLetterName('');
+    setForeignRentalRefName('');
+    setForeignNationality('');
     setTnbState(blank);
     setWaterState(blank);
     setMobileState(blank);
@@ -1676,13 +1861,82 @@ export default function TenantScreen({
                 />
               )}
 
+              {/* v3.7.3 — Foreign tenant alternative path.
+                  Non-Malaysians don't have an LHDN STAMPS-anchored previous
+                  tenancy (the cert only exists for tenancies stamped in MY).
+                  Alternative documents: passport last-4 + nationality +
+                  employer letter + (optional) overseas-rental reference. */}
+              {lhdnMethod === 'foreign' && (
+                <div className="space-y-2.5">
+                  <div className="p-2.5 rounded-lg text-[11px] leading-relaxed"
+                    style={{ background: '#f0f9ff', border: '1px solid #bae6fd', color: '#075985' }}>
+                    {t.foreignNote}
+                  </div>
+                  <TextInput
+                    label={t.foreignPassportLabel}
+                    value={foreignPassportLast4}
+                    onChange={(v) => { setForeignPassportLast4(v.slice(0, 4)); setLhdnResult(null); }}
+                    placeholder={t.foreignPassportPh}
+                    mono
+                    inputMode="numeric"
+                  />
+                  <TextInput
+                    label={t.foreignNationalityLabel}
+                    value={foreignNationality}
+                    onChange={(v) => { setForeignNationality(v); setLhdnResult(null); }}
+                    placeholder={t.foreignNationalityPh}
+                  />
+                  <PdfDropZone
+                    pdfName={foreignEmployerLetterName}
+                    onPick={(name) => { setForeignEmployerLetterName(name); setLhdnResult(null); }}
+                    t={{ ...t, pdfDropPrompt: t.foreignEmployerLabel, pdfDropHint: t.foreignEmployerHint, pdfReady: t.pdfReady }}
+                  />
+                  <PdfDropZone
+                    pdfName={foreignRentalRefName}
+                    onPick={(name) => { setForeignRentalRefName(name); }}
+                    t={{ ...t, pdfDropPrompt: t.foreignRentalRefLabel, pdfDropHint: t.foreignRentalRefHint, pdfReady: t.pdfReady }}
+                  />
+                  <button
+                    onClick={() => {
+                      // Foreign-tenant submission — sets a foreign-flagged result
+                      // so the verified-result card branches accordingly. Score
+                      // formula treats foreign verification as identity-only
+                      // (no LHDN previous-tenancy bonus); utility bills score
+                      // remains the primary signal.
+                      setLhdnResult({
+                        foreign: true,
+                        passportLast4: foreignPassportLast4,
+                        nationality: foreignNationality,
+                        employerLetter: foreignEmployerLetterName,
+                        rentalRef: foreignRentalRefName || null,
+                      });
+                      // Auto-fill the IC last-4 with passport last-4 so the
+                      // downstream "Tenant identity" line stays consistent.
+                      setTenantIC(foreignPassportLast4);
+                    }}
+                    disabled={!foreignPassportLast4 || foreignPassportLast4.length < 4 || !foreignNationality.trim() || !foreignEmployerLetterName}
+                    className="w-full py-3 rounded-xl text-[12px] font-bold text-white disabled:opacity-40 transition active:scale-[0.98]"
+                    style={{ background: '#0f172a' }}
+                  >
+                    {t.foreignSubmit}
+                  </button>
+                  <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
+                    {t.foreignDemoNote}
+                  </p>
+                </div>
+              )}
+
               {/* v3.4.22 — Side-by-side deep-link + upload screenshot pattern
                   per Ken's UX call ("create a UI button just beside when the
                   link was open"). Two buttons in same row:
                     • Left (navy): 🔗 Open LHDN STAMPS — opens portal, no auto-mark
                     • Right (gold border): 📎 Upload screenshot — file picker, marks verified
                   Matches the realistic Path A workflow from ARCH_CREDIT_SCORE.md:
-                  open portal → screenshot → upload back → OCR extracts result. */}
+                  open portal → screenshot → upload back → OCR extracts result.
+                  v3.7.3 — Hidden when method === 'foreign' (foreign flow has
+                  its own submit button above). */}
+              {lhdnMethod !== 'foreign' && (
+              <>
               <div className="flex gap-2">
                 <a
                   href="https://stamps.hasil.gov.my"
@@ -1783,6 +2037,8 @@ export default function TenantScreen({
               <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
                 {t.lhdnDemoNote}
               </p>
+              </>
+              )}
 
               {/* Skip option — Veri.ai is a support tool, landlord decides */}
               <div className="pt-1">
@@ -1800,8 +2056,8 @@ export default function TenantScreen({
             </>
           )}
 
-          {/* Verified result — green */}
-          {lhdnResult && !lhdnResult.skipped && (
+          {/* Verified result — green (Malaysian LHDN flow) */}
+          {lhdnResult && !lhdnResult.skipped && !lhdnResult.foreign && (
             <div className="p-4 rounded-2xl space-y-3 fade-in" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
               <div className="flex items-center justify-between">
                 <VerifiedBadge label={t.verified} />
@@ -1864,6 +2120,47 @@ export default function TenantScreen({
             </div>
           )}
 
+          {/* v3.7.3 — Verified result — blue (Foreign tenant alternative-document flow) */}
+          {lhdnResult && lhdnResult.foreign && (
+            <div className="p-4 rounded-2xl space-y-3 fade-in" style={{ background: '#f0f9ff', border: '1px solid #bae6fd' }}>
+              <div className="flex items-center justify-between">
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-widest"
+                  style={{ background: '#0369a1', color: '#fff' }}
+                >
+                  ✓ {t.foreignVerified}
+                </span>
+                <span className="text-[9px] font-mono" style={{ color: '#94a3b8' }}>
+                  passport · employer letter
+                </span>
+              </div>
+              <div className="text-[13px] font-bold" style={{ color: '#075985' }}>{t.foreignIdentityNote}</div>
+              <div className="space-y-1.5 pt-1">
+                <div className="flex gap-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest w-20 flex-shrink-0 mt-0.5" style={{ color: '#0369a1' }}>{t.foreignNationalityLabel}</span>
+                  <span className="text-[12px] font-semibold" style={{ color: '#0f172a' }}>{lhdnResult.nationality}</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest w-20 flex-shrink-0 mt-0.5" style={{ color: '#0369a1' }}>{t.foreignPassportLabel}</span>
+                  <span className="text-[12px] font-mono" style={{ color: '#0f172a' }}>•••• {lhdnResult.passportLast4}</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest w-20 flex-shrink-0 mt-0.5" style={{ color: '#0369a1' }}>{t.foreignEmployerLabel}</span>
+                  <span className="text-[12px] leading-snug" style={{ color: '#0f172a' }}>{lhdnResult.employerLetter}</span>
+                </div>
+                {lhdnResult.rentalRef && (
+                  <div className="flex gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest w-20 flex-shrink-0 mt-0.5" style={{ color: '#0369a1' }}>{t.foreignRentalRefLabel}</span>
+                    <span className="text-[12px] leading-snug" style={{ color: '#0f172a' }}>{lhdnResult.rentalRef}</span>
+                  </div>
+                )}
+              </div>
+              <div className="pt-2 mt-1 text-[10.5px] leading-relaxed" style={{ color: '#075985', borderTop: '1px solid #bae6fd' }}>
+                {t.foreignNoLhdnBonus}
+              </div>
+            </div>
+          )}
+
           {/* Skipped result — amber, no green check */}
           {lhdnResult && lhdnResult.skipped && (
             <div className="p-4 rounded-2xl space-y-2 fade-in" style={{ background: '#FEF3C7', border: '1px solid #FDE68A' }}>
@@ -1912,6 +2209,8 @@ export default function TenantScreen({
               state={tnbState}
               setState={setTnbState}
               t={t}
+              lang={lang}
+              vendor="TNB"
             />
             <BillTile
               label={t.water}
@@ -1921,6 +2220,8 @@ export default function TenantScreen({
               state={waterState}
               setState={setWaterState}
               t={t}
+              lang={lang}
+              vendor="AirSelangor"
             />
             <BillTile
               label={t.mobile}
@@ -1930,6 +2231,8 @@ export default function TenantScreen({
               state={mobileState}
               setState={setMobileState}
               t={t}
+              lang={lang}
+              vendor="Maxis"
             />
           </div>
 
