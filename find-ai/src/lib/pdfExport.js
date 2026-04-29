@@ -576,7 +576,7 @@ function renderHTML(p) {
     <div class="head-brand">
       <!-- v3.4.38 — Shield removed. Wordmark-only brand. -->
       <div>
-        <div class="head-name">Find<span style="color:#B8893A">.ai</span></div>
+        <div class="head-name">Veri<span style="color:#B8893A">.ai</span></div>
         <div class="head-strap">${esc(t.letterhead)}</div>
       </div>
     </div>

@@ -1,41 +1,39 @@
 'use client';
 
-// v3.5.1 — TOOL 2 v0 ship: Agreement Health Check at /audit.
-// Resurrects the dormant AgreementHealth component as a dedicated page —
-// not a Modal, but inline page UI that matches the rest of the toolkit
-// (/chat, /pricing, /stamp, /screen). Reuses the existing 10-clause Malaysian
-// library + rewrites already in src/components/tools/labels.js (EN/BM/中文).
+// v3.5.3 — TOOL 2 v1: Real Claude-powered tenancy agreement audit.
 //
-// What ships v0:
-//   - Paste-the-agreement textarea (placeholder for v1 OCR/parsing)
-//   - 10-clause checklist (latePay / deposit / maintenance / sublet /
-//     earlyTermination / inventory / utility / stampDuty / renewal / dispute)
-//   - Health score 0-100% with level (strong / moderate / weak)
-//   - Missing-clause rewrites
-//   - WhatsApp share of the audit summary
-//   - Cross-tool hand-off: link to /stamp and /screen/new
+// Major upgrade from v3.5.1 (manual checklist):
+//   - Paste agreement → POST /api/audit → Haiku 3.5 returns structured JSON
+//   - Auto-checks the 10 clauses based on LLM detection
+//   - Extracts key facts: monthlyRent, leaseTermMonths, parties, address
+//   - Surfaces predatory/red-flag clauses as warnings (with legal citations)
+//   - Branded PDF certificate via shared pdfExport.js (buildAuditReport)
+//   - Hand-off to SDSAS calculator: rent + term saved to localStorage
+//     so /stamp prefills automatically (the trust-spine cross-tool flow)
+//   - Graceful degraded mode: if Anthropic credits unavailable, falls back
+//     to v0 manual checklist UX without breaking the page
 //
-// What's NOT v0 (queued for v1):
-//   - Real agreement parsing/OCR (Word/PDF upload + LLM extraction)
-//   - Branded PDF export ("Veri.ai Agreement Audit PDF")
-//   - Section 90A digital-evidence anchoring
-//   - Case Memory hand-off (auto-prefill SDSAS Calculator with rent + term)
-//   - Contracts Act 1950 + RTA 2026 + Stamp Act citations per clause
-//
-// Per CLAUDE.md doctrine: trust before signing. This tool answers question 2
-// of the spine: "Is this agreement fair?"
+// Manual override is preserved — landlord/tenant can still toggle each clause
+// regardless of LLM call. The LLM is an assistant, not the source of truth.
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { L } from '../../components/tools/labels';
+import { exportReport, buildAuditReport, makeCaseRef } from '../../lib/pdfExport';
 
 const LANGS = ['en', 'bm', 'zh'];
+const SDSAS_HANDOFF_KEY = 'fa_sdsas_prefill_v1';
 
 export default function AuditPage() {
   const [lang, setLang] = useState('en');
   const [agreementText, setAgreementText] = useState('');
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState(null);  // {facts, clauses, warnings} or null
+  const [degradedMode, setDegradedMode] = useState(false);
+  const [analysisError, setAnalysisError] = useState('');
+  const [caseRef] = useState(() => makeCaseRef());
 
   useEffect(() => {
     try {
@@ -60,6 +58,64 @@ export default function AuditPage() {
     setResult(null);
   };
 
+  // v1 — call the audit API to auto-detect clauses + extract facts
+  const runAiAudit = async () => {
+    if (agreementText.trim().length < 100) {
+      setAnalysisError('Paste at least 100 characters of agreement text.');
+      return;
+    }
+    setAnalyzing(true);
+    setAnalysisError('');
+    setDegradedMode(false);
+    try {
+      const res = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agreementText: agreementText.trim(), lang }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        if (data.degradedMode) {
+          setDegradedMode(true);
+          setAnalysisError(data.message || 'AI analysis unavailable — use the manual checklist below.');
+        } else {
+          setAnalysisError(data.message || 'Could not analyze. Try again or use the manual checklist.');
+        }
+        return;
+      }
+
+      setAnalysis(data);
+
+      // Auto-fill the checklist based on LLM clause detection
+      const autoAnswers = {};
+      Object.entries(data.clauses || {}).forEach(([k, v]) => {
+        if (v.present) autoAnswers[k] = true;
+      });
+      setAnswers(autoAnswers);
+
+      // Cross-tool hand-off: save rent + term to localStorage so SDSAS prefills
+      if (data.facts?.monthlyRent || data.facts?.leaseTermMonths) {
+        try {
+          window.localStorage.setItem(SDSAS_HANDOFF_KEY, JSON.stringify({
+            monthlyRent: data.facts.monthlyRent || null,
+            leaseTermMonths: data.facts.leaseTermMonths || null,
+            propertyAddress: data.facts.propertyAddress || null,
+            landlordName: data.facts.landlordName || null,
+            tenantName: data.facts.tenantName || null,
+            ts: new Date().toISOString(),
+          }));
+        } catch (e) { /* localStorage blocked */ }
+      }
+    } catch (err) {
+      console.error('audit fetch error:', err);
+      setAnalysisError('Network error. Use the manual checklist below.');
+      setDegradedMode(true);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
   const check = () => {
     const total = t.clauses.length;
     const present = t.clauses.filter((c) => answers[c.id]).length;
@@ -67,7 +123,6 @@ export default function AuditPage() {
     const pct = Math.round((present / total) * 100);
     const level = pct >= 80 ? 'strong' : pct >= 50 ? 'moderate' : 'weak';
     setResult({ present, total, pct, level, missing });
-    // Smooth scroll to result
     setTimeout(() => {
       const el = document.getElementById('audit-result');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -78,9 +133,54 @@ export default function AuditPage() {
     setAnswers({});
     setResult(null);
     setAgreementText('');
+    setAnalysis(null);
+    setAnalysisError('');
+    setDegradedMode(false);
   };
 
-  // WhatsApp share — v0 sends a text summary of the audit
+  // ── PDF download (uses shared lib + buildAuditReport) ──────────────────
+  const downloadPdf = () => {
+    if (!result) return;
+    const grade = result.level === 'strong' ? 'A' : result.level === 'moderate' ? 'C' : 'D';
+
+    // Map LLM warnings → flags
+    const flags = (analysis?.warnings || []).map((w) => ({
+      severity: w.severity === 'red' ? 'red' : 'amber',
+      title: w.title,
+      detail: w.detail,
+    }));
+
+    // Append missing-clause flags (each missing clause is amber by default)
+    const missingFlags = result.missing.map((c) => ({
+      severity: 'amber',
+      title: c.q,
+      detail: t.clauseFix[c.id] || '',
+    }));
+
+    // Map missing-clause rewrites → list
+    const rewrites = result.missing.map((c) => `${c.q} — ${t.clauseFix[c.id] || ''}`);
+
+    const payload = buildAuditReport({
+      lang,
+      caseRef,
+      parties: {
+        landlord: analysis?.facts?.landlordName || '',
+        tenant: analysis?.facts?.tenantName || '',
+        rent: analysis?.facts?.monthlyRent || '',
+        term: analysis?.facts?.leaseTermMonths || '',
+      },
+      property: analysis?.facts?.propertyAddress || '',
+      score: {
+        grade,
+        label: `${result.pct}% — ${(t[result.level] || result.level).toString()}`,
+        sub: `${result.present}/${result.total} ${t.present}`,
+      },
+      flags: [...flags, ...missingFlags],
+      rewrites,
+    });
+    exportReport(payload);
+  };
+
   const buildWaMessage = () => {
     if (!result) return '';
     const headline = `Veri.ai · Agreement Audit · ${result.pct}% — ${(t[result.level] || result.level).toString()}`;
@@ -88,11 +188,17 @@ export default function AuditPage() {
     const missingLines = result.missing.length > 0
       ? '\n\nMissing clauses:\n' + result.missing.map((c) => `• ${c.q}`).join('\n')
       : '';
-    return `${headline}\n${presentLine}${missingLines}\n\n— Veri.ai · Don't sign blind.`;
+    const factsLine = analysis?.facts?.monthlyRent
+      ? `\n\nMonthly rent: RM ${analysis.facts.monthlyRent} · Term: ${analysis.facts.leaseTermMonths || '—'} months`
+      : '';
+    return `${headline}\n${presentLine}${factsLine}${missingLines}\n\n— Veri.ai · Don't sign blind.`;
   };
   const waUrl = result
     ? `https://wa.me/?text=${encodeURIComponent(buildWaMessage())}`
     : null;
+
+  const presentCount = Object.values(answers).filter(Boolean).length;
+  const hasAnalysis = !!analysis;
 
   return (
     <main style={{ minHeight: '100vh', background: '#FAF8F3' }}>
@@ -127,7 +233,6 @@ export default function AuditPage() {
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 16px 80px' }}>
 
-        {/* Back link */}
         <Link
           href="/"
           style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#5A6780', textDecoration: 'none', marginBottom: 14 }}
@@ -135,12 +240,10 @@ export default function AuditPage() {
           ← Back home
         </Link>
 
-        {/* Eyebrow */}
         <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 12 }}>
-          PRE-SIGNING · TOOL 2 OF 3
+          PRE-SIGNING · TOOL 2 OF 3 · v1 · AI-POWERED
         </div>
 
-        {/* H1 */}
         <h1
           style={{
             fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
@@ -156,29 +259,30 @@ export default function AuditPage() {
         </h1>
 
         <p style={{ fontSize: 16, lineHeight: 1.55, color: '#3F4E6B', margin: '0 0 28px', maxWidth: 600 }}>
-          {t.healthDesc} Run through {t.clauses.length} essential clauses for Malaysian
-          tenancy law. Mark each one as present in your draft. We'll score the agreement
-          and flag what's missing with ready-to-paste rewrites.
+          Paste your draft tenancy. Veri reads it, auto-checks {t.clauses.length} essential
+          clauses, extracts the key facts (rent, term, parties), flags predatory wording,
+          and gives you a branded PDF certificate. Free.
         </p>
 
-        {/* Optional paste area — placeholder for v1 OCR */}
+        {/* Paste area */}
         <section
           style={{
             background: '#fff',
             border: '1px solid #E7E1D2',
             borderRadius: 16,
             padding: '20px 22px',
-            marginBottom: 18,
+            marginBottom: 14,
           }}
         >
           <div style={{ fontSize: 11, fontWeight: 700, color: '#9A9484', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 }}>
-            Your draft agreement <span style={{ color: '#B8893A', textTransform: 'none', letterSpacing: 0, fontStyle: 'italic', fontWeight: 400 }}>· optional</span>
+            Your draft agreement
           </div>
           <textarea
             value={agreementText}
             onChange={(e) => setAgreementText(e.target.value)}
-            placeholder="Paste your tenancy agreement here (optional). v1 will scan it automatically — for now this is a reference area while you check off the clauses below."
-            rows={6}
+            placeholder="Paste the FULL TEXT of your tenancy agreement here. Veri will analyze every clause, extract rent and term, flag risky language, and generate a PDF audit certificate."
+            rows={8}
+            disabled={analyzing}
             style={{
               width: '100%',
               padding: '12px 14px',
@@ -191,17 +295,149 @@ export default function AuditPage() {
               outline: 'none',
               fontFamily: 'inherit',
               resize: 'vertical',
-              minHeight: 120,
+              minHeight: 160,
+              opacity: analyzing ? 0.7 : 1,
             }}
             onFocus={(e) => (e.target.style.borderColor = '#0F1E3F')}
             onBlur={(e) => (e.target.style.borderColor = '#E7E1D2')}
           />
-          <div style={{ fontSize: 11, color: '#9A9484', fontStyle: 'italic', marginTop: 8 }}>
-            v0 demo: paste here for reference while you check clauses below. v1 ships automatic clause detection + Word/PDF upload.
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, gap: 12, flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 11, color: '#9A9484', fontStyle: 'italic' }}>
+              {agreementText.length === 0 ? 'Min 100 characters · Max 50,000' : `${agreementText.length.toLocaleString()} chars`}
+            </div>
+            <button
+              type="button"
+              onClick={runAiAudit}
+              disabled={analyzing || agreementText.trim().length < 100}
+              style={{
+                padding: '10px 18px',
+                borderRadius: 999,
+                background: 'linear-gradient(135deg, #0F1E3F 0%, #1E2D52 100%)',
+                color: '#fff',
+                border: 'none',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: analyzing || agreementText.trim().length < 100 ? 'not-allowed' : 'pointer',
+                opacity: analyzing || agreementText.trim().length < 100 ? 0.55 : 1,
+                fontFamily: 'inherit',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                boxShadow: '0 4px 12px rgba(15,30,63,0.18)',
+              }}
+            >
+              {analyzing ? (
+                <>
+                  <Spinner /> Analyzing…
+                </>
+              ) : (
+                <>✦ Run AI audit</>
+              )}
+            </button>
           </div>
+          {analysisError && (
+            <div
+              style={{
+                marginTop: 10,
+                padding: '10px 12px',
+                background: degradedMode ? '#FEF3C7' : '#FCEBEB',
+                border: `1px solid ${degradedMode ? '#FDE68A' : '#F7C1C1'}`,
+                borderRadius: 8,
+                fontSize: 12,
+                color: degradedMode ? '#92400E' : '#7A1F1F',
+                lineHeight: 1.5,
+              }}
+            >
+              {degradedMode ? '⚠ ' : '✕ '}
+              {analysisError}
+            </div>
+          )}
         </section>
 
-        {/* Clause checklist */}
+        {/* "What we found" — extracted facts panel */}
+        {hasAnalysis && (
+          <section
+            style={{
+              background: 'linear-gradient(135deg, #F1F6EF 0%, #E5F0E0 100%)',
+              border: '1px solid #CFE1C7',
+              borderRadius: 16,
+              padding: '18px 20px',
+              marginBottom: 14,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#2F6B3E', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 }}>
+              ✓ What Veri found
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: 10,
+              }}
+            >
+              <Fact label="Monthly rent" value={analysis.facts.monthlyRent ? `RM ${Number(analysis.facts.monthlyRent).toLocaleString()}` : '—'} />
+              <Fact label="Lease term" value={analysis.facts.leaseTermMonths ? `${analysis.facts.leaseTermMonths} months` : '—'} />
+              <Fact label="Landlord" value={analysis.facts.landlordName || '—'} />
+              <Fact label="Tenant" value={analysis.facts.tenantName || '—'} />
+              <Fact label="Property" value={analysis.facts.propertyAddress || '—'} fullWidth />
+              <Fact label="Execution date" value={analysis.facts.executionDate || '—'} />
+            </div>
+            {(analysis.facts.monthlyRent || analysis.facts.leaseTermMonths) && (
+              <div style={{ marginTop: 12, fontSize: 11.5, color: '#2F6B3E' }}>
+                💡 Saved to your stamp duty calculator —{' '}
+                <Link href="/stamp" style={{ color: '#0F1E3F', fontWeight: 600 }}>
+                  jump to /stamp
+                </Link>{' '}
+                and these will pre-fill.
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Warnings — predatory clauses flagged by LLM */}
+        {hasAnalysis && analysis.warnings && analysis.warnings.length > 0 && (
+          <section
+            style={{
+              background: '#FCEBEB',
+              border: '1px solid #F7C1C1',
+              borderRadius: 16,
+              padding: '18px 20px',
+              marginBottom: 14,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#A32D2D', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 }}>
+              ⚠ Predatory or risky clauses detected · {analysis.warnings.length}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {analysis.warnings.map((w, i) => (
+                <div key={i}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.14em',
+                        padding: '2px 7px',
+                        borderRadius: 4,
+                        background: w.severity === 'red' ? '#A32D2D' : '#854F0B',
+                        color: '#fff',
+                      }}
+                    >
+                      {w.severity === 'red' ? 'High risk' : 'Review'}
+                    </span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#0F1E3F' }}>{w.title}</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: '#7A1F1F', lineHeight: 1.5, paddingLeft: 4 }}>
+                    {w.detail}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Clause checklist (auto-checked from LLM, manual override allowed) */}
         <section
           style={{
             background: '#fff',
@@ -212,11 +448,17 @@ export default function AuditPage() {
           }}
         >
           <div style={{ fontSize: 11, fontWeight: 700, color: '#9A9484', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 12 }}>
-            Clause checklist · {Object.values(answers).filter(Boolean).length}/{t.clauses.length} present
+            Clause checklist · {presentCount}/{t.clauses.length} present
+            {hasAnalysis && (
+              <span style={{ marginLeft: 8, color: '#B8893A', textTransform: 'none', letterSpacing: 0, fontWeight: 500, fontStyle: 'italic' }}>
+                · auto-detected · click to override
+              </span>
+            )}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {t.clauses.map((c) => {
               const active = !!answers[c.id];
+              const llm = analysis?.clauses?.[c.id];
               return (
                 <button
                   key={c.id}
@@ -224,7 +466,7 @@ export default function AuditPage() {
                   onClick={() => toggle(c.id)}
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     gap: 12,
                     width: '100%',
                     textAlign: 'left',
@@ -248,6 +490,7 @@ export default function AuditPage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
+                      marginTop: 2,
                     }}
                   >
                     {active && (
@@ -256,8 +499,24 @@ export default function AuditPage() {
                       </svg>
                     )}
                   </span>
-                  <span style={{ fontSize: 13.5, color: '#0F1E3F', fontWeight: active ? 600 : 500, lineHeight: 1.5 }}>
-                    {c.q}
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontSize: 13.5, color: '#0F1E3F', fontWeight: active ? 600 : 500, lineHeight: 1.5, display: 'block' }}>
+                      {c.q}
+                    </span>
+                    {llm && llm.evidence && (
+                      <span
+                        style={{
+                          display: 'block',
+                          marginTop: 4,
+                          fontSize: 11.5,
+                          color: '#5A6780',
+                          fontStyle: 'italic',
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        “{llm.evidence}” <span style={{ fontStyle: 'normal', color: '#9A9484', fontSize: 10 }}>· {llm.confidence}</span>
+                      </span>
+                    )}
                   </span>
                 </button>
               );
@@ -270,7 +529,7 @@ export default function AuditPage() {
           <button
             type="button"
             onClick={check}
-            disabled={Object.values(answers).filter(Boolean).length === 0}
+            disabled={presentCount === 0}
             style={{
               width: '100%',
               padding: '14px 20px',
@@ -280,8 +539,8 @@ export default function AuditPage() {
               border: 'none',
               fontSize: 14,
               fontWeight: 600,
-              cursor: Object.values(answers).filter(Boolean).length === 0 ? 'not-allowed' : 'pointer',
-              opacity: Object.values(answers).filter(Boolean).length === 0 ? 0.5 : 1,
+              cursor: presentCount === 0 ? 'not-allowed' : 'pointer',
+              opacity: presentCount === 0 ? 0.5 : 1,
               fontFamily: 'inherit',
               transition: 'opacity .15s',
             }}
@@ -354,6 +613,9 @@ export default function AuditPage() {
                   }}
                 />
               </div>
+              <div style={{ marginTop: 10, fontSize: 10, color: '#9FB1D6', fontFamily: 'ui-monospace, monospace' }}>
+                Case ref: {caseRef}
+              </div>
             </div>
 
             {/* Missing clauses */}
@@ -386,6 +648,28 @@ export default function AuditPage() {
 
             {/* Action row */}
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={downloadPdf}
+                style={{
+                  flex: '1 1 200px',
+                  padding: '12px 16px',
+                  borderRadius: 999,
+                  background: '#0F1E3F',
+                  color: '#fff',
+                  border: 'none',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                ⬇ Download PDF certificate
+              </button>
               <a
                 href={waUrl}
                 target="_blank"
@@ -409,7 +693,7 @@ export default function AuditPage() {
                 type="button"
                 onClick={reset}
                 style={{
-                  flex: '1 1 200px',
+                  flex: '1 1 160px',
                   padding: '12px 16px',
                   borderRadius: 999,
                   background: '#fff',
@@ -421,7 +705,7 @@ export default function AuditPage() {
                   fontFamily: 'inherit',
                 }}
               >
-                Audit another agreement
+                Audit another
               </button>
             </div>
 
@@ -437,9 +721,11 @@ export default function AuditPage() {
                 lineHeight: 1.55,
               }}
             >
-              <strong style={{ color: '#0F1E3F' }}>Next step:</strong> Once your agreement
-              is healthy, calculate stamp duty under the SDSAS 2026 framework, or screen
-              the tenant before viewing.
+              <strong style={{ color: '#0F1E3F' }}>Next step:</strong>{' '}
+              {hasAnalysis && analysis.facts.monthlyRent
+                ? <>Rent and term saved. Calculate the SDSAS 2026 stamp duty (auto-prefills), or screen the tenant before viewing.</>
+                : <>Once your agreement is healthy, calculate stamp duty under the SDSAS 2026 framework, or screen the tenant before viewing.</>
+              }
               <div style={{ display: 'flex', gap: 12, marginTop: 10, flexWrap: 'wrap' }}>
                 <Link href="/stamp" style={{ color: '#B8893A', fontWeight: 600, textDecoration: 'none' }}>
                   → Calculate stamp duty
@@ -451,12 +737,11 @@ export default function AuditPage() {
             </div>
 
             <div style={{ fontSize: 10, color: '#9A9484', fontStyle: 'italic', textAlign: 'center', marginTop: 4 }}>
-              v0 demo · Branded PDF audit certificate ships v1 with real clause-by-clause Contracts Act / RTA 2026 citations.
+              v1 demo · AI audit by Claude Haiku · Branded PDF via shared library · Real Word/PDF upload + Section 90A digital evidence wrapping ship in v2.
             </div>
           </section>
         )}
 
-        {/* Footer */}
         <footer style={{ marginTop: 48, paddingTop: 20, borderTop: '1px solid #E7E1D2', textAlign: 'center', fontSize: 11, color: '#9A9484' }}>
           <div>
             Veri.ai · Don't sign blind. ·{' '}
@@ -468,5 +753,41 @@ export default function AuditPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+// ── Components ──────────────────────────────────────────────────────────
+
+function Fact({ label, value, fullWidth }) {
+  return (
+    <div style={{ gridColumn: fullWidth ? '1 / -1' : 'auto' }}>
+      <div style={{ fontSize: 10, fontWeight: 600, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 3 }}>
+        {label}
+      </div>
+      <div style={{ fontSize: 14, fontWeight: 600, color: '#0F1E3F', lineHeight: 1.4, wordBreak: 'break-word' }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <span
+      style={{
+        width: 12,
+        height: 12,
+        borderRadius: '50%',
+        border: '1.5px solid #fff',
+        borderTopColor: 'transparent',
+        animation: 'audit-spin 0.7s linear infinite',
+        display: 'inline-block',
+      }}
+      aria-hidden="true"
+    >
+      <style jsx>{`
+        @keyframes audit-spin { to { transform: rotate(360deg); } }
+      `}</style>
+    </span>
   );
 }
