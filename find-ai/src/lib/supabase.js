@@ -91,3 +91,64 @@ export function isSupabaseConfigured() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Browser-side auth helpers (v3.6.0)
+// Use from client components. Returns null gracefully when Supabase env missing.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Send a magic-link sign-in email. Returns { ok, message }.
+ * The link redirects to /auth/callback to complete the session.
+ */
+export async function signInWithMagicLink(email) {
+  if (typeof window === 'undefined') return { ok: false, message: 'SSR context' };
+  const client = getBrowserClient();
+  if (!client) {
+    return { ok: false, message: 'Sign-in is not yet configured. Reach out to hello@veri.ai for early access.' };
+  }
+  try {
+    const redirectTo = `${window.location.origin}/auth/callback`;
+    const { error } = await client.auth.signInWithOtp({
+      email: email.trim().toLowerCase(),
+      options: {
+        emailRedirectTo: redirectTo,
+        shouldCreateUser: true,
+      },
+    });
+    if (error) return { ok: false, message: error.message || 'Could not send the magic link.' };
+    return { ok: true, message: 'Check your inbox — the magic link is on its way.' };
+  } catch (e) {
+    return { ok: false, message: e?.message || 'Unexpected error.' };
+  }
+}
+
+/**
+ * Sign out the current user. Returns true on success.
+ */
+export async function signOut() {
+  if (typeof window === 'undefined') return false;
+  const client = getBrowserClient();
+  if (!client) return false;
+  try {
+    await client.auth.signOut();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Read the current user (one-shot). Use the React hook below for live updates.
+ */
+export async function getCurrentUser() {
+  if (typeof window === 'undefined') return null;
+  const client = getBrowserClient();
+  if (!client) return null;
+  try {
+    const { data } = await client.auth.getUser();
+    return data?.user || null;
+  } catch (e) {
+    return null;
+  }
+}

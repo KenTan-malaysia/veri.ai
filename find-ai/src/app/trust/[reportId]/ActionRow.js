@@ -1,22 +1,22 @@
 'use client';
 
 // v3.5.2 — Trust Card action row (client component).
-// Wires the Approve / Request more info / Decline buttons that were dummy
-// stubs in v3.4.x. v0 implementation:
-//   - Click writes to localStorage `fa_audit_log_v1` — append-only array of
-//     decisions keyed by reportId. Schema:
-//       { reportId, action: 'approve'|'request'|'decline', ts: ISO, mode }
-//   - Shows toast feedback on click (success/info/warning by action)
-//   - On mount, reads last decision for this reportId — buttons reflect state
-//     (e.g. "✓ Approved · Apr 29" instead of "Approve")
-//   - "Reset decision" link clears for this reportId so user can re-decide
+// v3.6.0 — Now writes to BOTH localStorage AND the Supabase `audit_log` table
+// (when configured + user authed). localStorage stays as the source-of-truth
+// for the persisted-state UI; Supabase write is best-effort for cross-device
+// sync. This way:
+//   - Anonymous browsing still works (localStorage only)
+//   - Logged-in users get cross-device audit sync (Supabase + localStorage)
+//   - Degraded-mode failures (no Supabase / no auth) silently fall back to
+//     localStorage with a friendly toast message
 //
-// v1 will move the audit log to Supabase + auth-gated. For v0 demo, localStorage
-// is enough — the audit-trail copy ("Each decision is logged in the tenant's
-// audit trail") is now true on a per-device basis.
+// Schema (localStorage `fa_audit_log_v1`):
+//   { reportId, action: 'approve'|'request'|'decline', ts: ISO, mode }
+// Schema (Supabase `audit_log` table) — see migrations/0001_initial.sql
 
 import { useEffect, useState } from 'react';
 import { useToast } from '../../../components/ui/Toast';
+import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
 
 const AUDIT_LOG_KEY = 'fa_audit_log_v1';
 
@@ -105,6 +105,42 @@ export default function ActionRow({ reportId, mode = 'anonymous' }) {
     setHydrated(true);
   }, [reportId]);
 
+  // v3.6.0 — fire-and-forget Supabase write so logged-in users get
+  // cross-device audit sync. Anonymous + non-Supabase environments silently
+  // no-op (localStorage remains the source of truth).
+  const persistToSupabase = async (entry) => {
+    if (!isSupabaseConfigured()) return;
+    const client = getBrowserClient();
+    if (!client) return;
+    try {
+      const { data: { user } } = await client.auth.getUser();
+      if (!user) return;  // not signed in — localStorage only
+      // Look up the trust_cards row best-effort
+      let trustCardId = null;
+      try {
+        const { data: card } = await client
+          .from('trust_cards')
+          .select('id')
+          .eq('report_id', reportId)
+          .maybeSingle();
+        if (card) trustCardId = card.id;
+      } catch (e) { /* tolerate */ }
+      // Map ActionRow action keys to audit_log action enum
+      const actionMap = { approve: 'approve', request: 'request_more', decline: 'decline' };
+      const dbAction = actionMap[entry.action] || entry.action;
+      await client.from('audit_log').insert({
+        trust_card_id: trustCardId,
+        actor_user_id: user.id,
+        actor_role: 'landlord',
+        action: dbAction,
+        notes: trustCardId ? null : `[unmigrated card ${reportId}]`,
+      });
+    } catch (e) {
+      // Silent — localStorage is still the source of truth
+      console.warn('audit_log Supabase write failed (localStorage still active):', e?.message);
+    }
+  };
+
   const handleClick = (action) => {
     if (decision && decision.action === action) {
       // Already in this state — no-op with a gentle toast
@@ -124,6 +160,9 @@ export default function ActionRow({ reportId, mode = 'anonymous' }) {
     const cfg = ACTIONS[action];
     const showFn = show[cfg.toastFn] || show.info;
     showFn(cfg.toastMsg(reportId.slice(-8)));
+
+    // Best-effort cross-device sync
+    persistToSupabase(entry);
   };
 
   const handleReset = () => {

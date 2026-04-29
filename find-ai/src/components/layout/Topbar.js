@@ -3,8 +3,11 @@
 // v3.4.37 — Persistent app shell topbar per DESIGN_SYSTEM.md.
 // Height: 56px. Contents: page title (left) · search hint (center) · notifications + lang + avatar (right).
 // Search box is non-functional in v0 — placeholder for command palette in Phase 4.
+// v3.6.0 — UserMenu wired in: shows "Sign in" pill if anonymous, avatar + dropdown if authed.
+// Falls back to nothing if Supabase env not configured (graceful degraded mode).
 
 import { useState } from 'react';
+import UserMenu from './UserMenu';
 
 export default function Topbar({ title = 'Dashboard' }) {
   return (
@@ -46,8 +49,9 @@ export default function Topbar({ title = 'Dashboard' }) {
           return when their backends ship (Phase 4 cmd+K, Phase 3 auth +
           notifications). Lang toggle stays since it's wired. */}
       <div style={{ flex: 1 }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
         <LangToggle />
+        <UserMenu />
       </div>
     </header>
   );

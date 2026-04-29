@@ -296,17 +296,47 @@ export default function AuditPage() {
     }
   };
 
+  // v3.6.0 — fire-and-forget Supabase persistence after a result is computed.
+  // Always works in degraded mode; the page already saves rent/term to
+  // localStorage for the SDSAS hand-off, and now optionally syncs the full
+  // audit report to Supabase when configured.
+  const persistAudit = async (resultPayload) => {
+    try {
+      await fetch('/api/audit/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          caseRef,
+          pct: resultPayload.pct,
+          level: resultPayload.level,
+          presentCount: resultPayload.present,
+          totalCount: resultPayload.total,
+          facts: analysis?.facts || {},
+          clauses: analysis?.clauses || null,
+          warnings: analysis?.warnings || [],
+          missingClauses: resultPayload.missing.map((c) => c.id),
+        }),
+      });
+    } catch (e) {
+      // Silent — audit still works locally
+      console.warn('audit save failed (local-only mode):', e?.message);
+    }
+  };
+
   const check = () => {
     const total = t.clauses.length;
     const present = t.clauses.filter((c) => answers[c.id]).length;
     const missing = t.clauses.filter((c) => !answers[c.id]);
     const pct = Math.round((present / total) * 100);
     const level = pct >= 80 ? 'strong' : pct >= 50 ? 'moderate' : 'weak';
-    setResult({ present, total, pct, level, missing });
+    const resultPayload = { present, total, pct, level, missing };
+    setResult(resultPayload);
     setTimeout(() => {
       const el = document.getElementById('audit-result');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 80);
+    // Best-effort cross-device sync
+    persistAudit(resultPayload);
   };
 
   const reset = () => {
