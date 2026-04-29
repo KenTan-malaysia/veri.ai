@@ -3,6 +3,9 @@
 import { useState, useMemo } from 'react';
 import { Modal, ToolHeader, ActionBtn } from './shared';
 import { makeCaseRef } from '../../lib/pdfExport';
+// v3.7.2 — Real OCR wire-in (replaces v0 mock for LHDN cert + utility bills
+// when Anthropic credits are funded; gracefully falls back to mock otherwise).
+import { verifyLhdnCert, verifyUtilityBill } from '../../lib/billVerification';
 
 // ────────────────────────────────────────────────────────────────────────────
 // TOOL 1 — Tenant Credit Score (v0 MOCK DEMO)
@@ -29,6 +32,46 @@ import { makeCaseRef } from '../../lib/pdfExport';
 // ────────────────────────────────────────────────────────────────────────────
 
 const DEMO_MODE = true;
+
+// v3.7.2 — Helper: read a File as base64 + POST to /api/screen/extract.
+// Returns { ok: true, fields } on success, { ok: false, degradedMode, message } otherwise.
+// Used by both the LHDN cert upload step and utility-bill uploads in BillTile.
+async function extractFromFile(file, kind, opts = {}) {
+  if (!file) return { ok: false, message: 'No file' };
+  // Size guard (matches /api/screen/extract MAX_IMAGE_BASE64_BYTES ≈ 5MB raw)
+  if (file.size > 5 * 1024 * 1024) {
+    return { ok: false, message: 'File exceeds 5MB upload cap. Try a smaller image.' };
+  }
+  const mediaType = file.type === 'application/pdf'
+    ? 'application/pdf'
+    : (file.type && file.type.startsWith('image/'))
+      ? file.type
+      : 'image/jpeg';
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const s = String(reader.result || '');
+      const idx = s.indexOf('base64,');
+      resolve(idx >= 0 ? s.slice(idx + 7) : s);
+    };
+    reader.onerror = () => reject(new Error('File read failed'));
+    reader.readAsDataURL(file);
+  });
+  try {
+    const res = await fetch('/api/screen/extract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind, imageBase64: base64, mediaType, vendor: opts.vendor || null, lang: opts.lang || 'en' }),
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      return { ok: false, degradedMode: !!data.degradedMode, message: data.message || 'OCR unavailable' };
+    }
+    return { ok: true, fields: data.fields || {} };
+  } catch (err) {
+    return { ok: false, degradedMode: true, message: err?.message || 'Network error' };
+  }
+}
 
 // Inline EN/BM/ZH strings — kept local for v0 to avoid disturbing labels.js.
 const STR = {
@@ -1156,7 +1199,14 @@ function ScoreScale({ behaviourScore, trustScore, confMul, confTierLabel, t }) {
           <div className="text-[16px] font-bold mt-0.5" style={{ color: '#0f172a' }}>{behaviourScore}</div>
         </div>
         <div className="text-center" style={{ borderLeft: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9' }}>
-          <div className="text-[9px] uppercase tracking-widest" style={{ color: '#94a3b8' }}>{t.s4SubConfidence}</div>
+          <div className="text-[9px] uppercase tracking-widest flex items-center justify-center gap-0.5" style={{ color: '#94a3b8' }}>
+            {t.s4SubConfidence}
+            {/* v3.7.2 — T4 confidence tooltip per sprint-2 backlog */}
+            <HelpHint
+              title={t.s4SubConfidence}
+              body={`${confTierLabel || ''} · ${Math.round(confMul * 100)}% confidence multiplier. Confidence reflects how much evidence we have on the tenant — more LHDN months + more utility bills = higher confidence. The Trust Score = Behaviour × Confidence, so partial evidence shrinks the headline number even if behaviour is perfect.`}
+            />
+          </div>
           <div className="text-[16px] font-bold mt-0.5" style={{ color: '#0f172a' }}>{Math.round(confMul * 100)}%</div>
         </div>
         <div className="text-center">
@@ -1312,6 +1362,15 @@ export default function TenantScreen({
   const [lhdnPdfName, setLhdnPdfName] = useState('');
   // v3.4.21 — `verifying` spinner state removed. LHDN verify is now a deep-link.
   const [lhdnResult, setLhdnResult] = useState(null);
+  // v3.7.2 — Real OCR state. When an LHDN cert image/PDF is uploaded and
+  // /api/screen/extract returns real fields, lhdnExtracted holds them and
+  // lhdnVerifySignals holds the Tier 1 fraud-defense signals. Either may be
+  // null if the OCR is unavailable (Anthropic credits / network) — UI then
+  // falls back to MOCK_LHDN_RESULT so the demo still works.
+  const [lhdnExtracted, setLhdnExtracted] = useState(null);
+  const [lhdnVerifySignals, setLhdnVerifySignals] = useState(null);
+  const [lhdnExtracting, setLhdnExtracting] = useState(false);
+  const [lhdnExtractError, setLhdnExtractError] = useState('');
 
   // Step 3 state — TNB + Water + Mobile, each with its own mini-state machine
   const blank = { open: false, method: null, value: '', file: '', done: false };
@@ -1339,6 +1398,10 @@ export default function TenantScreen({
     setCertNumber(DEMO_MODE ? 'ABC1234567890' : '');
     setLhdnPdfName('');
     setLhdnResult(null);
+    setLhdnExtracted(null);
+    setLhdnVerifySignals(null);
+    setLhdnExtracting(false);
+    setLhdnExtractError('');
     setTnbState(blank);
     setWaterState(blank);
     setMobileState(blank);
@@ -1640,15 +1703,83 @@ export default function TenantScreen({
                     type="file"
                     accept="image/*,application/pdf"
                     className="hidden"
-                    onChange={(e) => {
-                      if (e.target.files?.[0]) {
-                        // Mock OCR pretend → returns the canonical mock LHDN result
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setLhdnExtracting(true);
+                      setLhdnExtractError('');
+                      const result = await extractFromFile(file, 'lhdn_cert', { lang });
+                      setLhdnExtracting(false);
+                      if (result.ok && result.fields) {
+                        // Real OCR succeeded — build a canonical lhdnResult shape
+                        // by merging extracted fields with mock structure for the
+                        // fields the API doesn't return. This way the existing
+                        // result-card renderer keeps working unchanged.
+                        const f = result.fields;
+                        const periodMonths = f.leaseTermMonths || MOCK_LHDN_RESULT.months;
+                        const merged = {
+                          ...MOCK_LHDN_RESULT,
+                          tenantName: f.tenantName || MOCK_LHDN_RESULT.tenantName,
+                          months: periodMonths,
+                          address: f.propertyAddress || MOCK_LHDN_RESULT.address,
+                          monthlyRent: f.monthlyRent || MOCK_LHDN_RESULT.monthlyRent,
+                          stampDuty: f.stampDuty || MOCK_LHDN_RESULT.stampDuty,
+                          executionDate: f.executionDate || MOCK_LHDN_RESULT.executionDate,
+                          stampedDate: f.stampedDate || MOCK_LHDN_RESULT.stampedDate,
+                        };
+                        setLhdnExtracted(f);
+                        setLhdnVerifySignals(verifyLhdnCert(f));
+                        setLhdnResult(merged);
+                        // If extracted tenant name differs from current, update
+                        if (f.tenantName) setTenantName(f.tenantName);
+                        if (f.tenantICLast4) setTenantIC(f.tenantICLast4);
+                      } else {
+                        // Graceful degraded — fall back to mock so demo still works
+                        if (result.degradedMode) {
+                          setLhdnExtractError(result.message || 'OCR temporarily unavailable. Using demo data.');
+                        }
                         setLhdnResult(MOCK_LHDN_RESULT);
                       }
                     }}
                   />
                 </label>
               </div>
+              {/* v3.7.2 — OCR loading indicator */}
+              {lhdnExtracting && (
+                <div
+                  className="p-3 rounded-xl flex items-center gap-2 fade-in"
+                  style={{ background: '#F3EFE4', border: '1px solid #E7E1D2' }}
+                >
+                  <span
+                    style={{
+                      width: 14,
+                      height: 14,
+                      borderRadius: '50%',
+                      border: '1.5px solid #0F1E3F',
+                      borderTopColor: 'transparent',
+                      animation: 'screen-spin 0.7s linear infinite',
+                      display: 'inline-block',
+                    }}
+                  />
+                  <span className="text-[12px] font-semibold" style={{ color: '#0F1E3F' }}>
+                    Veri is reading your LHDN cert…
+                  </span>
+                  <style jsx>{`
+                    @keyframes screen-spin { to { transform: rotate(360deg); } }
+                  `}</style>
+                </div>
+              )}
+
+              {/* v3.7.2 — OCR degraded-mode notice */}
+              {lhdnExtractError && !lhdnExtracting && (
+                <div
+                  className="p-3 rounded-xl text-[11px] leading-relaxed fade-in"
+                  style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E' }}
+                >
+                  ⚠ {lhdnExtractError}
+                </div>
+              )}
+
               <p className="text-[10px] italic leading-snug" style={{ color: '#94a3b8' }}>
                 {t.lhdnDemoNote}
               </p>
@@ -1693,6 +1824,43 @@ export default function TenantScreen({
                 </svg>
                 <span className="text-[11px] font-semibold" style={{ color: '#15803d' }}>{t.icMatched}</span>
               </div>
+
+              {/* v3.7.2 — Real OCR badge + Tier 1 verification signals */}
+              {lhdnExtracted && (
+                <div className="pt-2 mt-1 space-y-2" style={{ borderTop: '1px solid #bbf7d0' }}>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest"
+                      style={{ background: '#0F1E3F', color: '#fff' }}
+                    >
+                      ✦ Veri AI · Real OCR
+                    </span>
+                    {lhdnVerifySignals && (
+                      <span className="text-[10px] font-bold" style={{ color: '#15803d' }}>
+                        Authenticity: {lhdnVerifySignals.score}/100
+                      </span>
+                    )}
+                  </div>
+                  {lhdnVerifySignals && lhdnVerifySignals.signals.length > 0 && (
+                    <div className="space-y-1">
+                      {lhdnVerifySignals.signals.slice(0, 5).map((s, i) => (
+                        <div key={i} className="flex items-start gap-1.5 text-[10.5px] leading-relaxed">
+                          <span style={{
+                            color: s.level === 'green' ? '#16a34a' : s.level === 'amber' ? '#92400E' : '#A32D2D',
+                            flexShrink: 0,
+                            marginTop: 1,
+                          }}>
+                            {s.level === 'green' ? '✓' : s.level === 'amber' ? '⚠' : '✕'}
+                          </span>
+                          <span style={{ color: s.level === 'green' ? '#15803d' : s.level === 'amber' ? '#92400E' : '#A32D2D' }}>
+                            {s.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
