@@ -21,6 +21,7 @@
 
 import Link from 'next/link';
 import CountUp from '../../../components/ui/CountUp';
+import ActionRow from './ActionRow';
 
 // ─── data resolver (v0 — URL-encoded) ───────────────────────────────────────
 // v0 strategy (no backend yet): Trust Card data is encoded in URL search params
@@ -609,124 +610,11 @@ export default async function TrustCardPage({ params, searchParams }) {
               </p>
             </section>
 
-            {/* Action row — Approve / Request more / Decline (per DESIGN_DIRECTION.md).
-                v3.4.45 — 100-user audit P0 #6: this URL is sometimes opened by
-                non-landlords (curious recipients, agents, even the tenant who
-                generated it). Adding a clarifying header so it's obvious these
-                actions are for the receiving landlord only. Real audit-log
-                writes + auth gating ship in Sprint 3 of the redesign plan. */}
-            <section aria-label="Decision">
-              <div
-                style={{
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: '#9A9484',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.18em',
-                  marginBottom: 4,
-                }}
-              >
-                If you're the landlord
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: '#5A6780',
-                  marginBottom: 10,
-                }}
-              >
-                Each decision is logged in the tenant's audit trail.
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: 10,
-                }}
-              >
-                {/* Approve — teal/green semantic */}
-                <button
-                  type="button"
-                  style={{
-                    background: '#F1F6EF',
-                    border: '1.5px solid #CFE1C7',
-                    borderRadius: 12,
-                    padding: '14px 16px',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    fontFamily: 'inherit',
-                    transition: 'background .15s, border-color .15s',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <span style={{ color: '#2F6B3E', fontSize: 16, fontWeight: 700 }}>✓</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#0F1E3F' }}>Approve</span>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#3F4E6B' }}>
-                    Proceed with this tenant
-                  </div>
-                </button>
-
-                {/* Request more info — amber semantic */}
-                <button
-                  type="button"
-                  style={{
-                    background: '#FEF3C7',
-                    border: '1.5px solid #FDE68A',
-                    borderRadius: 12,
-                    padding: '14px 16px',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    fontFamily: 'inherit',
-                    transition: 'background .15s, border-color .15s',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <span style={{ color: '#854F0B', fontSize: 16, fontWeight: 700 }}>⊙</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#0F1E3F' }}>
-                      Request more info
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#3F4E6B' }}>
-                    Trigger T1 categorical reveal
-                  </div>
-                </button>
-
-                {/* Decline — red semantic */}
-                <button
-                  type="button"
-                  style={{
-                    background: '#FCEBEB',
-                    border: '1.5px solid #F7C1C1',
-                    borderRadius: 12,
-                    padding: '14px 16px',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    fontFamily: 'inherit',
-                    transition: 'background .15s, border-color .15s',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <span style={{ color: '#A32D2D', fontSize: 16, fontWeight: 700 }}>×</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#0F1E3F' }}>Decline</span>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#3F4E6B' }}>
-                    Not proceeding · tenant notified
-                  </div>
-                </button>
-              </div>
-              <div
-                style={{
-                  marginTop: 8,
-                  fontSize: 10,
-                  color: '#9A9484',
-                  fontStyle: 'italic',
-                  textAlign: 'center',
-                }}
-              >
-                v0 demo · button wiring + audit log ship next sprint
-              </div>
-            </section>
+            {/* Action row — wired v3.5.2 to ActionRow client component.
+                Buttons now write to localStorage `fa_audit_log_v1` per click,
+                show toast feedback, and persist decision state across reloads.
+                v1 will move the audit log to Supabase + auth-gated. */}
+            <ActionRow reportId={card.reportId} mode={card.mode} />
           </section>
         </div>
 
