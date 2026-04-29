@@ -1,17 +1,59 @@
 'use client';
 
 // v3.6.0 — /auth/callback page.
+// v3.7.1 — Wrapped useSearchParams in Suspense (same fix as /login).
 // Supabase magic links redirect here after the user clicks the email link.
 // We don't need to do much — the supabase-js client picks up the session
 // automatically from the URL hash. We just wait briefly for the auth state
 // to settle, then bounce to the dashboard (or wherever ?next= says).
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../lib/useAuth';
 
 export default function AuthCallback() {
+  return (
+    <Suspense fallback={<CallbackFallback />}>
+      <AuthCallbackInner />
+    </Suspense>
+  );
+}
+
+function CallbackFallback() {
+  return (
+    <main
+      style={{
+        minHeight: '100vh',
+        background: '#FAF8F3',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px 16px',
+      }}
+      aria-busy="true"
+    >
+      <div
+        style={{
+          maxWidth: 440,
+          width: '100%',
+          textAlign: 'center',
+          background: '#fff',
+          border: '1px solid #E7E1D2',
+          borderRadius: 18,
+          padding: '40px 32px',
+        }}
+      >
+        <div style={{ fontSize: 36, marginBottom: 12 }} aria-hidden="true">⏳</div>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0F1E3F', margin: '0 0 8px', letterSpacing: '-0.015em' }}>
+          Verifying your link…
+        </h1>
+      </div>
+    </main>
+  );
+}
+
+function AuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading, configured } = useAuth();

@@ -1,6 +1,9 @@
 'use client';
 
 // v3.6.0 — Login page (magic-link sign-in via Supabase Auth).
+// v3.7.1 — Wrapped useSearchParams in Suspense per Next 14 App Router
+// requirement. Without this, the page fails prerender with "useSearchParams()
+// should be wrapped in a suspense boundary at page /login".
 //
 // Doctrine:
 //   - Auth is OPT-IN, not gating. Anonymous-default Trust Card flow keeps
@@ -10,13 +13,47 @@
 //   - Degraded mode: if Supabase env missing, page shows a friendly
 //     "early access" message and a mailto link. Page never errors.
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signInWithMagicLink, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/useAuth';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginInner />
+    </Suspense>
+  );
+}
+
+function LoginFallback() {
+  return (
+    <main style={{ minHeight: '100vh', background: '#FAF8F3' }} aria-busy="true">
+      <div style={{ maxWidth: 480, margin: '0 auto', padding: '64px 16px' }}>
+        <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 12 }}>
+          Sign in to Veri.ai
+        </div>
+        <h1
+          style={{
+            fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+            fontSize: 56,
+            fontWeight: 400,
+            color: '#0F1E3F',
+            letterSpacing: '-0.025em',
+            lineHeight: 0.98,
+            margin: '0 0 16px',
+          }}
+        >
+          Welcome back.
+        </h1>
+        <p style={{ fontSize: 14, color: '#5A6780' }}>Loading…</p>
+      </div>
+    </main>
+  );
+}
+
+function LoginInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading } = useAuth();

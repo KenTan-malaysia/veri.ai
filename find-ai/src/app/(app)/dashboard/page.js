@@ -23,16 +23,24 @@ import Button from '../../../components/ui/Button';
 import Badge from '../../../components/ui/Badge';
 // Skeleton import retired in v3.4.43 — design system playground removed.
 import { useToast } from '../../../components/ui/Toast';
+// v3.7.0 — Real Supabase pipeline read (with sample-data fallback)
+import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
+import { useAuth } from '../../../lib/useAuth';
 
 const ASSISTANT_NAME_KEY = 'fa_assistant_name_v1';
 
 export default function DashboardPage() {
   const { show } = useToast();
   const router = useRouter();
+  const { user, configured } = useAuth();
 
   // Personal Assistant — optional name persistence + greeting state
   const [assistantName, setAssistantName] = useState('');
   const [savedName, setSavedName] = useState('');
+
+  // v3.7.0 — Real pipeline cards (when Supabase configured + authed)
+  const [realCards, setRealCards] = useState(null);   // null = not loaded; [] = no cards yet
+  const [pipelineLoading, setPipelineLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -43,6 +51,40 @@ export default function DashboardPage() {
       }
     } catch (e) { /* localStorage blocked */ }
   }, []);
+
+  // v3.7.0 — Fetch real cards from Supabase when configured + authed
+  useEffect(() => {
+    if (!configured || !user) {
+      setRealCards(null);
+      return;
+    }
+    const client = getBrowserClient();
+    if (!client) return;
+    let mounted = true;
+    (async () => {
+      setPipelineLoading(true);
+      try {
+        const { data, error } = await client
+          .from('trust_cards')
+          .select('id, report_id, anon_id, trust_score, behaviour_score, confidence_pct, mode, current_tier, lhdn_months, utility_count, avg_gap_days, created_at, property_address')
+          .or(`landlord_user_id.eq.${user.id},agent_user_id.eq.${user.id}`)
+          .order('created_at', { ascending: false })
+          .limit(12);
+        if (!mounted) return;
+        if (error) {
+          console.warn('trust_cards read failed (showing sample data):', error.message);
+          setRealCards(null);
+        } else {
+          setRealCards(Array.isArray(data) ? data : []);
+        }
+      } catch (e) {
+        if (mounted) setRealCards(null);
+      } finally {
+        if (mounted) setPipelineLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [configured, user]);
 
   const openAssistant = () => {
     const trimmed = assistantName.trim();
@@ -324,7 +366,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ── PIPELINE — sample Trust Card previews (rich visual layer) ── */}
+      {/* ── PIPELINE — real Trust Cards when authed + configured, else sample previews ── */}
       <section aria-labelledby="dash-pipeline-h2">
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
           <div>
@@ -332,7 +374,11 @@ export default function DashboardPage() {
               Your pipeline
             </h2>
             <p style={{ fontSize: 12, color: 'var(--color-stone)', margin: '2px 0 0' }}>
-              Sample data shown · your real Trust Cards will appear here once tenants submit
+              {realCards === null
+                ? 'Sample data shown · sign in to see your real Trust Cards'
+                : realCards.length === 0
+                ? 'No Trust Cards yet · generate a screening request to start'
+                : `${realCards.length} Trust Card${realCards.length === 1 ? '' : 's'} in your pipeline`}
             </p>
           </div>
           <Link href="/cards" style={{ fontSize: 12, color: 'var(--color-stone)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
@@ -347,9 +393,57 @@ export default function DashboardPage() {
             gap: 14,
           }}
         >
-          {SAMPLE_CARDS.map((card) => (
+          {realCards === null && SAMPLE_CARDS.map((card) => (
             <SampleTrustCard key={card.id} card={card} />
           ))}
+          {realCards !== null && realCards.length > 0 && realCards.map((row) => (
+            <SampleTrustCard
+              key={row.id}
+              card={{
+                id: row.report_id,
+                anonId: row.anon_id,
+                score: row.trust_score ?? 0,
+                behaviour: row.behaviour_score ?? 0,
+                confidence: row.confidence_pct ?? 0,
+                mode: row.mode || 'anonymous',
+                tier: parseInt((row.current_tier || 'T0').slice(1), 10) || 0,
+                risk: (row.trust_score ?? 0) >= 80 ? 'low' : (row.trust_score ?? 0) >= 60 ? 'medium' : 'high',
+                submitted: row.created_at ? new Date(row.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—',
+                lhdnMonths: row.lhdn_months ?? 0,
+                utilities: row.utility_count ?? 0,
+                avgGap: row.avg_gap_days ?? 0,
+                isReal: true,
+              }}
+            />
+          ))}
+          {realCards !== null && realCards.length === 0 && (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                padding: '32px 16px',
+                textAlign: 'center',
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px dashed var(--color-hairline)',
+                color: 'var(--color-stone)',
+                fontSize: 13,
+                lineHeight: 1.55,
+              }}
+            >
+              <div style={{ fontSize: 28, marginBottom: 8 }} aria-hidden="true">🪪</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-navy)', marginBottom: 4 }}>
+                No Trust Cards yet
+              </div>
+              <p style={{ fontSize: 12, color: 'var(--color-slate)', margin: '0 0 16px', maxWidth: 360, marginInline: 'auto' }}>
+                Generate a Trust Card request and send the link to a tenant prospect. Their score will appear here once they submit.
+              </p>
+              <Link href="/screen/new" style={{ textDecoration: 'none' }}>
+                <Button variant="primary" size="sm" icon={<PlusIcon />}>
+                  Generate first Trust Card
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         <div
@@ -519,20 +613,22 @@ function SampleTrustCard({ card }) {
         }}
       />
 
-      {/* Top row: mode + sample chip */}
+      {/* Top row: mode + sample/real chip */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, position: 'relative' }}>
-        <Badge tone="gold" size="sm" uppercase>Anonymous</Badge>
-        <span
-          style={{
-            fontSize: 9.5,
-            fontWeight: 500,
-            color: 'var(--color-bone)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.16em',
-          }}
-        >
-          Sample
-        </span>
+        <Badge tone="gold" size="sm" uppercase>{card.mode === 'verified' ? 'Verified' : 'Anonymous'}</Badge>
+        {!card.isReal && (
+          <span
+            style={{
+              fontSize: 9.5,
+              fontWeight: 500,
+              color: 'var(--color-bone)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.16em',
+            }}
+          >
+            Sample
+          </span>
+        )}
       </div>
 
       {/* Eyebrow */}

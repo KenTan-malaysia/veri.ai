@@ -1,4 +1,7 @@
 // v3.4.45 — PDPA notice stub.
+// v3.7.0 — Added live PDPA right-of-deletion form (DeleteMyDataForm).
+
+import DeleteMyDataForm from './DeleteMyDataForm';
 
 export const metadata = {
   title: 'PDPA notice',
@@ -45,6 +48,9 @@ export default function PdpaPage() {
       <Section title="How to exercise your rights">
         Email <a href="mailto:hello@veri.ai" style={{ color: 'var(--color-gold)' }}>hello@veri.ai</a> with
         your request. We respond within 21 days as required by the PDPA.
+        For deletion requests, you can use the form below — we acknowledge
+        within 7 working days and start the 14-day cooling-off period.
+        <DeleteMyDataForm />
       </Section>
 
       <Section title="Cross-border transfer">
