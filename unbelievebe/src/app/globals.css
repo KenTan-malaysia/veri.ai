@@ -3,51 +3,54 @@
 @tailwind utilities;
 
 :root {
-  --green-50: #f0fdf4;
-  --green-100: #dcfce7;
-  --green-500: #22c55e;
-  --green-600: #16a34a;
-  --green-700: #15803d;
-  --green-800: #166534;
-  --green-900: #14532d;
+  /* Peach sunrise palette — warm, positive, inspiring */
+  --bg:        #FFF8F0;   /* cream */
+  --surface:   #FFFFFF;   /* card white */
+  --surface-2: #F3EBDF;   /* warm beige */
+  --border:    #EFE4D3;   /* soft warm border */
+  --text:      #2B2418;   /* warm charcoal */
+  --text-2:    #5C4A33;   /* secondary text */
+  --muted:     #8A6E4E;   /* warm taupe */
+  --primary:   #FF7E5F;   /* coral (hero) */
+  --primary-2: #FEB47B;   /* peach (gradient partner) */
+  --accent:    #3D6B3D;   /* sage green (progress/success) */
+  --accent-2:  #E8F3E8;   /* mint bg */
+  --danger:    #E63946;   /* warm red (distinct from coral) */
+  --warning:   #F4A261;   /* amber */
+  --success:   #3D6B3D;   /* sage */
+  --info:      #2F5770;   /* dusk blue */
 }
 
 html, body {
   height: 100%;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* Custom scrollbar - thinner */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 2px;
+body {
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Card hover effect */
-.card-hover {
-  transition: all 0.2s;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+.card-hover { transition: all 0.2s; }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+  border-color: var(--primary);
+  box-shadow: 0 4px 16px rgba(255, 126, 95, 0.12);
 }
 
-/* Message fade in */
-.fade-in {
-  animation: fadeIn 0.3s ease-in;
-}
+.fade-in { animation: fadeIn 0.25s ease-out; }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Print styles */
+.glow-primary { box-shadow: 0 6px 20px rgba(255, 126, 95, 0.25); }
+
 @media print {
   .no-print { display: none !important; }
-  .chat-container { max-height: none !important; overflow: visible !important; }
 }

@@ -6,6 +6,8 @@
 //
 // v0 ships with the existing chat-page bridge — for now redirects to / which has
 // the chatbox infrastructure. Phase 2 will surface a focused chat-only view here.
+// v3.4.52 — Assistant locked as "Veri" (Latin root for truth). Header now
+// introduces Veri by name across all greeting states.
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -56,15 +58,24 @@ export default function ChatPage() {
             <ChevronLeft /> Back to dashboard
           </Link>
           <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 10 }}>
-            Personal assistant
+            Veri · Personal assistant
           </div>
-          <h1 style={{ fontSize: 36, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 12px' }}>
-            {name ? `Hi ${name}, what can I help with?` : 'How can I help?'}
+          <h1 style={{
+            fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+            fontSize: 44,
+            fontWeight: 400,
+            color: '#0F1E3F',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.05,
+            margin: '0 0 12px',
+          }}>
+            {name ? `Hi ${name}, Veri here. How can I help?` : 'Hi, I’m Veri.'}
           </h1>
           <p style={{ fontSize: 15, lineHeight: 1.55, color: '#3F4E6B', margin: 0, maxWidth: 560 }}>
             Ask me anything about Malaysian property compliance — tenancy law,
-            stamp duty, dispute scenarios, Sabah & Sarawak edge cases, or specific
-            clauses in your draft agreement.
+            stamp duty, dispute scenarios, Sabah &amp; Sarawak edge cases, or specific
+            clauses in your draft agreement. The name comes from the Latin root for
+            <em> truth</em> — same root as <em>verify</em>.
           </p>
         </div>
 

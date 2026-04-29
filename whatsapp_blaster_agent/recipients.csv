@@ -1,0 +1,9 @@
+phone_e164,name,language,opted_in,tags,var_company,var_offer
++14155551001,Alice Nguyen,en,yes,"vip,beta",Acme Corp,20% off
++14155551002,Bob Tan,en,yes,"beta",Globex,15% off
++14155551003,Clara Lim,en,no,"cold",Initech,10% off
++6591234567,Daniel Ooi,en,yes,"sg,vip",Umbrella,25% off
++6281234567890,Eka Putri,id,yes,"id",Wayne Enterprises,30% off
++14155551004,Frank Reyes,es,yes,"latam",Stark Industries,15% off
++447700900123,Grace Holloway,en,yes,"uk,vip",Tyrell Corp,20% off
+notaphone,Hank Broken,en,yes,"bad-data",Cyberdyne,10% off

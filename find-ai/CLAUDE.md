@@ -1,6 +1,20 @@
 # Find.ai — Malaysian Property Compliance Toolkit
 
-> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Product version shipping now: **Cakap 2.0**. Last updated: 2026-04-25 (v3.4.1).
+> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Product version shipping now: **Cakap 2.0**. Personal assistant (Tool 4) named **Veri** as of v3.4.52 (2026-04-29). Last updated: 2026-04-29 (v3.4.52).
+
+---
+
+## 🤖 ASSISTANT NAMING — LOCKED (v3.4.52)
+
+The personal assistant (Tool 4) is named **Veri** — Latin root for *truth*, the same root as *verify, verification, veracity, very, verdict*. Chosen for tri-cultural Malaysian readability (Malay / Chinese / Indian) plus international portability.
+
+- Brand stack: **Find.ai → Cakap 2.0 → Veri** (assistant)
+- Tagline: *"Veri — verify before you sign."*
+- EN: *"Ask Veri."* · BM: *"Tanya Veri."* · 中文: *"问问 Veri"*
+- System prompt opens: *"You are Veri — the personal assistant inside Find.ai…"*
+- The user's optional name (saved in `fa_assistant_name_v1`) is the user's name — Veri calls *them* by that name; Veri's own identity is fixed.
+
+Do NOT silently rebrand the assistant in any new surface. If a request asks to rename Veri, push back and reference this section.
 
 ---
 
@@ -144,7 +158,9 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 ---
 
-### TOOL 4 — Chatbox (Cakap 1.0)  [LIVE]
+### TOOL 4 — Veri (Personal Assistant)  [LIVE]
+*Branded "Veri" as of v3.4.52. Internally still wired through the Cakap 1.0 chat infrastructure; outward-facing it is Veri.*
+
 **Question answered:** *everything else — Sabah/Sarawak edge cases, dialect questions, dispute scenarios, clause nuances, RTA interpretation, cross-border issues.*
 
 **Role in Phase 1:** The chatbox is NOT the front door. It sits alongside the three tools as the **"Ask anything else" card** on the landing/tools hub. It fills gaps between the tool journey.

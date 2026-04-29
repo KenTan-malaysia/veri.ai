@@ -676,9 +676,9 @@ const STRINGS = {
     trust4Sub: 'No subscription. No paywall. Premium tier launches at scale for agents and agencies, not individuals.',
 
     helpH2: 'How can we help?',
-    help1Title: 'Ask anything',
-    help1Sub: 'Sabah / Sarawak edge cases, dialect questions, dispute scenarios — answered.',
-    help1Cta: 'Open chat',
+    help1Title: 'Ask Veri',
+    help1Sub: 'Your Malaysian property assistant. Sabah / Sarawak edge cases, dialect questions, dispute scenarios — answered.',
+    help1Cta: 'Open Veri',
     help2Title: 'See a Trust Card',
     help2Sub: 'A 60-second walk-through of the actual screening flow.',
     help2Cta: 'Try the demo',
@@ -695,7 +695,7 @@ const STRINGS = {
       { label: 'Trust Card screening', href: '/screen/new' },
       { label: 'Stamp duty calculator', href: '/' },
       { label: 'Agreement audit (soon)', href: '#' },
-      { label: 'Find.ai chat', href: '/' },
+      { label: 'Ask Veri', href: '/chat' },
     ],
     fcLearn: 'Learn',
     fcLearnLinks: [
@@ -783,7 +783,7 @@ const STRINGS = {
     trust4Title: 'Percuma untuk tuan rumah individu', trust4Sub: 'Tiada langganan. Tiada paywall.',
 
     helpH2: 'Bagaimana kami boleh bantu?',
-    help1Title: 'Tanya apa-apa', help1Sub: 'Kes Sabah / Sarawak, soalan dialek, senario pertikaian.', help1Cta: 'Buka sembang',
+    help1Title: 'Tanya Veri', help1Sub: 'Pembantu hartanah Malaysia anda. Kes Sabah / Sarawak, soalan dialek, senario pertikaian.', help1Cta: 'Buka Veri',
     help2Title: 'Lihat Trust Card', help2Sub: 'Demo 60 saat aliran saringan sebenar.', help2Cta: 'Cuba demo',
     help3Title: 'Log masuk', help3Sub: 'Urus Trust Card, penyewa, dan ejen anda.', help3Cta: 'Pergi ke papan pemuka',
 
@@ -796,7 +796,7 @@ const STRINGS = {
       { label: 'Saringan Trust Card', href: '/screen/new' },
       { label: 'Kalkulator duti setem', href: '/' },
       { label: 'Audit perjanjian (akan datang)', href: '#' },
-      { label: 'Find.ai sembang', href: '/' },
+      { label: 'Tanya Veri', href: '/chat' },
     ],
     fcLearn: 'Pelajari',
     fcLearnLinks: [
@@ -883,7 +883,7 @@ const STRINGS = {
     trust4Title: '个人房东永久免费', trust4Sub: '没有订阅。没有付费墙。',
 
     helpH2: '我们如何帮助？',
-    help1Title: '随便问', help1Sub: '沙巴 / 砂拉越特殊情况、方言问题、纠纷场景。', help1Cta: '打开聊天',
+    help1Title: '问问 Veri', help1Sub: '你的马来西亚房产助理。沙巴 / 砂拉越特殊情况、方言问题、纠纷场景。', help1Cta: '打开 Veri',
     help2Title: '查看 Trust Card', help2Sub: '60 秒了解实际审查流程。', help2Cta: '试用演示',
     help3Title: '登录', help3Sub: '管理您的 Trust Card、租客和经纪人。', help3Cta: '前往仪表板',
 
@@ -896,7 +896,7 @@ const STRINGS = {
       { label: 'Trust Card 审查', href: '/screen/new' },
       { label: '印花税计算器', href: '/' },
       { label: '协议审计（即将推出）', href: '#' },
-      { label: 'Find.ai 聊天', href: '/' },
+      { label: '问问 Veri', href: '/chat' },
     ],
     fcLearn: '了解',
     fcLearnLinks: [

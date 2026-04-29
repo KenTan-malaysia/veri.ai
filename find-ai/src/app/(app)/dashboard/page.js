@@ -11,6 +11,9 @@
 // Pipeline section (clearer empty state), Resources shelf (educational links).
 // Sections now have a clear job: Personal Assistant → Tools → Pipeline →
 // Resources. Stats return when real data ships in Phase 3.
+// v3.4.52 — Personal Assistant locked as "Veri" (Latin root for truth →
+// verify/verification). Tri-cultural + international-ready name. Card now
+// introduces Veri across eyebrow / headline / sub / CTA / toast.
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -47,7 +50,7 @@ export default function DashboardPage() {
       if (trimmed) {
         window.localStorage.setItem(ASSISTANT_NAME_KEY, trimmed);
         setSavedName(trimmed);
-        show.success(`Saved · the assistant will call you ${trimmed}`);
+        show.success(`Saved · Veri will call you ${trimmed}`);
       } else {
         window.localStorage.removeItem(ASSISTANT_NAME_KEY);
         setSavedName('');
@@ -115,7 +118,7 @@ export default function DashboardPage() {
                 marginBottom: 14,
               }}
             >
-              <SparkleIcon /> Personal assistant
+              <SparkleIcon /> Personal assistant · Veri
             </div>
             <h2
               style={{
@@ -128,7 +131,7 @@ export default function DashboardPage() {
                 color: 'var(--color-white)',
               }}
             >
-              {savedName ? `Hi ${savedName}, ready when you are.` : 'Your Find.ai assistant.'}
+              {savedName ? `Hi ${savedName}, Veri's ready when you are.` : 'Meet Veri.'}
             </h2>
             <p
               style={{
@@ -139,10 +142,7 @@ export default function DashboardPage() {
                 maxWidth: 480,
               }}
             >
-              A personal Malaysian property advisor — available anytime. Ask
-              about tenancy law, SDSAS 2026 stamp duty, dispute scenarios, Sabah
-              & Sarawak edge cases, or specific clauses in your draft agreement.
-              Answers in English, BM, and 中文.
+              <strong style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 500 }}>Veri</strong> is your personal Malaysian property assistant — named after the Latin root for <em>truth</em>, the same root as <em>verify</em>. Ask about tenancy law, SDSAS 2026 stamp duty, dispute scenarios, Sabah &amp; Sarawak edge cases, or specific clauses in your draft agreement. Answers in English, BM, and 中文.
             </p>
 
             {/* Name input row — optional, with skip */}
@@ -160,7 +160,7 @@ export default function DashboardPage() {
                     marginBottom: 6,
                   }}
                 >
-                  What should the assistant call you? <span style={{ textTransform: 'none', letterSpacing: 0, fontStyle: 'italic', fontWeight: 400 }}>· optional</span>
+                  What should Veri call you? <span style={{ textTransform: 'none', letterSpacing: 0, fontStyle: 'italic', fontWeight: 400 }}>· optional</span>
                 </label>
                 <input
                   id="fa-pa-name"
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-tea)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-white)')}
                 >
-                  <ChatIcon /> {savedName ? `Open assistant` : (assistantName.trim() ? 'Save name & open' : 'Open assistant')}
+                  <ChatIcon /> {savedName ? `Open Veri` : (assistantName.trim() ? 'Save name & open Veri' : 'Open Veri')}
                 </button>
                 {savedName && (
                   <button

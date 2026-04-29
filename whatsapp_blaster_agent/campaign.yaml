@@ -1,0 +1,28 @@
+# Campaign configuration for the WhatsApp blaster agent.
+# The agent reads this to know what to send.
+name: spring_promo_2026
+# Use {{var_name}} placeholders — they resolve to columns in recipients.csv.
+# {{name}}, {{phone_e164}}, {{language}} come from built-in columns.
+# Anything starting with `var_` in the CSV is available as {{var_*}}.
+templates:
+  en: |
+    Hi {{name}}! A quick heads-up from {{var_company}}:
+    you've got {{var_offer}} on our spring lineup this week only.
+    Reply STOP to opt out.
+  es: |
+    Hola {{name}}! Un aviso rapido de {{var_company}}:
+    tienes {{var_offer}} en nuestra coleccion de primavera esta semana.
+    Responde STOP para darte de baja.
+  id: |
+    Halo {{name}}! Info singkat dari {{var_company}}:
+    kamu dapat {{var_offer}} untuk koleksi musim semi minggu ini.
+    Balas STOP untuk berhenti berlangganan.
+
+# Optional filters — only send to rows matching these tags (empty = everyone opted-in).
+filter_tags_any: []
+# Hard cap for safety during dry-run experiments.
+max_sends: 1000
+# Dry-run mode never hits a real API. Flip to false only after wiring a provider.
+dry_run: true
+# Provider is a stub until you plug in Twilio / WhatsApp Cloud API keys.
+provider: stub
