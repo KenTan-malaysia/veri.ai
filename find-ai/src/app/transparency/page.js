@@ -9,7 +9,7 @@ export const metadata = {
   openGraph: {
     title: 'Veri.ai transparency report',
     description: 'What we measure, what we promise, where we are.',
-    url: 'https://find-ai-lovat.vercel.app/transparency',
+    // url omitted — inherits from layout.js metadataBase + path
   },
 };
 

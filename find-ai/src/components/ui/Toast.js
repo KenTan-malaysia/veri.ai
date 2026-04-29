@@ -134,10 +134,15 @@ function ToastItem({ toast, onDismiss }) {
   const label = toast.options?.label;
   const onActionClick = toast.options?.onClick;
 
+  // v3.7.4 — Errors and warnings get assertive announce; success/info polite.
+  // Screen readers interrupt the user's current reading for assertive, queue
+  // for polite. Decline / Approve confirmations stay polite (not interrupting).
+  const isUrgent = toast.variant === 'error' || toast.variant === 'warning';
   return (
     <div
-      role="status"
-      aria-live="polite"
+      role={isUrgent ? 'alert' : 'status'}
+      aria-live={isUrgent ? 'assertive' : 'polite'}
+      aria-atomic="true"
       style={{
         pointerEvents: 'auto',
         background: v.bg,

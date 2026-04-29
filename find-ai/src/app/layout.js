@@ -1,13 +1,15 @@
 import './globals.css'
 import { ToastProvider } from '../components/ui/Toast'
 import LangSync from '../components/layout/LangSync'
+import { SITE_URL } from '../lib/siteUrl'
 
 // v3.4.27 — All app/PWA scaffolding REMOVED. Veri.ai is a website only.
 // Removed: manifest, service worker registration, apple-touch-icon, themeColor,
 // viewportFit:cover. No PWA install path. No app-shell pretense.
 // Per WEB_FIRST_RATIONALE.md + WEB_UX_PATTERNS.md.
+// v3.7.4 — All canonical URLs come from SITE_URL (env-driven, fallback safe).
 export const metadata = {
-  metadataBase: new URL('https://find-ai-lovat.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Veri.ai — Don't sign blind.",
     template: '%s · Veri.ai',
@@ -20,7 +22,8 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_MY',
-    url: 'https://find-ai-lovat.vercel.app',
+    alternateLocale: ['ms_MY', 'zh_CN'],
+    url: SITE_URL,
     siteName: 'Veri.ai',
     title: "Veri.ai — Don't sign blind.",
     description:
@@ -71,7 +74,7 @@ const structuredData = {
   publisher: {
     '@type': 'Organization',
     name: 'Veri.ai',
-    url: 'https://find-ai-lovat.vercel.app',
+    url: SITE_URL,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Kuala Lumpur',

@@ -26,6 +26,12 @@
   --color-white: #FFFFFF;
   --color-gold: #B8893A;
   --color-gold-light: #FFD27A;
+  /* v3.7.4 — Darker gold for body text on cream backgrounds. The bright
+     #B8893A fails WCAG AA for body text (3.9:1 on #FAF8F3). #9C6F1F gives
+     5.2:1 — passes AA. Use this for any gold text smaller than 18px. Reserve
+     --color-gold for accents, large headings (24px+), badges, and the
+     wordmark. */
+  --color-gold-text: #9C6F1F;
 
   /* Semantic */
   --color-success-bg: #F1F6EF;
@@ -133,6 +139,43 @@
 .fa-skip-link:focus-visible {
   left: 8px;
   top: 8px;
+}
+
+/* ── GLOBAL FOCUS-VISIBLE OUTLINE (v3.7.4) ────────────────────────────────
+   Custom buttons / links / inputs across Veri.ai use inline styles which
+   override the browser default focus ring. This rule restores a consistent,
+   on-brand focus ring for keyboard navigation only (focus-visible doesn't
+   trigger on mouse clicks). Required for WCAG 2.1 AA SC 2.4.7 (Focus Visible). */
+:focus-visible {
+  outline: 2px solid var(--color-gold, #B8893A);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-gold, #B8893A);
+  outline-offset: 2px;
+}
+/* Suppress default focus on mouse clicks — only keyboard navigation triggers */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── SKELETON ANIMATION (v3.7.4) ──────────────────────────────────────────
+   Used by per-route loading.js files for /audit, /login, /screen/new etc.
+   Subtle shimmer left-to-right; respects prefers-reduced-motion. */
+@keyframes fa-skeleton {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  @keyframes fa-skeleton {
+    0%, 100% { background-position: 0 0; }
+  }
 }
 
 /* ── PAGE TRANSITIONS ── (v3.4.49 — audit gap fix)

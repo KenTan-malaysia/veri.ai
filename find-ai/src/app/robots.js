@@ -1,4 +1,7 @@
 // v3.4.50 — Next.js App Router auto-generates /robots.txt from this file.
+// v3.7.4 — sitemap URL comes from SITE_URL env helper.
+
+import { SITE_URL } from '../lib/siteUrl';
 
 export default function robots() {
   return {
@@ -16,6 +19,6 @@ export default function robots() {
         ],
       },
     ],
-    sitemap: 'https://find-ai-lovat.vercel.app/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { matchTopics, buildKnowledge, ALWAYS_INCLUDE } from '../knowledge.js';
+import { checkRateLimit, rateLimitResponse } from '../../../lib/rateLimit';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -174,6 +175,11 @@ WHAT YOU DON'T DO
 - Don't answer non-Malaysian property questions. One line: "I only cover Malaysian property matters."`;
 
 export async function POST(request) {
+  // v3.7.4 — Rate limit: 30 chat turns per minute per IP. Higher than audit/extract
+  // because chat is more chatty by nature; still tight enough to prevent runaway.
+  const rate = checkRateLimit(request, { key: 'chat', max: 30, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate);
+
   try {
     const { messages, profileContext, conversationMemory, caseMemory, caseType } = await request.json();
 
@@ -207,17 +213,22 @@ export async function POST(request) {
       systemPrompt += `\n\n═══ CASE FILE${typeLabel} ═══\nThe user has saved the following facts for this case. Treat them as ground truth unless the latest message contradicts them:\n${caseMemory.trim()}\n\nRules:\n- Personalize answers to this case. Do NOT ask for facts the user already recorded here.\n- If tenant details are marked REDACTED, never reference tenant identity — only general advice.\n- If the case type is set, frame answers in that context (e.g. industrial = CN-MY corridor rules, stamp_duty = SDSAS 2026).\n- If a saved fact looks stale or contradicts the user's latest message, flag it politely and ask them to update the case memory.`;
     }
 
+    // v3.7.4 — Anthropic prompt caching for the system prompt + knowledge.
+    // The system prompt is stable across turns within a session, so caching
+    // it drops cost ~90% on repeat turns and improves time-to-first-token.
+    // Per Anthropic docs: cache_control marks the boundary, anything before
+    // it is cacheable. Max 4 cache breakpoints per request.
+    // https://docs.claude.com/en/docs/build-with-claude/prompt-caching
     const stream = await client.messages.stream({
-      // v3.4.16 — switched to claude-3-5-haiku-20241022 (definitely available
-      // on every Anthropic account). Previous tries:
-      //   - claude-haiku-4-5-20251001 (dated alias) → 400 Bad Request
-      //   - claude-haiku-4-5 (undated alias) → still failing
-      // 3.5 Haiku is older but battle-tested and on every API key. Once chat
-      // is confirmed working, we can experiment back up to 4.5 if Ken's
-      // workspace has access (check at console.anthropic.com → Models).
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 4000,
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
       messages: messages.map(msg => ({
         role: msg.role,
         content: msg.content,

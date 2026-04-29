@@ -31,7 +31,14 @@ import { verifyLhdnCert, verifyUtilityBill } from '../../lib/billVerification';
 //     in ARCH_CREDIT_SCORE.md
 // ────────────────────────────────────────────────────────────────────────────
 
-const DEMO_MODE = true;
+// v3.7.4 — DEMO_MODE is now env-driven via NEXT_PUBLIC_DEMO_MODE.
+// Default: DEMO_MODE = true (so dev / preview / out-of-the-box deploys still
+// show the demo flow with prefilled mock data and DEMO banners).
+// To disable for production pilot: set NEXT_PUBLIC_DEMO_MODE='false' in
+// Vercel env vars (or any value that isn't literally 'true'). Real users
+// then see empty inputs, no DEMO banner, and the upload flow drives the
+// actual data pipeline.
+const DEMO_MODE = (process.env.NEXT_PUBLIC_DEMO_MODE ?? 'true') === 'true';
 
 // v3.7.2 — Helper: read a File as base64 + POST to /api/screen/extract.
 // Returns { ok: true, fields } on success, { ok: false, degradedMode, message } otherwise.
@@ -2503,7 +2510,7 @@ export default function TenantScreen({
                 (not hardcoded mock). Plus landlord/property context if the
                 tenant came in via /screen/{ref} link. */}
             {(() => {
-              const ORIGIN = 'https://find-ai-lovat.vercel.app';
+              const ORIGIN = (typeof window !== 'undefined' && window.location && window.location.origin) || 'https://find-ai-lovat.vercel.app';
               const ctx = (typeof submissionContext !== 'undefined' && submissionContext) || {};
               const mode = ctx.mode || 'anonymous';
 

@@ -10,7 +10,7 @@ export const metadata = {
     description:
       'Is your tenancy agreement safe to sign? 10-clause Malaysian audit with rewrites. Don’t sign blind.',
     type: 'website',
-    url: 'https://find-ai-lovat.vercel.app/audit',
+    // url omitted — inherits from layout.js metadataBase (SITE_URL) + path
     siteName: 'Veri.ai',
   },
   robots: {

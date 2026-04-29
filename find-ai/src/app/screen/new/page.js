@@ -22,8 +22,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Button from '../../../components/ui/Button';
 import { useToast } from '../../../components/ui/Toast';
+import { SITE_URL } from '../../../lib/siteUrl';
 
-const ORIGIN = 'https://find-ai-lovat.vercel.app';
+const ORIGIN = SITE_URL;
 
 // Stable client-side ref generator — short + URL-safe. Format: L-{6 chars}.
 // Not cryptographically meaningful in v0; collision-resistant enough for demo.

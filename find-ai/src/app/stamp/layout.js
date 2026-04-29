@@ -8,7 +8,7 @@ export const metadata = {
   openGraph: {
     title: 'Stamp duty calculator · SDSAS 2026 · Veri.ai',
     description: 'Self-assess your tenancy stamp duty for 2026. Avoid the RM 10,000 fine.',
-    url: 'https://find-ai-lovat.vercel.app/stamp',
+    // url omitted — inherits from layout.js metadataBase + path
     type: 'website',
   },
 };

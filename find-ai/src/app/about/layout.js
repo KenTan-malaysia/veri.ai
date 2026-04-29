@@ -6,7 +6,7 @@ export const metadata = {
   openGraph: {
     title: 'About Veri.ai · Built in Kuala Lumpur',
     description: 'Anonymous-default tenant verification. Pre-signing compliance for Malaysian rentals.',
-    url: 'https://find-ai-lovat.vercel.app/about',
+    // url omitted — inherits from layout.js metadataBase + path
     type: 'website',
   },
 };

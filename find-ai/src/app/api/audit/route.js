@@ -49,6 +49,7 @@
 // as the fallback.
 
 import Anthropic from '@anthropic-ai/sdk';
+import { checkRateLimit, rateLimitResponse } from '../../../lib/rateLimit';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -149,6 +150,16 @@ OUTPUT ONLY THE JSON. No other text. No markdown. No code fences.`;
 const MAX_PDF_BASE64_BYTES = 4 * 1024 * 1024; // 4MB base64 ≈ 3MB raw
 
 export async function POST(request) {
+  // v3.7.4 — Rate limit: 5 audits per minute per IP. Anthropic-burning route.
+  const rate = checkRateLimit(request, { key: 'audit', max: 5, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate);
+
+  // v3.7.4 — Hard 8MB body cap (PDF base64 path can get large).
+  const contentLength = parseInt(request.headers.get('content-length') || '0', 10);
+  if (contentLength > 8 * 1024 * 1024) {
+    return jsonResponse({ ok: false, error: 'body_too_large', message: 'Request body exceeds 8MB.' }, 413);
+  }
+
   let body;
   try {
     body = await request.json();

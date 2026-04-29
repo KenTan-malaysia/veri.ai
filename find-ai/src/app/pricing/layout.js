@@ -6,7 +6,7 @@ export const metadata = {
   openGraph: {
     title: 'Veri.ai pricing · Free for individuals',
     description: 'Transparent pricing. Free for individual landlords forever. Premium for agents post-30k.',
-    url: 'https://find-ai-lovat.vercel.app/pricing',
+    // url omitted — inherits from layout.js metadataBase + path
     type: 'website',
   },
 };

@@ -22,6 +22,7 @@
 import Link from 'next/link';
 import CountUp from '../../../components/ui/CountUp';
 import ActionRow from './ActionRow';
+import { SITE_URL } from '../../../lib/siteUrl';
 
 // ─── data resolver (v0 — URL-encoded) ───────────────────────────────────────
 // v0 strategy (no backend yet): Trust Card data is encoded in URL search params
@@ -110,7 +111,7 @@ export async function generateMetadata({ params, searchParams }) {
       title,
       description,
       type: 'website',
-      url: `https://find-ai-lovat.vercel.app/trust/${card.reportId}`,
+      url: `${SITE_URL}/trust/${card.reportId}`,
       siteName: 'Veri.ai',
       images: [
         {

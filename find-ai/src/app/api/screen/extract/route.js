@@ -51,6 +51,7 @@
 //   }}
 
 import Anthropic from '@anthropic-ai/sdk';
+import { checkRateLimit, rateLimitResponse } from '../../../../lib/rateLimit';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -122,6 +123,16 @@ RULES:
 Output ONLY the JSON.`;
 
 export async function POST(request) {
+  // v3.7.4 — Rate limit: 8 extractions per minute per IP.
+  const rate = checkRateLimit(request, { key: 'extract', max: 8, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate);
+
+  // v3.7.4 — Hard 8MB body cap.
+  const contentLength = parseInt(request.headers.get('content-length') || '0', 10);
+  if (contentLength > 8 * 1024 * 1024) {
+    return jsonResponse({ ok: false, error: 'body_too_large', message: 'Request body exceeds 8MB.' }, 413);
+  }
+
   let body;
   try {
     body = await request.json();

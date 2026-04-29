@@ -6,7 +6,7 @@ export const metadata = {
   openGraph: {
     title: 'Veri.ai · Personal Assistant',
     description: 'AI advisor for Malaysian property compliance. EN/BM/中文.',
-    url: 'https://find-ai-lovat.vercel.app/chat',
+    // url omitted — inherits from layout.js metadataBase + path
     type: 'website',
   },
   robots: { index: false, follow: false },

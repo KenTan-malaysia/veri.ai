@@ -1252,7 +1252,8 @@ export default function Home() {
 
   const shareWA = (text) => {
     const clean = text.replace(/\*\*/g, '*').replace(/<[^>]*>/g, '').substring(0, 2000);
-    window.open(`https://wa.me/?text=${encodeURIComponent(`From Veri.ai:\n\n${clean}\n\nhttps://find-ai-lovat.vercel.app`)}`, '_blank');
+    const origin = (typeof window !== 'undefined' && window.location && window.location.origin) || 'https://find-ai-lovat.vercel.app';
+    window.open(`https://wa.me/?text=${encodeURIComponent(`From Veri.ai:\n\n${clean}\n\n${origin}`)}`, '_blank');
   };
 
   const copyMsg = (text) => {
