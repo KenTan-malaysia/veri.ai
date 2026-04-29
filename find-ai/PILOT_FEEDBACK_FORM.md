@@ -1,4 +1,4 @@
-# Pilot Feedback Form — Find.ai Trust Score (v0)
+# Pilot Feedback Form — Veri.ai Trust Score (v0)
 
 > **How to use this:** Copy these questions into a Google Form (https://forms.google.com → blank form). Use the question types noted in brackets. Set "Required" on Sections 1, 3, 4, 7. Make Sections 2, 5, 6, 8 optional.
 >
@@ -10,13 +10,13 @@
 
 ## Form intro (paste at top of Google Form)
 
-**Find.ai Pilot — Tenant Trust Score Feedback**
+**Veri.ai Pilot — Tenant Trust Score Feedback**
 
-Thanks for trying Find.ai. This 10-minute form captures your honest reaction to the v0 demo you just walked through. Your responses shape the v1 launch.
+Thanks for trying Veri.ai. This 10-minute form captures your honest reaction to the v0 demo you just walked through. Your responses shape the v1 launch.
 
 **Your data:** No personal data shared with anyone. Anonymized aggregate findings only. Email is optional (only if you want a follow-up).
 
-**Questions about the form?** Email ken@find.ai
+**Questions about the form?** Email ken@veri.ai
 
 ---
 
@@ -40,7 +40,7 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 - Sarawak
 - Other (please specify) [open text]
 
-**Q1.3 — What language do you usually use Find.ai in?** [Multiple choice, single answer]
+**Q1.3 — What language do you usually use Veri.ai in?** [Multiple choice, single answer]
 - English
 - Bahasa Malaysia
 - 中文 (Mandarin)
@@ -50,7 +50,7 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 
 ## Section 2 — First impression (3 questions, optional)
 
-**Q2.1 — In one sentence, what does Find.ai try to do?** [Open text — 1-2 sentences]
+**Q2.1 — In one sentence, what does Veri.ai try to do?** [Open text — 1-2 sentences]
 
 > *Tests whether the messaging lands without our explanation.*
 
@@ -120,7 +120,7 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 
 ## Section 4 — Use intent (4 questions, required)
 
-**Q4.1 — Would you use Find.ai to screen a real tenant?** [Multiple choice]
+**Q4.1 — Would you use Veri.ai to screen a real tenant?** [Multiple choice]
 - Yes — I'd use it next time I have a vacancy
 - Probably yes — depends on price
 - Maybe — would need to see real version first
@@ -131,21 +131,21 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 
 **Q4.3 — What's the most confusing or missing thing?** [Open text]
 
-**Q4.4 — How likely are you to recommend Find.ai to another landlord/agent?** [Linear scale 0-10: Not at all likely → Extremely likely] *(NPS score)*
+**Q4.4 — How likely are you to recommend Veri.ai to another landlord/agent?** [Linear scale 0-10: Not at all likely → Extremely likely] *(NPS score)*
 
 ---
 
 ## Section 5 — Use intent + premium interest (3 questions, optional but high-value)
 
-> **Updated v3.4.19:** Find.ai is freemium-at-scale (free for individual landlords forever, premium tier launches at ~30k users for power users + B2B). See `MONETIZATION_PLAN.md`. Pricing-now questions removed — they would skew responses since the answer for Year 1-2 is "free."
+> **Updated v3.4.19:** Veri.ai is freemium-at-scale (free for individual landlords forever, premium tier launches at ~30k users for power users + B2B). See `MONETIZATION_PLAN.md`. Pricing-now questions removed — they would skew responses since the answer for Year 1-2 is "free."
 
-**Q5.1 — Would you keep using Find.ai if it remained FREE forever for individual landlords?** [Multiple choice]
+**Q5.1 — Would you keep using Veri.ai if it remained FREE forever for individual landlords?** [Multiple choice]
 - Yes — I'd use it for every screening
 - Yes — I'd use it occasionally
 - Maybe — depends on accuracy + reliability
 - No — even free isn't worth the effort
 
-**Q5.2 — IF Find.ai stayed free for basic screening, but offered premium features at RM 30-50/month, which premium feature would be MOST valuable to you?** [Multiple choice]
+**Q5.2 — IF Veri.ai stayed free for basic screening, but offered premium features at RM 30-50/month, which premium feature would be MOST valuable to you?** [Multiple choice]
 - Unlimited screenings (free tier caps at 5)
 - Trust Score history dashboard (see trends across all my tenants)
 - Priority verification (faster turnaround)
@@ -175,7 +175,7 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 - Property agent does it for me
 - Other (please specify) [open text]
 
-**Q6.2 — How does Find.ai compare to your current method?** [Multiple choice]
+**Q6.2 — How does Veri.ai compare to your current method?** [Multiple choice]
 - Much better — would switch
 - Similar quality but easier
 - Similar quality but more work
@@ -183,15 +183,15 @@ Thanks for trying Find.ai. This 10-minute form captures your honest reaction to 
 - Different — covers what I can't currently get
 - Hard to say from a demo
 
-**Q6.3 — If you've used CCRIS/CTOS before, how does Find.ai feel different?** [Open text — optional]
+**Q6.3 — If you've used CCRIS/CTOS before, how does Veri.ai feel different?** [Open text — optional]
 
 ---
 
 ## Section 7 — Open feedback (3 questions, required — even if "n/a")
 
-**Q7.1 — One thing you LIKED about Find.ai:** [Open text]
+**Q7.1 — One thing you LIKED about Veri.ai:** [Open text]
 
-**Q7.2 — One thing you'd CHANGE about Find.ai:** [Open text]
+**Q7.2 — One thing you'd CHANGE about Veri.ai:** [Open text]
 
 **Q7.3 — Anything else you want to tell us?** [Open text — long form]
 
@@ -213,17 +213,17 @@ Your feedback shapes the v1 launch. I'll send a "what shipped because of pilot f
 
 If you provided your email, you'll get a heads-up when v1 is live with your free first 5 screenings ready.
 
-Questions or follow-up: ken@find.ai
+Questions or follow-up: ken@veri.ai
 
-🛡️ Find.ai — Don't sign blind.
+🛡️ Veri.ai — Don't sign blind.
 
 ---
 
 ## Google Forms setup notes
 
 When creating the form:
-- **Theme:** Use Find.ai navy (#0f172a) as the header color
-- **Logo:** Add Find.ai shield emoji 🛡️ or upload logo if available
+- **Theme:** Use Veri.ai navy (#0f172a) as the header color
+- **Logo:** Add Veri.ai shield emoji 🛡️ or upload logo if available
 - **Privacy:** Set "Collect email addresses" to OFF (we ask in Q8.1 voluntarily)
 - **Required fields:** Section 1 (all), Q3.1, Q3.2, Q4.1, Q4.4, Q7.1, Q7.2, Q7.3
 - **Section breaks:** Use "Add section" between each numbered section so the form paginates
@@ -239,7 +239,7 @@ After 7+ pilots have completed the form:
 
 | Synthesis question | Where to look |
 |---|---|
-| **Concept resonance** | Q2.1 (open text) — count how many describe Find.ai correctly without prompting |
+| **Concept resonance** | Q2.1 (open text) — count how many describe Veri.ai correctly without prompting |
 | **UX friction** | Q3.1 average + Q3.2/3.5/3.6 distributions |
 | **NPS** | Q4.4 — Promoters (9-10) − Detractors (0-6) |
 | **Use intent** | Q4.1 — % saying YES or PROBABLY YES |
@@ -248,7 +248,7 @@ After 7+ pilots have completed the form:
 | **Premium upgrade willingness** | Q5.3 — % YES/PROBABLY YES at RM 30-50 (validates premium price point) |
 | **Top friction** | Q4.3 + Q7.2 — read all open text, cluster themes |
 | **Top wins** | Q7.1 — read all open text, cluster themes |
-| **Comparison signal** | Q6.2 — % saying Find.ai better/different from current method |
+| **Comparison signal** | Q6.2 — % saying Veri.ai better/different from current method |
 
 Synthesize into a 2-page report. Share with pilots (anonymized). Use to decide Sprint 2 vs OCR/backend investment.
 

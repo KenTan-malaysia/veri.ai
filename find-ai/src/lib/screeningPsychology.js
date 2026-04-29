@@ -1,6 +1,6 @@
 // src/lib/screeningPsychology.js
 // ─────────────────────────────────────────────────────────────────────────────
-// Find.ai — Behavioural psychology layer for the Payment Discipline Scan
+// Veri.ai — Behavioural psychology layer for the Payment Discipline Scan
 //
 // Sub-DNA lock: "only show the behaviour — the rest the landlord decides."
 // This module NEVER emits a verdict. It translates the raw 4-signal capture

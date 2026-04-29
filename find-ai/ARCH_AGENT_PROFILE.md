@@ -1,6 +1,6 @@
 # ARCH — Agent Profile (Third User Type, Identity Gatekeeper)
 
-> **Doctrine locked 2026-04-26 (v3.4.28) — Ken's decision after the agent-flow review:** Property agent is a first-class Find.ai user type, not a passive forwarder. Agents are the identity gatekeeper in the anonymous Trust Card flow, the multiplier for landlord acquisition, and the primary B2B revenue source post-30k.
+> **Doctrine locked 2026-04-26 (v3.4.28) — Ken's decision after the agent-flow review:** Property agent is a first-class Veri.ai user type, not a passive forwarder. Agents are the identity gatekeeper in the anonymous Trust Card flow, the multiplier for landlord acquisition, and the primary B2B revenue source post-30k.
 >
 > Last updated: 2026-04-26
 > Owner: Ken Tan
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Property agent is the third Find.ai user type — alongside Tenant and Landlord — with their own profile, dashboard, and identity-reveal authority *when present*. Agent adoption is the fastest path to 30k users; agent retention is the foundation of the premium tier. But Find.ai works without an agent in the chain — direct-landlord flow has full reveal capability. Agents win by adding value, not by being a forced gate.**
+**Property agent is the third Veri.ai user type — alongside Tenant and Landlord — with their own profile, dashboard, and identity-reveal authority *when present*. Agent adoption is the fastest path to 30k users; agent retention is the foundation of the premium tier. But Veri.ai works without an agent in the chain — direct-landlord flow has full reveal capability. Agents win by adding value, not by being a forced gate.**
 
 > **Path B doctrine (locked v3.4.29):** We do NOT artificially cripple direct-landlord flow to force agent adoption. Both flows are symmetrical in identity-reveal capability. Agents earn their position through value-add (co-branding, BOVAEP-verified credibility, curated tenant pipelines, professional vetting, multi-tenant management dashboards, market knowledge), not through being a mandatory bottleneck. This is the honest model — Path A (force-gating direct flow) creates resentment that finds workarounds.
 
@@ -25,17 +25,17 @@ Most Malaysian rentals (~70-80% in KL/Selangor, higher in Penang/Johor) involve 
 
 ```
 Prospect sees ad → contacts Agent → Agent asks Landlord → Landlord asks for Trust Card
-→ Agent forwards Find.ai link to Tenant → Tenant submits → Landlord sees anonymous score
+→ Agent forwards Veri.ai link to Tenant → Tenant submits → Landlord sees anonymous score
 → Landlord decides → reveals progress through tiers → viewing → deal → sign
 ```
 
-Find.ai is *embedded* in this flow at multiple points. We can't pretend the agent is an edge case.
+Veri.ai is *embedded* in this flow at multiple points. We can't pretend the agent is an edge case.
 
 ### 2. Agent is the identity gatekeeper *when present* (per `ARCH_REVEAL_TIERS.md`)
-When an agent is in the chain, they have authority over reveal pacing (T2 first-name release, T3 viewing-confirmation, T4 contact-reveal advancement). This authority is real and meaningful — it's the in-flow value-add. But it's not what makes Find.ai work. Find.ai works in direct-landlord flow too, with the tenant as their own gatekeeper. **Agents win by being faster + better at gatekeeping than the tenant doing it themselves** — they bring relationship management, market knowledge, and pipeline curation. They don't win by being mandatory.
+When an agent is in the chain, they have authority over reveal pacing (T2 first-name release, T3 viewing-confirmation, T4 contact-reveal advancement). This authority is real and meaningful — it's the in-flow value-add. But it's not what makes Veri.ai work. Veri.ai works in direct-landlord flow too, with the tenant as their own gatekeeper. **Agents win by being faster + better at gatekeeping than the tenant doing it themselves** — they bring relationship management, market knowledge, and pipeline curation. They don't win by being mandatory.
 
 ### 3. Agent acquisition is 10-50× more efficient than landlord acquisition
-A typical Malaysian property agent has 10-50 active listings + landlord relationships. Acquiring one agent who actively pushes Find.ai = pulling in their entire portfolio of landlords + tenants. To reach 30k users via direct landlord acquisition we'd need to convert ~30k landlords. Via agent acquisition, we need ~600-3,000 agents — much more achievable with industry partnerships (MIEA, REN community).
+A typical Malaysian property agent has 10-50 active listings + landlord relationships. Acquiring one agent who actively pushes Veri.ai = pulling in their entire portfolio of landlords + tenants. To reach 30k users via direct landlord acquisition we'd need to convert ~30k landlords. Via agent acquisition, we need ~600-3,000 agents — much more achievable with industry partnerships (MIEA, REN community).
 
 ---
 
@@ -50,7 +50,7 @@ This is the honest competitive case for agents under Path B. None of this requir
 | **Market knowledge** | Agent knows local rental dynamics, comparable rents, demand patterns | Landlord avoids underpricing + finds tenants faster |
 | **Multi-tenant management dashboard** | Agent juggles 5-50 active screenings; their dashboard surfaces patterns landlords can't see solo | Operational efficiency for portfolio landlords |
 | **Co-branded Trust Card** (premium) | Agent name + photo + REN registration on the card itself | Tenant feels they're dealing with professionals, not a random landlord |
-| **Tenant relationship continuity** | Agent has done the cold outreach + viewing scheduling + paperwork prep — Find.ai is one piece of their service | Landlord delegates the entire flow, not just screening |
+| **Tenant relationship continuity** | Agent has done the cold outreach + viewing scheduling + paperwork prep — Veri.ai is one piece of their service | Landlord delegates the entire flow, not just screening |
 | **Faster reveal advancement** (premium feature) | Premium agents can offer pre-consented "instant T3 unlock" with their tenants | Speed advantage in fast-moving rental markets |
 
 **Direct-landlord flow gets:** Trust Card request, anonymous-by-default screening, full reveal control via tenant consent, tenant audit trail, basic dashboard.
@@ -65,7 +65,7 @@ The differentiation is **honest and additive** — the things agents charge for 
 
 ```js
 agentProfile = {
-  agentId: 'A-0421',                   // Find.ai-issued opaque ID
+  agentId: 'A-0421',                   // Veri.ai-issued opaque ID
   identity: {
     name: 'Lim Wei Ming',              // legal name
     icHash: 'sha256:...',              // hashed for verification
@@ -120,7 +120,7 @@ agentProfile = {
 
 ### Key design principles
 
-1. **BOVAEP-anchored verification.** Every agent must be verified against the Board of Valuers, Appraisers, Estate Agents and Property Managers (BOVAEP) public registry at registration. Agents without REN/REA/PEA registration cannot use Find.ai's gatekeeper features. This is a real moat — illegal agents can't fake their way in.
+1. **BOVAEP-anchored verification.** Every agent must be verified against the Board of Valuers, Appraisers, Estate Agents and Property Managers (BOVAEP) public registry at registration. Agents without REN/REA/PEA registration cannot use Veri.ai's gatekeeper features. This is a real moat — illegal agents can't fake their way in.
 2. **Independent vs agency.** Solo agents (REN-licensed, no agency) have full agent profile. Agency-affiliated agents (REA/PEA under E-number) are linked to an `agency` record. Agency tier (premium) gets multi-agent management.
 3. **Trust Card forwarding is logged.** Every link the agent sends is tracked: when, to whom, current tier, last advance event.
 4. **No agent-side score visibility.** Agents see *whether* a tenant submitted, not the score itself. Score is between tenant + landlord. Prevents agents from steering tenants to specific landlords based on score.
@@ -130,7 +130,7 @@ agentProfile = {
 
 ## Agent self-insertion flow (locked v3.4.30)
 
-**Single-flow architecture replaces the previous two-flow split.** All Find.ai links start as landlord-generated direct links. Agents *insert themselves* into the deal after-the-fact — they are not required to be in the chain from the start.
+**Single-flow architecture replaces the previous two-flow split.** All Veri.ai links start as landlord-generated direct links. Agents *insert themselves* into the deal after-the-fact — they are not required to be in the chain from the start.
 
 ### The unified flow
 
@@ -184,7 +184,7 @@ This solves stress-test #5 from the v3.4.28 audit (BOVAEP gate excludes informal
 | **Verified Agent** | REN/REA/PEA registered + verified | Full gatekeeper authority over T2/T3/T4 reveals · Co-branded Trust Card option (premium) · Performance dashboard · Multi-tenant management | "Verified by Agent {Name} · REN 12345 · {Agency}" badge on card |
 | **Unverified Forwarder** | None | Basic forwarding only · No tier-advance authority · Cannot co-brand · Tracked attribution for transparency | "Forwarded by {Name}" (no verification badge) |
 
-Both can claim listings. Both are tracked. The differentiation is in *what they're authorized to do* once claimed. Unverified forwarders can pass links along but cannot exercise gatekeeper authority — that requires BOVAEP registration. Solves the inclusion problem (informal agents can use Find.ai) without compromising the regulatory moat (gatekeeper authority requires registration).
+Both can claim listings. Both are tracked. The differentiation is in *what they're authorized to do* once claimed. Unverified forwarders can pass links along but cannot exercise gatekeeper authority — that requires BOVAEP registration. Solves the inclusion problem (informal agents can use Veri.ai) without compromising the regulatory moat (gatekeeper authority requires registration).
 
 ---
 
@@ -198,7 +198,7 @@ Both can claim listings. Both are tracked. The differentiation is in *what they'
                                │ submits Trust Card via link
                                ↓
                         ┌─────────────┐
-                        │   Find.ai   │
+                        │   Veri.ai   │
                         │ (gatekeeper)│
                         └──────┬──────┘
                           ↗         ↘
@@ -239,7 +239,7 @@ First-class page when agent is logged in. Three tabs:
 
 ### 2. Forward-and-track surface
 When agent shares a link, the system creates a tracked link with metadata:
-- `https://find.ai/r/TC-2026-04-12345?agent=A-0421&listing=L-2026-04-001`
+- `https://veri.ai/r/TC-2026-04-12345?agent=A-0421&listing=L-2026-04-001`
 - Agent sees: "Sent to tenant {phone-last-4}, forwarded {time}, status: not yet submitted / submitted / score-X"
 
 ### 3. Reveal-tier action UI
@@ -311,7 +311,7 @@ Per `MONETIZATION_PLAN.md`. Agent tiers launch at 30k+ users (Phase 4).
 - Agency-level branding on Trust Cards
 - Cross-agent reporting + commission tracking
 - API access for integration with proptech / property management software
-- White-label Trust Card option (agency name as primary, "Powered by Find.ai" footer)
+- White-label Trust Card option (agency name as primary, "Powered by Veri.ai" footer)
 - Dedicated account manager
 - Custom contract terms
 
@@ -335,7 +335,7 @@ Tenants can rate agents post-deal (or post-veto). Aggregate score visible on age
 ### Agent abuse patterns to watch
 - **Tier-advancement-without-communication**: Agent advances tier multiple times without tenant interaction — likely script/bot abuse
 - **Veto-pattern**: Tenants vetoing >40% of T2 advances = agent over-pushing
-- **Sub-rosa identity sharing**: Agent shares tenant identity outside Find.ai (caught via tenant complaint or sting test) — immediate suspension
+- **Sub-rosa identity sharing**: Agent shares tenant identity outside Veri.ai (caught via tenant complaint or sting test) — immediate suspension
 - **Listing claiming**: Agent claims to represent a property they don't actually represent — caught via landlord complaint
 
 ---
@@ -343,7 +343,7 @@ Tenants can rate agents post-deal (or post-veto). Aggregate score visible on age
 ## Agent authentication
 
 ### Registration flow
-1. Agent visits `find.ai/agent/register`
+1. Agent visits `veri.ai/agent/register`
 2. Provides: name, IC, phone, email, REN/REA/PEA number
 3. System looks up REN number in BOVAEP public registry → confirms match
 4. MyDigital ID OAuth for IC verification (preferred) OR IC photo + selfie liveness fallback

@@ -124,19 +124,19 @@ Target: 2-3 agent pilots from professional networks.
 
 ### Cold outreach — FB group post (EN)
 
-> 🛡️ Calling Malaysian landlords — testing a new pre-signing tenant credit-check tool (Find.ai). 15-min demo, no sign-up, no charge. Your feedback shapes the launch. Anyone interested in trying it + giving 10 min of honest feedback? Drop a 👍 below or PM me. We'll send the link.
+> 🛡️ Calling Malaysian landlords — testing a new pre-signing tenant credit-check tool (Veri.ai). 15-min demo, no sign-up, no charge. Your feedback shapes the launch. Anyone interested in trying it + giving 10 min of honest feedback? Drop a 👍 below or PM me. We'll send the link.
 
 ### Cold outreach — FB group post (BM)
 
-> 🛡️ Landlord Malaysia — saya tengah test satu tool baru untuk semakan kredit penyewa sebelum tandatangan (Find.ai). Demo 15 minit, takde sign-up, takde bayaran. Feedback anda bantu shape launch sebenar. Siapa minat try + bagi 10 minit feedback jujur? Tinggalkan 👍 atau PM saya. Kami hantar link.
+> 🛡️ Landlord Malaysia — saya tengah test satu tool baru untuk semakan kredit penyewa sebelum tandatangan (Veri.ai). Demo 15 minit, takde sign-up, takde bayaran. Feedback anda bantu shape launch sebenar. Siapa minat try + bagi 10 minit feedback jujur? Tinggalkan 👍 atau PM saya. Kami hantar link.
 
 ### Email — for professional network (EN)
 
-> Subject: 15-min pilot ask — Find.ai (pre-signing tenant compliance toolkit)
+> Subject: 15-min pilot ask — Veri.ai (pre-signing tenant compliance toolkit)
 >
 > Hi [name],
 >
-> I'm building Find.ai, a Malaysian property compliance toolkit focused on the pre-signing window — verifying tenancies via LHDN records, computing Trust Scores from utility bill timing patterns, generating shareable Trust Cards. Currently a v0 working demo at https://find-ai-lovat.vercel.app.
+> I'm building Veri.ai, a Malaysian property compliance toolkit focused on the pre-signing window — verifying tenancies via LHDN records, computing Trust Scores from utility bill timing patterns, generating shareable Trust Cards. Currently a v0 working demo at https://find-ai-lovat.vercel.app.
 >
 > I'm recruiting 5-10 landlords/agents for a 15-min walkthrough and 10 min of structured feedback. Pure feedback — no sign-up, no payment, no real tenant data needed. Your input shapes the v1 launch (planned mid-2026).
 >

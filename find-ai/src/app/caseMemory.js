@@ -1,7 +1,7 @@
 'use client';
 
 // ═══════════════════════════════════════════════════════════════════════
-// Find.ai — Case-File Memory Module
+// Veri.ai — Case-File Memory Module
 //
 // Per-case persistent context that rides along with each chat thread.
 // Extends the existing chatHistory item shape (id, title, messages, ...)
@@ -186,7 +186,7 @@ const UI = {
     deposit: 'Deposit held (RM)',
     pdpaHeader: 'Storing tenant data — PDPA 2010 consent required',
     pdpaBody: 'Malaysia\'s Personal Data Protection Act requires explicit consent before you record a tenant\'s identifying information — even on your own device. Tick the box if the tenant has agreed.',
-    pdpaAgree: 'The tenant has consented to this information being stored in Find.ai for case management purposes.',
+    pdpaAgree: 'The tenant has consented to this information being stored in Veri.ai for case management purposes.',
     pdpaLocked: 'Tenant fields are locked until consent is granted.',
     save: 'Save memory',
     cancel: 'Cancel',
@@ -225,7 +225,7 @@ const UI = {
     deposit: 'Deposit disimpan (RM)',
     pdpaHeader: 'Simpan data penyewa — keizinan PDPA 2010 diperlukan',
     pdpaBody: 'Akta Perlindungan Data Peribadi 2010 memerlukan keizinan eksplisit sebelum anda merekod maklumat pengenalan penyewa — walaupun di peranti sendiri. Tandakan kotak jika penyewa bersetuju.',
-    pdpaAgree: 'Penyewa bersetuju maklumat ini disimpan dalam Find.ai untuk pengurusan kes.',
+    pdpaAgree: 'Penyewa bersetuju maklumat ini disimpan dalam Veri.ai untuk pengurusan kes.',
     pdpaLocked: 'Medan penyewa dikunci sehingga keizinan diberi.',
     save: 'Simpan memori',
     cancel: 'Batal',
@@ -264,7 +264,7 @@ const UI = {
     deposit: '押金（RM）',
     pdpaHeader: '存储租客数据 — 需要 PDPA 2010 同意',
     pdpaBody: '马来西亚《2010年个人数据保护法》要求在记录租客身份信息之前必须获得明确同意 — 即使在您自己的设备上。如果租客已同意，请勾选方框。',
-    pdpaAgree: '租客同意在 Find.ai 中存储此信息以用于案件管理。',
+    pdpaAgree: '租客同意在 Veri.ai 中存储此信息以用于案件管理。',
     pdpaLocked: '未获得同意前，租客字段已锁定。',
     save: '保存记忆',
     cancel: '取消',

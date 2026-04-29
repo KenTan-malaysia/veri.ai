@@ -20,9 +20,9 @@ export default function LegalLayout({ children }) {
             color: 'var(--color-navy)',
             marginBottom: 32,
           }}
-          aria-label="Find.ai home"
+          aria-label="Veri.ai home"
         >
-          <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+          <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
           <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--color-gold)' }}>.ai</span>
         </Link>
         {children}
@@ -42,7 +42,7 @@ export default function LegalLayout({ children }) {
           <Link href="/legal/privacy" style={{ color: 'var(--color-stone)' }}>Privacy policy</Link>
           <Link href="/legal/tenant-consent" style={{ color: 'var(--color-stone)' }}>Tenant consent</Link>
           <Link href="/legal/pdpa" style={{ color: 'var(--color-stone)' }}>PDPA notice</Link>
-          <Link href="/" style={{ color: 'var(--color-stone)', marginLeft: 'auto' }}>← Back to Find.ai</Link>
+          <Link href="/" style={{ color: 'var(--color-stone)', marginLeft: 'auto' }}>← Back to Veri.ai</Link>
         </nav>
       </div>
     </main>

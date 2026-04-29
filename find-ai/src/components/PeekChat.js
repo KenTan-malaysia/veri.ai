@@ -46,7 +46,7 @@ const T = {
     mic: 'Voice',
     thinking: 'Finding the law…',
     emptyTitle: 'Ask Veri',
-    emptySub: 'Your Find.ai assistant. Sabah to Sarawak · deposits · stamp duty · strata · edge cases.',
+    emptySub: 'Your Veri.ai assistant. Sabah to Sarawak · deposits · stamp duty · strata · edge cases.',
     emptyTry: 'Try one of these',
     examplePrompts: [
       'Can I trust this tenant?',
@@ -68,7 +68,7 @@ const T = {
     mic: 'Suara',
     thinking: 'Mencari undang-undang…',
     emptyTitle: 'Tanya Veri',
-    emptySub: 'Pembantu Find.ai anda. Sabah ke Sarawak · deposit · duti setem · strata · kes khas.',
+    emptySub: 'Pembantu Veri.ai anda. Sabah ke Sarawak · deposit · duti setem · strata · kes khas.',
     emptyTry: 'Cuba salah satu',
     examplePrompts: [
       'Boleh saya percaya penyewa ini?',
@@ -90,7 +90,7 @@ const T = {
     mic: '语音',
     thinking: '查找法律依据……',
     emptyTitle: '问问 Veri',
-    emptySub: '您的 Find.ai 助理。沙巴到砂拉越 · 押金 · 印花税 · 分层 · 特殊情况。',
+    emptySub: '您的 Veri.ai 助理。沙巴到砂拉越 · 押金 · 印花税 · 分层 · 特殊情况。',
     emptyTry: '试试这些',
     examplePrompts: [
       '这个租客可信吗？',
@@ -147,7 +147,7 @@ export default function PeekChat({
   const [localMessages, setLocalMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  // v9.4 — one-time dock hint ("Stuck? Ask Find.ai anything.") shown for 4s on
+  // v9.4 — one-time dock hint ("Stuck? Ask Veri.ai anything.") shown for 4s on
   // first mount per device, then suppressed forever via localStorage. Fixes the
   // 30-user feedback that first-timers didn't notice the persistent dock.
   const [showHint, setShowHint] = useState(false);
@@ -339,7 +339,7 @@ export default function PeekChat({
   const styles = `
     /* v3.4.27 — Corner widget at EVERY viewport. No more mobile-dock pattern.
        Mobile = compact corner widget bottom-right. Desktop = same corner widget
-       slightly larger. Per WEB_UX_PATTERNS.md — Find.ai is a website on every
+       slightly larger. Per WEB_UX_PATTERNS.md — Veri.ai is a website on every
        device, the chat is an Intercom-style helper, not a full-width app dock. */
     .pc-root {
       position: fixed; left: auto; right: 16px; bottom: 16px;

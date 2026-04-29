@@ -1,4 +1,4 @@
-// Knowledge Base — topic-based lookup for Find.ai
+// Knowledge Base — topic-based lookup for Veri.ai
 // Each topic has: keywords (EN/BM/ZH), law content, real case outcomes, and templates
 
 const TOPICS = {
@@ -2157,7 +2157,7 @@ STATUS & SCOPE:
   * Staff housing / institutional dormitories
   * Agricultural worker housing under Act 446
 - Transitional provisions: tenancies signed BEFORE RTA commencement continue under old law until renewal. New or renewed tenancies from commencement date MUST comply.
-- IMPORTANT: Exact commencement date and gazetted rate schedules — verify with KPKT (kpkt.gov.my) or the Federal Gazette before citing specific numbers. Find.ai content reflects the published framework but enforcement details may be updated.
+- IMPORTANT: Exact commencement date and gazetted rate schedules — verify with KPKT (kpkt.gov.my) or the Federal Gazette before citing specific numbers. Veri.ai content reflects the published framework but enforcement details may be updated.
 
 KEY FRAMEWORK — WHAT RTA 2026 INTRODUCES:
 
@@ -2951,7 +2951,7 @@ CLAIM PATHWAYS:
 
 PRACTICAL REALITY (2026): discrimination cases rarely win monetary damages in MY courts, BUT:
 - Public exposure via BOVEAEA + media routinely costs the agency the mandate + reputation.
-- Ken's platform positioning (Find.ai = "pre-verified" trust marketplace) can reduce reliance on discriminatory filtering by surfacing compliance-based trust signals.
+- Ken's platform positioning (Veri.ai = "pre-verified" trust marketplace) can reduce reliance on discriminatory filtering by surfacing compliance-based trust signals.
 
 APPLY / VERIFY HERE:
 - BOVEAEA: lppeh.gov.my | 03-2287 9888 | verify REA/PEA/REN tag
@@ -3113,7 +3113,7 @@ LANDLORD-INSURANCE CHECKLIST:
 ☐ Loss of rent rider.
 ☐ Tenant default rider (optional but good for high-value units).
 ☐ Annual review after any renovation / tenant change.
-☐ Copy of policy + schedule stored digitally (and in Evidence Vault if using Find.ai).
+☐ Copy of policy + schedule stored digitally (and in Evidence Vault if using Veri.ai).
 ☐ Emergency contacts on fridge: insurer hotline, Bomba, plumber.
 
 APPLY / VERIFY HERE:
@@ -3448,7 +3448,7 @@ STEP BY STEP FOR VICTIM (info for tenants who ask the chatbot):
 6. Serve Order on landlord + keep acknowledgement.
 7. Consider divorce + property division proceedings in parallel (LRA / Syariah).
 
-SUPPORT CONTACTS (for Find.ai to surface in chatbot):
+SUPPORT CONTACTS (for Veri.ai to surface in chatbot):
 - WAO: 03-7956 3488 / Talian Kasih 15999
 - Talian Nur (JKM DVA): 15999
 - AWAM: 03-7877 0224
@@ -3901,7 +3901,7 @@ BEST-PRACTICE LANDLORD WORKFLOW
 ═══════════════════════════════════════════════════════════════════════════════
 1. Insist on rent via bank transfer from TENANT's own named account. Add a clause to lease.
 2. For prepayment > RM20,000: request written source-of-funds explanation + tax residency declaration.
-3. For foreign tenant: verify USCC (CN) / equivalent + run through Find.ai CN-MY Trust Link.
+3. For foreign tenant: verify USCC (CN) / equivalent + run through Veri.ai CN-MY Trust Link.
 4. Keep tenant's ID, lease, receipts for 7 years (AMLA 6 + ITA buffer).
 5. If anything smells off: walk away BEFORE money moves. The moment funds are in your account, options narrow.
 6. If already received questionable funds: consult lawyer immediately; consider voluntary STR via your bank.
@@ -4014,7 +4014,7 @@ Legal exposure:
 - Customs Act 1967 ss.119-138 — officers may enter, search, seize.
 - s.135 — offences: up to 20 years jail / fines up to 20x value of goods.
 - s.127 — PROPERTY USED for smuggling can be FORFEITED — this includes the warehouse building if landlord "knew or ought to have known".
-- Landlord's shield: documented due diligence (lease checks, business verification, no "look the other way" behaviour). Find.ai's CN-MY Trust Link screening is defensible evidence.
+- Landlord's shield: documented due diligence (lease checks, business verification, no "look the other way" behaviour). Veri.ai's CN-MY Trust Link screening is defensible evidence.
 
 Your response protocol:
 1. Cooperate fully. Obstructing customs = offence s.133.
@@ -4723,7 +4723,7 @@ STRATEGY WHEN NT IS CLEARLY INFLATED
 Example: PBT says NT RM84,000 (≈ RM7,000/month rent); actual rent is RM3,000/month (RM36,000 pa).
 
 The test is MARKET rent for a willing landlord/tenant, not your actual below-market rent. So:
-1. Gather 3-5 comparables: asking rents and signed leases in same street, similar size, same usage. From property portals (Find.ai, PropertyGuru), signed SDSAS stamped tenancies, valuation-department reports.
+1. Gather 3-5 comparables: asking rents and signed leases in same street, similar size, same usage. From property portals (Veri.ai, PropertyGuru), signed SDSAS stamped tenancies, valuation-department reports.
 2. Engage a Registered Valuer for a short-form valuation report (RM1,500-RM4,000). This is your strongest evidence.
 3. File Form Bantahan with evidence + valuation report.
 4. Negotiate with PBT at Committee — most PBTs settle in the 10-25% reduction range if comps are credible.
@@ -5017,8 +5017,8 @@ ANNEX — FILE MANIFEST:
 | 1 | checkin-living-wide-001.jpg | 2026-01-12 09:14:22 MYT | 4a7c... (full 64-char) |
 | 2 | ... | ... | ... |"
 
-EVIDENCE VAULT — PRO TIP (Find.ai roadmap, not yet live):
-- Find.ai's upcoming Digital Evidence Vault will automate steps 6-7 of the check-in workflow: auto-hash every photo, pull NTP timestamps, generate a Section 90A CoA as a one-click PDF.
+EVIDENCE VAULT — PRO TIP (Veri.ai roadmap, not yet live):
+- Veri.ai's upcoming Digital Evidence Vault will automate steps 6-7 of the check-in workflow: auto-hash every photo, pull NTP timestamps, generate a Section 90A CoA as a one-click PDF.
 - Until the Vault ships, run the manual workflow above — it is already defensible if each pillar is executed.
 
 APPLY / VERIFY HERE:

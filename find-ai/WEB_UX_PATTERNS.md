@@ -1,6 +1,6 @@
-# Web UX Patterns — Find.ai
+# Web UX Patterns — Veri.ai
 
-> **Doctrine locked 2026-04-26 (v3.4.25) — Ken's call after web-first commitment:** Find.ai is a website, not a mobile app. Build with web patterns, not app patterns crammed into a browser.
+> **Doctrine locked 2026-04-26 (v3.4.25) — Ken's call after web-first commitment:** Veri.ai is a website, not a mobile app. Build with web patterns, not app patterns crammed into a browser.
 >
 > Last updated: 2026-04-26
 > Owner: Ken Tan
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Find.ai builds with web-native UX patterns: real URLs, browser back, responsive desktop+mobile, SEO-indexable pages, OG meta tags, hover states, keyboard navigation. NOT a mobile-app shell stuffed into a browser tab.**
+**Veri.ai builds with web-native UX patterns: real URLs, browser back, responsive desktop+mobile, SEO-indexable pages, OG meta tags, hover states, keyboard navigation. NOT a mobile-app shell stuffed into a browser tab.**
 
 This complements the web-first delivery commitment (`WEB_FIRST_RATIONALE.md`). Web-first is meaningless if the product still feels like an app trapped in a webview.
 
@@ -46,10 +46,10 @@ Each of these fights the medium. On a web-first product targeting 30,000 users v
 | App pattern (retire) | Web pattern (adopt) | Why |
 |---|---|---|
 | Trust Card = canvas-rendered image only | Trust Card = real HTML/CSS at `/trust/{reportId}` + PNG render for OG preview | Permanent shareable URL. Recipient lands on real page. |
-| WhatsApp share = text dump | WhatsApp share = `find.ai/r/{reportId}` short URL with OG meta tags | Rich link preview = the actual viral mechanic. |
-| No browser tab title | Per-page `<title>` (e.g. "Step 2 — Verify LHDN · Find.ai") | Multi-tab users find Find.ai in tab strip. |
+| WhatsApp share = text dump | WhatsApp share = `veri.ai/r/{reportId}` short URL with OG meta tags | Rich link preview = the actual viral mechanic. |
+| No browser tab title | Per-page `<title>` (e.g. "Step 2 — Verify LHDN · Veri.ai") | Multi-tab users find Veri.ai in tab strip. |
 | No OG meta tags | OG image + title + description on every public page | WhatsApp/Telegram/Twitter previews show real card. |
-| App Store as discovery | SEO + server-rendered indexable pages | "Tenant screening Malaysia" lands on real Find.ai pages. |
+| App Store as discovery | SEO + server-rendered indexable pages | "Tenant screening Malaysia" lands on real Veri.ai pages. |
 
 ### Layout + interaction
 
@@ -110,8 +110,8 @@ Each of these fights the medium. On a web-first product targeting 30,000 users v
 - Add proper `<header>` with logo · language · profile-or-sign-in
 - Hero section with motto + sub-tagline + primary CTA
 - 3-tile launcher (existing, responsive)
-- Social proof / "what is Find.ai" section (helps SEO + first-time trust)
-- `<footer>` with legal links (T&C, Privacy, Tenant Consent), © Find.ai, language selector
+- Social proof / "what is Veri.ai" section (helps SEO + first-time trust)
+- `<footer>` with legal links (T&C, Privacy, Tenant Consent), © Veri.ai, language selector
 - All this responsive — mobile keeps bento simplicity, desktop gets the breathing room
 
 ### Shared infrastructure
@@ -193,7 +193,7 @@ If any of these fail, fix before shipping.
 
 ## Final note for future Zeus sessions
 
-> When reviewing or building any UI for Find.ai, auto-screen against the swap list above. If a proposed pattern is in the "App pattern (retire)" column, push back and propose the web pattern equivalent.
+> When reviewing or building any UI for Veri.ai, auto-screen against the swap list above. If a proposed pattern is in the "App pattern (retire)" column, push back and propose the web pattern equivalent.
 >
 > Exceptions worth re-evaluating:
 > - At Phase 4 Capacitor wrap, some app patterns (native back gesture, push notifications) become available — but the web layer must stay web-pattern-pure so the same code works in both contexts.

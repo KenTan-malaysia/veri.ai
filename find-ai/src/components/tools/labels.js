@@ -14,7 +14,7 @@ export const L = {
     // === TOOL 1 — Payment Discipline Scan (Bloomberg-not-FICO) ===========
     screenTitleV2: 'Payment Discipline Scan',
     screenDescV2: 'Show 4 app screens at the viewing. No uploads, no bank statements.',
-    screenSubDnaFooter: 'Find.ai surfaces payment behaviour. The decision to enter tenancy rests entirely with the landlord.',
+    screenSubDnaFooter: 'Veri.ai surfaces payment behaviour. The decision to enter tenancy rests entirely with the landlord.',
     screenTenantSection: 'Tenant at the viewing',
     screenTenantName: 'Full name (per MyKad)',
     screenTenantIC: 'IC last 4 digits',
@@ -279,7 +279,7 @@ export const L = {
 
     regS5Title: 'Consent & finish',
     regS5Sub: 'Your profile is created the moment you tap Create. You control every future share.',
-    regS5Consent1: 'I authorize Find.ai to store this profile for tenancy trust purposes under PDPA 2010.',
+    regS5Consent1: 'I authorize Veri.ai to store this profile for tenancy trust purposes under PDPA 2010.',
     regS5Consent2: 'I authorize monthly auto-refresh via my forwarded utility bills (optional).',
     regS5Consent2Sub: 'Keeps your payment history current so landlords always see the latest data.',
     regS5PDPARights: 'You can view, export, or delete your profile at any time (PDPA s.30-34).',
@@ -295,7 +295,7 @@ export const L = {
     regDoneCopied: 'Copied',
     regDoneOpenWA: 'Share via WhatsApp',
     regDoneNext: 'Done',
-    regDoneWAMsg: 'Hi — here is my Find.ai tenant profile: {url}\n\nIt takes you 1 tap to see my verified payment history. Revocable anytime.',
+    regDoneWAMsg: 'Hi — here is my Veri.ai tenant profile: {url}\n\nIt takes you 1 tap to see my verified payment history. Revocable anytime.',
 
     regBack: 'Back',
     regNext: 'Next',
@@ -317,7 +317,7 @@ export const L = {
     // === TOOL 1 — Payment Discipline Scan (Bloomberg-not-FICO) ===========
     screenTitleV2: 'Imbasan Disiplin Pembayaran',
     screenDescV2: 'Tunjuk 4 skrin aplikasi semasa tinjauan. Tiada muat naik, tiada penyata bank.',
-    screenSubDnaFooter: 'Find.ai hanya memaparkan tingkah laku bayaran. Keputusan untuk meneruskan sewaan sepenuhnya di tangan tuan rumah.',
+    screenSubDnaFooter: 'Veri.ai hanya memaparkan tingkah laku bayaran. Keputusan untuk meneruskan sewaan sepenuhnya di tangan tuan rumah.',
     screenTenantSection: 'Penyewa semasa tinjauan',
     screenTenantName: 'Nama penuh (ikut MyKad)',
     screenTenantIC: '4 digit akhir IC',
@@ -580,7 +580,7 @@ export const L = {
 
     regS5Title: 'Keizinan & siapkan',
     regS5Sub: 'Profil anda hidup sebaik sahaja anda tekan Cipta. Anda kawal setiap perkongsian akan datang.',
-    regS5Consent1: 'Saya benarkan Find.ai menyimpan profil ini untuk tujuan amanah tenansi di bawah PDPA 2010.',
+    regS5Consent1: 'Saya benarkan Veri.ai menyimpan profil ini untuk tujuan amanah tenansi di bawah PDPA 2010.',
     regS5Consent2: 'Saya benarkan pembaharuan automatik bulanan melalui bil utiliti yang dimajukan (pilihan).',
     regS5Consent2Sub: 'Menjaga sejarah pembayaran anda sentiasa terkini supaya tuan rumah lihat data terbaru.',
     regS5PDPARights: 'Anda boleh lihat, eksport, atau padam profil pada bila-bila masa (PDPA s.30-34).',
@@ -596,7 +596,7 @@ export const L = {
     regDoneCopied: 'Disalin',
     regDoneOpenWA: 'Kongsi via WhatsApp',
     regDoneNext: 'Siap',
-    regDoneWAMsg: 'Hi — ini profil penyewa Find.ai saya: {url}\n\n1 tekan untuk lihat sejarah pembayaran disahkan. Boleh tarik balik bila-bila masa.',
+    regDoneWAMsg: 'Hi — ini profil penyewa Veri.ai saya: {url}\n\n1 tekan untuk lihat sejarah pembayaran disahkan. Boleh tarik balik bila-bila masa.',
 
     regBack: 'Kembali',
     regNext: 'Seterusnya',
@@ -618,7 +618,7 @@ export const L = {
     // === TOOL 1 — Payment Discipline Scan (Bloomberg-not-FICO) ===========
     screenTitleV2: '付款纪律扫描',
     screenDescV2: '看房时展示4个应用界面。无需上传，无需银行对账单。',
-    screenSubDnaFooter: 'Find.ai 仅呈现付款行为。是否签约完全由房东自行决定。',
+    screenSubDnaFooter: 'Veri.ai 仅呈现付款行为。是否签约完全由房东自行决定。',
     screenTenantSection: '看房当天的租客',
     screenTenantName: '全名（按身份证）',
     screenTenantIC: '身份证后4位',
@@ -881,7 +881,7 @@ export const L = {
 
     regS5Title: '同意 & 完成',
     regS5Sub: '点击"创建"后档案即时生效。每次分享您都拥有完全控制权。',
-    regS5Consent1: '我授权 Find.ai 在 PDPA 2010 框架下储存此档案用于租赁信任评估。',
+    regS5Consent1: '我授权 Veri.ai 在 PDPA 2010 框架下储存此档案用于租赁信任评估。',
     regS5Consent2: '我授权通过转发的公用事业账单进行月度自动刷新（可选）。',
     regS5Consent2Sub: '保持您的付款记录最新 — 房东随时看到最新数据。',
     regS5PDPARights: '您可随时查看、导出或删除您的档案（PDPA 第 30-34 条）。',
@@ -897,7 +897,7 @@ export const L = {
     regDoneCopied: '已复制',
     regDoneOpenWA: '通过 WhatsApp 分享',
     regDoneNext: '完成',
-    regDoneWAMsg: '您好 — 这是我的 Find.ai 租客档案：{url}\n\n1 次点击即可查看经验证的付款记录。可随时撤销授权。',
+    regDoneWAMsg: '您好 — 这是我的 Veri.ai 租客档案：{url}\n\n1 次点击即可查看经验证的付款记录。可随时撤销授权。',
 
     regBack: '返回',
     regNext: '下一步',

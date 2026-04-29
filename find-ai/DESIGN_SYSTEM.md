@@ -1,4 +1,4 @@
-# DESIGN SYSTEM — Find.ai
+# DESIGN SYSTEM — Veri.ai
 
 > **Doctrine locked 2026-04-26 (v3.4.37) — Ken's call after approving the 4-phase web-with-app-UX redesign.** This doc captures the foundation: design tokens (typography, spacing, color, motion), component library spec, and the persistent app shell. Phase 2-4 ship on top of this foundation.
 >
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Find.ai is a web product with app-UX quality. We use design tokens + a small component library + a persistent app shell to make every surface feel as polished as Linear, Stripe Dashboard, or Notion — while keeping our locked banking-trust DNA, anonymous-default doctrine, and web-pattern (not app-pattern) commitment.**
+**Veri.ai is a web product with app-UX quality. We use design tokens + a small component library + a persistent app shell to make every surface feel as polished as Linear, Stripe Dashboard, or Notion — while keeping our locked banking-trust DNA, anonymous-default doctrine, and web-pattern (not app-pattern) commitment.**
 
 ---
 
@@ -230,7 +230,7 @@ src/app/
 **Width:** 240px desktop · 64px collapsed (icon-only) · drawer on mobile (<768px).
 
 **Sections:**
-- 🛡️ Find.ai brand (top)
+- 🛡️ Veri.ai brand (top)
 - Primary nav:
   - 📊 Dashboard
   - 🪪 Trust Cards
@@ -376,7 +376,7 @@ This system aligns with prior locked doctrines:
 
 ## Final note for future Zeus sessions
 
-> When designing or building any UI for Find.ai, use components from `src/components/ui/` first. Do not reinvent buttons, cards, or toasts inline. If a component doesn't exist yet, propose adding it to this design system before building.
+> When designing or building any UI for Veri.ai, use components from `src/components/ui/` first. Do not reinvent buttons, cards, or toasts inline. If a component doesn't exist yet, propose adding it to this design system before building.
 >
 > Reject in code review:
 > - Inline button styles when `<Button>` exists

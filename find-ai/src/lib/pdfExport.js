@@ -1,12 +1,12 @@
 // src/lib/pdfExport.js
 // ─────────────────────────────────────────────────────────────────────────────
-// Find.ai — Shared PDF Export Module (Phase 1 doctrine)
+// Veri.ai — Shared PDF Export Module (Phase 1 doctrine)
 //
 // Single, branded report generator used by all four Phase 1 tools:
 //   - Tenant Screening    → "Tenant Screening Report"
 //   - Agreement Health    → "Agreement Health Check Report"
 //   - SDSAS 2026          → "SDSAS 2026 Tax Accuracy Certificate"
-//   - Chatbox save        → "Find.ai Advisory Summary"
+//   - Chatbox save        → "Veri.ai Advisory Summary"
 //
 // ZERO NPM DEPENDENCIES — uses the browser's native print-to-PDF flow.
 // Works on every modern browser, including iOS Safari + Android Chrome,
@@ -116,13 +116,13 @@ const KIND_LABELS = {
 
 const I18N = {
   en: {
-    letterhead: 'Find.ai · Malaysian Property Compliance Toolkit',
+    letterhead: 'Veri.ai · Malaysian Property Compliance Toolkit',
     strap: "Don't sign blind.",
     case: 'Case ref',
     date: 'Date prepared',
     preparedFor: 'Prepared for',
     property: 'Property',
-    verify: 'Scan to verify this report at find.ai',
+    verify: 'Scan to verify this report at veri.ai',
     shield: 'Support tool only — not legal advice.',
     pdpa: 'Personal data collected under PDPA 2010. Retained for dispute support; deletable on request.',
     disclaimer: 'This report summarises publicly available Malaysian legal reference material together with the information you provided. It is NOT a substitute for independent legal advice from a qualified Peguambela & Peguamcara. Verify critical actions with a licensed professional before relying on them.',
@@ -131,13 +131,13 @@ const I18N = {
     of: 'of',
   },
   bm: {
-    letterhead: 'Find.ai · Kit Pematuhan Hartanah Malaysia',
+    letterhead: 'Veri.ai · Kit Pematuhan Hartanah Malaysia',
     strap: 'Jangan tandatangan buta.',
     case: 'Rujukan kes',
     date: 'Tarikh sedia',
     preparedFor: 'Disediakan untuk',
     property: 'Hartanah',
-    verify: 'Imbas untuk sahkan laporan ini di find.ai',
+    verify: 'Imbas untuk sahkan laporan ini di veri.ai',
     shield: 'Alat sokongan sahaja — bukan nasihat undang-undang.',
     pdpa: 'Data peribadi dikumpul di bawah APDP 2010. Disimpan untuk sokongan pertikaian; boleh dipadam atas permintaan.',
     disclaimer: 'Laporan ini merumuskan rujukan undang-undang Malaysia yang tersedia secara umum bersama maklumat yang anda berikan. Ia BUKAN pengganti nasihat undang-undang bebas daripada Peguambela & Peguamcara yang bertauliah. Sahkan tindakan penting dengan profesional berlesen sebelum bergantung padanya.',
@@ -146,13 +146,13 @@ const I18N = {
     of: 'daripada',
   },
   zh: {
-    letterhead: 'Find.ai · 马来西亚房产合规工具箱',
+    letterhead: 'Veri.ai · 马来西亚房产合规工具箱',
     strap: '签约前先查清。',
     case: '案件编号',
     date: '报告日期',
     preparedFor: '收件人',
     property: '物业',
-    verify: '扫码到 find.ai 验证此报告',
+    verify: '扫码到 veri.ai 验证此报告',
     shield: '仅供参考——不构成法律意见。',
     pdpa: '个人资料依据 PDPA 2010 收集。用于争议支援用途；可按要求删除。',
     disclaimer: '本报告综合马来西亚公开法律参考资料与您提供的信息。它不能取代由合格执业律师提供的独立法律意见。依赖任何关键行动前，请向持牌专业人士核实。',
@@ -167,8 +167,8 @@ const I18N = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Generates a Find.ai case reference ID, e.g. "FA-20260421-7XKQ".
- * Stable pattern for QR viral loop: find.ai/r/FA-YYYYMMDD-XXXX
+ * Generates a Veri.ai case reference ID, e.g. "FA-20260421-7XKQ".
+ * Stable pattern for QR viral loop: veri.ai/r/FA-YYYYMMDD-XXXX
  */
 export function makeCaseRef(date = new Date()) {
   const pad = (n) => String(n).padStart(2, '0');
@@ -180,11 +180,11 @@ export function makeCaseRef(date = new Date()) {
 }
 
 /**
- * Builds the find.ai viral-loop URL for a given case ref.
+ * Builds the veri.ai viral-loop URL for a given case ref.
  * If the domain moves, update here and every QR across all tools updates.
  */
 export function caseUrl(caseRef) {
-  return `https://find.ai/r/${encodeURIComponent(caseRef)}`;
+  return `https://veri.ai/r/${encodeURIComponent(caseRef)}`;
 }
 
 /**
@@ -376,7 +376,7 @@ function renderHTML(p) {
 <html lang="${p.lang}">
 <head>
 <meta charset="utf-8">
-<title>${esc(p.title)} · ${esc(p.caseRef)} · Find.ai</title>
+<title>${esc(p.title)} · ${esc(p.caseRef)} · Veri.ai</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   :root {
@@ -606,7 +606,7 @@ function renderHTML(p) {
     <div class="foot-body">
       <span class="shield-chip">${esc(t.shield)}</span>
       <p class="foot-p">${esc(t.disclaimer)}</p>
-      <p class="foot-pdpa">${esc(t.pdpa)} · ${esc(t.continue)} find.ai</p>
+      <p class="foot-pdpa">${esc(t.pdpa)} · ${esc(t.continue)} veri.ai</p>
     </div>
   </div>
 
@@ -651,7 +651,7 @@ const SCREEN_I18N = {
     findingsHeading: 'Observations',
     notesHeading: 'Notes',
     noVerdict: 'This report is NOT a credit score, NOT a grade, and NOT a recommendation. The track record describes documented evidence only — the decision to enter into a tenancy rests entirely with the landlord.',
-    subDna: 'Find.ai surfaces payment behaviour captured at the viewing. Signals shown were displayed on the tenant\'s own device under their verbal consent. No data was pulled from CCRIS, CTOS or any credit bureau.',
+    subDna: 'Veri.ai surfaces payment behaviour captured at the viewing. Signals shown were displayed on the tenant\'s own device under their verbal consent. No data was pulled from CCRIS, CTOS or any credit bureau.',
     signalElectricity: 'Electricity',
     signalMobile: 'Mobile postpaid',
     signalInternet: 'Home internet',
@@ -685,7 +685,7 @@ const SCREEN_I18N = {
     findingsHeading: 'Pemerhatian',
     notesHeading: 'Nota',
     noVerdict: 'Laporan ini BUKAN skor kredit, BUKAN gred, dan BUKAN cadangan. Rekod jejak ini hanya menggambarkan bukti yang didokumenkan — keputusan untuk meneruskan sewaan sepenuhnya di tangan tuan rumah.',
-    subDna: 'Find.ai hanya memaparkan tingkah laku bayaran yang direkod semasa tinjauan. Isyarat ditunjukkan pada peranti penyewa sendiri dengan kebenaran lisan. Tiada data diambil daripada CCRIS, CTOS atau mana-mana biro kredit.',
+    subDna: 'Veri.ai hanya memaparkan tingkah laku bayaran yang direkod semasa tinjauan. Isyarat ditunjukkan pada peranti penyewa sendiri dengan kebenaran lisan. Tiada data diambil daripada CCRIS, CTOS atau mana-mana biro kredit.',
     signalElectricity: 'Elektrik',
     signalMobile: 'Pascabayar mudah alih',
     signalInternet: 'Internet rumah',
@@ -719,7 +719,7 @@ const SCREEN_I18N = {
     findingsHeading: '观察',
     notesHeading: '说明',
     noVerdict: '本报告并非信用评分、并非评级、也不是推荐建议。履历仅描述已归档的证据——是否签约完全由房东自行决定。',
-    subDna: 'Find.ai 仅展示看房时记录的付款行为。所有信号均在租客本人设备上、经其口头同意后展示。未从 CCRIS、CTOS 或任何征信机构拉取数据。',
+    subDna: 'Veri.ai 仅展示看房时记录的付款行为。所有信号均在租客本人设备上、经其口头同意后展示。未从 CCRIS、CTOS 或任何征信机构拉取数据。',
     signalElectricity: '电费',
     signalMobile: '手机后付',
     signalInternet: '家庭宽带',

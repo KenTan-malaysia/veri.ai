@@ -1,4 +1,4 @@
-# Find.ai — Knowledge Base Coverage Audit
+# Veri.ai — Knowledge Base Coverage Audit
 
 **Date:** 2026-04-20
 **Total topics in knowledge.js:** 29

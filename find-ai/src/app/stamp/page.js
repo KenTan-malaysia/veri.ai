@@ -23,9 +23,9 @@ export default function StampDutyPage() {
           <Link
             href="/"
             style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
-            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
           <button
@@ -50,7 +50,7 @@ export default function StampDutyPage() {
               fontSize: 12, color: '#5A6780', textDecoration: 'none', marginBottom: 12,
             }}
           >
-            <ChevronLeft /> Back to Find.ai
+            <ChevronLeft /> Back to Veri.ai
           </Link>
           <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 10 }}>
             SDSAS 2026 · LHDN self-assessment
@@ -81,7 +81,7 @@ export default function StampDutyPage() {
             fontSize: 12, lineHeight: 1.55, color: '#3F4E6B',
           }}
         >
-          <strong style={{ color: '#0F1E3F' }}>Disclaimer.</strong> Find.ai is a support tool for SDSAS 2026 self-assessment.
+          <strong style={{ color: '#0F1E3F' }}>Disclaimer.</strong> Veri.ai is a support tool for SDSAS 2026 self-assessment.
           Final responsibility lies with the landlord. The branded certificate is an audit-protection artifact, not legal advice.
           Refer to <a href="https://stamps.hasil.gov.my" style={{ color: '#B8893A' }}>LHDN STAMPS</a> for official submission.
         </div>

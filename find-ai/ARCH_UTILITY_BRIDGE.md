@@ -10,7 +10,7 @@
 
 **Adjacent → Phase 2 (post-signing custodian).** This feature lives AFTER the tenancy is signed, so it is NOT a Phase 1 ship.
 
-**BUT it has a sharp Phase 1 hook:** every utility bill the tenant pays on time becomes a portable Trust Score that feeds **TOOL 1 (Tenant Screening)** when the same tenant rents their NEXT place. The Phase 2 utility ledger is the data engine that makes Phase 1 screening actually trustworthy. Without it, Tool 1 is just CCRIS + references — same as everyone else. With it, Find.ai owns a proprietary behavioural dataset no competitor has.
+**BUT it has a sharp Phase 1 hook:** every utility bill the tenant pays on time becomes a portable Trust Score that feeds **TOOL 1 (Tenant Screening)** when the same tenant rents their NEXT place. The Phase 2 utility ledger is the data engine that makes Phase 1 screening actually trustworthy. Without it, Tool 1 is just CCRIS + references — same as everyone else. With it, Veri.ai owns a proprietary behavioural dataset no competitor has.
 
 **Recommendation:** Architect now, build in Phase 2 (Q3-Q4 2026). Do NOT promote publicly during the 90-day Phase 1 window.
 
@@ -47,7 +47,7 @@ When a new tenant moves into a residential unit:
 ## Architecture — 10 Layers
 
 ### Layer 1 — Identity & Pairing
-- Landlord profile (already exists in Find.ai)
+- Landlord profile (already exists in Veri.ai)
 - Tenant invite (NEW) — landlord generates one-time invite link / QR, tenant signs up
 - Tenancy Pairing — links to existing Case ID from TOOL 2 (Audit), so the agreement and the utility bridge share one canonical case ref
 
@@ -68,7 +68,7 @@ When a new tenant moves into a residential unit:
 - Section 90A Evidence Act 1950 admissibility built in
 
 ### Layer 4 — Bill Ingestion (landlord, monthly)
-- Landlord forwards TNB email PDF / WhatsApp the bill image / email-to-Find.ai unique address
+- Landlord forwards TNB email PDF / WhatsApp the bill image / email-to-Veri.ai unique address
 - OCR extracts: account number, billing period, total kWh / m³, total RM, due date, current reading
 - Validates against known TNB / SYABAS / IWK bill formats
 - Auto-detects anomalies (estimated reading vs actual, sudden spikes, account mismatches)
@@ -116,7 +116,7 @@ When a new tenant moves into a residential unit:
 
 ## Three Branded PDF Outputs
 
-Each PDF uses the same Find.ai letterhead + QR viral loop pattern as the existing `pdfExport.js` (built in v3.3):
+Each PDF uses the same Veri.ai letterhead + QR viral loop pattern as the existing `pdfExport.js` (built in v3.3):
 
 1. **📊 Tax Trail PDF** — landlord's YTD utility expense for IRB Form B. Built from `buildUtilityTaxReport()` (NEW).
 2. **🛡️ Trust Score PDF** — tenant-owned, portable, QR-verifiable. Built from `buildTenantUtilityScore()` (NEW). **This is the artifact that loops back to TOOL 1.**

@@ -15,16 +15,16 @@ export default function AboutPage() {
           <Link
             href="/"
             style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
-            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
         </header>
 
         {/* Eyebrow + H1 */}
         <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14 }}>
-          ABOUT FIND.AI
+          ABOUT VERI.AI
         </div>
         <h1 style={{
           fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
@@ -39,7 +39,7 @@ export default function AboutPage() {
         </h1>
 
         <p style={{ fontSize: 18, lineHeight: 1.55, color: '#3F4E6B', margin: '0 0 36px' }}>
-          Find.ai is a pre-signing compliance toolkit for Malaysian landlords,
+          Veri.ai is a pre-signing compliance toolkit for Malaysian landlords,
           tenants, and property agents. We verify payment behaviour with LHDN
           STAMPS-anchored data, gate identity reveals tier-by-tier, and never
           expose tenant PII without explicit consent.
@@ -76,13 +76,13 @@ export default function AboutPage() {
                 Ken Tan
               </h2>
               <p style={{ fontSize: 13.5, lineHeight: 1.6, color: '#3F4E6B', margin: '0 0 8px' }}>
-                Building Find.ai from Kuala Lumpur. Started this after one too many
+                Building Veri.ai from Kuala Lumpur. Started this after one too many
                 rental disputes where the landlord and tenant both wished they'd
                 verified before signing. Anonymous-default is the only design that
                 doesn't punish whoever has less negotiating power.
               </p>
-              <a href="mailto:hello@find.ai" style={{ fontSize: 12, color: '#B8893A', textDecoration: 'none' }}>
-                hello@find.ai →
+              <a href="mailto:hello@veri.ai" style={{ fontSize: 12, color: '#B8893A', textDecoration: 'none' }}>
+                hello@veri.ai →
               </a>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function AboutPage() {
         </Section>
 
         <Section title="What's next">
-          Find.ai is in pre-launch v1. We're building toward 30,000 active users
+          Veri.ai is in pre-launch v1. We're building toward 30,000 active users
           before introducing premium tiers. Updates ship on the homepage. Email
           us for pilot access, agent partnerships, or just to say hi.
         </Section>
@@ -132,7 +132,7 @@ export default function AboutPage() {
               fontSize: 13, color: '#5A6780', textDecoration: 'none',
             }}
           >
-            ← Back to Find.ai
+            ← Back to Veri.ai
           </Link>
         </div>
       </div>

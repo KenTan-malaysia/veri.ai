@@ -1,4 +1,4 @@
-# Web-First Rationale — Find.ai
+# Web-First Rationale — Veri.ai
 
 > **Strategy locked 2026-04-26 (v3.4.24) — Ken's decision after analysis review:** Web-only push to 30,000 users → Capacitor wrap to native. NOT parallel web+native build. NOT delayed launch waiting for native.
 >
@@ -10,17 +10,17 @@
 
 ## The decision in one line
 
-**Find.ai goes ALL IN on web for the first 30,000 users. Native (iOS / Android) comes ONLY at Phase 4 via Capacitor wrap of the existing web app.**
+**Veri.ai goes ALL IN on web for the first 30,000 users. Native (iOS / Android) comes ONLY at Phase 4 via Capacitor wrap of the existing web app.**
 
 This decision was made 2026-04-26 after stress-testing the strategy against alternatives (parallel web+native, delayed launch, hire engineers for native).
 
 ---
 
-## Why this fits Find.ai specifically
+## Why this fits Veri.ai specifically
 
 ### Use pattern (strongly favors web)
 
-| Find.ai reality | Implication |
+| Veri.ai reality | Implication |
 |---|---|
 | Landlord screens 1-5x/year. Tenant screened 1-3x/lifetime. | Users won't bother installing an app for 1-3 uses/year. WhatsApp link + web = perfect fit. |
 | ~3 minute sessions | Web works fine. No offline mode needed. |
@@ -32,14 +32,14 @@ This decision was made 2026-04-26 after stress-testing the strategy against alte
 
 ### Compare to apps where native IS essential
 
-| Product | Why native required | Find.ai equivalent? |
+| Product | Why native required | Veri.ai equivalent? |
 |---|---|---|
 | Grab / MyTeksi | Real-time GPS tracking | ❌ N/A |
 | WhatsApp | Push notifications critical | ⚠️ LBV is rare exception |
 | Maybank app | Biometric secure local storage | ❌ Auth via MyDigital ID, no local secrets |
-| PropertyGuru app | Map-heavy + image gallery | ❌ Find.ai is form-heavy, not media-heavy |
+| PropertyGuru app | Map-heavy + image gallery | ❌ Veri.ai is form-heavy, not media-heavy |
 
-Find.ai's profile = web-first natural fit.
+Veri.ai's profile = web-first natural fit.
 
 ---
 
@@ -52,10 +52,10 @@ Find.ai's profile = web-first natural fit.
 | Web-first reaches 30k users | **50-65%** (medium-high) |
 | Web-first is cheaper than parallel web+native | **95%+** (almost certain) |
 | Web app provides enough trust for individual landlords | **70-80%** (high) |
-| Find.ai NEEDS native before reaching 30k users | **15-25%** (low-medium) |
-| Web-first is the right strategic bet for Find.ai | **70-85%** (high) |
+| Veri.ai NEEDS native before reaching 30k users | **15-25%** (low-medium) |
+| Web-first is the right strategic bet for Veri.ai | **70-85%** (high) |
 
-**Bottom line: web-first is the right bet 70-85% of the time for Find.ai's context.**
+**Bottom line: web-first is the right bet 70-85% of the time for Veri.ai's context.**
 
 ### Real-world precedents (web-first → scale → native)
 
@@ -67,7 +67,7 @@ Find.ai's profile = web-first natural fit.
 | ChatGPT | First 6 months → 100M users | OpenAI $90B |
 | Canva | 2-3 years | $40B valuation |
 
-**Pattern is proven. Find.ai joins this lineage.**
+**Pattern is proven. Veri.ai joins this lineage.**
 
 ---
 
@@ -78,7 +78,7 @@ Find.ai's profile = web-first natural fit.
 | Risk | Likelihood | Severity | Mitigation |
 |---|---|---|---|
 | **Conversion plateau** at 5-10k users — some segment needs native | Low | High | Add PWA "install to home screen" prompt; revisit Capacitor at 10k if growth stalls |
-| **Trust signal ceiling** with institutional landlords (REITs, bank properties) | Low for Phase 1 | Medium | Phase 4 problem — by then Find.ai has proven traction + Capacitor wrap |
+| **Trust signal ceiling** with institutional landlords (REITs, bank properties) | Low for Phase 1 | Medium | Phase 4 problem — by then Veri.ai has proven traction + Capacitor wrap |
 | **Competitor enters MY market with native** | Low (no current competition) | High if hit | Speed advantage of web-first (faster iteration) wins over native quality |
 | **B2B partnerships demand native** (proptechs wanting deep-link integration) | Low | Medium | Web link integration is sufficient for most; web hooks fine |
 | **App Store discovery loss** — never appears in "tenant screening Malaysia" search | Certain | Low (compensated) | SEO + WhatsApp viral + agent network referrals replace App Store discovery |
@@ -122,7 +122,7 @@ Ken's framing of "spam the entire thing into website" = aggressive web distribut
 
 | Channel | Mechanism | Estimated cost |
 |---|---|---|
-| **WhatsApp viral** | Trust Card share = 1+ new landlord seeing Find.ai per share | RM 0 (organic) |
+| **WhatsApp viral** | Trust Card share = 1+ new landlord seeing Veri.ai per share | RM 0 (organic) |
 | **Trust Card permanent record** | Tenants reuse score → new landlord exposed each time | RM 0 (built-in viral) |
 | **SEO content** | "Malaysian tenant screening", "LHDN stamp duty 2026" articles | RM 200-500/month freelance writer |
 | **Property agent network** | MIEA, REN community partnerships | Time + relationship building |
@@ -140,7 +140,7 @@ Total growth marketing budget through 30k users: **RM 5-20k cumulative.**
 This decision is already aligned with:
 - `BUILD_APPROACH.md` — Phase 4 = native after 30k users
 - `MONETIZATION_PLAN.md` — freemium-at-scale with premium tier at 30k+ users
-- `FINDAI_MEMORY.md` sticky lesson: "Web app IS a real product — not less real than native"
+- `VERIAI_MEMORY.md` sticky lesson: "Web app IS a real product — not less real than native"
 
 This doc just makes the COMMITMENT explicit so future Zeus sessions don't suggest premature native work.
 
@@ -171,7 +171,7 @@ This doc just makes the COMMITMENT explicit so future Zeus sessions don't sugges
 
 ### Phase 4 trigger checklist for native
 
-When Find.ai hits these milestones, evaluate Capacitor wrap:
+When Veri.ai hits these milestones, evaluate Capacitor wrap:
 - [ ] 30,000+ active free users
 - [ ] 5,000+ monthly screenings
 - [ ] NPS sustained ≥40
@@ -185,7 +185,7 @@ When all checked → spend RM 5-15k on Capacitor wrap. Not before.
 
 ## What changes if Ken raises seed money
 
-If Find.ai raises RM 1-3M seed in Year 1-2:
+If Veri.ai raises RM 1-3M seed in Year 1-2:
 
 | What changes | What stays |
 |---|---|
@@ -203,7 +203,7 @@ If Find.ai raises RM 1-3M seed in Year 1-2:
 If a Malaysian competitor launches with native iOS/Android focus:
 
 1. **Don't panic** — first-mover web advantage often beats latecomer native
-2. **Speed advantage** — Find.ai can ship 5x faster than native competitor (60-second deploys vs 1-7 day App Store reviews)
+2. **Speed advantage** — Veri.ai can ship 5x faster than native competitor (60-second deploys vs 1-7 day App Store reviews)
 3. **Distribution match** — match their App Store presence by adding Capacitor wrap (RM 5-15k, 2-4 weeks)
 4. **Don't react with full React Native rewrite** — overkill response, drains cash
 
@@ -219,12 +219,12 @@ The web-first commitment is robust to competition.
 
 ## Final note for future Zeus sessions
 
-> When Ken (or any future contributor) suggests native development before 30,000 users, REJECT the suggestion and reference this doc. The web-first strategy is the validated path for Find.ai's specific context, audience, and use pattern.
+> When Ken (or any future contributor) suggests native development before 30,000 users, REJECT the suggestion and reference this doc. The web-first strategy is the validated path for Veri.ai's specific context, audience, and use pattern.
 >
 > Exceptions worth re-evaluating:
 > - 30k users milestone reached
 > - Conversion stalled at 10k+ users with clear evidence native is the bottleneck
 > - B2B enterprise customer with $XX,XXX/year contract requiring native
-> - Competitor reaches 50k+ Malaysian users on native and capturing Find.ai's market
+> - Competitor reaches 50k+ Malaysian users on native and capturing Veri.ai's market
 >
 > Otherwise, web-first commitment holds. Save the cash for runway and growth marketing.

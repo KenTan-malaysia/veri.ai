@@ -14,7 +14,7 @@
 
 ## The three-sided account system (updated v3.4.28)
 
-Find.ai is now a **three-sided platform**: landlords screen, tenants own their score, agents gatekeep. All three must be designed together.
+Veri.ai is now a **three-sided platform**: landlords screen, tenants own their score, agents gatekeep. All three must be designed together.
 
 | Side | What they get | Why they need an account |
 |---|---|---|
@@ -169,7 +169,7 @@ Landlord B starts screening for prospective tenant
     ↓
 Landlord types tenant's name + phone OR IC last 4 in Step 1
     ↓
-Find.ai backend searches TenantProfile.identity:
+Veri.ai backend searches TenantProfile.identity:
     - phone hash match → match
     - icHash match → match
     - name + DOB fuzzy match → suggest possible matches (require confirmation)
@@ -178,7 +178,7 @@ If match found:
     1. Landlord sees: "Found existing profile — verified by Landlord A 14 months ago"
        (Landlord A's name masked: "L***rd A" for privacy)
     2. Landlord taps "Request access"
-    3. Find.ai sends LBV push to tenant's phone:
+    3. Veri.ai sends LBV push to tenant's phone:
        "Landlord B at [Property] is requesting your Trust Score.
         Tap to verify your identity and release the score."
     4. Tenant taps push → live face match against biometric on file
@@ -207,9 +207,9 @@ If no match found:
 ```
 Trust Card has QR code → contains encrypted lookup token
     ↓
-Landlord scans QR (or enters tenant phone in Find.ai)
+Landlord scans QR (or enters tenant phone in Veri.ai)
     ↓
-Find.ai backend checks: is this token valid + not revoked?
+Veri.ai backend checks: is this token valid + not revoked?
     ↓
 Push notification to tenant's registered phone:
     "[Landlord/Property] requesting your Trust Score · Tap to verify"
@@ -274,7 +274,7 @@ LBV is the bedrock — without it, the Trust Card is just an artifact. With it, 
 - Bulk workflows
 
 **Enterprise / Proptech (~RM 2k-10k/month):**
-- Find.ai API access
+- Veri.ai API access
 - Co-branded outputs
 - Custom integration
 
@@ -287,7 +287,7 @@ LBV is the bedrock — without it, the Trust Card is just an artifact. With it, 
 | Right | Implementation |
 |---|---|
 | **Access** | Tenant downloads full profile data (JSON / PDF export) at any time |
-| **Correction** | Edit any incorrect identity field; Find.ai re-verifies |
+| **Correction** | Edit any incorrect identity field; Veri.ai re-verifies |
 | **Deletion** | Full account delete; soft-delete 30-day grace, then hard-delete |
 | **Withdraw consent** | Tap any active landlord consent → revoke → that landlord loses access |
 | **Portability** | JSON export shareable to other systems |
@@ -365,7 +365,7 @@ To validate the concept with pilots without building real backend, v0 mock inclu
 Above the name + IC inputs:
 
 ```
-🔄 Has this tenant been screened by Find.ai before?
+🔄 Has this tenant been screened by Veri.ai before?
 [ Tenant phone or IC last 4 ]
 [ 🔍 Look up existing Trust Score ]
 

@@ -6,7 +6,7 @@ export const metadata = {
   title: 'Stamp duty calculator · SDSAS 2026',
   description: 'Calculate Malaysian tenancy stamp duty under the SDSAS 2026 self-assessment framework. Avoid the RM 10,000 fine. Free for individual landlords.',
   openGraph: {
-    title: 'Stamp duty calculator · SDSAS 2026 · Find.ai',
+    title: 'Stamp duty calculator · SDSAS 2026 · Veri.ai',
     description: 'Self-assess your tenancy stamp duty for 2026. Avoid the RM 10,000 fine.',
     url: 'https://find-ai-lovat.vercel.app/stamp',
     type: 'website',

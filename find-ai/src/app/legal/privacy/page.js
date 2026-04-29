@@ -14,7 +14,7 @@ export default function PrivacyPage() {
           textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 12,
         }}
       >
-        Legal · Find.ai
+        Legal · Veri.ai
       </div>
       <h1 style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.02em', margin: '0 0 24px' }}>
         Privacy policy
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         }}
       >
         <strong>Draft notice.</strong> Pending lawyer-finalization. The
-        principles below reflect Find.ai's locked doctrine (anonymous-default,
+        principles below reflect Veri.ai's locked doctrine (anonymous-default,
         PDPA-compliant, audit-trail-visible) and will be hardened to enforceable
         legal text before public launch.
       </div>
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="Where data lives">
-        Find.ai is hosted on Vercel (US infrastructure, with Malaysian PDPA
+        Veri.ai is hosted on Vercel (US infrastructure, with Malaysian PDPA
         Standard Contractual Clauses for cross-border transfer). Your data is
         encrypted at rest and in transit.
       </Section>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
         Under Malaysia's Personal Data Protection Act 2010 you have the right
         to: (a) access your data, (b) correct inaccurate data, (c) request
         deletion, (d) withdraw consent, (e) lodge a complaint with the PDPC.
-        Email <a href="mailto:hello@find.ai" style={{ color: 'var(--color-gold)' }}>hello@find.ai</a> to exercise any of these rights.
+        Email <a href="mailto:hello@veri.ai" style={{ color: 'var(--color-gold)' }}>hello@veri.ai</a> to exercise any of these rights.
       </Section>
 
       <Section title="Audit trail visibility">
@@ -74,8 +74,8 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="Contact">
-        Privacy questions? Email <a href="mailto:hello@find.ai" style={{ color: 'var(--color-gold)' }}>hello@find.ai</a>.
-        Find.ai's Data Protection Officer (designated upon launch) is the
+        Privacy questions? Email <a href="mailto:hello@veri.ai" style={{ color: 'var(--color-gold)' }}>hello@veri.ai</a>.
+        Veri.ai's Data Protection Officer (designated upon launch) is the
         formal contact for PDPA matters.
       </Section>
 

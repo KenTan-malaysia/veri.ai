@@ -8,9 +8,9 @@
 
 ## Onboarding message template (EN)
 
-> Hi [name], thanks for joining the Find.ai pilot. Here's everything you need.
+> Hi [name], thanks for joining the Veri.ai pilot. Here's everything you need.
 >
-> **What this is:** A v0 working demo of Find.ai's Tenant Credit Score tool. It uses simulated data (you'll see a yellow DEMO banner) — no real tenant info needed. We want your honest feedback on the concept, the UX, and whether you'd pay for the real version.
+> **What this is:** A v0 working demo of Veri.ai's Tenant Credit Score tool. It uses simulated data (you'll see a yellow DEMO banner) — no real tenant info needed. We want your honest feedback on the concept, the UX, and whether you'd pay for the real version.
 >
 > **Time:** ~15 min walkthrough + ~10 min feedback form. Total: ~25 min.
 >
@@ -42,9 +42,9 @@
 
 ## Onboarding message template (BM)
 
-> Hi [name], terima kasih sertai pilot Find.ai. Ini semua yang anda perlu.
+> Hi [name], terima kasih sertai pilot Veri.ai. Ini semua yang anda perlu.
 >
-> **Apa ini:** Demo v0 alat Skor Kredit Penyewa Find.ai. Guna data simulasi (anda akan nampak banner DEMO kuning) — tak perlu info penyewa sebenar. Kami nak feedback jujur anda tentang konsep, UX, dan sama ada anda sanggup bayar untuk versi sebenar.
+> **Apa ini:** Demo v0 alat Skor Kredit Penyewa Veri.ai. Guna data simulasi (anda akan nampak banner DEMO kuning) — tak perlu info penyewa sebenar. Kami nak feedback jujur anda tentang konsep, UX, dan sama ada anda sanggup bayar untuk versi sebenar.
 >
 > **Masa:** ~15 minit walkthrough + ~10 minit form feedback. Jumlah: ~25 minit.
 >
@@ -76,9 +76,9 @@
 
 ## Onboarding message template (中文)
 
-> 您好 [name]，感谢加入 Find.ai 试用计划。这是您需要的一切。
+> 您好 [name]，感谢加入 Veri.ai 试用计划。这是您需要的一切。
 >
-> **这是什么：**Find.ai 租客信用评分工具的 v0 演示版。使用模拟数据（您会看到黄色 DEMO 提示）— 不需要真实租客信息。我们希望听到您对概念、用户体验、以及是否愿意为正式版付费的真实反馈。
+> **这是什么：**Veri.ai 租客信用评分工具的 v0 演示版。使用模拟数据（您会看到黄色 DEMO 提示）— 不需要真实租客信息。我们希望听到您对概念、用户体验、以及是否愿意为正式版付费的真实反馈。
 >
 > **时间：**约 15 分钟试用 + 约 10 分钟反馈表。总计：约 25 分钟。
 >

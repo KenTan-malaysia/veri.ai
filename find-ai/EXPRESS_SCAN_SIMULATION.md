@@ -1,6 +1,6 @@
 # Express Scan — Real Case Simulation
 
-**Find.ai · Cakap 2.0 · Phase 1 TOOL 1b**
+**Veri.ai · Veri.ai · Phase 1 TOOL 1b**
 **Doctrine lock:** "Don't sign blind." · Bloomberg-not-FICO · TRUST BEFORE SIGNING
 **Designed:** 21 April 2026
 
@@ -40,7 +40,7 @@ No bank connection. No credential scraping. No utility/telco API partnership. Ze
 
 Ken gives Siti the tour. She loves the view, the parking, the kitchen. By 7:20 she says "I'd like to apply."
 
-Ken opens Find.ai on his phone, taps into the active case he created yesterday:
+Ken opens Veri.ai on his phone, taps into the active case he created yesterday:
 
 > **Case: Mirage Mont Kiara Condo**
 > Asking: RM 4,800/mo · Ready to occupy
@@ -92,7 +92,7 @@ Ken fills the 5 fields by asking Siti at the viewing (he says "quick check, just
 
 ### 7:21 PM — Siti receives WhatsApp (1 minute after send)
 
-Siti's phone pings. WhatsApp message from "Find.ai · Verified":
+Siti's phone pings. WhatsApp message from "Veri.ai · Verified":
 
 > Hi Siti! 👋
 >
@@ -113,7 +113,7 @@ She taps the button. Opens in her phone browser.
 
 ```
 ┌────────────────────────────────────────────┐
-│  🛡️  Find.ai Express Scan                │
+│  🛡️  Veri.ai Express Scan                │
 │                                            │
 │  Hi Siti — 2 quick things:                 │
 │                                            │
@@ -173,7 +173,7 @@ Confirmation screen:
 │   We'll let you know if he approves       │
 │   your application.                        │
 │                                            │
-│         🛡️  Find.ai                       │
+│         🛡️  Veri.ai                       │
 │                                            │
 └────────────────────────────────────────────┘
 ```
@@ -203,7 +203,7 @@ Confirmation screen:
 
 At 7:22 PM, Mr Lee's phone pings:
 
-> Hi Mr Lee — Find.ai here, verified sender.
+> Hi Mr Lee — Veri.ai here, verified sender.
 >
 > Ms **Siti Aminah** (IC ending **8321**) listed you as her current landlord at **Residensi Bangsar Park, Unit 8-12**.
 >
@@ -228,7 +228,7 @@ Mr Lee replies at 7:24 PM (2 minutes later, he was watching TV):
 
 ### 7:25 PM — Ken's notification (5 min after send)
 
-Ken's Find.ai pings. He opens it:
+Ken's Veri.ai pings. He opens it:
 
 ```
 ┌────────────────────────────────────────────┐
@@ -271,7 +271,7 @@ Ken's Find.ai pings. He opens it:
 └────────────────────────────────────────────┘
 ```
 
-Ken exports the PDF. The report bears the Find.ai letterhead, embeds all 3 bill PDFs as evidence appendices, shows the Payment Discipline Index, lists the current landlord reference transcript with Mr Lee's WhatsApp-verified responses, and carries the standard "NOT a credit score / landlord decides" disclaimer.
+Ken exports the PDF. The report bears the Veri.ai letterhead, embeds all 3 bill PDFs as evidence appendices, shows the Payment Discipline Index, lists the current landlord reference transcript with Mr Lee's WhatsApp-verified responses, and carries the standard "NOT a credit score / landlord decides" disclaimer.
 
 **Ken's total work this entire session: 5 field entries + 1 tap. Zero manual data entry on bills. Result in 5 minutes.**
 
@@ -299,7 +299,7 @@ The OCR + reference data flows into the existing `computeIndex()` and `analyseBe
 
 Same branded template as Stamp Duty / Manual Scan reports. Page 1:
 
-1. **Find.ai letterhead** (navy gradient, shield brand mark)
+1. **Veri.ai letterhead** (navy gradient, shield brand mark)
 2. **Case meta:** Prepared for Ken Tan · Property: The Mirage, Mont Kiara · Case ref: FA-20260421-9PXM · Date: 21 April 2026
 3. **Payment Discipline Index badge:** 88/100 (green tone)
 4. **Behavioural observations:** Consistent payer · High confidence · Essentials-first intact · Long tenure
@@ -307,7 +307,7 @@ Same branded template as Stamp Duty / Manual Scan reports. Page 1:
 6. **Current landlord reference:** Mr Lee's verbatim WhatsApp responses + timestamp
 7. **Flags:** Maxis partial-name (amber, non-blocking)
 8. **Notes:** "NOT a credit score. Landlord decides." + Bloomberg-not-FICO sub-DNA footer
-9. **Footer:** QR code to `find.ai/r/FA-20260421-9PXM` · Shield chip · PDPA disclaimer
+9. **Footer:** QR code to `veri.ai/r/FA-20260421-9PXM` · Shield chip · PDPA disclaimer
 
 Pages 2–4: each uploaded bill PDF as evidence appendix with OCR overlay highlighting the extracted fields.
 

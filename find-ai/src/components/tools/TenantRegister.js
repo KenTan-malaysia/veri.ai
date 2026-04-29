@@ -1,7 +1,7 @@
 'use client';
 
 // ═══════════════════════════════════════════════════════════════════════
-// Find.ai — Tenant Pre-Registration Wizard (Path D)
+// Veri.ai — Tenant Pre-Registration Wizard (Path D)
 //
 // "Register once, rent anywhere." 5-step flow that creates a reusable
 // TenantProfile stored in localStorage. Output: a shareable URL every

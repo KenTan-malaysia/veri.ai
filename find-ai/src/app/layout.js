@@ -2,15 +2,15 @@ import './globals.css'
 import { ToastProvider } from '../components/ui/Toast'
 import LangSync from '../components/layout/LangSync'
 
-// v3.4.27 — All app/PWA scaffolding REMOVED. Find.ai is a website only.
+// v3.4.27 — All app/PWA scaffolding REMOVED. Veri.ai is a website only.
 // Removed: manifest, service worker registration, apple-touch-icon, themeColor,
 // viewportFit:cover. No PWA install path. No app-shell pretense.
 // Per WEB_FIRST_RATIONALE.md + WEB_UX_PATTERNS.md.
 export const metadata = {
   metadataBase: new URL('https://find-ai-lovat.vercel.app'),
   title: {
-    default: "Find.ai — Don't sign blind.",
-    template: '%s · Find.ai',
+    default: "Veri.ai — Don't sign blind.",
+    template: '%s · Veri.ai',
   },
   description:
     'Malaysian property compliance toolkit. Verify tenants, audit agreements, calculate stamp duty — before anyone signs. Free for individual landlords.',
@@ -21,8 +21,8 @@ export const metadata = {
     type: 'website',
     locale: 'en_MY',
     url: 'https://find-ai-lovat.vercel.app',
-    siteName: 'Find.ai',
-    title: "Find.ai — Don't sign blind.",
+    siteName: 'Veri.ai',
+    title: "Veri.ai — Don't sign blind.",
     description:
       'Malaysian property compliance toolkit. Verify tenants, audit agreements, calculate stamp duty — before anyone signs.',
     images: [
@@ -30,13 +30,13 @@ export const metadata = {
         url: '/icons/icon-512.png',
         width: 512,
         height: 512,
-        alt: 'Find.ai',
+        alt: 'Veri.ai',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Find.ai — Don't sign blind.",
+    title: "Veri.ai — Don't sign blind.",
     description:
       'Malaysian property compliance toolkit. Verify tenants, audit agreements, calculate stamp duty — before anyone signs.',
     images: ['/icons/icon-512.png'],
@@ -59,7 +59,7 @@ export const viewport = {
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Find.ai',
+  name: 'Veri.ai',
   applicationCategory: 'BusinessApplication',
   description: 'Malaysian property compliance toolkit. Anonymous-first tenant verification, SDSAS 2026 stamp duty, agreement audit. Free for individual landlords.',
   operatingSystem: 'Web',
@@ -70,7 +70,7 @@ const structuredData = {
   },
   publisher: {
     '@type': 'Organization',
-    name: 'Find.ai',
+    name: 'Veri.ai',
     url: 'https://find-ai-lovat.vercel.app',
     address: {
       '@type': 'PostalAddress',

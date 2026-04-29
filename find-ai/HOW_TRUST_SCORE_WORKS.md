@@ -1,21 +1,21 @@
-# How the Find.ai Trust Score works
+# How the Veri.ai Trust Score works
 
 > Plain-language explainer for landlords, agents, and tenants. Last updated: 2026-04-25 (v3.4.5).
 > **This document is the PUBLIC-TIER disclosure of the Trust Score methodology.** Safe to publish on marketing site, FAQ, or as an in-app help panel. Per `SCORING_DISCLOSURE_POLICY.md`, exact multiplier values, factor weights, and anti-fraud mechanisms are proprietary and not disclosed here.
 
 ---
 
-## What Find.ai is (and isn't)
+## What Veri.ai is (and isn't)
 
-Find.ai is a **support tool** for Malaysian landlords and agents to gather evidence about a prospective tenant before signing a tenancy agreement. We help you ask the right questions and present the answers in a clear format.
+Veri.ai is a **support tool** for Malaysian landlords and agents to gather evidence about a prospective tenant before signing a tenancy agreement. We help you ask the right questions and present the answers in a clear format.
 
-**Find.ai is NOT:**
+**Veri.ai is NOT:**
 - A decision engine — we don't tell you whether to rent to someone
 - A guarantee — a high score isn't a promise the tenant won't have problems
 - A credit bureau — we don't replace CCRIS, CTOS, or formal credit checks
 - A legal verdict — the final decision rests with you, the landlord
 
-**Find.ai IS:**
+**Veri.ai IS:**
 - An evidence-gathering tool — we collect what's available and present it clearly
 - A standardized format — every Trust Card looks the same, comparable across tenants
 - A government-anchored verification — we cross-check identity against LHDN STAMPS where available
@@ -92,7 +92,7 @@ This is fair because:
 - The single Trust Score reflects both, so landlords can compare tenants apples-to-apples
 - Tenants with limited evidence are encouraged to upload more — their Trust Score rises as the picture sharpens
 
-The exact mathematical relationship between Behaviour and Confidence is proprietary to Find.ai, but the categories above are exactly what we measure.
+The exact mathematical relationship between Behaviour and Confidence is proprietary to Veri.ai, but the categories above are exactly what we measure.
 
 ---
 
@@ -117,7 +117,7 @@ Tenants choose what to provide. They can:
 - Upload a recent bill OR provide just an account number
 - Pick which utilities to share (TNB, water, mobile — at least one)
 
-Find.ai doesn't access utility databases without consent. Tenants always control what gets shared.
+Veri.ai doesn't access utility databases without consent. Tenants always control what gets shared.
 
 ---
 
@@ -136,10 +136,10 @@ Find.ai doesn't access utility databases without consent. Tenants always control
 
 ## What happens to the data
 
-- **Tenant evidence (bills, IC, LHDN cert):** Stored encrypted, accessible only to the screening landlord and Find.ai's security-cleared staff. Auto-deleted 12 months after the tenancy ends, or earlier on request.
+- **Tenant evidence (bills, IC, LHDN cert):** Stored encrypted, accessible only to the screening landlord and Veri.ai's security-cleared staff. Auto-deleted 12 months after the tenancy ends, or earlier on request.
 - **Tenant consent:** Required before any bill is uploaded. Captured at the screening session.
 - **Landlord-facing reports:** Trust Card and Trust Score computed at the moment of screening. Card stored for landlord's records. Tenant can request deletion at any time per PDPA 2010.
-- **PDPA compliance:** Find.ai operates under Personal Data Protection Act 2010 (Malaysia). Full Privacy Policy at `legal/PRIVACY_POLICY.md`.
+- **PDPA compliance:** Veri.ai operates under Personal Data Protection Act 2010 (Malaysia). Full Privacy Policy at `legal/PRIVACY_POLICY.md`.
 
 ---
 
@@ -147,15 +147,15 @@ Find.ai doesn't access utility databases without consent. Tenants always control
 
 ### Q: Why does my Trust Score say 67 when my Behaviour is 95?
 
-Your Behaviour Score is the quality of how you've paid bills. If it's 95, you're an excellent payer. The Trust Score adjusts for how much evidence we have — if you only provided 1 utility bill, our confidence is limited. Upload more bills (or get your previous tenancy LHDN-stamped through Find.ai's stamp duty tool) and your Trust Score will rise.
+Your Behaviour Score is the quality of how you've paid bills. If it's 95, you're an excellent payer. The Trust Score adjusts for how much evidence we have — if you only provided 1 utility bill, our confidence is limited. Upload more bills (or get your previous tenancy LHDN-stamped through Veri.ai's stamp duty tool) and your Trust Score will rise.
 
-### Q: I'm a first-time renter. Can I still use Find.ai?
+### Q: I'm a first-time renter. Can I still use Veri.ai?
 
 Yes. You can skip the LHDN step (no previous tenancy is fine), and provide whatever utility bills are in your name (mobile postpaid is most common for first-timers). Your Trust Score will be lower because there's less to judge from, but it gives the landlord something to work with — and it's better than nothing.
 
 ### Q: My previous tenancy wasn't stamped. Does that hurt me?
 
-It limits your Confidence tier (you'll be Provisional instead of Mature, even with good bills) but doesn't hurt your Behaviour Score. If your bills show on-time payments, that signal stays. Find.ai's TOOL 3 (stamp duty calculator) helps your CURRENT tenancy get properly stamped — building your future profile.
+It limits your Confidence tier (you'll be Provisional instead of Mature, even with good bills) but doesn't hurt your Behaviour Score. If your bills show on-time payments, that signal stays. Veri.ai's TOOL 3 (stamp duty calculator) helps your CURRENT tenancy get properly stamped — building your future profile.
 
 ### Q: Why did I get a low Trust Score even though I always paid?
 
@@ -169,11 +169,11 @@ The landlord sees the Trust Score, Behaviour Score, Confidence tier, and a per-u
 
 ### Q: Can I dispute a score I think is wrong?
 
-Yes. Email support@find.ai with your case reference number and the specific issue. We'll re-review within 5 business days. If we find an error, we'll re-compute and notify the landlord.
+Yes. Email support@veri.ai with your case reference number and the specific issue. We'll re-review within 5 business days. If we find an error, we'll re-compute and notify the landlord.
 
-### Q: How is Find.ai different from CCRIS or CTOS?
+### Q: How is Veri.ai different from CCRIS or CTOS?
 
-CCRIS and CTOS focus on bank loans and credit card history — important for mortgages and personal loans. Find.ai focuses specifically on rental utility payment behaviour, which is a different signal (and one almost every adult Malaysian has, even if they have no bank loans). The two are complementary, not competitive.
+CCRIS and CTOS focus on bank loans and credit card history — important for mortgages and personal loans. Veri.ai focuses specifically on rental utility payment behaviour, which is a different signal (and one almost every adult Malaysian has, even if they have no bank loans). The two are complementary, not competitive.
 
 ### Q: Is the score guaranteed to be accurate?
 
@@ -183,7 +183,7 @@ No score system can guarantee future behaviour. We make our best effort to extra
 
 ## What we keep proprietary
 
-To prevent fraud and protect Find.ai's competitive advantage, we don't publish:
+To prevent fraud and protect Veri.ai's competitive advantage, we don't publish:
 - The exact mathematical relationship between Behaviour and Confidence
 - The specific weights we apply to each factor
 - The thresholds that separate one timing tier from another
@@ -196,7 +196,7 @@ This is standard practice for credit-scoring systems worldwide (FICO, Experian, 
 
 ## Questions or feedback
 
-- Email: support@find.ai
+- Email: support@veri.ai
 - Web: https://find-ai-lovat.vercel.app
 - WhatsApp: (TBD — to be added with pilot launch)
 

@@ -68,7 +68,7 @@ export default function NewScreenRequestPage() {
   };
 
   const waMsg = generatedUrl
-    ? `Hi! Before our viewing, please submit your Trust Card for verification.\n\n${landlordName ? `Landlord: ${landlordName}\n` : ''}${property ? `Property: ${property}\n` : ''}Mode: ${mode === 'anonymous' ? 'Anonymous (your name stays private until you choose to reveal it)' : 'Verified (your name will be shared)'}\n\nLink: ${generatedUrl}\n\n— Find.ai · Don't sign blind.`
+    ? `Hi! Before our viewing, please submit your Trust Card for verification.\n\n${landlordName ? `Landlord: ${landlordName}\n` : ''}${property ? `Property: ${property}\n` : ''}Mode: ${mode === 'anonymous' ? 'Anonymous (your name stays private until you choose to reveal it)' : 'Verified (your name will be shared)'}\n\nLink: ${generatedUrl}\n\n— Veri.ai · Don't sign blind.`
     : '';
   const waUrl = generatedUrl ? `https://wa.me/?text=${encodeURIComponent(waMsg)}` : null;
 
@@ -80,10 +80,10 @@ export default function NewScreenRequestPage() {
           <Link
             href="/"
             style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
             {/* v3.4.38 — Wordmark-only brand. */}
-            <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
         </header>
@@ -248,10 +248,10 @@ export default function NewScreenRequestPage() {
         {/* Footer */}
         <footer style={{ textAlign: 'center', fontSize: 11, color: '#9A9484', marginTop: 8 }}>
           <Link href="/" style={{ color: '#0F1E3F', textDecoration: 'none', fontWeight: 600 }}>
-            ← Back to Find.ai
+            ← Back to Veri.ai
           </Link>
           <div style={{ marginTop: 8 }}>
-            Find.ai · Don't sign blind.
+            Veri.ai · Don't sign blind.
           </div>
         </footer>
       </div>

@@ -50,10 +50,10 @@ export default function TenantScreenSubmissionPage() {
           <Link
             href="/"
             style={{ display: 'flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
             {/* v3.4.38 — Wordmark-only brand. */}
-            <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
           <div style={{ flex: 1, fontSize: 12, color: '#3F4E6B', minWidth: 0 }}>

@@ -73,7 +73,7 @@ const COMPLIANCE_GOALS = {
         { name: 'Security Deposit (2+1)', dept: 'Paid to landlord', detail: 'Standard: 2 months rent (security) + 0.5 month (utility deposit). Get receipts. Document everything with photos at check-in.', time: 'Upfront', cost: '2.5 months rent' },
       ],
       recommended: [
-        { name: 'Use Find.ai Evidence Vault', dept: 'Find.ai Photo Proof tool', detail: 'SHA-256 hash your check-in photos. Creates court-ready evidence under Section 90A Evidence Act. Protects your deposit claim.', time: '10 minutes', cost: 'Free' },
+        { name: 'Use Veri.ai Evidence Vault', dept: 'Veri.ai Photo Proof tool', detail: 'SHA-256 hash your check-in photos. Creates court-ready evidence under Section 90A Evidence Act. Protects your deposit claim.', time: '10 minutes', cost: 'Free' },
         { name: 'Verify Landlord Ownership', dept: 'Pejabat Tanah (Land Office)', detail: 'Do a title search to confirm the person renting to you actually owns the property. Scams exist.', time: 'Same day', cost: 'RM50-100' },
       ],
     },
@@ -88,7 +88,7 @@ const COMPLIANCE_GOALS = {
         { name: 'Deposit Keselamatan (2+1)', dept: 'Bayar kepada tuan rumah', detail: 'Standard: 2 bulan sewa (keselamatan) + 0.5 bulan (deposit utiliti). Dapatkan resit.', time: 'Pendahuluan', cost: '2.5 bulan sewa' },
       ],
       recommended: [
-        { name: 'Guna Find.ai Bukti Foto', dept: 'Alat Bukti Foto Find.ai', detail: 'Hash SHA-256 gambar masuk anda. Cipta bukti mahkamah di bawah Seksyen 90A Akta Keterangan.', time: '10 minit', cost: 'Percuma' },
+        { name: 'Guna Veri.ai Bukti Foto', dept: 'Alat Bukti Foto Veri.ai', detail: 'Hash SHA-256 gambar masuk anda. Cipta bukti mahkamah di bawah Seksyen 90A Akta Keterangan.', time: '10 minit', cost: 'Percuma' },
         { name: 'Sahkan Pemilikan Tuan Rumah', dept: 'Pejabat Tanah', detail: 'Buat carian hakmilik untuk sahkan pemilik sebenar. Penipuan wujud.', time: 'Hari yang sama', cost: 'RM50-100' },
       ],
     },
@@ -103,7 +103,7 @@ const COMPLIANCE_GOALS = {
         { name: '押金（2+1）', dept: '支付给房东', detail: '标准：2个月租金（押金）+ 0.5个月（水电押金）。索取收据。入住时拍照记录一切。', time: '预付', cost: '2.5个月租金' },
       ],
       recommended: [
-        { name: '使用Find.ai照片证明', dept: 'Find.ai照片证明工具', detail: 'SHA-256哈希锁定入住照片。根据《证据法》第90A条创建法庭证据。保护您的押金索赔。', time: '10分钟', cost: '免费' },
+        { name: '使用Veri.ai照片证明', dept: 'Veri.ai照片证明工具', detail: 'SHA-256哈希锁定入住照片。根据《证据法》第90A条创建法庭证据。保护您的押金索赔。', time: '10分钟', cost: '免费' },
         { name: '核实房东所有权', dept: '土地局', detail: '进行产权搜索，确认出租人确实拥有该房产。存在诈骗。', time: '当天', cost: 'RM50-100' },
       ],
     },

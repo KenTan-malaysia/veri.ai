@@ -44,7 +44,7 @@ export const ToolHeader = ({ icon, title, desc, onClose, onAsk, askLabel }) => (
 // v3.4.27 — Pure web Modal. No more bottom-sheet on mobile (drag handle
 // removed entirely), no rounded-top-only corners, no app instinct. At every
 // viewport this is a centered dialog with all-corners rounded. Per
-// WEB_UX_PATTERNS.md — Find.ai is a website on every device, not an app.
+// WEB_UX_PATTERNS.md — Veri.ai is a website on every device, not an app.
 export const Modal = ({ children }) => (
   <div
     className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"

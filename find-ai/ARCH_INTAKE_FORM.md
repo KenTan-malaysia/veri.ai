@@ -1,6 +1,6 @@
 # ARCH — Tenant Intake Form (Pre-Screening Operational Fit)
 
-> **Doctrine locked 2026-04-26 (v3.4.32) — Ken's decision after analyzing the standard agent-to-landlord WhatsApp prospect message:** Find.ai owns the intake form too, not just the screening. This pulls us upstream in the customer journey from "trust before signing" to "trust before introducing."
+> **Doctrine locked 2026-04-26 (v3.4.32) — Ken's decision after analyzing the standard agent-to-landlord WhatsApp prospect message:** Veri.ai owns the intake form too, not just the screening. This pulls us upstream in the customer journey from "trust before signing" to "trust before introducing."
 >
 > Last updated: 2026-04-26
 > Owner: Ken Tan
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Find.ai standardizes the messy WhatsApp prospect-intake practice into a structured `/intake/{intakeId}` form. Tenant fills once, agent forwards link, landlord sees operational fit data + (optionally) Trust Card screening. Single artifact replaces the 5-different-formats-per-agent WhatsApp message that runs Malaysian rentals today.**
+**Veri.ai standardizes the messy WhatsApp prospect-intake practice into a structured `/intake/{intakeId}` form. Tenant fills once, agent forwards link, landlord sees operational fit data + (optionally) Trust Card screening. Single artifact replaces the 5-different-formats-per-agent WhatsApp message that runs Malaysian rentals today.**
 
 This is the upstream-most move in this session. Owning intake = owning the first mile of the rental customer journey.
 
@@ -22,10 +22,10 @@ This is the upstream-most move in this session. Owning intake = owning the first
 Today, agents send landlords a free-text WhatsApp message with prospect details. Every agent does it differently. Every message includes some discrimination vectors (race, religion). The data dies in WhatsApp — not searchable, not portable, not comparable. Landlords can't rank 5 prospects fairly because the format varies.
 
 ### 2. We're missing operational-fit data that landlords actually need
-Find.ai's TOOL 1 currently captures: name, IC, LHDN cert, utility bills. That's *trust signal*. But the agent's intake message captures: pax, move-in date, budget, tenancy length, pets, etc. That's *operational fit*. **Landlords need both.** Without intake, we force agents to keep doing the WhatsApp interview, which means the discrimination vectors leak in pre-Find.ai.
+Veri.ai's TOOL 1 currently captures: name, IC, LHDN cert, utility bills. That's *trust signal*. But the agent's intake message captures: pax, move-in date, budget, tenancy length, pets, etc. That's *operational fit*. **Landlords need both.** Without intake, we force agents to keep doing the WhatsApp interview, which means the discrimination vectors leak in pre-Veri.ai.
 
 ### 3. It re-anchors anonymous-default
-Currently anonymous-default is theater because the agent already shares everything via WhatsApp pre-Find.ai. If our intake form is the entry point, we shape what gets captured: race becomes opt-in with warning, employer becomes categorical. **Now anonymous-default is structurally meaningful, not just window-dressing.**
+Currently anonymous-default is theater because the agent already shares everything via WhatsApp pre-Veri.ai. If our intake form is the entry point, we shape what gets captured: race becomes opt-in with warning, employer becomes categorical. **Now anonymous-default is structurally meaningful, not just window-dressing.**
 
 ### 4. It's the upstream-most move
 Trust Card is "trust before signing." Intake form is "trust before *introducing*." Each step upstream = harder to displace. Whoever owns intake owns the rental customer journey in MY.
@@ -36,7 +36,7 @@ Trust Card is "trust before signing." Intake form is "trust before *introducing*
 
 ```
 Step 1 — Tenant sees ad, contacts agent (existing)
-Step 2 — Agent gives Find.ai intake link (NEW)         ← Sprint 4 build target
+Step 2 — Agent gives Veri.ai intake link (NEW)         ← Sprint 4 build target
 Step 3 — Tenant fills intake form (5-8 min)
 Step 4 — Intake Card generated → /intake/{intakeId}    ← shareable URL
 Step 5 — Agent forwards Intake Card to landlord
@@ -47,9 +47,9 @@ Step 8 — Trust Card → /trust/{reportId}                 ← shipped v3.4.31
 Step 9 — Reveal tiers, viewing, deal, sign (existing)
 ```
 
-**Two artifacts, both Find.ai-shareable URLs:**
-- `find.ai/intake/{intakeId}` — operational fit + soft attributes
-- `find.ai/trust/{reportId}` — credit/trust signal
+**Two artifacts, both Veri.ai-shareable URLs:**
+- `veri.ai/intake/{intakeId}` — operational fit + soft attributes
+- `veri.ai/trust/{reportId}` — credit/trust signal
 
 **Linked:** `trustCard.relatedIntake = intakeId`, `intake.relatedTrustCard = reportId`. Tenant fills intake once, screening once, both reusable across multiple landlords.
 
@@ -108,7 +108,7 @@ Every intake field falls into one of four categories. **This is the locked princ
 
 ### Category C — Opt-in with explicit warning (potentially discriminatory)
 
-> **🔒 LOCKED v3.4.34 — Ken's final call: Option B confirmed.** Race/religion are captured as **opt-in with discrimination warning + audit log**. Hidden by default. Tenant must actively click "Add this field." Every view logged. Landlord-side shows: *"Tenant self-disclosed. Cannot be legally used as discrimination basis. Find.ai logs every view of this field."*
+> **🔒 LOCKED v3.4.34 — Ken's final call: Option B confirmed.** Race/religion are captured as **opt-in with discrimination warning + audit log**. Hidden by default. Tenant must actively click "Add this field." Every view logged. Landlord-side shows: *"Tenant self-disclosed. Cannot be legally used as discrimination basis. Veri.ai logs every view of this field."*
 >
 > **Data-validated v3.4.33.** **Critical finding from real samples: agents conflate "Race" with "Nationality."** 3 of 4 "race" entries in real samples are actually nationality (Mahad: "Race: American", Hedaya/Omar: "Race: Arab"). Form must enforce the distinction:
 > - **Nationality** is operational (Category A above) — passport country, affects visa/contract.
@@ -122,7 +122,7 @@ These fields are HIDDEN BY DEFAULT. Tenant must explicitly click "Add this field
 
 | Field | Format | Universality in real samples | Warning shown to landlord |
 |---|---|---|---|
-| Race / ethnicity | Free text OR category (Malay / Chinese / Indian / Arab / Other) | 4/6 (but 3/4 conflated with nationality) | "Tenant self-disclosed. Race-based tenant rejection is not legally enforceable. This information is for tenant transparency only. Find.ai logs every view of this field." |
+| Race / ethnicity | Free text OR category (Malay / Chinese / Indian / Arab / Other) | 4/6 (but 3/4 conflated with nationality) | "Tenant self-disclosed. Race-based tenant rejection is not legally enforceable. This information is for tenant transparency only. Veri.ai logs every view of this field." |
 | Religion | Free text OR category (Islam / Buddhism / Christianity / Hinduism / Other / None) | 1/6 (only when tenant volunteers) | "Tenant self-disclosed. Religion-based tenant rejection is not legally enforceable." |
 | Extended family / dependents | Categorical (Multi-generational / With elderly parents / With domestic help / Other) | 0/6 explicit, sometimes implied | "Tenant self-disclosed. Use only for unit-fit assessment (bedroom count, accessibility), not as discriminatory criterion." |
 
@@ -135,7 +135,7 @@ These fields are HIDDEN BY DEFAULT. Tenant must explicitly click "Add this field
 > **🔒 LOCKED v3.4.34 — Ken's final call:**
 > - **Specific employer:** ✅ Categorical at intake, specific name reveals only at T4 (per `ARCH_REVEAL_TIERS.md`).
 > - **Income / salary:** ✅ **NEVER asked at intake.** The Budget field (Category A) IS the income proxy at intake. Salary as a concept doesn't appear on the intake form at all. If a landlord wants income verification, it surfaces at T4 (contact reveal) as an opt-in tenant action — and even then framed as "income range bucket," never "salary."
-> - **Why this matters:** Asking for salary at intake is invasive and replicates exactly the data-aggregation we're trying to prevent. Real-sample data confirms: 0/6 agents asked for salary in their proposal messages. Budget is the universally-used proxy. Don't add the question Find.ai shouldn't be asking.
+> - **Why this matters:** Asking for salary at intake is invasive and replicates exactly the data-aggregation we're trying to prevent. Real-sample data confirms: 0/6 agents asked for salary in their proposal messages. Budget is the universally-used proxy. Don't add the question Veri.ai shouldn't be asking.
 >
 > **Data-validated v3.4.33.** Real samples confirm specific employer name is **volunteered only when prestigious** ("Philip Morris International", "Systems Limited") and **omitted when neutral** (housewife, business owner, student, generic "IT Consultant"). This is reputation gaming — Category D treatment correctly equalizes the field.
 
@@ -152,8 +152,8 @@ These fields are captured as bucket on the intake form. Specific value can be op
 | Field | Why never at intake | When it surfaces |
 |---|---|---|
 | ~~Income range~~ | The word "salary" / "income" never appears on the intake form. Budget (Category A) is the income proxy. Asking salary at intake = data-aggregation we're explicitly trying to prevent. | T4 (contact reveal) only, opt-in. Framed as "income range bucket," never specific salary. |
-| Specific salary | Never on intake. Never on Find.ai by default. | T4 reveal only IF landlord requests + tenant explicitly approves. |
-| Bank statements | Never on intake. Never on Find.ai. | Off-platform between landlord and tenant if both agree. Find.ai does not collect or display. |
+| Specific salary | Never on intake. Never on Veri.ai by default. | T4 reveal only IF landlord requests + tenant explicitly approves. |
+| Bank statements | Never on intake. Never on Veri.ai. | Off-platform between landlord and tenant if both agree. Veri.ai does not collect or display. |
 | IC number | Never on intake. | T5 (signing) — legally required for stamp duty + lease. |
 
 ### Free-text optional fields
@@ -189,7 +189,7 @@ The shareable artifact at `/intake/{intakeId}` looks like this conceptually:
 
 ```
 ┌────────────────────────────────────────────┐
-│  📋 Find.ai Intake                          │
+│  📋 Veri.ai Intake                          │
 │  Operational fit summary                   │
 │                                            │
 │  Tenant: Anonymous Tenant T-7841           │
@@ -313,7 +313,7 @@ Even though build is Sprint 4, we should validate field decisions with pilots BE
 
 1. *"Show us a typical WhatsApp prospect message you've sent or received recently. (Screenshot or paste text — you can redact name.)"*
 2. *"Which fields in that message did you actually use to make a decision? Which did you ignore?"*
-3. *"If Find.ai standardized this intake form, which fields would you mark as REQUIRED vs OPTIONAL?"*
+3. *"If Veri.ai standardized this intake form, which fields would you mark as REQUIRED vs OPTIONAL?"*
 4. *"How would you feel about a 'race / religion / family composition' field being opt-in only with a discrimination warning?"*
 5. *"Would you prefer the intake form to show specific employer name, OR a category (e.g. 'Multinational corporate')?"*
 

@@ -54,13 +54,13 @@ Industrial-strength. Cost: RM 30-80k development + RM 6-12k/month operational.
 | # | Check | Mechanism | Catches |
 |---|---|---|---|
 | 9 | **ML anomaly detection** | Train on real Malaysian utility bills + known fake patterns. Flag low-confidence images. | Novel fraud patterns |
-| 10 | **Human review queue** | Find.ai trust team manually reviews flagged cases (1-2 staff at scale) | Edge cases, novel attacks |
+| 10 | **Human review queue** | Veri.ai trust team manually reviews flagged cases (1-2 staff at scale) | Edge cases, novel attacks |
 
 ---
 
 ## DNA-aligned UX when fakes are detected
 
-**Critical:** never accuse the tenant directly. Frame neutrally to protect both the tenant (innocent reasons exist — bad photo, old bill format) and Find.ai (no defamation risk).
+**Critical:** never accuse the tenant directly. Frame neutrally to protect both the tenant (innocent reasons exist — bad photo, old bill format) and Veri.ai (no defamation risk).
 
 ### ❌ Wrong framing
 > "This bill looks fake — denied"

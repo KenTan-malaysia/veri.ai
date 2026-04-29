@@ -5,9 +5,9 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Transparency · what we measure, publicly',
-  description: 'Find.ai transparency report. Trust Cards generated, anonymous-mode adoption, audit log integrity, breach notifications. Updated regularly.',
+  description: 'Veri.ai transparency report. Trust Cards generated, anonymous-mode adoption, audit log integrity, breach notifications. Updated regularly.',
   openGraph: {
-    title: 'Find.ai transparency report',
+    title: 'Veri.ai transparency report',
     description: 'What we measure, what we promise, where we are.',
     url: 'https://find-ai-lovat.vercel.app/transparency',
   },
@@ -20,9 +20,9 @@ export default function TransparencyPage() {
         <Link
           href="/"
           style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F', marginBottom: 40 }}
-          aria-label="Find.ai home"
+          aria-label="Veri.ai home"
         >
-          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
           <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
         </Link>
 
@@ -60,7 +60,7 @@ export default function TransparencyPage() {
             marginBottom: 40,
           }}
         >
-          <strong>Pre-launch state.</strong> Find.ai is in v1 development.
+          <strong>Pre-launch state.</strong> Veri.ai is in v1 development.
           The metrics below show our commitments. Real numbers populate as
           pilot landlords + tenants come through the flow.
         </div>
@@ -102,7 +102,7 @@ export default function TransparencyPage() {
 
         <Section title="Independent audits">
           <p style={{ fontSize: 14, lineHeight: 1.65, color: '#3F4E6B' }}>
-            Find.ai will commission an independent PDPA compliance audit
+            Veri.ai will commission an independent PDPA compliance audit
             within 90 days of reaching 1,000 active users. Audit report
             will be published on this page. (Currently pre-launch — no
             audit performed yet.)
@@ -112,7 +112,7 @@ export default function TransparencyPage() {
         <Section title="Ask us anything">
           <p style={{ fontSize: 14, lineHeight: 1.65, color: '#3F4E6B' }}>
             Questions about our methodology, security posture, or compliance
-            commitments? Email <a href="mailto:hello@find.ai" style={{ color: '#B8893A' }}>hello@find.ai</a>.
+            commitments? Email <a href="mailto:hello@veri.ai" style={{ color: '#B8893A' }}>hello@veri.ai</a>.
             Substantive responses within 48 hours. Privacy-related requests
             (PDPA access, deletion, etc.) within 21 days as required by law.
           </p>
@@ -123,7 +123,7 @@ export default function TransparencyPage() {
             href="/"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 13, color: '#5A6780', textDecoration: 'none' }}
           >
-            ← Back to Find.ai
+            ← Back to Veri.ai
           </Link>
           <div style={{ marginTop: 14, fontSize: 11, color: '#9A9484', fontStyle: 'italic' }}>
             Last updated April 2026 · Next review: when first 100 users complete the flow

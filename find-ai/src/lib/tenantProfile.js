@@ -1,7 +1,7 @@
 'use client';
 
 // ═══════════════════════════════════════════════════════════════════════
-// Find.ai — Tenant Profile Module (Path D — "Register once, rent anywhere")
+// Veri.ai — Tenant Profile Module (Path D — "Register once, rent anywhere")
 //
 // Reusable tenant trust profile. One registration → every future landlord
 // fetches a pre-verified profile in 1 second.
@@ -127,7 +127,7 @@ export function requestOTP(phoneE164) {
   // Dev-only: log so it's visible during pilot testing
   if (typeof window !== 'undefined') {
     // eslint-disable-next-line no-console
-    console.info(`[Find.ai OTP · MOCK] code for ${phoneE164} = ${code}`);
+    console.info(`[Veri.ai OTP · MOCK] code for ${phoneE164} = ${code}`);
   }
   return { sent: true, mockCode: code };   // mockCode exposed for demo only
 }
@@ -345,6 +345,6 @@ export function useTenantProfile() {
 // Public shareable URL builder (for WhatsApp hand-off)
 // ───────────────────────────────────────────────────────────────────────
 export function buildShareURL(profileId, origin) {
-  const base = origin || (typeof window !== 'undefined' ? window.location.origin : 'https://find.ai');
+  const base = origin || (typeof window !== 'undefined' ? window.location.origin : 'https://veri.ai');
   return `${base}/t/${profileId}`;
 }

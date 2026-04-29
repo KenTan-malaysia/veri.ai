@@ -1,6 +1,6 @@
 # ARCH — Identity Reveal Tiers (Anonymous-by-Default Trust Card)
 
-> **Doctrine locked 2026-04-26 (v3.4.28) — Ken's decision after the agent-flow review:** Find.ai is anonymous-by-default. Tenant identity is hidden from landlord until a tiered, consented reveal. The agent (where present) controls reveal pacing; the tenant always retains veto power.
+> **Doctrine locked 2026-04-26 (v3.4.28) — Ken's decision after the agent-flow review:** Veri.ai is anonymous-by-default. Tenant identity is hidden from landlord until a tiered, consented reveal. The agent (where present) controls reveal pacing; the tenant always retains veto power.
 >
 > Last updated: 2026-04-26
 > Owner: Ken Tan
@@ -12,7 +12,7 @@
 
 **A landlord sees a Trust Score, not a tenant. Identity is revealed in 5 tiers, gated by consent, only as the rental decision progresses. At signing, full identity transfers automatically (legally required for stamp duty + lease).**
 
-This single decision reframes Find.ai from "tenant screening tool" to "identity layer of Malaysian rentals."
+This single decision reframes Veri.ai from "tenant screening tool" to "identity layer of Malaysian rentals."
 
 > **v3.4.30 update — Mode is OPTIONAL, default is Anonymous.** Anonymous is no longer mandatory. Each deal picks one of two modes at link-creation time: **Anonymous Mode** (T0 = no name, full tier flow as below) or **Verified Mode** (T0 = name shown, but contact/employer/IC details still tier-gated). Default mode is Anonymous (recommended for tenant safety + anti-discrimination). Tenant has unilateral right to insist on Anonymous Mode regardless of landlord/agent preference. See "Mode Selection" section below.
 
@@ -79,13 +79,13 @@ If Anonymous Mode adoption drops below 40% sustained, escalate to product review
 Three structural reasons. All three reinforce our DNA, none of them are promotional.
 
 ### 1. Agent moat
-Without anonymous mode, agents won't push Find.ai because every screening risks the landlord bypassing them (getting tenant contact directly → cutting agent out of the commission). With anonymous mode, the agent is the *gatekeeper of identity* — landlord literally cannot deal-direct without going through the reveal flow, which the agent controls. This makes Find.ai infrastructure agents *need*, not a tool they *might* use.
+Without anonymous mode, agents won't push Veri.ai because every screening risks the landlord bypassing them (getting tenant contact directly → cutting agent out of the commission). With anonymous mode, the agent is the *gatekeeper of identity* — landlord literally cannot deal-direct without going through the reveal flow, which the agent controls. This makes Veri.ai infrastructure agents *need*, not a tool they *might* use.
 
 ### 2. Anti-discrimination
 Landlords with explicit or implicit bias filter on race, gender, religion, foreign-vs-local, age — all signaled by name. With "Trust Score 87 · Anonymous Tenant T-7841" as the default view, the score becomes the criterion, not the name. We don't enforce anti-discrimination; we *make it the path of least resistance*. This has public-good narrative value with regulators, the press, and tenant rights groups.
 
 ### 3. Tenant safety + adoption
-Many tenants — especially women, foreign workers, junior professionals — actively prefer not to share IC + employer + address until they're committed to the unit. Anonymous-default makes Find.ai feel safer to submit. Higher submission rate. Better data for landlords. Reinforcing loop.
+Many tenants — especially women, foreign workers, junior professionals — actively prefer not to share IC + employer + address until they're committed to the unit. Anonymous-default makes Veri.ai feel safer to submit. Higher submission rate. Better data for landlords. Reinforcing loop.
 
 ---
 
@@ -195,7 +195,7 @@ Landlords cannot skip tiers — they always get whatever tier the tenant has aut
 
 ### T5 — automatic at signing
 1. Tenancy agreement is being prepared (Agreement Health Check tool, future)
-2. Find.ai detects "tenancy initiated" event → unlocks T5
+2. Veri.ai detects "tenancy initiated" event → unlocks T5
 3. All parties notified: "Full identity now visible for tenancy signing + LHDN stamping"
 4. No reveal-tier UI needed — it's a system event
 
@@ -240,13 +240,13 @@ Every reveal event writes an immutable log entry:
 }
 ```
 
-Tenant can request their full reveal history at any time (PDPA right). Find.ai retains logs for 7 years (statutory record-keeping).
+Tenant can request their full reveal history at any time (PDPA right). Veri.ai retains logs for 7 years (statutory record-keeping).
 
 ---
 
-## PDPA implications — Find.ai is now formally a data controller
+## PDPA implications — Veri.ai is now formally a data controller
 
-Find.ai holds tenant PII (collected at submission) and gates its release. That makes us a **data controller** under PDPA 2010 — not a data processor.
+Veri.ai holds tenant PII (collected at submission) and gates its release. That makes us a **data controller** under PDPA 2010 — not a data processor.
 
 Required infrastructure:
 - **DPIA (Data Protection Impact Assessment)** — formal document, lawyer-prepared, before broad launch
@@ -283,7 +283,7 @@ The current v0 mock Trust Card shows tenant name prominently. **This must be red
 ### Anonymous Trust Card (T0 — the default visual)
 ```
 ┌─────────────────────────────────────────┐
-│  🛡️ Find.ai Trust Card                   │
+│  🛡️ Veri.ai Trust Card                   │
 │                                         │
 │  Trust Score: 87 / 100                  │
 │  Anonymous Tenant T-7841                │

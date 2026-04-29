@@ -101,7 +101,7 @@ export async function generateMetadata({ params, searchParams }) {
   const title = card.mode === 'verified' && card.tenantName
     ? `Trust Score ${card.trustScore}/100 · ${card.tenantName}`
     : `Trust Score ${card.trustScore}/100 · Anonymous Tenant ${card.anonymousTenantId}`;
-  const description = `Find.ai Trust Card · ${card.mode === 'anonymous' ? 'Anonymous' : 'Verified'} Mode · LHDN-verified ${card.lhdnMonths} months previous tenancy · ${card.utilityCount}/3 utility bills · Last verified ${card.lastVerified}.`;
+  const description = `Veri.ai Trust Card · ${card.mode === 'anonymous' ? 'Anonymous' : 'Verified'} Mode · LHDN-verified ${card.lhdnMonths} months previous tenancy · ${card.utilityCount}/3 utility bills · Last verified ${card.lastVerified}.`;
   return {
     title,
     description,
@@ -110,13 +110,13 @@ export async function generateMetadata({ params, searchParams }) {
       description,
       type: 'website',
       url: `https://find-ai-lovat.vercel.app/trust/${card.reportId}`,
-      siteName: 'Find.ai',
+      siteName: 'Veri.ai',
       images: [
         {
           url: '/icons/icon-512.png',
           width: 512,
           height: 512,
-          alt: `Find.ai Trust Card — ${card.anonymousTenantId}`,
+          alt: `Veri.ai Trust Card — ${card.anonymousTenantId}`,
         },
       ],
     },
@@ -316,10 +316,10 @@ export default async function TrustCardPage({ params, searchParams }) {
               textDecoration: 'none',
               color: '#0F1E3F',
             }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
             {/* v3.4.38 — Wordmark-only brand. */}
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
           <div
@@ -589,7 +589,7 @@ export default async function TrustCardPage({ params, searchParams }) {
               <p style={{ fontSize: 13, lineHeight: 1.6, color: '#3F4E6B', marginBottom: 12 }}>
                 This is an{' '}
                 <strong>{isAnonymous ? 'Anonymous' : 'Verified'} Mode</strong> Trust
-                Card from Find.ai. The tenant submitted their LHDN-verified previous
+                Card from Veri.ai. The tenant submitted their LHDN-verified previous
                 tenancy + utility payment history. The Trust Score combines{' '}
                 <strong>payment behaviour</strong> (how on-time they paid bills) and{' '}
                 <strong>confidence</strong> (how much data we have).
@@ -603,7 +603,7 @@ export default async function TrustCardPage({ params, searchParams }) {
                 </p>
               )}
               <p style={{ fontSize: 12, color: '#9A9484', fontStyle: 'italic' }}>
-                Find.ai is a support tool, not legal advice. Landlord makes the final
+                Veri.ai is a support tool, not legal advice. Landlord makes the final
                 judgment. Live Bound Verification (LBV) at viewing confirms the person
                 in front of you matches this Trust Card.
               </p>
@@ -742,10 +742,10 @@ export default async function TrustCardPage({ params, searchParams }) {
           }}
         >
           <Link href="/" style={{ color: '#0F1E3F', textDecoration: 'none', fontWeight: 600 }}>
-            ← Back to Find.ai
+            ← Back to Veri.ai
           </Link>
           <div style={{ marginTop: 10 }}>
-            Find.ai · Don't sign blind. ·{' '}
+            Veri.ai · Don't sign blind. ·{' '}
             <Link href="/privacy" style={{ color: '#9A9484', textDecoration: 'underline' }}>
               Privacy
             </Link>

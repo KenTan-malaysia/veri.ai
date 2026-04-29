@@ -4,7 +4,7 @@
 //
 // Per Ken's directive ("study apple.com/my/store and copy webpage design").
 // Replaces the v9.3 welcome→pick flow. Single full landing page following the
-// Apple Store webpage pattern adapted to Find.ai's banking-trust DNA:
+// Apple Store webpage pattern adapted to Veri.ai's banking-trust DNA:
 //
 //   1. Top nav (sticky) — wordmark + center nav + sign-in
 //   2. Hero — massive headline + subhead + 2 CTAs
@@ -95,8 +95,8 @@ export default function Landing({
       {/* ── TOP NAV (sticky) ────────────────────────────────────────────── */}
       <nav className="ap-nav" aria-label="Primary">
         <div className="ap-nav-inner">
-          <Link href="/" className="ap-brand" aria-label="Find.ai home">
-            <span className="ap-brand-find">Find</span>
+          <Link href="/" className="ap-brand" aria-label="Veri.ai home">
+            <span className="ap-brand-find">Veri</span>
             <span className="ap-brand-ai">.ai</span>
           </Link>
           <ul className="ap-nav-links">
@@ -365,12 +365,12 @@ export default function Landing({
           </div>
           <div className="ap-footer-bottom">
             <div className="ap-footer-brand">
-              <span className="ap-brand-find">Find</span><span className="ap-brand-ai">.ai</span>
+              <span className="ap-brand-find">Veri</span><span className="ap-brand-ai">.ai</span>
             </div>
             <div className="ap-footer-meta">
-              <span>© 2026 Find.ai · Kuala Lumpur, Malaysia</span>
+              <span>© 2026 Veri.ai · Kuala Lumpur, Malaysia</span>
               <span className="ap-footer-sep">·</span>
-              <a href="mailto:hello@find.ai">hello@find.ai</a>
+              <a href="mailto:hello@veri.ai">hello@veri.ai</a>
               <span className="ap-footer-sep">·</span>
               <button onClick={cycleLang} className="ap-footer-lang">
                 {c.fLangLabel}: {lang.toUpperCase()}
@@ -459,7 +459,7 @@ function FooterCol({ title, links }) {
 function HeroTrustCard({ c }) {
   return (
     <div className="ap-htc-wrap">
-      <div className="ap-htc-card" role="img" aria-label="Find.ai Trust Card preview — example">
+      <div className="ap-htc-card" role="img" aria-label="Veri.ai Trust Card preview — example">
         {/* v3.4.45 — EXAMPLE label per 100-user audit P0 #4. First-time users
             were confusing the demo score with their own. */}
         <div className="ap-htc-example-tag">EXAMPLE</div>
@@ -716,7 +716,7 @@ const STRINGS = {
       { label: 'About', href: '/about' },
       { label: 'Pricing', href: '/pricing' },
       { label: 'Transparency', href: '/transparency' },
-      { label: 'Contact', href: 'mailto:hello@find.ai' },
+      { label: 'Contact', href: 'mailto:hello@veri.ai' },
     ],
     fLangLabel: 'Language',
     founderLine: 'Built by Ken Tan in Kuala Lumpur · Sdn Bhd registration pending · Pre-launch v1 · Trusted infrastructure: LHDN STAMPS · PDPA 2010 · Section 90A Evidence Act',
@@ -816,7 +816,7 @@ const STRINGS = {
     fcCompanyLinks: [
       { label: 'Tentang', href: '/about' },
       { label: 'Harga', href: '/pricing' },
-      { label: 'Hubungi', href: 'mailto:hello@find.ai' },
+      { label: 'Hubungi', href: 'mailto:hello@veri.ai' },
     ],
     fLangLabel: 'Bahasa',
     founderLine: 'Dibina oleh Ken Tan di Kuala Lumpur · Pendaftaran Sdn Bhd dalam proses · Pra-pelancaran v1 · Infrastruktur dipercayai: LHDN STAMPS · PDPA 2010 · Seksyen 90A Akta Keterangan',
@@ -916,7 +916,7 @@ const STRINGS = {
     fcCompanyLinks: [
       { label: '关于', href: '/about' },
       { label: '定价', href: '/pricing' },
-      { label: '联系', href: 'mailto:hello@find.ai' },
+      { label: '联系', href: 'mailto:hello@veri.ai' },
     ],
     fLangLabel: '语言',
     founderLine: '由 Ken Tan 在吉隆坡构建 · Sdn Bhd 注册进行中 · 预发布 v1 · 可信基础设施：LHDN STAMPS · PDPA 2010 · 证据法第 90A 条',

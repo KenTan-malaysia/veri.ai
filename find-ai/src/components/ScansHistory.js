@@ -1,7 +1,7 @@
 'use client';
 
 // ═══════════════════════════════════════════════════════════════════════
-// Find.ai — "Your scans" history view (v9.6 T12 + T13 dossier pivot)
+// Veri.ai — "Your scans" history view (v9.6 T12 + T13 dossier pivot)
 //
 // A landlord who's run 3 scans on 3 different prospects wants to compare
 // them side-by-side before signing. Up until now the scan artifact was

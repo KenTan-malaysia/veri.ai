@@ -8,12 +8,12 @@
 
 ## Strategic Position
 
-This spec turns **TOOL 1 (Tenant Screening)** from a generic CCRIS/CTOS + reference-call tool into a Find.ai-proprietary credit-scoring engine that uses **government-anchored tenancy proof + utility payment behaviour** as the primary signals. Competitors cannot copy this without doing the same hard work of integrating LHDN STAMPS + Malaysian utility bill OCR + the verification lattice — and Find.ai is already the dominant Malaysian e-stamping front-end via TOOL 3.
+This spec turns **TOOL 1 (Tenant Screening)** from a generic CCRIS/CTOS + reference-call tool into a Veri.ai-proprietary credit-scoring engine that uses **government-anchored tenancy proof + utility payment behaviour** as the primary signals. Competitors cannot copy this without doing the same hard work of integrating LHDN STAMPS + Malaysian utility bill OCR + the verification lattice — and Veri.ai is already the dominant Malaysian e-stamping front-end via TOOL 3.
 
 **The compounding loop:**
 - TOOL 3 stamps tenancies today → creates LHDN cert
 - TOOL 1 tomorrow uses those certs as identity gates for credit scoring
-- More tenancies stamped through Find.ai = more verifiable credit history in the system
+- More tenancies stamped through Veri.ai = more verifiable credit history in the system
 - More credit history = more landlord trust in TOOL 1 = more screening adoption
 - More screening adoption = more demand for TOOL 3 stamping (because cert is required for the gold tier)
 
@@ -27,9 +27,9 @@ This is the moat.
 
 ### ⚠️ Support-tool doctrine (v3.4.3 — Ken)
 
-> **"Find.ai surfaces evidence. The decision rests with the landlord."**
+> **"Veri.ai surfaces evidence. The decision rests with the landlord."**
 >
-> Both the LHDN gate AND the utility bills are **OPTIONAL** in the UX. Landlord can skip either or both and proceed with whatever evidence is available. Find.ai's job is to gather and present, not to gatekeep. If the landlord wants to take a risk on a tenant with no LHDN cert and only one utility bill, that's their call — Find.ai surfaces the partial-data warning and lets them through.
+> Both the LHDN gate AND the utility bills are **OPTIONAL** in the UX. Landlord can skip either or both and proceed with whatever evidence is available. Veri.ai's job is to gather and present, not to gatekeep. If the landlord wants to take a risk on a tenant with no LHDN cert and only one utility bill, that's their call — Veri.ai surfaces the partial-data warning and lets them through.
 >
 > This handles three big real-world cases automatically:
 > - **Unstamped previous tenancy** (40-60% of MY rentals) → skip LHDN, proceed with bills only → "Behaviour-only · No LHDN anchor" badge
@@ -67,7 +67,7 @@ From the `Pengesahan Ketulenan` (Authentication) lookup at https://stamps.hasil.
 
 | Field | Used for |
 |---|---|
-| Tenant name + IC | Cross-match against the tenant's MyDigital ID-verified IC on Find.ai. **Must match exactly** or the gate fails. |
+| Tenant name + IC | Cross-match against the tenant's MyDigital ID-verified IC on Veri.ai. **Must match exactly** or the gate fails. |
 | Property address | Cross-match against the address on the utility bills. **Must match** or the bills are not eligible to score. |
 | Lease period (start, end) | Defines the time window for which utility bills are eligible to score. |
 | Stamping date | Sanity check — must be reasonable relative to lease period. |
@@ -86,20 +86,20 @@ From the `Pengesahan Ketulenan` (Authentication) lookup at https://stamps.hasil.
 
 | Path | Description | Speed | Build risk |
 |---|---|---|---|
-| **A. Manual (MVP)** | Tenant taps "Verify on LHDN" button → opens LHDN portal in new tab with cert # pre-filled in URL → tenant takes screenshot of result page → uploads back to Find.ai → OCR extracts fields | Ship today | None |
-| **B. Web scraping** | Find.ai auto-queries LHDN portal in background when tenant submits cert # | 2 weeks | Fragile, may breach LHDN ToS, breaks when LHDN updates form |
+| **A. Manual (MVP)** | Tenant taps "Verify on LHDN" button → opens LHDN portal in new tab with cert # pre-filled in URL → tenant takes screenshot of result page → uploads back to Veri.ai → OCR extracts fields | Ship today | None |
+| **B. Web scraping** | Veri.ai auto-queries LHDN portal in background when tenant submits cert # | 2 weeks | Fragile, may breach LHDN ToS, breaks when LHDN updates form |
 | **C. Formal LHDN API** | Apply for partnership API access via MAMPU / LHDN | 3-9 months | Bureaucratic but legitimate; opens deeper integration doors |
 
 **Decision:** Path A for MVP. Path C in parallel as a long-term partnership track. Never Path B.
 
 ### Tenant flow for Path A
 
-1. Tenant enters previous LHDN cert number into Find.ai screen
-2. Find.ai shows: *"We'll verify this with LHDN. Tap below to open the official LHDN portal — it will pre-fill your cert number."*
+1. Tenant enters previous LHDN cert number into Veri.ai screen
+2. Veri.ai shows: *"We'll verify this with LHDN. Tap below to open the official LHDN portal — it will pre-fill your cert number."*
 3. Tenant taps → LHDN tab opens with cert # in URL params
 4. Tenant sees LHDN's authentication result page
-5. Tenant taps "Screenshot & return" in Find.ai (or just screenshots themselves)
-6. Find.ai OCR extracts the verified fields → cross-matches against tenant's IC on file
+5. Tenant taps "Screenshot & return" in Veri.ai (or just screenshots themselves)
+6. Veri.ai OCR extracts the verified fields → cross-matches against tenant's IC on file
 7. ~30-45 seconds total
 
 ### Edge cases
@@ -239,7 +239,7 @@ Same paying quality (95). Different headline scores. Fair, transparent, and moti
 | 6-doc tenant always wins over 1-doc tenant with same behaviour? | YES — but transparently shown as Behaviour 95 × Confidence 70% = Trust 67, not as "bad behaviour." |
 | Landlord misled by single number? | NO — Trust Score IS the single number, but Behaviour + Confidence + Tier all visible in drill-in. |
 | Tenant who lost old bills can't recover? | They can re-request bills from utility provider OR accept the lower Trust Score with full Behaviour visible. |
-| Find.ai unfairly gatekeeping? | NO — landlord still decides. DNA reaffirmed: Find.ai surfaces evidence, decision rests with landlord. |
+| Veri.ai unfairly gatekeeping? | NO — landlord still decides. DNA reaffirmed: Veri.ai surfaces evidence, decision rests with landlord. |
 | Tenant motivation for honesty? | YES — gamification: more uploads = higher Trust Score. Landlord-side incentive to push tenants for full evidence. |
 
 ### Multi-utility cross-check
@@ -275,7 +275,7 @@ Maxis Postpaid · 14 months  [auto-debit]
 🥇 Upfront    [█████████████░]  13
 ✅ On-time    [█░░░░░░░░░░░░░]   1
 
-[ View bill details ↓ ]   [ Download Find.ai Trust Report PDF 🛡️ ]
+[ View bill details ↓ ]   [ Download Veri.ai Trust Report PDF 🛡️ ]
 ```
 
 Compare with a flagged tenant — same "did they pay" answer, but timing tells the real story:
@@ -313,7 +313,7 @@ The exported artifact is a **branded Trust Card** — see "Trust Card output for
 
 ```
 ┌─────────────────────────────────────────┐
-│ 🛡️ FIND.AI · TRUST CARD       2026.04.25 │  ← navy gradient header strip
+│ 🛡️ VERI.AI · TRUST CARD       2026.04.25 │  ← navy gradient header strip
 ├─────────────────────────────────────────┤
 │ Ahmad bin Ali                            │  ← tenant name (bold)
 │ IC ····4321 · MyDigital ID verified      │  ← identity sub
@@ -358,7 +358,7 @@ PDF wins because it's printable, scaleable, can embed the QR + ref + brand consi
 | Removed | Why |
 |---|---|
 | Bank statement upload | Bills already contain payment-behaviour signals natively. Bank statement adds friction without adding signal. |
-| Bank API linking | Find.ai stays out of the payments lane — we are a trust app, not a payments app. |
+| Bank API linking | Veri.ai stays out of the payments lane — we are a trust app, not a payments app. |
 | Lease completion rate | Identity gate concerns existence of tenancy, not whether tenant completed the term. Score is purely about paying utilities, not honoring lease length. |
 | Tenancy length as scoring factor | Unfair to short-term tenants with perfect behaviour. Length only affects confidence indicator (separate badge), never the score itself. |
 | Number of past tenancies as scoring factor | Same as above. |
@@ -371,7 +371,7 @@ PDF wins because it's printable, scaleable, can embed the QR + ref + brand consi
 | Case | Handling |
 |---|---|
 | First-time renter (no LHDN cert exists) | Show as **"No verified rental history yet — alternative signals available"**; offer employer reference upload, EPF statement showing employment, MyDigital ID-verified age. Do NOT show as 0/100. |
-| Unstamped previous tenancy | Same as first-time renter. Educational nudge: *"Your next tenancy through Find.ai will be auto-stamped via TOOL 3, building your credit profile for the future."* |
+| Unstamped previous tenancy | Same as first-time renter. Educational nudge: *"Your next tenancy through Veri.ai will be auto-stamped via TOOL 3, building your credit profile for the future."* |
 | Bills missing some months in the period | Calculate score on submitted months; show "Partial coverage: X of Y months" badge. Below 50% coverage → flag as Provisional. |
 | Bill OCR fails or low confidence | Tenant prompted to re-upload clearer image; manual review queue if persistent. |
 | Tenant has multiple past tenancies | Each tenancy scored independently; landlord sees most recent first, can expand to see history. Most recent has highest weight in confidence tier (separate from score). |
@@ -403,7 +403,7 @@ This spec replaces the original TOOL 1 brief (which was just CCRIS/CTOS + refere
 3. **Bill upload + OCR pipeline** — TNB + water bill template recognition, field extraction (Bayaran Diterima, Tunggakan, Caj Lewat, disconnection flags).
 4. **Scoring engine** — pure function from extracted fields → 0-100 score. Unit-testable, no UI.
 5. **Live Bound Verification (LBV) flow** — when landlord requests the score, push to tenant's phone, live face match, score reveal. (See ARCH_UTILITY_BRIDGE.md for LBV pattern detail.)
-6. **Trust Card export** — `buildTrustCard()` in `src/lib/pdfExport.js` rendering at business-card dimensions (85×55mm), with Find.ai letterhead strip, score + star rating, timing tag, utility list, QR for Live Bound Verification, ref number. Replaces the originally planned `buildScreenReport()` A4 PDF — see "Trust Card output format" section above.
+6. **Trust Card export** — `buildTrustCard()` in `src/lib/pdfExport.js` rendering at business-card dimensions (85×55mm), with Veri.ai letterhead strip, score + star rating, timing tag, utility list, QR for Live Bound Verification, ref number. Replaces the originally planned `buildScreenReport()` A4 PDF — see "Trust Card output format" section above.
 7. **Landlord-facing UI** — score card, evidence breakdown, optional countersign request button.
 8. **Replace "coming soon" Screen tile** in `src/app/page.js` with live TOOL 1 launcher.
 

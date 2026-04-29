@@ -1,6 +1,24 @@
-# Find.ai — Malaysian Property Compliance Toolkit
+# Veri.ai — Malaysian Property Compliance Toolkit
 
-> Previously "Unbelievebe", then an AI chatbot. Now repositioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Product version shipping now: **Cakap 2.0**. Personal assistant (Tool 4) named **Veri** as of v3.4.52 (2026-04-29). Last updated: 2026-04-29 (v3.4.52).
+> Previously *Unbelievebe* (chatbot v1) → *Find.ai / Cakap 2.0* (toolkit v2-3) → **Veri.ai** (single-name brand, v3.5.0+). Now positioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Brand pivoted to single-name *Veri.ai* on 2026-04-29 (v3.5.0). Last updated: 2026-04-29 (v3.5.0).
+
+---
+
+## 🏷️ BRAND ARCHITECTURE — LOCKED (v3.5.0, 2026-04-29)
+
+Single-name brand stack — Stripe pattern. Company and product collapse into one name, with the assistant as a sub-persona inside.
+
+| Layer | Name | Role |
+|---|---|---|
+| Company / domain / product | **Veri.ai** | The brand. The product. The website. One name carries all. |
+| Personal assistant (Tool 4) | **Veri** | The conversational persona inside Veri.ai. |
+
+- Tagline: *"Veri.ai — verify before you sign."*
+- The product is no longer called "Cakap 2.0" — that label is **retired** as of v3.5.0. (Cakap 1.0 stays as historical reference for the legacy chat-only era.)
+- Brand wordmark: `Veri` in navy 700 + `.ai` in gold 500. No leading icon.
+- Why the collapse: Stripe / Notion / Linear / Figma all run a single-name brand where company = product. Cleaner, fewer mental models for users, stronger SEO concentration, no naming conflict between "what's the company" vs "what's the product."
+
+Do NOT reintroduce a separate product label (Cakap, Trust Stack, etc.) without an explicit Ken decision. If a future request asks to add a sub-product brand, push back and reference this section.
 
 ---
 
@@ -8,10 +26,10 @@
 
 The personal assistant (Tool 4) is named **Veri** — Latin root for *truth*, the same root as *verify, verification, veracity, very, verdict*. Chosen for tri-cultural Malaysian readability (Malay / Chinese / Indian) plus international portability.
 
-- Brand stack: **Find.ai → Cakap 2.0 → Veri** (assistant)
+- Brand stack: **Veri.ai → Veri** (company-product → assistant)
 - Tagline: *"Veri — verify before you sign."*
 - EN: *"Ask Veri."* · BM: *"Tanya Veri."* · 中文: *"问问 Veri"*
-- System prompt opens: *"You are Veri — the personal assistant inside Find.ai…"*
+- System prompt opens: *"You are Veri — the personal assistant inside Veri.ai…"*
 - The user's optional name (saved in `fa_assistant_name_v1`) is the user's name — Veri calls *them* by that name; Veri's own identity is fixed.
 
 Do NOT silently rebrand the assistant in any new surface. If a request asks to rename Veri, push back and reference this section.
@@ -30,17 +48,17 @@ Claude must auto-screen every Ken request through this filter BEFORE writing cod
 
 Open non-trivial replies with a one-line DNA read, e.g. *"DNA read: bullseye — deepens pre-signing trust via tenant verification."* or *"DNA read: adjacent — post-signing. Park for Phase 2?"*
 
-**Cakap 2.0** is the Phase 1 product name = Tenant Screening + Agreement Health Check + SDSAS 2026 Stamp Duty + Chatbox. (Cakap 1.0 = legacy chat-only era — model badge in UI only, do not promote.)
+**Veri.ai** is the Phase 1 product name = Tenant Screening + Agreement Health Check + SDSAS 2026 Stamp Duty + Chatbox. (Cakap 1.0 = legacy chat-only era — model badge in UI only, do not promote.)
 
 ---
 
-## NORTH STAR (2026 v3.3.3 — Phase 1 / Cakap 2.0)
+## NORTH STAR (2026 v3.3.3 — Phase 1 / Veri.ai)
 
 **Tagline:** *"Don't sign blind."*
 
-**What Find.ai is:** A Malaysian property **compliance toolkit** — a set of sharp utility tools that protect both sides of a tenancy BEFORE anyone signs. Each tool produces a branded PDF that creates a viral sharing loop.
+**What Veri.ai is:** A Malaysian property **compliance toolkit** — a set of sharp utility tools that protect both sides of a tenancy BEFORE anyone signs. Each tool produces a branded PDF that creates a viral sharing loop.
 
-**What Find.ai is NOT:**
+**What Veri.ai is NOT:**
 - Not a chatbot. (The chatbox is one of four tools — it fills gaps between the other three, not the front door.)
 - Not a listing site. (The marketplace pivot is Phase 4 endgame — never mentioned publicly for the next 90 days.)
 - Not a CRM.
@@ -58,7 +76,7 @@ Open non-trivial replies with a one-line DNA read, e.g. *"DNA read: bullseye —
 - Property agents who want screening + audit + stamp as a bundled service to offer their landlord clients
 - SME commercial tenants receiving a draft agreement and needing a quick audit before signing
 
-**Domain:** `find.ai` (TBD — currently deployed at https://find-ai-lovat.vercel.app)
+**Domain:** `veri.ai` (TBD — currently deployed at https://find-ai-lovat.vercel.app)
 
 ---
 
@@ -104,7 +122,7 @@ find-ai/
 
 ## Phase 1 Tools (the entire product for the next 90 days)
 
-All four tools share one spine — **pre-signing trust** — and data flows between them via the existing Case Memory system (`fi_chat_history[i].memory`). Every tool produces a branded PDF export. The PDF is the viral mechanic: when a landlord shares the Tenant Screening report on WhatsApp, the recipient sees the Find.ai letterhead + QR code and becomes a user.
+All four tools share one spine — **pre-signing trust** — and data flows between them via the existing Case Memory system (`fi_chat_history[i].memory`). Every tool produces a branded PDF export. The PDF is the viral mechanic: when a landlord shares the Tenant Screening report on WhatsApp, the recipient sees the Veri.ai letterhead + QR code and becomes a user.
 
 ### TOOL 1 — Tenant Credit Score  [v0 MOCK LIVE — v3.4.1, 2026-04-25]
 **Question answered:** *"Can I trust this tenant before I hand over keys?"*
@@ -122,7 +140,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 **Live Bound Verification (LBV):** PDF alone is never sufficient. Landlord scans QR → tenant pushed → live face match → score revealed with live photo overlay. PDF = invitation to verify, not the trust artifact.
 
-**Outputs:** Score 0-100 + per-utility timing-tier bars + Average Timing headline + tenant tag (Upfront/On-time/Late) + **"Find.ai Trust Report PDF"** with QR for re-verification.
+**Outputs:** Score 0-100 + per-utility timing-tier bars + Average Timing headline + tenant tag (Upfront/On-time/Late) + **"Veri.ai Trust Report PDF"** with QR for re-verification.
 
 **Source of truth:** `src/components/tools/TenantScreen.js` (v0 MOCK live, ~1100 lines, EN/BM/中文 inline). Spec: `ARCH_CREDIT_SCORE.md`. Build remaining (real OCR, real LHDN integration, PDF export) per 8-step backlog in spec.
 
@@ -133,7 +151,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 **Inputs:** Paste agreement text (or upload Word/PDF later) + answers to 10-15 clause questions (deposit amount, notice period, eviction clause, stamp duty clause, etc.).
 
-**Outputs:** Health score (0-100) + clause-by-clause red/yellow/green flags + specific rewrites for dangerous clauses + **"Find.ai Agreement Audit PDF."**
+**Outputs:** Health score (0-100) + clause-by-clause red/yellow/green flags + specific rewrites for dangerous clauses + **"Veri.ai Agreement Audit PDF."**
 
 **Legal backbone:** Contracts Act 1950 + RTA 2026 + Stamp Act 1949 + SDSAS + Section 90A. Cross-references the `agreement_clauses` knowledge topic (to be added in next session).
 
@@ -150,7 +168,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 **Logic:** `Math.ceil(annual_rent / 250) × rate_tier` where rate_tier = RM1/3/5/7 depending on years. Minimum RM10. No RM2,400 exemption. 30-day stamping deadline. RM10,000 fine per incorrect assessment under SDSAS.
 
-**Outputs:** Stamp duty amount + old-vs-new comparison + e-Duti Setem (STAMPS portal) walkthrough + **"Find.ai Tax Accuracy Certificate PDF"** — this is the audit-protection artifact that proves landlord self-assessed correctly.
+**Outputs:** Stamp duty amount + old-vs-new comparison + e-Duti Setem (STAMPS portal) walkthrough + **"Veri.ai Tax Accuracy Certificate PDF"** — this is the audit-protection artifact that proves landlord self-assessed correctly.
 
 **Verification:** `sdsas_2026_calculator.py` is the reference implementation. UI calculator must match exactly.
 
@@ -177,7 +195,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 ## Shared Infrastructure (to be built)
 
-**`src/lib/pdfExport.js`** — single PDF generator used by all three tools. Consistent Find.ai letterhead (wordmark-only — shield retired v3.4.38), footer disclaimer ("Support tool only, not legal advice"), report ID (UUID), QR code pointing to `find.ai/r/{reportId}` for viral loop.
+**`src/lib/pdfExport.js`** — single PDF generator used by all three tools. Consistent Veri.ai letterhead (wordmark-only — shield retired v3.4.38), footer disclaimer ("Support tool only, not legal advice"), report ID (UUID), QR code pointing to `veri.ai/r/{reportId}` for viral loop.
 
 **Case Memory hand-off** — already exists (`fi_chat_history[i].memory`). Tool 1 writes tenant object, Tool 2 reads tenant + writes agreement object, Tool 3 reads rent/term and writes stamp-duty result. Chatbox reads everything.
 
@@ -188,7 +206,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 ## Deployment
 
 - **Current URL:** https://find-ai-lovat.vercel.app (live, production)
-- **GitHub:** https://github.com/KenTan-malaysia/find.ai
+- **GitHub:** https://github.com/KenTan-malaysia/veri.ai
 - **Workflow:** Zeus edits code → Ken pushes to GitHub → Vercel auto-deploys
 - **API key:** Set in Vercel env vars as ANTHROPIC_API_KEY
 - **Model:** claude-haiku-4-5-20251001
@@ -231,7 +249,7 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 - "Thumb Zone" framing retired (v3.4.27 web-pattern purge). Web layout, not mobile-app dock.
 - Trust signals via copy + audit trail visibility, not security icons. ("LHDN-verified" / "PDPA-compliant" / "Audit-logged" badges over shield icons).
 - No cartoonish elements. Professional. Serious. Trustworthy.
-- Every PDF export uses the SAME Find.ai wordmark letterhead + disclaimer footer — consistency = trust.
+- Every PDF export uses the SAME Veri.ai wordmark letterhead + disclaimer footer — consistency = trust.
 
 ## Competitive positioning (Phase 1 only)
 
@@ -247,7 +265,7 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 - **Token efficiency:** Only load files relevant to the question. Never load all context at once.
 - **One question = one file max** unless task genuinely needs multiple.
 - **Ken makes all final decisions.** Never assume approval.
-- **When Ken says "find.ai"** — work from this folder only.
+- **When Ken says "veri.ai"** — work from this folder only.
 - **Answer format in app:** Icon-based, scannable, not essay-style. No follow-up questions at bottom.
 - **Languages:** Always maintain EN/BM/中文 parity for any new UI text.
 
@@ -275,7 +293,7 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 
 - **v1.0** — Unbelievebe launched. Landlord Q&A chatbot.
 - **v1.1** — Added calculators (stamp duty, yield, screening, health check), voice, BM, 中文, profiles, session memory.
-- **v2.0** — Rebranded to Find.ai. SDSAS 2026 calculator updated. Project restructured for multi-module platform.
+- **v2.0** — Rebranded to Veri.ai. SDSAS 2026 calculator updated. Project restructured for multi-module platform.
 - **v2.1** — Tools stripped; went chatbox-only to land the core consumer Q&A wedge. 7 tool components preserved as dormant code.
 - **v3.0** — Case Memory / Case File system shipped. Persistent per-chat context for follow-ups.
 - **v3.1** — knowledge.js hardened (R100 stress test 100%); chat memory refresh-persistence bug fixed; mobile voice recording fixed (iOS Safari + Android Chrome).

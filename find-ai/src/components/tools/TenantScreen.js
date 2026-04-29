@@ -39,7 +39,7 @@ const STR = {
     of: 'of',
     s1Title: 'Tenant identity',
     s1Sub: 'Enter what the tenant told you. We will verify it next.',
-    returningTenantHeader: '🔄 Has this tenant been screened by Find.ai before?',
+    returningTenantHeader: '🔄 Has this tenant been screened by Veri.ai before?',
     returningTenantPh: 'Phone or IC last 4',
     returningTenantLookup: '🔍 Look up existing Trust Score',
     returningTenantOr: '— or —',
@@ -60,7 +60,7 @@ const STR = {
     lhdnHelp: "What's a LHDN cert?",
     lhdnHelpBody: 'Every legally stamped tenancy agreement (rent over RM150/month) gets a unique LHDN reference number. Ask the tenant\'s previous landlord — usually starts with letters followed by digits.',
     lhdnSkip: 'Skip — no cert / first-time renter',
-    lhdnSkipNote: 'Landlord proceeds at own discretion · Find.ai is a support tool',
+    lhdnSkipNote: 'Landlord proceeds at own discretion · Veri.ai is a support tool',
     lhdnSkipped: 'LHDN SKIPPED',
     identityUnverified: 'Identity unverified',
     methodNumber: '⌨️  Key in number',
@@ -95,7 +95,7 @@ const STR = {
     acctWaterPh: 'e.g. 4001234567',
     acctMobilePh: 'e.g. 0123456789',
     verifyOnExternal: '🔗 Open {provider} to check this account',
-    demoNoteAcct: 'In production, this deep-links to {provider} with the account # pre-filled. For demo, opens {provider} home — return to Find.ai after.',
+    demoNoteAcct: 'In production, this deep-links to {provider} with the account # pre-filled. For demo, opens {provider} home — return to Veri.ai after.',
     portalOpened: '{provider} opened in a new tab',
     portalOpenedHint: 'Check the bill on the {provider} site, then come back here and tap below.',
     markVerified: '✓ I checked — mark verified',
@@ -133,7 +133,7 @@ const STR = {
     methodologyLink: 'How is this calculated?',
     methodologyTitle: 'How the Trust Score works',
     methodologyBody: 'Two parts: BEHAVIOUR (how well the tenant paid past utility bills, based on payment timing relative to due date) × CONFIDENCE (how much evidence backs that judgment — more bills + LHDN-verified tenancy = higher confidence). Both numbers are visible above. The exact algorithm is proprietary; categories are public. Read more: HOW_TRUST_SCORE_WORKS.md',
-    methodologyDecision: 'Find.ai surfaces evidence. The rental decision rests with you, the landlord.',
+    methodologyDecision: 'Veri.ai surfaces evidence. The rental decision rests with you, the landlord.',
     scenarioHeader: 'See how the score adapts to shared evidence',
     scenarioSub: 'Same tenant — different evidence depth = different Trust Score',
     scenarioFull: '🌳 Full evidence',
@@ -203,7 +203,7 @@ const STR = {
     introBullets: [
       'LHDN-verified tenancy proof (government source)',
       'Utility paying behaviour from real bills',
-      'Branded Find.ai Trust Report PDF',
+      'Branded Veri.ai Trust Report PDF',
     ],
     introTime: '~3 minutes · Tenant cooperation required',
   },
@@ -214,7 +214,7 @@ const STR = {
     of: 'daripada',
     s1Title: 'Identiti penyewa',
     s1Sub: 'Masukkan apa yang penyewa beritahu anda. Kami akan sahkan seterusnya.',
-    returningTenantHeader: '🔄 Pernah disaring oleh Find.ai sebelum ini?',
+    returningTenantHeader: '🔄 Pernah disaring oleh Veri.ai sebelum ini?',
     returningTenantPh: 'Telefon atau 4 digit IC',
     returningTenantLookup: '🔍 Cari Skor Amanah sedia ada',
     returningTenantOr: '— atau —',
@@ -235,7 +235,7 @@ const STR = {
     lhdnHelp: 'Apa itu sijil LHDN?',
     lhdnHelpBody: 'Setiap perjanjian sewaan yang disahkan setem (sewa lebih RM150/bulan) ada nombor rujukan LHDN unik. Tanya tuan rumah penyewa sebelum ini — biasanya bermula dengan huruf diikuti angka.',
     lhdnSkip: 'Langkau — tiada sijil / penyewa kali pertama',
-    lhdnSkipNote: 'Tuan rumah meneruskan atas budi bicara sendiri · Find.ai adalah alat sokongan',
+    lhdnSkipNote: 'Tuan rumah meneruskan atas budi bicara sendiri · Veri.ai adalah alat sokongan',
     lhdnSkipped: 'LHDN DILANGKAU',
     identityUnverified: 'Identiti tidak disahkan',
     methodNumber: '⌨️  Masukkan nombor',
@@ -270,7 +270,7 @@ const STR = {
     acctWaterPh: 'cth. 4001234567',
     acctMobilePh: 'cth. 0123456789',
     verifyOnExternal: '🔗 Buka {provider} untuk semak akaun ini',
-    demoNoteAcct: 'Dalam pengeluaran, ini deep-link ke {provider} dengan no. akaun pra-isi. Untuk demo, buka laman utama {provider} — kembali ke Find.ai selepas itu.',
+    demoNoteAcct: 'Dalam pengeluaran, ini deep-link ke {provider} dengan no. akaun pra-isi. Untuk demo, buka laman utama {provider} — kembali ke Veri.ai selepas itu.',
     portalOpened: '{provider} dibuka dalam tab baru',
     portalOpenedHint: 'Semak bil di laman {provider}, kemudian kembali ke sini dan ketuk di bawah.',
     markVerified: '✓ Saya dah semak — tandakan disahkan',
@@ -308,7 +308,7 @@ const STR = {
     methodologyLink: 'Bagaimana dikira?',
     methodologyTitle: 'Cara Skor Amanah berfungsi',
     methodologyBody: 'Dua bahagian: TINGKAH LAKU (sebaik mana penyewa bayar bil utiliti lepas, berdasarkan masa bayaran berbanding tarikh akhir) × KEYAKINAN (banyak mana bukti menyokong penilaian — lebih bil + sewaan disahkan LHDN = keyakinan lebih tinggi). Kedua-dua nombor ditunjukkan di atas. Algoritma tepat adalah proprietari; kategori adalah awam.',
-    methodologyDecision: 'Find.ai memaparkan bukti. Keputusan menyewa terletak pada anda, tuan rumah.',
+    methodologyDecision: 'Veri.ai memaparkan bukti. Keputusan menyewa terletak pada anda, tuan rumah.',
     scenarioHeader: 'Lihat bagaimana skor berubah dengan bukti yang dikongsi',
     scenarioSub: 'Penyewa sama — kedalaman bukti berbeza = Skor Amanah berbeza',
     scenarioFull: '🌳 Bukti penuh',
@@ -378,7 +378,7 @@ const STR = {
     introBullets: [
       'Bukti sewaan disahkan LHDN (sumber kerajaan)',
       'Tingkah laku bayaran utiliti dari bil sebenar',
-      'PDF Laporan Amanah Find.ai berjenama',
+      'PDF Laporan Amanah Veri.ai berjenama',
     ],
     introTime: '~3 minit · Memerlukan kerjasama penyewa',
   },
@@ -389,7 +389,7 @@ const STR = {
     of: '/ 共',
     s1Title: '租客身份',
     s1Sub: '输入租客告诉您的信息。我们将在下一步验证。',
-    returningTenantHeader: '🔄 此租客之前曾被 Find.ai 筛查过吗？',
+    returningTenantHeader: '🔄 此租客之前曾被 Veri.ai 筛查过吗？',
     returningTenantPh: '电话或身份证后4位',
     returningTenantLookup: '🔍 查询现有信任分数',
     returningTenantOr: '— 或 —',
@@ -410,7 +410,7 @@ const STR = {
     lhdnHelp: 'LHDN 证书是什么？',
     lhdnHelpBody: '每份合法盖印的租赁合约（月租超过 RM150）都有唯一的 LHDN 参考编号。向租客的前任房东询问 — 通常以字母开头加数字。',
     lhdnSkip: '跳过 — 无证书 / 首次租赁',
-    lhdnSkipNote: '房东自行决定 · Find.ai 是辅助工具',
+    lhdnSkipNote: '房东自行决定 · Veri.ai 是辅助工具',
     lhdnSkipped: '已跳过 LHDN',
     identityUnverified: '身份未验证',
     methodNumber: '⌨️  输入编号',
@@ -445,7 +445,7 @@ const STR = {
     acctWaterPh: '例：4001234567',
     acctMobilePh: '例：0123456789',
     verifyOnExternal: '🔗 打开 {provider} 查询此账户',
-    demoNoteAcct: '在生产版本中，这会深度链接到 {provider} 并预填账户编号。演示版仅打开 {provider} 主页 — 之后请返回 Find.ai。',
+    demoNoteAcct: '在生产版本中，这会深度链接到 {provider} 并预填账户编号。演示版仅打开 {provider} 主页 — 之后请返回 Veri.ai。',
     portalOpened: '{provider} 已在新标签打开',
     portalOpenedHint: '在 {provider} 网站查看账单，然后返回此处点击下方按钮。',
     markVerified: '✓ 已核查 — 标记为已验证',
@@ -483,7 +483,7 @@ const STR = {
     methodologyLink: '如何计算？',
     methodologyTitle: '信任分数的工作原理',
     methodologyBody: '两部分：行为（基于付款时间相对于到期日，租客过往支付公用事业账单的表现）× 可信度（多少证据支撑此判断 — 更多账单 + LHDN 已验证租赁 = 更高可信度）。两个数字均显示在上方。具体算法专有；类别公开。',
-    methodologyDecision: 'Find.ai 呈现证据。租赁决定权在您，房东。',
+    methodologyDecision: 'Veri.ai 呈现证据。租赁决定权在您，房东。',
     scenarioHeader: '查看分数如何随分享的证据变化',
     scenarioSub: '同一租客 — 证据深度不同 = 信任分数不同',
     scenarioFull: '🌳 完整证据',
@@ -553,7 +553,7 @@ const STR = {
     introBullets: [
       'LHDN 认证租赁证明（政府来源）',
       '从真实账单读取的公用事业付款行为',
-      'Find.ai 品牌信任报告 PDF',
+      'Veri.ai 品牌信任报告 PDF',
     ],
     introTime: '约 3 分钟 · 需租客配合',
   },
@@ -596,7 +596,7 @@ const COVERAGE_MOCK_MONTHS = 14;
 // ═══════════════════════════════════════════════════════════════════════════
 //
 // The exact multiplier values in this function are PROPRIETARY and represent
-// Find.ai's core scoring methodology. Currently they live in client code,
+// Veri.ai's core scoring methodology. Currently they live in client code,
 // which means anyone can View Source on the production site (or open
 // browser DevTools) and steal the exact values.
 //
@@ -1263,7 +1263,7 @@ function TrustCardPreview({ tenantName, tenantIC, score, behaviour, tierLabel, l
 
       {/* v3.4.23 — "Permanent record" badge per ARCH_USER_PROFILES.md.
           Signals to tenants that this Trust Score is a portable artifact —
-          they can re-use it for future rentals via Find.ai's tenant profile
+          they can re-use it for future rentals via Veri.ai's tenant profile
           + LBV (Live Bound Verification). Subtle, never the headline. */}
       <div className="px-4 py-1.5 text-center text-[8px] uppercase tracking-widest font-semibold"
         style={{ background: '#0f172a', color: 'rgba(184,137,58,0.85)' }}>
@@ -1350,7 +1350,7 @@ export default function TenantScreen({
   // pattern as TNB Account #) that sets the mock result on click.
   const verifyDisabled = (lhdnMethod === 'number' ? !certNumber.trim() : !lhdnPdfName);
 
-  // v3.4.3 (Ken): Find.ai is a support tool, landlord decides what's enough.
+  // v3.4.3 (Ken): Veri.ai is a support tool, landlord decides what's enough.
   // At least 1 utility is enough to proceed. Even mobile-only is OK.
   // Landlord sees clear "limited data" badge if they proceed with partial data.
   const billsCount = (tnbState.done ? 1 : 0) + (waterState.done ? 1 : 0) + (mobileState.done ? 1 : 0);
@@ -1653,7 +1653,7 @@ export default function TenantScreen({
                 {t.lhdnDemoNote}
               </p>
 
-              {/* Skip option — Find.ai is a support tool, landlord decides */}
+              {/* Skip option — Veri.ai is a support tool, landlord decides */}
               <div className="pt-1">
                 <button
                   onClick={() => setLhdnResult({ skipped: true })}
@@ -2069,7 +2069,7 @@ export default function TenantScreen({
                 ? 'Anonymous Mode · Identity reveals tier-by-tier as deal progresses.'
                 : 'Verified Mode · Tenant name shared.';
               const waMsg =
-`Find.ai Trust Card
+`Veri.ai Trust Card
 
 ${contextLine}Trust Score: ${trustScore} / 100
 ${lhdnLine}
@@ -2077,7 +2077,7 @@ ${effectiveBillsCount}/3 utility bills · avg ${MOCK_SCORE.avgGapDays < 0 ? `${M
 
 View card: ${trustUrl}
 
-— Find.ai · Don't sign blind.
+— Veri.ai · Don't sign blind.
 ${modeLine}`;
               const waUrl = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
               return (

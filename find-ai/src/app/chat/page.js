@@ -39,9 +39,9 @@ export default function ChatPage() {
               display: 'inline-flex', alignItems: 'baseline', gap: 2,
               textDecoration: 'none', color: '#0F1E3F',
             }}
-            aria-label="Find.ai home"
+            aria-label="Veri.ai home"
           >
-            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
             <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
           </Link>
         </header>

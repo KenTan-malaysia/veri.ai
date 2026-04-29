@@ -1,4 +1,4 @@
-# Build Approach — Find.ai
+# Build Approach — Veri.ai
 
 > **Decision locked:** Full AI-assist build (with Zeus / Claude) for Phase 1 and Phase 2, supplemented by strategic human work where required (lawyer, trademarks, security review).
 >
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Ken builds Find.ai using AI-assistance (Claude / Zeus) for all engineering, with selective human spend on lawyer + trademarks + one-time security review.**
+**Ken builds Veri.ai using AI-assistance (Claude / Zeus) for all engineering, with selective human spend on lawyer + trademarks + one-time security review.**
 
 This decision was made 2026-04-26 after evaluating: full hire-engineers (RM 60-145k Year 1) vs hybrid AI-assist (RM 26-60k Year 1) vs full AI-assist (RM 15-30k Year 1 + Ken's time).
 
@@ -27,7 +27,7 @@ This decision was made 2026-04-26 after evaluating: full hire-engineers (RM 60-1
 | Vercel Pro (when free tier outgrown) | RM 95 | Required when functions need >10s timeout for OCR |
 | OCR via Claude vision (in-house) | RM 50-200 | Pilot scale; cheaper than third-party vendors |
 | WhatsApp Business API | RM 200-500 | When pilot scales beyond personal account |
-| Anthropic chat credits (Find.ai's own chatbot) | RM 200-500 | Per pilot/early-launch volume |
+| Anthropic chat credits (Veri.ai's own chatbot) | RM 200-500 | Per pilot/early-launch volume |
 | **Subtotal** | **RM 825-1,855/month** | |
 
 ### One-time costs (must hire humans — AI cannot do)
@@ -35,7 +35,7 @@ This decision was made 2026-04-26 after evaluating: full hire-engineers (RM 60-1
 | Item | Cost (MYR) | Priority |
 |---|---|---|
 | Malaysian lawyer (T&C + Privacy + Tenant Consent, PDPA-compliant) | RM 3,000-5,000 | **Hire NOW** — non-negotiable for any real launch |
-| Trademark filings (Find.ai, Cakap 2.0, Trust Card) | RM 6,000-9,000 | **File NOW** — brand protection compounds |
+| Trademark filings (Veri.ai, Veri.ai, Trust Card) | RM 6,000-9,000 | **File NOW** — brand protection compounds |
 | Sdn Bhd company registration (if not done) | RM 2,000-3,000 | One-time |
 | Senior engineer 1-2 week security review (before broad consumer launch) | RM 5,000-10,000 | Before Phase 3 broad launch |
 | **Subtotal** | **RM 16,000-27,000** | |
@@ -48,11 +48,11 @@ vs hiring engineers: **RM 60,000-145,000** = saves **RM 35,000-95,000**.
 
 ---
 
-## What AI-assist does WELL for Find.ai (proven)
+## What AI-assist does WELL for Veri.ai (proven)
 
 We've shipped 16+ working iterations of TOOL 1 v0 mock together. AI-assist has demonstrated:
 
-| Task | AI quality | Evidence from Find.ai |
+| Task | AI quality | Evidence from Veri.ai |
 |---|---|---|
 | React + Tailwind frontend (EN/BM/中文) | ★★★★★ | All 4 tools' UI |
 | Next.js API routes | ★★★★★ | `/api/chat`, `/api/notify-me` |
@@ -111,7 +111,7 @@ This is what most founders underestimate.
 
 ## Phased spending plan (FREEMIUM-AT-SCALE — locked v3.4.19)
 
-> **Strategy:** Find.ai stays FREE for individual landlords until ~30,000 users. Premium tier launches at scale. Long-game (18-36 months to revenue). See `MONETIZATION_PLAN.md`.
+> **Strategy:** Veri.ai stays FREE for individual landlords until ~30,000 users. Premium tier launches at scale. Long-game (18-36 months to revenue). See `MONETIZATION_PLAN.md`.
 
 | Phase | What ships | Cost (MYR) | Duration | Decision gate |
 |---|---|---|---|---|
@@ -152,7 +152,7 @@ Without funding plan, project stalls at Phase 1-2. Plan funding NOW even though 
 **Mitigation:**
 - Phase 3 security review (RM 5-10k for 1-2 weeks of senior contractor) is **non-negotiable** before broad consumer launch
 - Use battle-tested libraries (NextAuth, Prisma) over hand-rolled auth
-- Never store API keys / secrets in client code (Find.ai's `computeConfidence()` already flagged for server-side migration)
+- Never store API keys / secrets in client code (Veri.ai's `computeConfidence()` already flagged for server-side migration)
 - Run dependency security scans (npm audit) before each release
 
 ### Risk 2 — Ken's time becomes the bottleneck
@@ -162,7 +162,7 @@ Without funding plan, project stalls at Phase 1-2. Plan funding NOW even though 
 **Mitigation:**
 - Be honest about time available BEFORE starting Phase 1
 - If <20h/week is realistic, plan for part-time engineer (RM 3-5k/month) starting Phase 2
-- Use FINDAI_MEMORY.md religiously — every Zeus session re-uploads = no context loss
+- Use VERIAI_MEMORY.md religiously — every Zeus session re-uploads = no context loss
 
 ### Risk 3 — Architecture mistakes compound
 
@@ -179,7 +179,7 @@ Without funding plan, project stalls at Phase 1-2. Plan funding NOW even though 
 
 **Mitigation:**
 - Lawyer engagement at Phase 2 (RM 3-5k) is non-negotiable
-- Stay out of payment processing (Find.ai is a trust app, not a payments app — already locked in spec)
+- Stay out of payment processing (Veri.ai is a trust app, not a payments app — already locked in spec)
 - Don't promise things in marketing copy that lawyer hasn't reviewed
 
 ---
@@ -210,7 +210,7 @@ The free-at-scale model demands ULTRA-LEAN unit economics. Every cent per user m
 
 ## How future Zeus sessions should treat this doc
 
-When Ken loads `FINDAI_MEMORY.md` in a future session, the future Zeus should:
+When Ken loads `VERIAI_MEMORY.md` in a future session, the future Zeus should:
 1. Treat this `BUILD_APPROACH.md` as Ken's locked direction for build approach
 2. Default to AI-assist for any engineering task suggested
 3. Flag when a task crosses into the "needs human" categories (auth, payments, legal, security review)

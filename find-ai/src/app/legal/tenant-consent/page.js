@@ -14,7 +14,7 @@ export default function TenantConsentPage() {
           textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 12,
         }}
       >
-        Legal · Find.ai
+        Legal · Veri.ai
       </div>
       <h1 style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.02em', margin: '0 0 24px' }}>
         Tenant consent
@@ -31,7 +31,7 @@ export default function TenantConsentPage() {
       </div>
 
       <p style={{ fontSize: 14, lineHeight: 1.65, color: 'var(--color-slate)', marginBottom: 28 }}>
-        When you submit a Find.ai Trust Card, you consent to the collection
+        When you submit a Veri.ai Trust Card, you consent to the collection
         and processing of the data below for the specific purpose of
         verifying your identity and payment behavior to a landlord or agent
         you've chosen.

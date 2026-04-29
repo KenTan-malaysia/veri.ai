@@ -14,9 +14,9 @@ export default function PricingPage() {
         <Link
           href="/"
           style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-          aria-label="Find.ai home"
+          aria-label="Veri.ai home"
         >
-          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
           <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
         </Link>
       </div>
@@ -38,7 +38,7 @@ export default function PricingPage() {
           Free for individuals.<br/>Forever.
         </h1>
         <p style={{ fontSize: 17, lineHeight: 1.5, color: '#3F4E6B', margin: 0, maxWidth: 560, marginInline: 'auto' }}>
-          Premium tiers for property agents and agencies launch when Find.ai
+          Premium tiers for property agents and agencies launch when Veri.ai
           reaches 30,000 users. Until then, every individual landlord uses
           everything free.
         </p>
@@ -65,7 +65,7 @@ export default function PricingPage() {
               'Unlimited Trust Card requests',
               'Anonymous-default screening',
               'SDSAS 2026 stamp duty calculator',
-              'Find.ai Personal Assistant',
+              'Veri.ai Personal Assistant',
               'Tier-gated identity reveal',
               'Audit trail visibility',
             ]}
@@ -90,7 +90,7 @@ export default function PricingPage() {
               'WhatsApp Business integration',
             ]}
             cta="Notify me"
-            ctaHref="mailto:hello@find.ai?subject=Premium%20agent%20interest"
+            ctaHref="mailto:hello@veri.ai?subject=Premium%20agent%20interest"
           />
 
           {/* Tier 3: Agency (post-30k) */}
@@ -110,7 +110,7 @@ export default function PricingPage() {
               'Priority support',
             ]}
             cta="Talk to us"
-            ctaHref="mailto:hello@find.ai?subject=Agency%20interest"
+            ctaHref="mailto:hello@veri.ai?subject=Agency%20interest"
           />
         </div>
 
@@ -128,14 +128,14 @@ export default function PricingPage() {
           }}>
             Pricing questions
           </h2>
-          <Faq q="Why is Find.ai free for individuals?">
+          <Faq q="Why is Veri.ai free for individuals?">
             We believe pre-signing trust is foundational infrastructure for
             Malaysian rentals. Charging individuals slows adoption — and
             adoption is what makes the network valuable. Premium tiers for
             agents and agencies (post-30k users) cover our operating costs.
           </Faq>
           <Faq q="When will premium tiers launch?">
-            When Find.ai reaches 30,000 active users. We're transparent about
+            When Veri.ai reaches 30,000 active users. We're transparent about
             the milestone — see <Link href="/transparency" style={{ color: '#B8893A' }}>transparency report</Link> for current numbers (when data exists).
           </Faq>
           <Faq q="Will the free tier ever change?">
@@ -144,7 +144,7 @@ export default function PricingPage() {
           </Faq>
           <Faq q="What if I'm a small agency or solo agent?">
             For now, you use the Individual tier free. Premium agent tools
-            launch after 30k users — email <a href="mailto:hello@find.ai" style={{ color: '#B8893A' }}>hello@find.ai</a> for early-access updates.
+            launch after 30k users — email <a href="mailto:hello@veri.ai" style={{ color: '#B8893A' }}>hello@veri.ai</a> for early-access updates.
           </Faq>
         </section>
 
@@ -157,7 +157,7 @@ export default function PricingPage() {
               fontSize: 13, color: '#5A6780', textDecoration: 'none',
             }}
           >
-            ← Back to Find.ai
+            ← Back to Veri.ai
           </Link>
         </div>
       </section>

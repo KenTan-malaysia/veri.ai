@@ -23,7 +23,7 @@
 ## Path A — Email Forward Inbox ("Just forward like you forward memes")
 
 ### The pitch to the tenant
-> "See the TNB bill email in your inbox? Long-press → Forward → send to `siti-8321@scan.find.ai`. Do that for TNB, Maxis, Unifi. Done."
+> "See the TNB bill email in your inbox? Long-press → Forward → send to `siti-8321@scan.veri.ai`. Do that for TNB, Maxis, Unifi. Done."
 
 ### Why it's creative
 Tenants already know how to forward an email. Zero new UI to learn. No app to install. No password to remember. No file picker. The cognitive load is zero because forwarding is muscle memory.
@@ -31,18 +31,18 @@ Tenants already know how to forward an email. Zero new UI to learn. No app to in
 ### Architecture
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  1. Find.ai generates a unique scan inbox per tenant:       │
-│     siti-8321@scan.find.ai (valid for 72h, then burns)      │
+│  1. Veri.ai generates a unique scan inbox per tenant:       │
+│     siti-8321@scan.veri.ai (valid for 72h, then burns)      │
 ├─────────────────────────────────────────────────────────────┤
 │  2. Tenant receives WhatsApp from landlord:                 │
 │     "Forward your TNB/Maxis/Unifi bill emails to            │
-│      siti-8321@scan.find.ai — any 3 recent months"          │
+│      siti-8321@scan.veri.ai — any 3 recent months"          │
 ├─────────────────────────────────────────────────────────────┤
 │  3. Tenant opens Gmail/Outlook, long-press → Forward        │
 │     (2 taps per email × 3 emails = 6 taps, but each         │
 │     tap is muscle memory, not cognitive work)               │
 ├─────────────────────────────────────────────────────────────┤
-│  4. Find.ai SMTP server receives email:                     │
+│  4. Veri.ai SMTP server receives email:                     │
 │     - Validates sender matches tenant's declared email      │
 │     - Extracts PDF attachments                              │
 │     - Runs OCR (Google Cloud Vision)                        │
@@ -62,7 +62,7 @@ Tenants already know how to forward an email. Zero new UI to learn. No app to in
 1. Open Gmail → search "TNB" (muscle memory)
 2. Tap latest bill email
 3. Tap ⋮ → Forward
-4. Type `siti-8321@scan.find.ai` (or paste — Find.ai sends it as a copy-able message via WhatsApp)
+4. Type `siti-8321@scan.veri.ai` (or paste — Veri.ai sends it as a copy-able message via WhatsApp)
 5. Send
 6. Repeat steps 2-5 for Maxis + Unifi
 
@@ -99,17 +99,17 @@ Forward works identically on every major email provider. The instruction card ("
 ## Path B — Gmail OAuth Read-Only ("One tap, done")
 
 ### The pitch to the tenant
-> "Tap 'Connect Gmail' — Find.ai pulls your last 3 TNB/Maxis/Unifi bills automatically. We never see any other email. Revoke anytime."
+> "Tap 'Connect Gmail' — Veri.ai pulls your last 3 TNB/Maxis/Unifi bills automatically. We never see any other email. Revoke anytime."
 
 ### Why it's creative
-**This is the lowest tenant-effort architecture legally possible in Malaysia.** One OAuth consent screen → Find.ai fetches 12 months of bills in 8 seconds. The tenant never opens a single utility app, never types an IC, never uploads a PDF. They just say "yes."
+**This is the lowest tenant-effort architecture legally possible in Malaysia.** One OAuth consent screen → Veri.ai fetches 12 months of bills in 8 seconds. The tenant never opens a single utility app, never types an IC, never uploads a PDF. They just say "yes."
 
 ### Architecture
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  1. Landlord generates scan link → WhatsApp to tenant       │
 ├─────────────────────────────────────────────────────────────┤
-│  2. Tenant taps link → lands on Find.ai mini-page:          │
+│  2. Tenant taps link → lands on Veri.ai mini-page:          │
 │                                                             │
 │     ┌─────────────────────────────────────┐                │
 │     │  🛡️ Express Scan for The Mirage    │                │
@@ -128,7 +128,7 @@ Forward works identically on every major email provider. The instruction card ("
 │              OR digi.com.my OR astro.com.my)               │
 │              newer_than:6m has:attachment                   │
 ├─────────────────────────────────────────────────────────────┤
-│  4. Find.ai server (no credentials stored, refresh         │
+│  4. Veri.ai server (no credentials stored, refresh         │
 │     token only):                                            │
 │     • Execute the filtered query                            │
 │     • Download each matching PDF attachment                 │
@@ -152,9 +152,9 @@ Forward works identically on every major email provider. The instruction card ("
 ```
 
 ### Tap-by-tap tenant view (iOS Chrome)
-1. Tap WhatsApp link → Chrome opens Find.ai scan page
+1. Tap WhatsApp link → Chrome opens Veri.ai scan page
 2. Tap **[ 🔓 Connect Gmail ]**
-3. Google consent sheet slides up → "Find.ai wants to view emails from TNB, Maxis, Unifi" → tap **[ Allow ]**
+3. Google consent sheet slides up → "Veri.ai wants to view emails from TNB, Maxis, Unifi" → tap **[ Allow ]**
 4. Watch 8-second progress animation
 5. Tap **[ ✅ Share with Ken ]**
 
@@ -169,14 +169,14 @@ To further de-scope, we can use Google's incremental auth + label-specific scope
 
 ### Google verification burden
 - `gmail.readonly` is a sensitive scope. Requires Google OAuth App Verification (~2-6 weeks, one-time). Need privacy policy, security questionnaire, homepage with the scope justification, CASA Tier 2 security assessment.
-- **Workaround during verification:** Google allows up to 100 users in "Testing" mode without verification. Enough for Find.ai's first pilot with 1-2 landlords × ~20 tenants.
+- **Workaround during verification:** Google allows up to 100 users in "Testing" mode without verification. Enough for Veri.ai's first pilot with 1-2 landlords × ~20 tenants.
 - After production push: full verification must be complete.
 
 ### Legal status: ✅ Clean
 - Tenant gives explicit consent via Google's own consent screen — strongest possible PDPA basis.
 - No credential storage (OAuth tokens only; refresh token revoked after one-shot pull).
 - Computer Crimes Act 1997 Section 3 satisfied: authorized access via consent.
-- PDPA 2010 Section 6(1): tenant = data subject, Find.ai = data user, consent is explicit + purpose-specific.
+- PDPA 2010 Section 6(1): tenant = data subject, Veri.ai = data user, consent is explicit + purpose-specific.
 - Google's ToS (Section 1 of Limited Use Requirements): we must only use the data for the service explicitly requested. ✅ We do.
 
 ### Stack
@@ -213,7 +213,7 @@ Because we can query `newer_than:24m` instead of `newer_than:6m`, we can pull **
 ## Path C — WhatsApp Auto-Drop ("Already in your WhatsApp")
 
 ### The pitch to the tenant
-> "Your TNB bot already sends monthly bills to your WhatsApp. Grant Find.ai one-time access to those messages — we pick them up automatically. Zero uploads."
+> "Your TNB bot already sends monthly bills to your WhatsApp. Grant Veri.ai one-time access to those messages — we pick them up automatically. Zero uploads."
 
 ### Why it's creative
 **Most Malaysians receive their TNB, Unifi, Maxis bills as WhatsApp media from the utility's own verified bot**, not email. TNB's bot is a verified WhatsApp Business account; Unifi sends via their +603-xxxx bot; Maxis sends billing PDFs through WhatsApp now (2025 rollout). The bills are **already sitting in the tenant's WhatsApp**. The only question is how to extract them with near-zero tenant effort.
@@ -223,23 +223,23 @@ Because we can query `newer_than:24m` instead of `newer_than:6m`, we can pull **
 #### C-1: WhatsApp Business API Reverse-Linked Inbox (official)
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  1. Find.ai registers a WhatsApp Business API number:       │
+│  1. Veri.ai registers a WhatsApp Business API number:       │
 │     +60 12-CAKAP-AI (a verified business account)           │
 ├─────────────────────────────────────────────────────────────┤
-│  2. Tenant saves Find.ai contact + sends one message:       │
+│  2. Tenant saves Veri.ai contact + sends one message:       │
 │     "scan siti 950203-08-1234"                              │
 ├─────────────────────────────────────────────────────────────┤
-│  3. Find.ai bot replies with 3 option buttons:              │
+│  3. Veri.ai bot replies with 3 option buttons:              │
 │     [ 📤 Forward TNB bill ]                                 │
 │     [ 📤 Forward Unifi bill ]                               │
 │     [ 📤 Forward Maxis bill ]                               │
 ├─────────────────────────────────────────────────────────────┤
 │  4. Tenant long-presses each TNB/Unifi/Maxis message in     │
-│     their chat history → Forward → selects Find.ai bot.     │
+│     their chat history → Forward → selects Veri.ai bot.     │
 │     WhatsApp's multi-forward picker lets them select 3      │
 │     bills at once per utility, then hit forward.            │
 ├─────────────────────────────────────────────────────────────┤
-│  5. Find.ai receives media via WhatsApp Business API        │
+│  5. Veri.ai receives media via WhatsApp Business API        │
 │     webhook → downloads → same OCR pipeline                 │
 ├─────────────────────────────────────────────────────────────┤
 │  6. Bot replies: "✅ 9 bills processed. Grade A (84/100)"   │
@@ -254,7 +254,7 @@ Because we can query `newer_than:24m` instead of `newer_than:6m`, we can pull **
 │  1. Tenant downloads WhatsApp Web on a laptop/PC (or        │
 │     uses the existing session on their desktop).            │
 ├─────────────────────────────────────────────────────────────┤
-│  2. Tenant visits find.ai/scan/web → sees QR code           │
+│  2. Tenant visits veri.ai/scan/web → sees QR code           │
 ├─────────────────────────────────────────────────────────────┤
 │  3. Tenant opens WhatsApp on their phone → Settings →       │
 │     Linked Devices → Link Device → scans our QR             │
@@ -292,7 +292,7 @@ Because we can query `newer_than:24m` instead of `newer_than:6m`, we can pull **
 **C-2 (WhatsApp Web bridge):**
 - Technically **legal** — the tenant is voluntarily linking a device to their own account and we only access pre-existing chats they explicitly authorize.
 - BUT — violates WhatsApp ToS Section 4(b): "You must not create accounts through automated or unauthorized means; you must not access the Services except through the interface that WhatsApp provides." Using `whatsapp-web.js` or Baileys to run a server-side WA Web client is a ToS violation.
-- Risk: WhatsApp can ban the tenant's number (low probability, but real) or block Find.ai's infrastructure.
+- Risk: WhatsApp can ban the tenant's number (low probability, but real) or block Veri.ai's infrastructure.
 - **Recommendation: do NOT ship C-2 in Phase 1.** Keep as R&D only.
 
 **C-1 is the shippable WhatsApp path.**
@@ -322,9 +322,9 @@ Malaysia has ~30M WhatsApp users out of ~34M population — **the highest penetr
 ## Path D — Tenant Pre-Registration ("Register once, rent anywhere") 🏆 HERO
 
 ### The strategic flip
-Paths A/B/C all assume a **fresh scan per landlord-tenant pair**. Expensive, friction per deal. Path D inverts the model: tenant registers **once**, builds a reusable Find.ai trust profile, and every subsequent landlord fetches it in 1 second.
+Paths A/B/C all assume a **fresh scan per landlord-tenant pair**. Expensive, friction per deal. Path D inverts the model: tenant registers **once**, builds a reusable Veri.ai trust profile, and every subsequent landlord fetches it in 1 second.
 
-**Landlord love is the wedge.** Once Find.ai-verified tenants become the default signal of quality, landlords start writing "Find.ai verified tenants only" into their listings — the same way "CTOS-clear" became mandatory for credit cards. Tenants then complete the one-time registration because it's the price of rental market access.
+**Landlord love is the wedge.** Once Veri.ai-verified tenants become the default signal of quality, landlords start writing "Veri.ai verified tenants only" into their listings — the same way "CTOS-clear" became mandatory for credit cards. Tenants then complete the one-time registration because it's the price of rental market access.
 
 ### The two pitches
 
@@ -332,7 +332,7 @@ Paths A/B/C all assume a **fresh scan per landlord-tenant pair**. Expensive, fri
 > "Register once. Every future landlord sees your trust grade in 1 second — no more re-submitting ICs, payslips, references for every viewing. 4 minutes now saves you hours per rental cycle."
 
 **To the landlord:**
-> "Stop waiting 5 days for screening. Find.ai verified tenants come with a pre-computed grade, 12 months of payment history, and IC-matched utility accounts. Tap their profile link — grade shows instantly."
+> "Stop waiting 5 days for screening. Veri.ai verified tenants come with a pre-computed grade, 12 months of payment history, and IC-matched utility accounts. Tap their profile link — grade shows instantly."
 
 ### Registration flow — tap-by-tap
 
@@ -369,7 +369,7 @@ Paths A/B/C all assume a **fresh scan per landlord-tenant pair**. Expensive, fri
 ├─────────────────────────────────────────────────────────────┤
 │  STEP 5 — Consent + finish                                  │
 │  ────────────────────────────                               │
-│  ☑ I authorize Find.ai to share my trust grade with         │
+│  ☑ I authorize Veri.ai to share my trust grade with         │
 │    landlords I explicitly invite (PDPA 2010 Section 6)      │
 │  ☑ I authorize monthly auto-refresh via forwarded bills     │
 │  [ 🛡️ Create my trust profile ] Tap: Finish (1 tap)        │
@@ -423,7 +423,7 @@ interface TenantProfile {
     signedAt: ISO8601;
     endedAt?: ISO8601;
     landlordRating?: 1 | 2 | 3 | 4 | 5;   // only after tenancy ends
-    landlordVerified: boolean;           // was the landlord Find.ai verified too
+    landlordVerified: boolean;           // was the landlord Veri.ai verified too
   }[];
 }
 ```
@@ -435,9 +435,9 @@ interface TenantProfile {
 │  Landlord Ken wants to screen Siti:                         │
 │                                                             │
 │  1. Siti sends Ken her profile link:                        │
-│     find.ai/t/siti-8321                                     │
+│     veri.ai/t/siti-8321                                     │
 │                                                             │
-│  2. Ken taps link → Find.ai app opens:                      │
+│  2. Ken taps link → Veri.ai app opens:                      │
 │     "Siti Aminah wants to share her trust profile with you" │
 │     [ View profile ] [ Request full scan ]                  │
 │                                                             │
@@ -453,7 +453,7 @@ interface TenantProfile {
 │     │  📱 Phone verified 2026-01-14            │            │
 │     │  ⚡ TNB ****90 — 12 mo, 0 late          │            │
 │     │  🌐 Unifi ****45 — 8 mo, 1 late (Aug)   │            │
-│     │  📜 2 prior Find.ai tenancies (⭐4.5)   │            │
+│     │  📜 2 prior Veri.ai tenancies (⭐4.5)   │            │
 │     │                                          │            │
 │     │  Verified via e-bill OCR + IC match      │            │
 │     │  Last refreshed: 3 days ago              │            │
@@ -469,7 +469,7 @@ interface TenantProfile {
 
 ### Monthly auto-refresh (keeps profile current)
 
-When Siti registers she opts in to monthly refresh via email-forward inbox (Path A). Her unique inbox `siti-8321@scan.find.ai` receives auto-generated bills directly from TNB/Unifi/Maxis billing systems (tenants can set this in the utility's own portal as a secondary billing email — takes 30 seconds per utility at registration, one-time).
+When Siti registers she opts in to monthly refresh via email-forward inbox (Path A). Her unique inbox `siti-8321@scan.veri.ai` receives auto-generated bills directly from TNB/Unifi/Maxis billing systems (tenants can set this in the utility's own portal as a secondary billing email — takes 30 seconds per utility at registration, one-time).
 
 Result: **the profile is always live — payment history compounds automatically for years**. By year 2, Siti has 24 months of pristine payment history. That profile becomes a massive career asset.
 
@@ -477,7 +477,7 @@ For tenants who don't want auto-refresh: the profile shows "Last refreshed" time
 
 ### Legal posture
 
-- **PDPA 2010 Section 6 (consent):** two-layer consent — (a) consent to Find.ai as data user at registration, (b) fresh per-landlord consent before each share. Strongest possible PDPA basis.
+- **PDPA 2010 Section 6 (consent):** two-layer consent — (a) consent to Veri.ai as data user at registration, (b) fresh per-landlord consent before each share. Strongest possible PDPA basis.
 - **PDPA 2010 Section 7 (purpose limitation):** data used only for tenancy trust scoring. Never sold. Never marketed. Audited per Section 11.
 - **PDPA 2010 Section 9 (security):** ICs hashed. Account numbers encrypted at rest (AES-256). Bill PDFs purged 30 days after parse.
 - **Computer Crimes Act 1997 Section 3:** no credential access. No scraping. All data is tenant-uploaded.
@@ -538,7 +538,7 @@ Unit economics work cleanly if even 20% of landlords pay RM5 per fetch.
 | Network effects | None | None | None | **Landlord ratings compound** |
 | Defensibility | Low | Medium | Medium | **Very high (data moat)** |
 
-Path D is the only architecture that creates **compounding trust data** — a Malaysian rental-credit bureau owned by Find.ai. This is what Phases 2-4 build on top of.
+Path D is the only architecture that creates **compounding trust data** — a Malaysian rental-credit bureau owned by Veri.ai. This is what Phases 2-4 build on top of.
 
 ### 90-day execution plan
 
@@ -546,7 +546,7 @@ Path D is the only architecture that creates **compounding trust data** — a Ma
 - **Day 14-42:** Path D registration wizard + profile system + landlord fetch ship together.
 - **Day 42-60:** Recruit 10 pilot landlords × ~50 tenants each. Free tier for both sides.
 - **Day 60-90:** First paid fetches. Landlord ratings start populating. First 2-generation tenants appear (tenants who renewed with a second landlord — their profile has 2 ratings).
-- **Day 90+:** Find.ai-verified tenants become a requested filter in listings. Tenants start voluntarily registering ahead of applying.
+- **Day 90+:** Veri.ai-verified tenants become a requested filter in listings. Tenants start voluntarily registering ahead of applying.
 
 By Day 90 the flywheel is self-sustaining.
 
@@ -563,7 +563,7 @@ Don't force one path. Let each tenant pick the path of least resistance **for th
 │                                                             │
 │   🛡️ Your landlord Ken wants to verify you                 │
 │                                                             │
-│   🏆 [ 🪪 I have a Find.ai profile — 1 tap ]  ← Path D      │
+│   🏆 [ 🪪 I have a Veri.ai profile — 1 tap ]  ← Path D      │
 │       (reusable across all future landlords)                │
 │                                                             │
 │   🟢 [ 🔓 Connect Gmail — 1 tap, 15 sec ]  ← Path B         │
@@ -618,7 +618,7 @@ For registered tenants, Path D is always first and always 1 tap. For unregistere
 
 Ken's stretch goal is tenant = 0 taps. In Malaysian law, this is impossible:
 - **PDPA 2010 Section 6(1)** requires **affirmative** consent. Silence is not consent. Zero-tap = no consent = illegal.
-- The closest legal "zero-tap" is a **recurring authorization** — e.g., tenant once grants Find.ai persistent OAuth access, and we re-scan monthly. But this requires the tenant to have tapped once at the start, and we still need to obtain per-landlord sharing consent on subsequent shares.
+- The closest legal "zero-tap" is a **recurring authorization** — e.g., tenant once grants Veri.ai persistent OAuth access, and we re-scan monthly. But this requires the tenant to have tapped once at the start, and we still need to obtain per-landlord sharing consent on subsequent shares.
 
 **The true floor is 1 affirmative tap.** That's Path B. Nothing legal gets below it.
 
@@ -633,7 +633,7 @@ After this: tenant registers **once**, lives off that registration forever. Land
 
 **What Path D actually is:**
 
-This is Find.ai's version of CTOS — but for rental trust, not credit. By year 2 you own the most valuable rental-trust dataset in Malaysia. By year 3, no competitor can catch up because they'd need to re-acquire every tenant profile from scratch. This is also the **direct bridge to Phase 4 marketplace endgame** — a listings platform where every tenant comes pre-graded. PropertyGuru cannot copy this because they don't have the compliance-tool wedge to acquire the data.
+This is Veri.ai's version of CTOS — but for rental trust, not credit. By year 2 you own the most valuable rental-trust dataset in Malaysia. By year 3, no competitor can catch up because they'd need to re-acquire every tenant profile from scratch. This is also the **direct bridge to Phase 4 marketplace endgame** — a listings platform where every tenant comes pre-graded. PropertyGuru cannot copy this because they don't have the compliance-tool wedge to acquire the data.
 
 **The 90-day ship order:**
 
@@ -650,6 +650,6 @@ Path D is fully PDPA-compliant with two-layer consent (registration + per-landlo
 
 1. **Green-light Path A + Path D together** as a combined Phase 1 Tool 1 implementation (7 weeks).
 2. **Confirm the tenant registration incentive:** free for tenants, RM5-10 per-fetch fee on landlord side (paid tier after 3 free fetches), or freemium both sides with later monetisation? This shapes the UX copy.
-3. **Pick a pilot landlord cohort:** 5-10 landlords from your network willing to adopt "Find.ai verified tenants only" policy for their next 50 viewings. Without this pilot, tenants have no reason to register.
+3. **Pick a pilot landlord cohort:** 5-10 landlords from your network willing to adopt "Veri.ai verified tenants only" policy for their next 50 viewings. Without this pilot, tenants have no reason to register.
 
 Your call on which to lock first. I can start building Path A's SMTP inbound handler on your word.

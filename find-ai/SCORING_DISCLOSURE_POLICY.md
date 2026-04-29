@@ -1,8 +1,8 @@
 # Scoring Disclosure Policy — INTERNAL
 
-> **AUDIENCE:** Find.ai engineering, product, marketing, support staff, and any contractor/agency working on Find.ai content. **NOT for public publication.**
+> **AUDIENCE:** Veri.ai engineering, product, marketing, support staff, and any contractor/agency working on Veri.ai content. **NOT for public publication.**
 >
-> **Purpose:** Define what's safe to disclose about the Trust Score methodology vs. what stays trade-secret. Protects Find.ai's competitive moat while enabling sufficient transparency for user trust + legal compliance.
+> **Purpose:** Define what's safe to disclose about the Trust Score methodology vs. what stays trade-secret. Protects Veri.ai's competitive moat while enabling sufficient transparency for user trust + legal compliance.
 >
 > Last updated: 2026-04-25 (v3.4.5).
 
@@ -31,14 +31,14 @@ Safe to publish on:
 | LHDN cert is identity gate only | *"LHDN verification confirms the tenancy was real — it doesn't directly affect the score."* |
 | Four confidence tiers exist (named) | *"Mature, Established, Provisional, Initial — based on how much evidence is available."* |
 | More evidence = higher Trust Score | *"Tenants who upload more bills get a higher Trust Score for the same paying behaviour."* |
-| Score is a support tool, landlord decides | *"Find.ai surfaces evidence; the rental decision rests with the landlord."* |
+| Score is a support tool, landlord decides | *"Veri.ai surfaces evidence; the rental decision rests with the landlord."* |
 | Anti-fraud measures exist (general) | *"We use multiple verification methods to detect fake bills and identity mismatches."* |
 | Data retention period (12 months post-tenancy) | *"Tenant data auto-deleted 12 months after tenancy ends."* |
 | Tenant consent required before data use | *"Tenants explicitly consent to each piece of evidence before it's screened."* |
 
 ### Tier 2 — DRILL-IN (in-product help only)
 
-Disclosed only inside the Find.ai product when a user explicitly opens a `(?)` info card or methodology panel. NOT in marketing, NOT in public docs, NOT in interviews.
+Disclosed only inside the Veri.ai product when a user explicitly opens a `(?)` info card or methodology panel. NOT in marketing, NOT in public docs, NOT in interviews.
 
 **Approved drill-in facts:**
 
@@ -90,7 +90,7 @@ Stays in:
 
 ---
 
-## Rules for Zeus and future AI assistants working on Find.ai
+## Rules for Zeus and future AI assistants working on Veri.ai
 
 When generating any user-facing copy, marketing material, or documentation:
 
@@ -105,7 +105,7 @@ When generating any user-facing copy, marketing material, or documentation:
 ## Trade secret protection — engineering rules
 
 1. **Multiplier values + factor weights MUST live server-side in production.** Currently in client code (`computeConfidence()` in `TenantScreen.js`) for the v0 mock. Migration to server-side API is a P0 requirement before v1 launch.
-2. **Source code MUST NOT be public.** Repo stays private (currently `KenTan-malaysia/find.ai` on GitHub).
+2. **Source code MUST NOT be public.** Repo stays private (currently `KenTan-malaysia/veri.ai` on GitHub).
 3. **No engineer or contractor sees the full scoring formula without an NDA.**
 4. **Production deploys MUST minify + obfuscate client JS** (Next.js does this automatically in `next build` — verify before launch).
 5. **API responses MUST return the computed Trust Score + tier label, NOT the raw inputs to the formula.** Don't leak weights via API shape.
@@ -130,11 +130,11 @@ If the methodology is changed (new factors, new weights, new tiers):
 ## Trademark + brand protection
 
 The following marks should be trademark-registered (TBD):
-- "Find.ai" (word mark)
-- "Cakap 2.0" (product name)
+- "Veri.ai" (word mark)
+- "Veri.ai" (product name)
 - "Trust Card" (artifact name)
 - "Trust Score" (potentially generic — confer with IP agent)
-- Find.ai shield logo
+- Veri.ai shield logo
 
 Until trademarks are filed, use ™ symbol in marketing material as common-law claim.
 

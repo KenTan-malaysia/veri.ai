@@ -1,8 +1,8 @@
-# Monetization Plan — Find.ai
+# Monetization Plan — Veri.ai
 
 > **Strategy locked 2026-04-26 (v3.4.19) — Ken's call:** *"Im not expecting to charge so fast at the stage 4 and even didnt reached 30,000 user, after that only will charge on the premium feature, this is a long time game."*
 >
-> Find.ai uses the **freemium-at-scale playbook** — free for everyone until ~30,000 active users, then premium tier for power users + B2B (agents, agencies, proptechs).
+> Veri.ai uses the **freemium-at-scale playbook** — free for everyone until ~30,000 active users, then premium tier for power users + B2B (agents, agencies, proptechs).
 >
 > Last updated: 2026-04-26
 > Owner: Ken Tan
@@ -12,7 +12,7 @@
 
 ## The model in one line
 
-**Find.ai is free for individual landlords forever.** Premium tier launches at ~30k users to monetize agents, agencies, multi-property landlords, and proptech integrators.
+**Veri.ai is free for individual landlords forever.** Premium tier launches at ~30k users to monetize agents, agencies, multi-property landlords, and proptech integrators.
 
 This is the same playbook used by:
 - **Notion** — free for individuals, paid for teams
@@ -67,7 +67,7 @@ For property agents who screen many tenants on behalf of landlord clients:
 |---|---|
 | Bulk screening (5+ tenants in one workflow) | Save hours per cycle |
 | Agency dashboard with team accounts | Multi-user, role-based access |
-| White-label Trust Card | Agency branding instead of just Find.ai |
+| White-label Trust Card | Agency branding instead of just Veri.ai |
 | Client-facing reports | Send formatted reports to landlord clients |
 | API for integration with REN platforms | Workflow integration |
 
@@ -77,7 +77,7 @@ For PropertyGuru / iProperty / EdgeProp / property mgmt companies:
 
 | Feature | Enterprise value |
 |---|---|
-| Find.ai API access | Integrate Trust Score into their listing pages |
+| Veri.ai API access | Integrate Trust Score into their listing pages |
 | Bulk verification SLAs | Guaranteed throughput |
 | Custom Trust Card formats | Co-branded outputs |
 | Anonymized aggregate data | Market intelligence reports |
@@ -86,17 +86,17 @@ For PropertyGuru / iProperty / EdgeProp / property mgmt companies:
 
 ---
 
-## Why this works for Find.ai
+## Why this works for Veri.ai
 
 | Benefit | Mechanism |
 |---|---|
 | **Massive top-of-funnel** | MY rental market = ~3M+ landlords. Free removes adoption friction. |
 | **Network effects compound** | Every screening builds the trust dataset → better Trust Scores → more landlords trust → more screenings |
-| **Data moat** | At 30k users, Find.ai has proprietary behavioural data PropertyGuru / iProperty cannot replicate |
+| **Data moat** | At 30k users, Veri.ai has proprietary behavioural data PropertyGuru / iProperty cannot replicate |
 | **Trust signal builds gradually** | Free use = brand familiarity → when premium launches, users already trust the brand |
 | **Investor story at scale** | "30k MAU in MY property compliance" is fundable Series A material |
 | **Defensive moat** | Hard for competitors to compete with free at scale once you have network effects |
-| **B2B follows B2C** | Agencies + proptechs ONLY pay if their landlord clients/users already use Find.ai |
+| **B2B follows B2C** | Agencies + proptechs ONLY pay if their landlord clients/users already use Veri.ai |
 
 ---
 
@@ -115,14 +115,14 @@ Don't launch premium until ALL of these are true:
 
 ---
 
-## Unit economics — why free at scale works for Find.ai
+## Unit economics — why free at scale works for Veri.ai
 
 ### Cost per screening (at 30k+ user scale)
 
 | Cost item | Per screening |
 |---|---|
 | Claude vision API for OCR (3 bills × ~RM 0.03 each) | RM 0.10 |
-| Anthropic chat (Find.ai Q&A, ~5 turns) | RM 0.05 |
+| Anthropic chat (Veri.ai Q&A, ~5 turns) | RM 0.05 |
 | Vercel hosting (amortized) | RM 0.001 |
 | Database storage | RM 0.001 |
 | Bill verification (Tier 1 lattice) | RM 0.05 |
@@ -210,7 +210,7 @@ The current pilot recruitment + feedback form has questions about pricing — th
 
 - "Would you use this if it stays free forever?"
 - "Which premium features would be valuable enough to pay RM 30/month for IF free tier still existed?"
-- "Would you recommend Find.ai to other landlords?"
+- "Would you recommend Veri.ai to other landlords?"
 
 See `PILOT_FEEDBACK_FORM.md` (updated to reflect this).
 

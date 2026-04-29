@@ -1,4 +1,4 @@
-# DESIGN DIRECTION — Find.ai
+# DESIGN DIRECTION — Veri.ai
 
 > **Doctrine locked 2026-04-26 (v3.4.36) — Ken's call after reviewing 3 hybrid options:** Option 3 — Tier ladder as left spine, Trust Card content on the right, action row at the bottom.
 >
@@ -10,7 +10,7 @@
 
 ## The decision in one line
 
-**Find.ai's Trust Card page (`/trust/[reportId]`) and related screens use a tier-spine-as-navigation + Trust-Card-as-hero composition. The reveal journey is the spine; the score is the destination. Apple Card materials + Wallet Pass restraint + Health-style tier progression — fused into one layout.**
+**Veri.ai's Trust Card page (`/trust/[reportId]`) and related screens use a tier-spine-as-navigation + Trust-Card-as-hero composition. The reveal journey is the spine; the score is the destination. Apple Card materials + Wallet Pass restraint + Health-style tier progression — fused into one layout.**
 
 ---
 
@@ -50,7 +50,7 @@ Reviewed against the locked doctrine:
 ┌────────────────────────────────────────────────────────────────────┐
 │  [Demo banner if applicable]                                        │
 │  [Landlord/property context strip if present]                       │
-│  [Find.ai brand · "Trust Card" eyebrow]                             │
+│  [Veri.ai brand · "Trust Card" eyebrow]                             │
 │                                                                     │
 │  ┌──────────────────┐  ┌────────────────────────────────────────┐  │
 │  │ REVEAL JOURNEY   │  │ [Mode badge top-left]                  │  │
@@ -161,7 +161,7 @@ Stays as currently spec'd in v3.4.31 — white card with "What this Trust Card m
 
 ---
 
-## Color palette (Find.ai locked, not host design system)
+## Color palette (Veri.ai locked, not host design system)
 
 **Primary surface colors:**
 - Cream `#FAF8F3` — page background

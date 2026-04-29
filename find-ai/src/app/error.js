@@ -12,7 +12,7 @@ export default function GlobalError({ error, reset }) {
     // In production this would forward to a monitoring service (Sentry, etc.).
     // For v0, log to console.
     if (typeof window !== 'undefined') {
-      console.error('Find.ai global error:', error);
+      console.error('Veri.ai global error:', error);
     }
   }, [error]);
 
@@ -22,9 +22,9 @@ export default function GlobalError({ error, reset }) {
         <Link
           href="/"
           style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F', marginBottom: 48 }}
-          aria-label="Find.ai home"
+          aria-label="Veri.ai home"
         >
-          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+          <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
           <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
         </Link>
 

@@ -20,7 +20,7 @@ export default function TermsPage() {
           marginBottom: 12,
         }}
       >
-        Legal · Find.ai
+        Legal · Veri.ai
       </div>
       <h1 style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '-0.02em', margin: '0 0 24px' }}>
         Terms of use
@@ -38,11 +38,11 @@ export default function TermsPage() {
       >
         <strong>Draft notice.</strong> This page is a placeholder. The final
         Terms of use will be reviewed by a Malaysian lawyer before public
-        launch. Use Find.ai at your own discretion in the meantime.
+        launch. Use Veri.ai at your own discretion in the meantime.
       </div>
 
-      <Section title="1. What Find.ai is">
-        Find.ai is a Malaysian property compliance support tool. We help
+      <Section title="1. What Veri.ai is">
+        Veri.ai is a Malaysian property compliance support tool. We help
         landlords, tenants, and property agents verify each other before
         signing tenancies. We are not a law firm and do not provide legal
         advice. Trust Cards are evidence summaries — landlords make the final
@@ -58,20 +58,20 @@ export default function TermsPage() {
 
       <Section title="3. Acceptable use">
         You agree not to: submit false documents, impersonate another person,
-        use Find.ai to discriminate against tenants on protected grounds, or
+        use Veri.ai to discriminate against tenants on protected grounds, or
         attempt to bypass the anonymous-default identity reveal flow.
         Repeated violations result in account suspension.
       </Section>
 
       <Section title="4. Disclaimer of warranties">
-        Find.ai is provided "as is." Trust Scores are derived from utility
+        Veri.ai is provided "as is." Trust Scores are derived from utility
         payment history and LHDN records — they are signals, not guarantees.
         We do not guarantee tenant behavior, deal outcomes, or legal validity
         of any tenancy you sign.
       </Section>
 
       <Section title="5. Liability">
-        To the extent permitted by Malaysian law, Find.ai's total liability
+        To the extent permitted by Malaysian law, Veri.ai's total liability
         for any claim is limited to the fees you paid us in the 12 months
         prior to the claim. For free-tier users, this means our liability is
         limited to RM 1.
@@ -83,7 +83,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="7. Contact">
-        Questions? Email <a href="mailto:hello@find.ai" style={{ color: 'var(--color-gold)' }}>hello@find.ai</a>.
+        Questions? Email <a href="mailto:hello@veri.ai" style={{ color: 'var(--color-gold)' }}>hello@veri.ai</a>.
       </Section>
 
       <p style={{ fontSize: 12, color: 'var(--color-stone)', marginTop: 32, fontStyle: 'italic' }}>

@@ -161,7 +161,7 @@ Note: DEMO_MODE banner is visible — testers are appropriately lenient on "real
 
 ### 👍 L1 — Ahmad bin Salleh (first-time landlord, KL, EN, condo 1 unit)
 
-> "I just bought my first condo in Mont Kiara and I'm interviewing tenants this weekend. Friend told me about Find.ai."
+> "I just bought my first condo in Mont Kiara and I'm interviewing tenants this weekend. Friend told me about Veri.ai."
 
 | Step | Verdict | Notes |
 |---|---|---|
@@ -468,7 +468,7 @@ When tapped, route to a "Silver tier verification" path:
 - Score badge shows "Silver tier · No LHDN anchor"
 - Landlord-facing: clearly weaker confidence than Gold tier
 
-Educational note: *"Your future tenancy through Find.ai will be auto-stamped via TOOL 3 — this builds your LHDN-anchored credit profile from day one."*
+Educational note: *"Your future tenancy through Veri.ai will be auto-stamped via TOOL 3 — this builds your LHDN-anchored credit profile from day one."*
 
 ### P0-2 — Foreign tenant flow
 
@@ -542,7 +542,7 @@ Currently alerts "coming next session." Replace with a more graceful in-modal pr
 
 **T9 — Account # path: clarify deep-link behavior**
 
-When tenant picks Account # method, show a small inline note: *"Tap Confirm — we'll open the official TNB portal with your account # pre-filled. Screenshot what you see and upload back to Find.ai."* Sets expectation correctly.
+When tenant picks Account # method, show a small inline note: *"Tap Confirm — we'll open the official TNB portal with your account # pre-filled. Screenshot what you see and upload back to Veri.ai."* Sets expectation correctly.
 
 **T10 — CSV / API export for enterprise users**
 

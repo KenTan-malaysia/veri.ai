@@ -29,7 +29,7 @@ const STATES = [
 
 const UI = {
   en: {
-    title: 'Find.ai',
+    title: 'Veri.ai',
     subtitle: 'Your property advisor',
     subtitleActive: 'Thinking with you',
     welcomeTitle: "What's your property situation?",
@@ -101,7 +101,7 @@ const UI = {
     feedbackThanks: 'Thanks for your feedback!',
   },
   bm: {
-    title: 'Find.ai',
+    title: 'Veri.ai',
     subtitle: 'Penasihat hartanah anda',
     subtitleActive: 'Sedang membantu anda',
     welcomeTitle: 'Apa situasi hartanah anda?',
@@ -174,7 +174,7 @@ const UI = {
     feedbackThanks: 'Terima kasih atas maklum balas!',
   },
   zh: {
-    title: 'Find.ai',
+    title: 'Veri.ai',
     subtitle: '您的房产顾问',
     subtitleActive: '正在为您分析',
     welcomeTitle: '您的房产情况是什么？',
@@ -448,7 +448,7 @@ export default function Home() {
   const [lastFailedMsg, setLastFailedMsg] = useState(null);
   const [feedbackMap, setFeedbackMap] = useState({});
   const [showFeedbackToast, setShowFeedbackToast] = useState(false);
-  // v3.4.27 — PWA install banner state RETIRED. Find.ai is a website, not an
+  // v3.4.27 — PWA install banner state RETIRED. Veri.ai is a website, not an
   // installable app. See WEB_FIRST_RATIONALE.md + WEB_UX_PATTERNS.md.
   // Chat history state
   const [chatHistory, setChatHistory] = useState([]);
@@ -496,7 +496,7 @@ export default function Home() {
   const voiceMaxRef = useRef(null);          // 45s hard watchdog — force-stop if engine hangs
 
   // v3.4.27 — PWA install handlers RETIRED. We don't prompt users to install
-  // Find.ai as an app — we are a website. Capacitor wrap arrives at Phase 4
+  // Veri.ai as an app — we are a website. Capacitor wrap arrives at Phase 4
   // (post-30k users) per WEB_FIRST_RATIONALE.md.
 
   useEffect(() => {
@@ -1147,12 +1147,12 @@ export default function Home() {
 
   const handleSave = () => {
     const content = messages.map(m => {
-      const who = m.role === 'user' ? 'You' : 'Find.ai';
+      const who = m.role === 'user' ? 'You' : 'Veri.ai';
       return `<div style="margin-bottom:20px"><strong>${who}:</strong><div style="margin-top:6px;white-space:pre-wrap">${m.content}</div></div>`;
     }).join('<hr style="border:none;border-top:1px solid #eee;margin:16px 0">');
-    const html = `<html><head><title>Find.ai Chat ${new Date().toISOString().slice(0,10)}</title>
+    const html = `<html><head><title>Veri.ai Chat ${new Date().toISOString().slice(0,10)}</title>
       <style>body{font-family:system-ui,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#333;font-size:14px;line-height:1.6}h1{font-size:18px}p.sub{color:#888;font-size:12px}</style></head>
-      <body><h1>Find.ai — Malaysian Property Advisor</h1><p class="sub">${new Date().toLocaleDateString('en-MY',{dateStyle:'full'})}</p><hr>${content}
+      <body><h1>Veri.ai — Malaysian Property Advisor</h1><p class="sub">${new Date().toLocaleDateString('en-MY',{dateStyle:'full'})}</p><hr>${content}
       <p class="sub" style="margin-top:30px">AI guidance — not a substitute for professional legal counsel</p></body></html>`;
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
@@ -1252,7 +1252,7 @@ export default function Home() {
 
   const shareWA = (text) => {
     const clean = text.replace(/\*\*/g, '*').replace(/<[^>]*>/g, '').substring(0, 2000);
-    window.open(`https://wa.me/?text=${encodeURIComponent(`From Find.ai:\n\n${clean}\n\nhttps://find-ai-lovat.vercel.app`)}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(`From Veri.ai:\n\n${clean}\n\nhttps://find-ai-lovat.vercel.app`)}`, '_blank');
   };
 
   const copyMsg = (text) => {
@@ -1345,7 +1345,7 @@ export default function Home() {
   // Context label tells the peek header which screen the user is currently on,
   // so Claude's answer can be framed appropriately ("while you're in Stamp
   // Duty…"). On the full chat page we pass undefined so the peek just says
-  // "Ask Find.ai" — because you're already there.
+  // "Ask Veri.ai" — because you're already there.
   const peekContext = showStampTool
     ? (lang === 'en' ? 'Stamp Duty'       : lang === 'bm' ? 'Duti Setem'        : '印花税')
     : showScreenTool

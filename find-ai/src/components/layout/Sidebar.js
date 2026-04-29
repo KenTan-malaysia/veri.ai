@@ -64,14 +64,14 @@ export default function Sidebar({ collapsed = false, onToggle }) {
             textDecoration: 'none',
             color: 'var(--color-navy)',
           }}
-          aria-label="Find.ai home"
+          aria-label="Veri.ai home"
         >
           {/* v3.4.38 — Wordmark-only brand. Shield retired. */}
           {collapsed ? (
             <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>F</span>
           ) : (
             <>
-              <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Find</span>
+              <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
               <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--color-gold)' }}>.ai</span>
             </>
           )}

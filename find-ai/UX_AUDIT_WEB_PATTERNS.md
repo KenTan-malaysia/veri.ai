@@ -8,7 +8,7 @@
 
 ## Executive summary
 
-Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The product runs in a browser tab, but every UX pattern was built with mobile-first instincts that fight the medium:
+Veri.ai is currently a **mobile app shell wrapped in a Next.js web app.** The product runs in a browser tab, but every UX pattern was built with mobile-first instincts that fight the medium:
 
 - TenantScreen mounts as a fullscreen modal (`fixed inset-0`) over the chat page — not a real route
 - All app width is capped at `max-w-lg` (~512px), so desktop users see a narrow centered column with empty space on either side
@@ -17,10 +17,10 @@ Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The pr
 - Trust Card outputs as in-modal HTML only — no permanent shareable URL, no OG preview when shared on WhatsApp
 - WhatsApp share is plaintext-only — no rich link preview = the viral mechanic is broken
 - No browser back support for tool flows — `onClose` jumps straight to Landing, skipping intermediate steps
-- `<title>` is static across the entire app — multi-tab users can't find Find.ai in their tab strip
+- `<title>` is static across the entire app — multi-tab users can't find Veri.ai in their tab strip
 - No `<header>` or `<footer>` on the page shell — desktop visitors see no nav, no legal links, no language selector outside the tool
 
-**Net effect:** A landlord on desktop opening find-ai-lovat.vercel.app sees what looks like a mobile app stuck in the middle of their 1440px screen. A tenant receiving a Trust Card via WhatsApp sees a generic Find.ai link with no preview. Both kill trust.
+**Net effect:** A landlord on desktop opening find-ai-lovat.vercel.app sees what looks like a mobile app stuck in the middle of their 1440px screen. A tenant receiving a Trust Card via WhatsApp sees a generic Veri.ai link with no preview. Both kill trust.
 
 ---
 
@@ -30,7 +30,7 @@ Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The pr
 
 | # | Issue | File · Line | Impact |
 |---|---|---|---|
-| **P0.1** | **No `/trust/{reportId}` public page.** Trust Card lives only inside the in-app modal. WhatsApp share is plaintext only. Recipient lands on `/` (Find.ai home) when they open the link, not on the tenant's actual Trust Card. | `TenantScreen.js:2030-2058` (waMsg + waUrl) | **The viral mechanic is broken.** Every WhatsApp share fails to drive new-user discovery. This was the entire premise of `WEB_FIRST_RATIONALE.md` — fix this and the strategy starts working. |
+| **P0.1** | **No `/trust/{reportId}` public page.** Trust Card lives only inside the in-app modal. WhatsApp share is plaintext only. Recipient lands on `/` (Veri.ai home) when they open the link, not on the tenant's actual Trust Card. | `TenantScreen.js:2030-2058` (waMsg + waUrl) | **The viral mechanic is broken.** Every WhatsApp share fails to drive new-user discovery. This was the entire premise of `WEB_FIRST_RATIONALE.md` — fix this and the strategy starts working. |
 | **P0.2** | **No OG meta tags on any page.** `layout.js` has only `title` + `description`. No `og:image`, `og:url`, `twitter:card`. WhatsApp/Telegram/Twitter previews show blank or generic. | `layout.js:3-16` | Compounds P0.1. Even when shareable URLs exist, the previews are dead. |
 | **P0.3** | **TenantScreen mounts as fullscreen modal, not a route.** `page.js:1663-1672` conditionally renders `<TenantScreen />` over the chat page. No URL changes when the user is in the tool. Browser back = exit chat, not exit step. Refresh = lose all progress. | `page.js:1663-1672`, `shared.js:40-50` (Modal `fixed inset-0`), `TenantScreen.js:1293` (`useState(0)` for step) | Refresh-loss = pilot users lose 5+ minutes of work. URL-not-shareable = no deep-linking ever. |
 
@@ -41,7 +41,7 @@ Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The pr
 | **P1.1** | **Entire app capped at `max-w-lg` (512px).** Desktop users see a centered mobile-shaped column. No 2-col form layouts, no breathing room, looks like a phone shoved into a 1440px screen. | `page.js:1460` (`max-w-lg mx-auto`), `shared.js:42` (`max-w-lg`) | Desktop landlords (35-65 yrs, used to Maybank2u + e-Filing) judge by visual maturity. A narrow phone-shape column on desktop reads as "this is a startup app, not a real business tool." Trust ceiling. |
 | **P1.2** | **`userScalable: false` + `apple-mobile-web-app-capable: yes` in viewport.** The manifest tells browsers "this is a phone app." Pinch-zoom is disabled. Older landlords cannot zoom in to read fine print on bills upload steps. | `layout.js:18-25, 32` | Accessibility violation. Older audience needs zoom. Manifest claims app-status that contradicts our web-first commitment. |
 | **P1.3** | **No `<header>` / `<footer>` on the page shell.** Layout is just `<body className="bg-white h-full">{children}</body>`. No persistent logo, language toggle, profile, or footer with legal links. Each page invents its own header. | `layout.js:35` | First-time desktop visitors see no nav, no legal proof. Trust signal missing. SEO penalty (no internal linking from footer). |
-| **P1.4** | **Static `<title>` across the entire app.** Always reads "Find.ai — Malaysian Property Advisor." User on step 3 of TenantScreen can't find the tab if they have 8 tabs open. | `layout.js:4` | Power-user (agent screening 5 tenants) hostile. Multi-tab is a desktop pattern Find.ai is ignoring. |
+| **P1.4** | **Static `<title>` across the entire app.** Always reads "Veri.ai — Malaysian Property Advisor." User on step 3 of TenantScreen can't find the tab if they have 8 tabs open. | `layout.js:4` | Power-user (agent screening 5 tenants) hostile. Multi-tab is a desktop pattern Veri.ai is ignoring. |
 | **P1.5** | **PeekChat is bottom-anchored at all viewport sizes.** On desktop (`≥md`), it should be a corner widget (Intercom-style ~380×520px). Currently it spans full width even on a 1440px screen. | `PeekChat.js` (whole file) | Desktop UX expectation broken. Bottom-spanning chat dock = mobile-app pattern. |
 
 ### P2 (web polish — fix sprint 3)
@@ -71,19 +71,19 @@ Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The pr
 2. **Add `/r/[reportId]/route.js` — short URL redirect** to `/trust/[reportId]`. Keeps WhatsApp messages short.
 3. **Persist Trust Card data** so `/trust/[reportId]` can render it. For v0 mock: localStorage + URL fallback. For v1: Supabase row keyed by `reportId`.
 4. **Add per-page metadata API exports** for `/trust/[reportId]`:
-   - `<title>` = "Trust Score for {tenantName} — Find.ai"
+   - `<title>` = "Trust Score for {tenantName} — Veri.ai"
    - `og:image` = generated PNG of the Trust Card (use Next.js `ImageResponse` or static export)
    - `og:title`, `og:description`, `og:url`, `twitter:card`
 5. **Update WhatsApp share** in `TenantScreen.js:2030-2058`:
-   - Append `https://find.ai/r/${reportId}` to `waMsg`
-   - Body becomes "🛡️ Find.ai Trust Card for {tenantName}: {url}" — short text + link
+   - Append `https://veri.ai/r/${reportId}` to `waMsg`
+   - Body becomes "🛡️ Veri.ai Trust Card for {tenantName}: {url}" — short text + link
    - Recipient pastes URL → rich preview → tap → lands on real card
 
 **Done test:** Paste a Trust Card URL into WhatsApp Web. Rich preview appears with image + title + description. Tapping opens a real page with the score and a QR for LBV.
 
 ### Sprint 2 — Desktop respect (P1, ~3-4 days)
 
-**Goal:** Find.ai looks like a real website on a 1440×900 screen.
+**Goal:** Veri.ai looks like a real website on a 1440×900 screen.
 
 6. **Convert TenantScreen modal → routes.** New folder `src/app/screen/`:
    - `screen/page.js` — intro + start CTA
@@ -98,11 +98,11 @@ Find.ai is currently a **mobile app shell wrapped in a Next.js web app.** The pr
    - Mobile (`<sm`): `max-w-lg mx-auto px-4` — current behavior
    - Desktop (`≥sm`): `max-w-3xl` for forms, `max-w-5xl` for landing, `max-w-7xl` for result/Trust Card view
 10. **Add a global `<header>`** in `layout.js`:
-    - Logo · "Find.ai" wordmark · language toggle · profile (login/avatar)
+    - Logo · "Veri.ai" wordmark · language toggle · profile (login/avatar)
     - Sticky on scroll, transparent → solid on scroll
     - Hidden on `<sm` if it conflicts with current page header (responsive)
 11. **Add a global `<footer>`** in `layout.js`:
-    - © Find.ai · T&C · Privacy · Tenant Consent · "Don't sign blind." motto
+    - © Veri.ai · T&C · Privacy · Tenant Consent · "Don't sign blind." motto
     - Language selector mirror
     - Trust signal block: "🛡️ Compliant with PDPA 2010 · LHDN STAMPS-anchored"
 12. **Reposition PeekChat for desktop.** In `PeekChat.js`:
