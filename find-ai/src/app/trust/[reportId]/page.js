@@ -746,7 +746,7 @@ export default async function TrustCardPage({ params, searchParams }) {
           </Link>
           <div style={{ marginTop: 10 }}>
             Veri.ai · Don't sign blind. ·{' '}
-            <Link href="/privacy" style={{ color: '#9A9484', textDecoration: 'underline' }}>
+            <Link href="/legal/privacy" style={{ color: '#9A9484', textDecoration: 'underline' }}>
               Privacy
             </Link>
           </div>

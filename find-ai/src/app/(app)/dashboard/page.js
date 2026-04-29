@@ -316,10 +316,10 @@ export default function DashboardPage() {
           <ToolCard
             icon={<ToolIconAudit />}
             name="Audit an agreement"
-            sub="Paste your tenancy. We flag dangerous clauses against MY law."
-            href="/#tools"
-            cta="Notify me"
-            status="coming"
+            sub="Paste your tenancy. 10-clause Malaysian check with rewrites for what's missing."
+            href="/audit"
+            cta="Run audit"
+            status="active"
           />
         </div>
       </section>

@@ -146,7 +146,7 @@ Score formula: avg payment timing (50%) + consistency (25%) + worst single event
 
 ---
 
-### TOOL 2 — Agreement Health Check  [dormant code, to be resurrected]
+### TOOL 2 — Agreement Health Check  [v0 LIVE — v3.5.1, 2026-04-29]
 **Question answered:** *"Is this tenancy agreement fair and legally safe?"*
 
 **Inputs:** Paste agreement text (or upload Word/PDF later) + answers to 10-15 clause questions (deposit amount, notice period, eviction clause, stamp duty clause, etc.).

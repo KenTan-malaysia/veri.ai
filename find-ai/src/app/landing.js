@@ -20,12 +20,12 @@
 // Anonymous-default doctrine respected — no PII shown anywhere on landing.
 // Legacy welcome→pick flow preserved in landing-v9-guided.js.
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Reveal from '../components/ui/Reveal';
 
 const SKIP_WELCOME_KEY = 'fi_skip_welcome_v1'; // legacy — kept for compat
-const NOTIFY_KEY = 'fi_audit_notify_v1';
+// NOTIFY_KEY retired v3.5.1 — was used by the Audit tool teaser, now live at /audit.
 
 export default function Landing({
   onStart,
@@ -45,43 +45,9 @@ export default function Landing({
   // ─── mobile nav state ────────────────────────────────────────────────────
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  // ─── notify-me state for the Audit tool teaser ───────────────────────────
-  const [notifyStage, setNotifyStage] = useState('rest'); // rest | form | submitting | done | error
-  const [notifyEmail, setNotifyEmail] = useState('');
-
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(NOTIFY_KEY);
-      if (stored) setNotifyStage('done');
-    } catch (e) { /* localStorage blocked */ }
-  }, []);
-
-  const submitNotify = async () => {
-    const email = notifyEmail.trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setNotifyStage('error');
-      return;
-    }
-    setNotifyStage('submitting');
-    try {
-      const res = await fetch('/api/notify-me', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, tool: 'audit', lang }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data && data.ok) {
-        try {
-          window.localStorage.setItem(NOTIFY_KEY, JSON.stringify({ email, ts: Date.now() }));
-        } catch (e) {}
-        setNotifyStage('done');
-      } else {
-        setNotifyStage('error');
-      }
-    } catch (e) {
-      setNotifyStage('error');
-    }
-  };
+  // ─── notify-me state retired v3.5.1 — Audit tool now ships live at /audit.
+  //     Email collection logic preserved in git history for any future
+  //     "coming-soon" tile that needs the same UX.
 
   const cycleLang = () => {
     const next = lang === 'en' ? 'bm' : lang === 'bm' ? 'zh' : 'en';
@@ -244,48 +210,17 @@ export default function Landing({
               </div>
             </article>
 
-            {/* Tile 3 — Agreement Audit (coming soon, with notify-me) */}
+            {/* Tile 3 — Agreement Audit (LIVE as of v3.5.1) */}
             <article className="ap-tile ap-tile-cream">
               <div className="ap-tile-content">
                 <div className="ap-tile-eyebrow ap-tile-eyebrow-amber">{c.t3Eye}</div>
                 <h3 className="ap-tile-h3">{c.t3Title}</h3>
                 <p className="ap-tile-sub">{c.t3Sub}</p>
-                {notifyStage === 'done' ? (
-                  <div className="ap-notify-done">
-                    <span className="ap-notify-check">✓</span>
-                    <span>{c.t3NotifyDone}</span>
-                  </div>
-                ) : notifyStage === 'rest' ? (
-                  <div className="ap-tile-cta-row">
-                    <button onClick={() => setNotifyStage('form')} className="ap-btn-primary">
-                      {c.t3Cta1}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="ap-notify-form">
-                    <input
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      value={notifyEmail}
-                      onChange={(e) => { setNotifyEmail(e.target.value); if (notifyStage === 'error') setNotifyStage('form'); }}
-                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submitNotify(); } }}
-                      placeholder={c.t3Placeholder}
-                      className="ap-notify-input"
-                      disabled={notifyStage === 'submitting'}
-                    />
-                    <button
-                      onClick={submitNotify}
-                      disabled={notifyStage === 'submitting'}
-                      className="ap-btn-primary"
-                    >
-                      {notifyStage === 'submitting' ? '…' : c.t3CtaSubmit}
-                    </button>
-                  </div>
-                )}
-                {notifyStage === 'error' && (
-                  <div className="ap-notify-err">{c.t3NotifyErr}</div>
-                )}
+                <div className="ap-tile-cta-row">
+                  <Link href="/audit" className="ap-btn-primary">
+                    {c.t3Cta1}
+                  </Link>
+                </div>
               </div>
               <div className="ap-tile-visual ap-tile-visual-cream" aria-hidden="true">
                 <AuditVisual />
@@ -646,10 +581,10 @@ const STRINGS = {
     t2Cta1: 'Calculate now',
     t2Cta2: 'Learn more',
 
-    t3Eye: 'COMING NEXT',
+    t3Eye: 'TOOL 2 · LIVE',
     t3Title: 'Audit an agreement.',
-    t3Sub: 'Paste your tenancy. We\'ll flag dangerous clauses against Contracts Act 1950, RTA 2026, and Stamp Act 1949. Notify me when ready.',
-    t3Cta1: 'Notify me',
+    t3Sub: 'Run your tenancy through 10 essential clause checks. Health score + rewrites for what\'s missing. Free.',
+    t3Cta1: 'Run audit',
     t3CtaSubmit: 'Submit',
     t3Placeholder: 'your@email.com',
     t3NotifyDone: 'You\'re on the list',
@@ -694,7 +629,7 @@ const STRINGS = {
     fcToolsLinks: [
       { label: 'Trust Card screening', href: '/screen/new' },
       { label: 'Stamp duty calculator', href: '/' },
-      { label: 'Agreement audit (soon)', href: '#' },
+      { label: 'Agreement audit', href: '/audit' },
       { label: 'Ask Veri', href: '/chat' },
     ],
     fcLearn: 'Learn',
@@ -766,9 +701,9 @@ const STRINGS = {
     t2Sub: 'Penilaian sendiri untuk rangka kerja 2026 baharu. Elak denda RM 10,000.',
     t2Cta1: 'Kira sekarang', t2Cta2: 'Ketahui lagi',
 
-    t3Eye: 'AKAN DATANG', t3Title: 'Audit perjanjian.',
-    t3Sub: 'Tampal perjanjian sewa anda. Kami akan tandakan klausa berbahaya. Beritahu saya bila siap.',
-    t3Cta1: 'Beritahu saya', t3CtaSubmit: 'Hantar', t3Placeholder: 'emel@anda.com',
+    t3Eye: 'ALAT 2 · LANGSUNG', t3Title: 'Audit perjanjian.',
+    t3Sub: 'Jalankan perjanjian sewa melalui 10 semakan klausa penting. Skor kesihatan + penulisan semula. Percuma.',
+    t3Cta1: 'Jalankan audit', t3CtaSubmit: 'Hantar', t3Placeholder: 'emel@anda.com',
     t3NotifyDone: 'Anda dalam senarai', t3NotifyErr: 'Tidak dapat simpan — cuba lagi',
 
     howH2: 'Cara ia berfungsi.', howSub: 'Tiga langkah. Tiga minit. Tiga pihak dilindungi.',
@@ -795,7 +730,7 @@ const STRINGS = {
     fcToolsLinks: [
       { label: 'Saringan Trust Card', href: '/screen/new' },
       { label: 'Kalkulator duti setem', href: '/' },
-      { label: 'Audit perjanjian (akan datang)', href: '#' },
+      { label: 'Audit perjanjian', href: '/audit' },
       { label: 'Tanya Veri', href: '/chat' },
     ],
     fcLearn: 'Pelajari',
@@ -866,9 +801,9 @@ const STRINGS = {
     t2Sub: '2026 新框架的自我评估。避免 RM 10,000 罚款。',
     t2Cta1: '立即计算', t2Cta2: '了解更多',
 
-    t3Eye: '即将推出', t3Title: '审计协议。',
-    t3Sub: '粘贴您的租约。我们将标记危险条款。准备好时通知我。',
-    t3Cta1: '通知我', t3CtaSubmit: '提交', t3Placeholder: '您的@邮箱.com',
+    t3Eye: '工具 2 · 上线', t3Title: '审计协议。',
+    t3Sub: '通过 10 项关键条款检查您的租约。健康评分 + 缺失条款的改写建议。免费。',
+    t3Cta1: '运行审计', t3CtaSubmit: '提交', t3Placeholder: '您的@邮箱.com',
     t3NotifyDone: '您已在名单中', t3NotifyErr: '保存失败 — 请重试',
 
     howH2: '使用方法。', howSub: '三个步骤。三分钟。三方受保护。',
@@ -895,7 +830,7 @@ const STRINGS = {
     fcToolsLinks: [
       { label: 'Trust Card 审查', href: '/screen/new' },
       { label: '印花税计算器', href: '/' },
-      { label: '协议审计（即将推出）', href: '#' },
+      { label: '协议审计', href: '/audit' },
       { label: '问问 Veri', href: '/chat' },
     ],
     fcLearn: '了解',
