@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import Landing from './landing';
-import ErrorBoundary from '../components/ErrorBoundary';
+// v3.7.6 — ErrorBoundary import removed (replaced by Next 14 /app/error.js global boundary)
 import { CaseMemoryModal, buildCaseMemoryContext, emptyMemory, hasPdpaConsent } from './caseMemory';
 import StampDutyCalc from '../components/tools/StampDutyCalc';
 import TenantScreen from '../components/tools/TenantScreen';

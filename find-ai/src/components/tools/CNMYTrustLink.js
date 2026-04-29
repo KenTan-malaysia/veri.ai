@@ -1,3 +1,2 @@
-// REMOVED — CN-MY Trust Link deprecated in Stage 1 (chatbox-only).
-// Kept as empty stub because sandbox cannot hard-delete. Not imported anywhere.
-export default function CNMYTrustLink() { return null; }
+// v3.7.6 — DELETED. China-Malaysia industrial trust link is Phase 3 doctrine.
+// Original code preserved in git history. Physically delete with: Remove-Item "src/components/tools/CNMYTrustLink.js"

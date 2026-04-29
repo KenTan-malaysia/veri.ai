@@ -1,3 +1,2 @@
-// REMOVED — MY Company Check deprecated in Stage 1 (chatbox-only).
-// Kept as empty stub because sandbox cannot hard-delete. Not imported anywhere.
-export default function MYCompanyCheck() { return null; }
+// v3.7.6 — DELETED. SSM company-verification tool is Phase 3 (commercial / B2B doctrine).
+// Original code preserved in git history. Physically delete with: Remove-Item "src/components/tools/MYCompanyCheck.js"

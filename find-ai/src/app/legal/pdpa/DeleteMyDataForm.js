@@ -147,7 +147,7 @@ export default function DeleteMyDataForm() {
         <span style={{ fontSize: 12, color: '#3F4E6B', lineHeight: 1.55 }}>
           I confirm I want my Veri.ai data deleted. I understand a 14-day
           cooling-off period applies and I can retract by emailing{' '}
-          <a href="mailto:hello@veri.ai" style={{ color: '#B8893A' }}>hello@veri.ai</a> within that window.
+          <a href="mailto:hello@veri.ai" style={{ color: 'var(--color-gold-text, #9C6F1F)' }}>hello@veri.ai</a> within that window.
         </span>
       </label>
 

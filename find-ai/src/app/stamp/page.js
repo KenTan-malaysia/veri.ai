@@ -132,7 +132,7 @@ export default function StampDutyPage() {
         >
           <strong style={{ color: '#0F1E3F' }}>Disclaimer.</strong> Veri.ai is a support tool for SDSAS 2026 self-assessment.
           Final responsibility lies with the landlord. The branded certificate is an audit-protection artifact, not legal advice.
-          Refer to <a href="https://stamps.hasil.gov.my" style={{ color: '#B8893A' }}>LHDN STAMPS</a> for official submission.
+          Refer to <a href="https://stamps.hasil.gov.my" style={{ color: 'var(--color-gold-text, #9C6F1F)' }}>LHDN STAMPS</a> for official submission.
         </div>
       </div>
     </main>

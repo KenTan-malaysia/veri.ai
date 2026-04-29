@@ -809,7 +809,7 @@ export default function AuditPage() {
           <div style={{ fontSize: 11, fontWeight: 700, color: '#9A9484', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 12 }}>
             Clause checklist · {presentCount}/{t.clauses.length} present
             {hasAnalysis && (
-              <span style={{ marginLeft: 8, color: '#B8893A', textTransform: 'none', letterSpacing: 0, fontWeight: 500, fontStyle: 'italic' }}>
+              <span style={{ marginLeft: 8, color: 'var(--color-gold-text, #9C6F1F)', textTransform: 'none', letterSpacing: 0, fontWeight: 500, fontStyle: 'italic' }}>
                 · auto-detected · click to override
               </span>
             )}
@@ -1086,10 +1086,10 @@ export default function AuditPage() {
                 : <>Once your agreement is healthy, calculate stamp duty under the SDSAS 2026 framework, or screen the tenant before viewing.</>
               }
               <div style={{ display: 'flex', gap: 12, marginTop: 10, flexWrap: 'wrap' }}>
-                <Link href="/stamp" style={{ color: '#B8893A', fontWeight: 600, textDecoration: 'none' }}>
+                <Link href="/stamp" style={{ color: 'var(--color-gold-text, #9C6F1F)', fontWeight: 600, textDecoration: 'none' }}>
                   → Calculate stamp duty
                 </Link>
-                <Link href="/screen/new" style={{ color: '#B8893A', fontWeight: 600, textDecoration: 'none' }}>
+                <Link href="/screen/new" style={{ color: 'var(--color-gold-text, #9C6F1F)', fontWeight: 600, textDecoration: 'none' }}>
                   → Screen a tenant
                 </Link>
               </div>
