@@ -34,7 +34,7 @@ const SDSAS_HANDOFF_KEY = 'fa_sdsas_prefill_v1';
 
 // File upload limits (per route.js MAX_PDF_BASE64_BYTES)
 const MAX_FILE_BYTES = 3 * 1024 * 1024; // 3MB raw — keeps base64 under 4MB
-const ACCEPTED_TYPES = '.pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const ACCEPTED_TYPES = '.pdf,.txt,.docx,.xlsx,.xls,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel';
 
 export default function AuditPage() {
   const [lang, setLang] = useState('en');
@@ -86,6 +86,8 @@ export default function AuditPage() {
     if (name.endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') return 'docx';
     if (name.endsWith('.doc')) return 'doc-legacy';
     if (name.endsWith('.txt') || file.type === 'text/plain') return 'txt';
+    if (name.endsWith('.xlsx') || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') return 'xlsx';
+    if (name.endsWith('.xls') || file.type === 'application/vnd.ms-excel') return 'xls';
     return 'unknown';
   };
 
@@ -130,7 +132,7 @@ export default function AuditPage() {
     }
 
     if (kind === 'unknown') {
-      setFileError('Unsupported file type. Use PDF, Word (.docx), or plain text (.txt).');
+      setFileError('Unsupported file type. Use PDF, Word (.docx), Excel (.xlsx), or plain text (.txt).');
       return;
     }
 
@@ -164,6 +166,34 @@ export default function AuditPage() {
         const text = (result.value || '').trim();
         if (text.length < 100) {
           setFileError('We could only extract a tiny amount of text from this Word file. The document may be image-based or empty. Save as PDF and try again.');
+          setExtracting(false);
+          return;
+        }
+        setAgreementText(text);
+        setPdfBase64('');
+        setUploadedFile({ name: file.name, size: file.size, kind });
+      } else if (kind === 'xlsx' || kind === 'xls') {
+        // Dynamic import — only loads SheetJS bundle when user actually picks a spreadsheet
+        let XLSX;
+        try {
+          XLSX = await import('xlsx');
+        } catch (e) {
+          setFileError('Excel support requires the xlsx dependency. Save the file as PDF and try again, or paste the text below.');
+          setExtracting(false);
+          return;
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const wb = XLSX.read(arrayBuffer, { type: 'array' });
+        // Concatenate all sheets — each sheet rendered as labeled CSV-ish blocks
+        const sheetTexts = wb.SheetNames.map((sheetName) => {
+          const sheet = wb.Sheets[sheetName];
+          // Convert to CSV (preserves cell relationships better than JSON for legal text)
+          const csv = XLSX.utils.sheet_to_csv(sheet, { blankrows: false });
+          return `=== Sheet: ${sheetName} ===\n${csv}`;
+        });
+        const text = sheetTexts.join('\n\n').trim();
+        if (text.length < 100) {
+          setFileError('We could only extract a tiny amount of text from this Excel file. Make sure your agreement text is in the cells, not as embedded images.');
           setExtracting(false);
           return;
         }
@@ -447,7 +477,7 @@ export default function AuditPage() {
                 Drop your agreement here
               </div>
               <div style={{ fontSize: 12.5, color: '#5A6780', marginBottom: 14, lineHeight: 1.55 }}>
-                PDF, Word (.docx), or plain text (.txt) · up to 3MB · stays on your device until analysis
+                PDF · Word (.docx) · Excel (.xlsx) · plain text (.txt) · up to 3MB · stays on your device until analysis
               </div>
               <button
                 type="button"
@@ -491,7 +521,10 @@ export default function AuditPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left', flex: 1, minWidth: 200 }}>
                 <span style={{ fontSize: 28 }} aria-hidden="true">
-                  {uploadedFile.kind === 'pdf' ? '📕' : uploadedFile.kind === 'docx' ? '📘' : '📄'}
+                  {uploadedFile.kind === 'pdf' ? '📕'
+                    : uploadedFile.kind === 'docx' ? '📘'
+                    : uploadedFile.kind === 'xlsx' || uploadedFile.kind === 'xls' ? '📗'
+                    : '📄'}
                 </span>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 13.5, fontWeight: 600, color: '#0F1E3F', wordBreak: 'break-word', lineHeight: 1.4 }}>
@@ -502,6 +535,8 @@ export default function AuditPage() {
                       ? 'PDF · forwarded directly to Claude (no client-side parsing)'
                       : uploadedFile.kind === 'docx'
                       ? 'Word · text extracted into the box below'
+                      : uploadedFile.kind === 'xlsx' || uploadedFile.kind === 'xls'
+                      ? 'Excel · all sheets flattened into the box below'
                       : 'Text · loaded into the box below'}
                     {' · '}{Math.round(uploadedFile.size / 1024)} KB
                   </div>

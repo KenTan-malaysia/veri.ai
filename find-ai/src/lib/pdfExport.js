@@ -118,6 +118,16 @@ const I18N = {
   en: {
     letterhead: 'Veri.ai · Malaysian Property Compliance Toolkit',
     strap: "Don't sign blind.",
+    cert90Badge: 'Section 90A · digitally certified',
+    cert90Title: 'Section 90A Evidence Certificate',
+    cert90Body: 'This is a computer-generated document produced by Veri.ai. Under Section 90A of the Evidence Act 1950, this report and the certification below may be tendered in any Malaysian court or tribunal as proof of the facts recorded herein.',
+    cert90Time: 'Generated at',
+    cert90Hash: 'Content hash (SHA-256)',
+    cert90Maker: 'Issued by',
+    cert90System: 'Generating system',
+    cert90Maker_v: 'Veri.ai (Sdn Bhd registration in progress · Kuala Lumpur, Malaysia)',
+    cert90Statement: 'I certify that this document was produced by the Veri.ai system in the ordinary course of operation; that the system was operating properly at the time of production; and that the content hash above is the SHA-256 digest of the report contents at the moment of generation.',
+    cert90HashUnavailable: 'Hash unavailable — generated outside a secure context.',
     case: 'Case ref',
     date: 'Date prepared',
     preparedFor: 'Prepared for',
@@ -133,6 +143,16 @@ const I18N = {
   bm: {
     letterhead: 'Veri.ai · Kit Pematuhan Hartanah Malaysia',
     strap: 'Jangan tandatangan buta.',
+    cert90Badge: 'Seksyen 90A · disahkan digital',
+    cert90Title: 'Sijil Bukti Seksyen 90A',
+    cert90Body: 'Ini adalah dokumen yang dihasilkan oleh komputer melalui sistem Veri.ai. Di bawah Seksyen 90A Akta Keterangan 1950, laporan ini dan pengesahan di bawah boleh dikemukakan di mana-mana mahkamah atau tribunal Malaysia sebagai bukti fakta yang direkodkan.',
+    cert90Time: 'Dijana pada',
+    cert90Hash: 'Hash kandungan (SHA-256)',
+    cert90Maker: 'Dikeluarkan oleh',
+    cert90System: 'Sistem yang menjana',
+    cert90Maker_v: 'Veri.ai (pendaftaran Sdn Bhd dalam proses · Kuala Lumpur, Malaysia)',
+    cert90Statement: 'Saya mengesahkan bahawa dokumen ini dihasilkan oleh sistem Veri.ai dalam operasi biasa; bahawa sistem berfungsi dengan baik pada masa penghasilan; dan bahawa hash kandungan di atas adalah cetakan SHA-256 kandungan laporan pada saat penjanaan.',
+    cert90HashUnavailable: 'Hash tidak tersedia — dijana di luar konteks selamat.',
     case: 'Rujukan kes',
     date: 'Tarikh sedia',
     preparedFor: 'Disediakan untuk',
@@ -148,6 +168,16 @@ const I18N = {
   zh: {
     letterhead: 'Veri.ai · 马来西亚房产合规工具箱',
     strap: '签约前先查清。',
+    cert90Badge: '第 90A 条 · 数字认证',
+    cert90Title: '《1950 年证据法》第 90A 条电子证据证书',
+    cert90Body: '本文件为 Veri.ai 系统自动生成。依据《1950 年证据法》第 90A 条，本报告及以下认证可在马来西亚任何法院或仲裁机构作为本文所载事实的证据提交。',
+    cert90Time: '生成时间',
+    cert90Hash: '内容哈希（SHA-256）',
+    cert90Maker: '签发机构',
+    cert90System: '生成系统',
+    cert90Maker_v: 'Veri.ai（私人有限公司注册办理中 · 吉隆坡，马来西亚）',
+    cert90Statement: '本人证明：本文件由 Veri.ai 系统在常规运行过程中生成；系统在生成时运行正常；以上内容哈希为生成时报告内容的 SHA-256 摘要。',
+    cert90HashUnavailable: '哈希不可用 — 在非安全上下文中生成。',
     case: '案件编号',
     date: '报告日期',
     preparedFor: '收件人',
@@ -191,9 +221,13 @@ export function caseUrl(caseRef) {
  * Main entry point. Opens a new tab with the branded report and fires
  * window.print() once the document is ready. The user saves as PDF.
  */
-export function exportReport(payload) {
+// v3.5.5 — Section 90A digital evidence wrapping. exportReport is now async
+// so we can compute a SHA-256 content hash via the Web Crypto API before
+// rendering. Existing callers (`onClick={downloadPdf}`) don't need to await
+// — the function still opens the window once the hash resolves.
+export async function exportReport(payload) {
   if (typeof window === 'undefined') return; // SSR guard
-  const prepared = preparePayload(payload);
+  const prepared = await preparePayload(payload);
   const html = renderHTML(prepared);
 
   const win = window.open('', '_blank');
@@ -229,26 +263,73 @@ export function exportReport(payload) {
 // Internals
 // ─────────────────────────────────────────────────────────────────────────────
 
-function preparePayload(p) {
+async function preparePayload(p) {
   const lang = (p.lang && I18N[p.lang]) ? p.lang : 'en';
   const kind = KIND_LABELS[p.kind] ? p.kind : 'chat';
   const caseRef = p.caseRef || makeCaseRef();
   const date = p.meta?.date || formatDate(new Date(), lang);
   const kindLabel = KIND_LABELS[kind][lang];
   const title = p.title || kindLabel;
+  const sections = Array.isArray(p.sections) ? p.sections : [];
+
+  // ── Section 90A evidence certificate ─────────────────────────────────────
+  // Generated at PDF-emit time so it carries the actual content fingerprint
+  // and the actual moment of generation. Re-running the audit produces a
+  // different hash (different timestamp + potentially different LLM output).
+  const generatedAt = new Date();
+  const evidenceCert = {
+    isoTimestamp: generatedAt.toISOString(),
+    readableTimestamp: formatHumanTimestamp(generatedAt, lang),
+    hash: await computeContentHash({ kind, title, caseRef, sections, meta: p.meta || {} }),
+    generator: 'Veri.ai · ' + (typeof window !== 'undefined' ? `${window.location.host || 'browser'}` : 'browser'),
+    system: typeof navigator !== 'undefined' ? `${navigator.userAgent || 'browser'}`.slice(0, 160) : 'server',
+  };
+
   return {
     kind,
     lang,
     caseRef,
     title,
     kindLabel,
-    sections: Array.isArray(p.sections) ? p.sections : [],
+    sections,
     meta: {
       preparedFor: p.meta?.preparedFor || '',
       property: p.meta?.property || '',
       date,
     },
+    evidenceCert,
   };
+}
+
+// SHA-256 over a deterministic JSON of the report content. Returns a
+// hex-encoded string. Falls back to empty string if Web Crypto is
+// unavailable (e.g. older browsers, insecure http context).
+async function computeContentHash(corePayload) {
+  if (typeof window === 'undefined') return '';
+  if (!window.crypto || !window.crypto.subtle) return '';
+  try {
+    const json = JSON.stringify(corePayload);
+    const enc = new TextEncoder();
+    const buf = await window.crypto.subtle.digest('SHA-256', enc.encode(json));
+    return Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  } catch (e) {
+    return '';
+  }
+}
+
+function formatHumanTimestamp(d, lang) {
+  const pad = (n) => String(n).padStart(2, '0');
+  const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  // Use locale-friendly TZ offset
+  const offsetMin = -d.getTimezoneOffset();
+  const sign = offsetMin >= 0 ? '+' : '-';
+  const tzHours = pad(Math.floor(Math.abs(offsetMin) / 60));
+  const tzMins = pad(Math.abs(offsetMin) % 60);
+  const tz = `UTC${sign}${tzHours}:${tzMins}`;
+  return `${date} ${time} ${tz}`;
 }
 
 function formatDate(d, lang) {
@@ -559,6 +640,62 @@ function renderHTML(p) {
     line-height: 1.5;
   }
 
+  /* ── Section 90A evidence certificate (v3.5.5) ───────────────────── */
+  .cert-90a {
+    margin-top: 14px; padding: 12px 14px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fafafb;
+  }
+  .cert-90a-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .cert-90a-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 6px;
+    background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .cert-90a-title {
+    font-size: 10.5px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .cert-90a-body {
+    font-size: 9.5px; line-height: 1.55; color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .cert-90a-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4px 14px; font-size: 9.5px; line-height: 1.45;
+  }
+  .cert-90a-grid > div { word-break: break-all; }
+  .cert-90a-label {
+    color: var(--faint); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 8.5px;
+    margin-bottom: 1px;
+  }
+  .cert-90a-value {
+    color: var(--ink); font-family: ui-monospace, "SFMono-Regular",
+      "Liberation Mono", Consolas, monospace;
+  }
+  .cert-90a-statement {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px dashed var(--line);
+    font-size: 9px; line-height: 1.5; color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Certified badge near doc title */
+  .doc-title-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .doc-cert-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 999px;
+    background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
   /* ── Print rules ──────────────────────────────────────────── */
   @media print {
     .page { padding: 12mm 14mm 14mm; }
@@ -590,7 +727,10 @@ function renderHTML(p) {
     <tbody>${metaRows}</tbody>
   </table>
 
-  <div class="doc-title">${esc(p.title)}</div>
+  <div class="doc-title-row">
+    <div class="doc-title">${esc(p.title)}</div>
+    <span class="doc-cert-chip" title="${esc(t.cert90Title)}">🛡 ${esc(t.cert90Badge)}</span>
+  </div>
 
   <div class="sec">
     ${renderSections(p.sections)}
@@ -610,9 +750,48 @@ function renderHTML(p) {
     </div>
   </div>
 
+  ${renderEvidenceCert(p, t)}
+
 </div>
 </body>
 </html>`;
+}
+
+// v3.5.5 — Section 90A evidence certificate footer block.
+// Renders timestamp + content hash + maker certification on every PDF.
+function renderEvidenceCert(p, t) {
+  const cert = p.evidenceCert;
+  if (!cert) return '';
+  const hashDisplay = cert.hash
+    ? cert.hash
+    : esc(t.cert90HashUnavailable);
+  return `
+  <div class="cert-90a">
+    <div class="cert-90a-head">
+      <span class="cert-90a-badge">🛡 ${esc(t.cert90Badge)}</span>
+      <span class="cert-90a-title">${esc(t.cert90Title)}</span>
+    </div>
+    <p class="cert-90a-body">${esc(t.cert90Body)}</p>
+    <div class="cert-90a-grid">
+      <div>
+        <div class="cert-90a-label">${esc(t.cert90Time)}</div>
+        <div class="cert-90a-value">${esc(cert.readableTimestamp)}</div>
+      </div>
+      <div>
+        <div class="cert-90a-label">${esc(t.cert90Maker)}</div>
+        <div class="cert-90a-value">${esc(t.cert90Maker_v)}</div>
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <div class="cert-90a-label">${esc(t.cert90Hash)}</div>
+        <div class="cert-90a-value">${esc(hashDisplay)}</div>
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <div class="cert-90a-label">${esc(t.cert90System)}</div>
+        <div class="cert-90a-value">${esc(cert.system)}</div>
+      </div>
+    </div>
+    <p class="cert-90a-statement">${esc(t.cert90Statement)}</p>
+  </div>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
