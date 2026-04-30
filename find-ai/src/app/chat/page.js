@@ -10,6 +10,12 @@
 // assistant can be renamed to Sarah / 美丽 / etc. per landlord. Welcome line
 // now includes a time-aware greeting (Good morning / afternoon / evening) so
 // it feels human, not robotic.
+// v3.7.12 — Chatspace upgrade. /chat is now a multi-conversation workspace:
+// left sidebar with conversation history, "New chat" button, click-to-switch,
+// per-thread persistence via chatStore.js. Mobile collapses sidebar into a
+// slide-over drawer. Each conversation has its own id, title (derived from
+// first user message), messages, lang, timestamps. Dashboard chat bar still
+// hands off via ASSISTANT_PREFILL_KEY — the prefill seeds a NEW conversation.
 //
 // Doctrine (Tool 4 — Veri):
 //   - Same /api/chat backend as the homepage chat dock — single source of truth
@@ -24,9 +30,19 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLang } from '../../lib/useLang';
-import { ASSISTANT_NAME_KEY, CHAT_HISTORY_KEY, AI_NAME_KEY, ASSISTANT_PREFILL_KEY } from '../../lib/storageKeys';
+import { ASSISTANT_NAME_KEY, AI_NAME_KEY, ASSISTANT_PREFILL_KEY } from '../../lib/storageKeys';
 import { exportReport, buildChatReport, makeCaseRef } from '../../lib/pdfExport';
 import { fmt } from '../../lib/chatFormat';
+import {
+  loadAll as loadAllConversations,
+  getActiveId,
+  setActiveId as setActiveIdLS,
+  createConversation,
+  updateMessages as updateConversationMessages,
+  deleteConversation,
+  renameConversation,
+  relativeTime,
+} from '../../lib/chatStore';
 
 // v3.7.11 — Default AI name, overridable per-user via AI_NAME_KEY.
 const DEFAULT_AI_NAME = 'Veri';
@@ -74,6 +90,16 @@ const STR = {
     saved: 'Saved · PDF will open',
     cleared: 'Conversation cleared',
     disclaimer: 'AI advice is for reference only. Final decisions are yours. For high-stakes matters, consult a Malaysian property lawyer.',
+    // v3.7.12 — chatspace sidebar
+    newChat: 'New chat',
+    conversations: 'Conversations',
+    noConversations: 'Your past chats will appear here',
+    deleteChat: 'Delete chat',
+    deleteConfirm: 'Delete this conversation? It cannot be undone.',
+    renameChat: 'Rename',
+    openSidebar: 'Open conversations',
+    closeSidebar: 'Close conversations',
+    untitled: 'New conversation',
   },
   bm: {
     eyebrow: '{ai} · PEMBANTU PERIBADI',
@@ -99,6 +125,16 @@ const STR = {
     saved: 'Disimpan · PDF akan dibuka',
     cleared: 'Perbualan dipadam',
     disclaimer: 'Nasihat AI hanya untuk rujukan. Keputusan akhir adalah anda. Untuk hal serius, rujuk peguam hartanah Malaysia.',
+    // v3.7.12 — chatspace sidebar
+    newChat: 'Sembang baru',
+    conversations: 'Perbualan',
+    noConversations: 'Sembang lalu anda akan muncul di sini',
+    deleteChat: 'Padam sembang',
+    deleteConfirm: 'Padam perbualan ini? Tidak boleh dipulihkan.',
+    renameChat: 'Namakan semula',
+    openSidebar: 'Buka perbualan',
+    closeSidebar: 'Tutup perbualan',
+    untitled: 'Perbualan baru',
   },
   zh: {
     eyebrow: '{ai} · 个人助理',
@@ -124,6 +160,16 @@ const STR = {
     saved: '已保存 · PDF 将打开',
     cleared: '对话已清除',
     disclaimer: 'AI 建议仅供参考。最终决定由您做出。重大事项请咨询马来西亚房产律师。',
+    // v3.7.12 — chatspace sidebar
+    newChat: '新对话',
+    conversations: '对话记录',
+    noConversations: '您过去的对话将显示在这里',
+    deleteChat: '删除对话',
+    deleteConfirm: '删除此对话？此操作无法撤销。',
+    renameChat: '重命名',
+    openSidebar: '打开对话列表',
+    closeSidebar: '关闭对话列表',
+    untitled: '新对话',
   },
 };
 
@@ -152,11 +198,17 @@ function ChatInner() {
   const [name, setName] = useState('');
   const [aiName, setAiName] = useState(DEFAULT_AI_NAME); // v3.7.11
   const [greeting, setGreeting] = useState('Hello');     // v3.7.11
-  const [messages, setMessages] = useState([]);   // [{role, content}]
+
+  // v3.7.12 — multi-conversation state
+  const [conversations, setConversations] = useState([]); // sorted by updatedAt desc
+  const [activeId, setActiveId] = useState(null);          // null = no active conversation (welcome state)
+  const [sidebarOpen, setSidebarOpen] = useState(false);   // mobile drawer toggle
+
+  const [messages, setMessages] = useState([]);   // [{role, content}] — mirror of active conversation
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState('');
-  const [caseRef] = useState(() => makeCaseRef());
+  const [caseRef, setCaseRef] = useState(() => makeCaseRef());
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const streamBufferRef = useRef('');
@@ -175,23 +227,31 @@ function ChatInner() {
     },
   });
 
-  // Hydrate user name + AI name + saved conversation + URL prefill
+  // Hydrate user name + AI name + multi-conversation list + URL prefill
   useEffect(() => {
     try {
       const n = window.localStorage.getItem(ASSISTANT_NAME_KEY);
       if (n) setName(n);
       const ai = window.localStorage.getItem(AI_NAME_KEY);
       if (ai && ai.trim()) setAiName(ai.trim());
-      const stored = window.localStorage.getItem(CHAT_HISTORY_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].messages) {
-          // CHAT_HISTORY_KEY is multi-conversation array; load the most recent
-          setMessages(parsed[0].messages || []);
-        }
+
+      // v3.7.12 — load all conversations + restore active one
+      const all = loadAllConversations();
+      setConversations(all);
+      const restoredActiveId = getActiveId();
+      const active = all.find((c) => c.id === restoredActiveId);
+      if (active) {
+        setActiveId(active.id);
+        setMessages(active.messages || []);
+        setCaseRef(active.id); // use conversation id as caseRef for PDF export
       }
+      // Otherwise stay in welcome (no active conversation, empty messages).
+
+      // Prefill from dashboard takes precedence — always opens a NEW chat with prefill text.
       const prefill = window.localStorage.getItem(PREFILL_KEY);
       if (prefill) {
+        setActiveId(null);          // welcome state
+        setMessages([]);
         setInput(prefill);
         window.localStorage.removeItem(PREFILL_KEY);
       }
@@ -208,15 +268,63 @@ function ChatInner() {
     }
   }, [messages, streaming]);
 
-  // Persist conversation to localStorage on every change
+  // v3.7.12 — Persist active conversation messages on every change.
+  // If activeId is null (welcome state), we wait until the first user message
+  // is sent and createConversation() inside send() will materialize it.
   useEffect(() => {
-    if (messages.length === 0) return;
-    try {
-      window.localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify([
-        { caseRef, messages, lang, savedAt: new Date().toISOString() },
-      ]));
-    } catch (e) { /* localStorage blocked */ }
-  }, [messages, caseRef, lang]);
+    if (!activeId || messages.length === 0) return;
+    const updated = updateConversationMessages(activeId, messages, lang);
+    if (updated) {
+      // Reload list so the freshly-touched conversation floats to top.
+      setConversations(loadAllConversations());
+    }
+  }, [messages, activeId, lang]);
+
+  // v3.7.12 — Conversation handlers
+  const startNewChat = () => {
+    setActiveId(null);
+    setActiveIdLS(null);
+    setMessages([]);
+    setError('');
+    setSidebarOpen(false);
+    setTimeout(() => inputRef.current?.focus(), 80);
+  };
+
+  const switchConversation = (id) => {
+    if (!id || streaming) return;
+    const conv = conversations.find((c) => c.id === id);
+    if (!conv) return;
+    setActiveId(id);
+    setActiveIdLS(id);
+    setMessages(conv.messages || []);
+    setCaseRef(id);
+    setError('');
+    setSidebarOpen(false);
+    setTimeout(() => scrollRef.current && (scrollRef.current.scrollTop = scrollRef.current.scrollHeight), 60);
+  };
+
+  const removeConversation = (id, e) => {
+    if (e) e.stopPropagation();
+    if (!id) return;
+    if (!window.confirm(t.deleteConfirm)) return;
+    deleteConversation(id);
+    const next = loadAllConversations();
+    setConversations(next);
+    if (activeId === id) {
+      setActiveId(null);
+      setMessages([]);
+      setError('');
+    }
+  };
+
+  const renameCurrentChat = () => {
+    if (!activeId) return;
+    const current = conversations.find((c) => c.id === activeId);
+    const proposed = window.prompt(t.renameChat, current?.title || t.untitled);
+    if (proposed == null) return;
+    renameConversation(activeId, proposed.trim() || t.untitled);
+    setConversations(loadAllConversations());
+  };
 
   const send = async (overrideText) => {
     const text = (overrideText ?? input).trim();
@@ -225,6 +333,20 @@ function ChatInner() {
     setError('');
     const userMsg = { role: 'user', content: text };
     const placeholder = { role: 'assistant', content: '' };
+
+    // v3.7.12 — If no active conversation yet (welcome state), materialize a
+    // new one with this user message + assistant placeholder. This way the
+    // sidebar entry appears immediately and the conversation has a real id
+    // for the persistence effect to write to.
+    let workingId = activeId;
+    if (!workingId) {
+      const conv = createConversation({ lang, initialMessages: [userMsg, placeholder] });
+      workingId = conv.id;
+      setActiveId(conv.id);
+      setCaseRef(conv.id);
+      setConversations(loadAllConversations());
+    }
+
     setMessages((prev) => [...prev, userMsg, placeholder]);
     setStreaming(true);
     streamBufferRef.current = '';
@@ -296,10 +418,21 @@ function ChatInner() {
     }
   };
 
+  // v3.7.12 — "Clear" now deletes the active conversation entirely (matches
+  // user mental model — a clear in a multi-conversation workspace removes the
+  // thread, not just the in-memory copy).
   const clearConversation = () => {
+    if (!activeId) {
+      setMessages([]);
+      setError('');
+      return;
+    }
+    if (!window.confirm(t.deleteConfirm)) return;
+    deleteConversation(activeId);
+    setConversations(loadAllConversations());
+    setActiveId(null);
     setMessages([]);
     setError('');
-    try { window.localStorage.removeItem(CHAT_HISTORY_KEY); } catch (e) {}
   };
 
   const savePdf = () => {
@@ -318,19 +451,54 @@ function ChatInner() {
   const headerTitle = name ? t.titleNamed : t.titleNew;
   const isEmpty = messages.length === 0;
 
+  // v3.7.12 — sidebar (conversation list)
+  const sidebar = (
+    <ChatSidebar
+      t={t}
+      conversations={conversations}
+      activeId={activeId}
+      lang={lang}
+      onNewChat={startNewChat}
+      onSelect={switchConversation}
+      onDelete={removeConversation}
+      onClose={() => setSidebarOpen(false)}
+    />
+  );
+
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', height: '100vh', background: '#FAF8F3', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ background: '#fff', borderBottom: '1px solid #E7E1D2', flexShrink: 0 }}>
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'space-between' }}>
-          <Link
-            href="/"
-            style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
-            aria-label="Veri.ai home"
-          >
-            <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-            <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
-          </Link>
+        <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {/* Mobile sidebar toggle */}
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label={t.openSidebar}
+              className="chat-mobile-only"
+              style={{
+                width: 36, height: 36, borderRadius: 8,
+                background: '#F3EFE4', border: '1px solid #E7E1D2',
+                color: '#0F1E3F', cursor: 'pointer', display: 'inline-flex',
+                alignItems: 'center', justifyContent: 'center', fontFamily: 'inherit',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <Link
+              href="/"
+              style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}
+              aria-label="Veri.ai home"
+            >
+              <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
+              <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+            </Link>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {messages.length > 0 && (
               <>
@@ -376,85 +544,270 @@ function ChatInner() {
         </div>
       </div>
 
-      {/* Body — welcome (empty state) or message list */}
-      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px 32px' }}>
-          {isEmpty ? (
-            <WelcomeBlock t={t} headerTitle={headerTitle} send={send} />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {messages.map((m, i) => (
-                <Message key={i} role={m.role} content={m.content} streaming={streaming && i === messages.length - 1} t={t} />
-              ))}
-              {error && (
-                <div
-                  style={{
-                    padding: '10px 14px', background: '#FCEBEB', border: '1px solid #F7C1C1',
-                    borderRadius: 12, fontSize: 12.5, color: '#7A1F1F', lineHeight: 1.5,
-                  }}
-                  role="alert"
-                  aria-live="assertive"
-                >
-                  ⚠ {error.includes('400') || error.includes('credit') ? t.notConfigured : t.errorGeneric}
-                  {(error.includes('400') || error.includes('credit')) && (
-                    <div style={{ marginTop: 6, fontSize: 11.5, color: '#92400E' }}>
-                      {t.notConfiguredBody}
+      {/* Two-pane layout: sidebar + chat body */}
+      <div style={{ flex: 1, display: 'flex', minHeight: 0, position: 'relative' }}>
+        {/* Sidebar — desktop persistent, mobile drawer */}
+        <aside
+          className="chat-sidebar-desktop"
+          style={{
+            width: 280,
+            flexShrink: 0,
+            background: '#fff',
+            borderRight: '1px solid #E7E1D2',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
+        >
+          {sidebar}
+        </aside>
+
+        {/* Mobile drawer + scrim */}
+        {sidebarOpen && (
+          <>
+            <div
+              onClick={() => setSidebarOpen(false)}
+              className="chat-mobile-only"
+              style={{
+                position: 'fixed', inset: 0, background: 'rgba(15,30,63,0.45)', zIndex: 49,
+              }}
+              aria-hidden="true"
+            />
+            <aside
+              className="chat-mobile-only"
+              style={{
+                position: 'fixed', top: 0, left: 0, bottom: 0, width: 'min(86vw, 320px)',
+                background: '#fff', zIndex: 50, display: 'flex', flexDirection: 'column',
+                boxShadow: '0 8px 24px rgba(15,30,63,0.18)',
+              }}
+            >
+              {sidebar}
+            </aside>
+          </>
+        )}
+
+        {/* Right pane: messages + composer */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          {/* Body */}
+          <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto' }}>
+            <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px 32px' }}>
+              {isEmpty ? (
+                <WelcomeBlock t={t} headerTitle={headerTitle} send={send} />
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {messages.map((m, i) => (
+                    <Message key={i} role={m.role} content={m.content} streaming={streaming && i === messages.length - 1} t={t} />
+                  ))}
+                  {error && (
+                    <div
+                      style={{
+                        padding: '10px 14px', background: '#FCEBEB', border: '1px solid #F7C1C1',
+                        borderRadius: 12, fontSize: 12.5, color: '#7A1F1F', lineHeight: 1.5,
+                      }}
+                      role="alert"
+                      aria-live="assertive"
+                    >
+                      ⚠ {error.includes('400') || error.includes('credit') ? t.notConfigured : t.errorGeneric}
+                      {(error.includes('400') || error.includes('credit')) && (
+                        <div style={{ marginTop: 6, fontSize: 11.5, color: '#92400E' }}>
+                          {t.notConfiguredBody}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      {/* Composer — sticky bottom */}
-      <div style={{ background: '#fff', borderTop: '1px solid #E7E1D2', flexShrink: 0 }}>
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '12px 16px' }}>
-          <form
-            onSubmit={(e) => { e.preventDefault(); send(); }}
-            style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}
-          >
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t.inputPh}
-              disabled={streaming}
-              rows={1}
-              style={{
-                flex: 1, minHeight: 44, maxHeight: 140, padding: '10px 14px',
-                borderRadius: 12, fontSize: 14, lineHeight: 1.45,
-                color: '#0F1E3F', background: '#FAF8F3',
-                border: '1.5px solid #E7E1D2', outline: 'none',
-                fontFamily: 'inherit', resize: 'none',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#0F1E3F')}
-              onBlur={(e) => (e.target.style.borderColor = '#E7E1D2')}
-            />
-            <button
-              type="submit"
-              disabled={streaming || !input.trim()}
-              style={{
-                height: 44, padding: '0 18px', borderRadius: 999,
-                background: '#0F1E3F', color: '#fff', border: 'none',
-                fontSize: 13, fontWeight: 600,
-                cursor: streaming || !input.trim() ? 'not-allowed' : 'pointer',
-                opacity: streaming || !input.trim() ? 0.55 : 1,
-                fontFamily: 'inherit', flexShrink: 0,
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-              }}
-            >
-              {streaming ? <Spinner /> : t.send}
-            </button>
-          </form>
-          <div style={{ fontSize: 10, color: '#9A9484', textAlign: 'center', marginTop: 8, fontStyle: 'italic' }}>
-            {t.disclaimer}
+          {/* Composer — sticky bottom */}
+          <div style={{ background: '#fff', borderTop: '1px solid #E7E1D2', flexShrink: 0 }}>
+            <div style={{ maxWidth: 720, margin: '0 auto', padding: '12px 16px' }}>
+              <form
+                onSubmit={(e) => { e.preventDefault(); send(); }}
+                style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}
+              >
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={t.inputPh}
+                  disabled={streaming}
+                  rows={1}
+                  style={{
+                    flex: 1, minHeight: 44, maxHeight: 140, padding: '10px 14px',
+                    borderRadius: 12, fontSize: 14, lineHeight: 1.45,
+                    color: '#0F1E3F', background: '#FAF8F3',
+                    border: '1.5px solid #E7E1D2', outline: 'none',
+                    fontFamily: 'inherit', resize: 'none',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#0F1E3F')}
+                  onBlur={(e) => (e.target.style.borderColor = '#E7E1D2')}
+                />
+                <button
+                  type="submit"
+                  disabled={streaming || !input.trim()}
+                  style={{
+                    height: 44, padding: '0 18px', borderRadius: 999,
+                    background: '#0F1E3F', color: '#fff', border: 'none',
+                    fontSize: 13, fontWeight: 600,
+                    cursor: streaming || !input.trim() ? 'not-allowed' : 'pointer',
+                    opacity: streaming || !input.trim() ? 0.55 : 1,
+                    fontFamily: 'inherit', flexShrink: 0,
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                  }}
+                >
+                  {streaming ? <Spinner /> : t.send}
+                </button>
+              </form>
+              <div style={{ fontSize: 10, color: '#9A9484', textAlign: 'center', marginTop: 8, fontStyle: 'italic' }}>
+                {t.disclaimer}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Responsive sidebar visibility — desktop persistent, mobile drawer */}
+      <style jsx global>{`
+        .chat-mobile-only { display: inline-flex; }
+        .chat-sidebar-desktop { display: none; }
+        @media (min-width: 900px) {
+          .chat-mobile-only { display: none !important; }
+          .chat-sidebar-desktop { display: flex !important; }
+        }
+      `}</style>
     </main>
+  );
+}
+
+// ─── Sidebar (conversation list) ─────────────────────────────────────────
+function ChatSidebar({ t, conversations, activeId, lang, onNewChat, onSelect, onDelete, onClose }) {
+  return (
+    <>
+      <div
+        style={{
+          padding: '14px 14px 10px',
+          borderBottom: '1px solid #E7E1D2',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.16em' }}>
+          {t.conversations}
+        </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="chat-mobile-only"
+            aria-label={t.closeSidebar}
+            style={{
+              width: 28, height: 28, borderRadius: 6, background: 'transparent',
+              border: 'none', color: '#5A6780', cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        )}
+      </div>
+
+      <div style={{ padding: '12px 12px 8px' }}>
+        <button
+          type="button"
+          onClick={onNewChat}
+          style={{
+            width: '100%', height: 40, padding: '0 14px', borderRadius: 10,
+            background: '#0F1E3F', color: '#fff', border: 'none',
+            fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            transition: 'background 120ms ease',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#1A2D5C')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#0F1E3F')}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          {t.newChat}
+        </button>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 8px 16px' }}>
+        {conversations.length === 0 ? (
+          <div style={{ padding: '32px 16px', textAlign: 'center', color: '#9A9484', fontSize: 12, lineHeight: 1.55, fontStyle: 'italic' }}>
+            {t.noConversations}
+          </div>
+        ) : (
+          conversations.map((c) => {
+            const isActive = c.id === activeId;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => onSelect(c.id)}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 8,
+                  width: '100%', padding: '10px 10px',
+                  background: isActive ? '#F3EFE4' : 'transparent',
+                  border: 'none', borderRadius: 10, cursor: 'pointer',
+                  textAlign: 'left', fontFamily: 'inherit',
+                  marginBottom: 2,
+                  transition: 'background 120ms ease',
+                }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = '#FAF8F3'; }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: 13, fontWeight: isActive ? 600 : 500, color: '#0F1E3F',
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                      marginBottom: 2,
+                    }}
+                  >
+                    {c.title || t.untitled}
+                  </div>
+                  <div style={{ fontSize: 10.5, color: '#9A9484', fontFamily: 'var(--font-mono, monospace)' }}>
+                    {relativeTime(c.updatedAt, lang)}
+                  </div>
+                </div>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t.deleteChat}
+                  onClick={(e) => onDelete(c.id, e)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onDelete(c.id, e); } }}
+                  style={{
+                    width: 24, height: 24, borderRadius: 6, flexShrink: 0,
+                    color: '#9A9484', cursor: 'pointer',
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'background 120ms ease, color 120ms ease',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#FCEBEB'; e.currentTarget.style.color = '#7A1F1F'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9A9484'; }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                  </svg>
+                </span>
+              </button>
+            );
+          })
+        )}
+      </div>
+    </>
   );
 }
 
