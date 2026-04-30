@@ -14,6 +14,11 @@
 // v3.4.52 — Personal Assistant locked as "Veri" (Latin root for truth →
 // verify/verification). Tri-cultural + international-ready name. Card now
 // introduces Veri across eyebrow / headline / sub / CTA / toast.
+// v3.7.11 — Personalized AI experience: time-aware greeting (morning/afternoon/
+// evening), user-customizable AI name (default 'Veri', renameable per landlord
+// to 'Sarah' / '美丽' / etc.), and a DIRECT chat input bar on the dashboard so
+// the user can ask anything from the mainboard without first navigating to
+// /chat. Submit pre-fills /chat via ASSISTANT_PREFILL_KEY → seamless hand-off.
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -26,8 +31,23 @@ import { useToast } from '../../../components/ui/Toast';
 // v3.7.0 — Real Supabase pipeline read (with sample-data fallback)
 import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
 import { useAuth } from '../../../lib/useAuth';
+// v3.7.11 — Centralized localStorage keys (single source of truth)
+import {
+  ASSISTANT_NAME_KEY,
+  ASSISTANT_PREFILL_KEY,
+  AI_NAME_KEY,
+} from '../../../lib/storageKeys';
 
-const ASSISTANT_NAME_KEY = 'fa_assistant_name_v1';
+const DEFAULT_AI_NAME = 'Veri';
+
+// Time-of-day greeting helper. Honors the user's local timezone via
+// `new Date().getHours()`. Buckets: 5–11 morning · 12–17 afternoon · 18–4 evening.
+function getTimeGreeting() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'Good morning';
+  if (h >= 12 && h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
 
 export default function DashboardPage() {
   const { show } = useToast();
@@ -35,8 +55,22 @@ export default function DashboardPage() {
   const { user, configured } = useAuth();
 
   // Personal Assistant — optional name persistence + greeting state
-  const [assistantName, setAssistantName] = useState('');
+  const [assistantName, setAssistantName] = useState(''); // user's own display name
   const [savedName, setSavedName] = useState('');
+
+  // v3.7.11 — User-customizable AI name (default 'Veri'). Each landlord can
+  // personalize the AI persona — Veri / Sarah / 美丽 / etc. Brand stays Veri.ai.
+  const [aiName, setAiName] = useState(DEFAULT_AI_NAME);
+  const [aiNameInput, setAiNameInput] = useState('');
+  const [showAiRename, setShowAiRename] = useState(false);
+
+  // v3.7.11 — Direct chat input on dashboard (mainboard). Submitting pre-fills
+  // /chat via ASSISTANT_PREFILL_KEY so the question carries over.
+  const [chatInput, setChatInput] = useState('');
+
+  // v3.7.11 — Recompute the greeting on each render so a user who keeps the
+  // tab open across sunset still sees the right phrase after a soft reload.
+  const [greeting, setGreeting] = useState('Welcome back');
 
   // v3.7.0 — Real pipeline cards (when Supabase configured + authed)
   const [realCards, setRealCards] = useState(null);   // null = not loaded; [] = no cards yet
@@ -49,7 +83,12 @@ export default function DashboardPage() {
         setSavedName(stored);
         setAssistantName(stored);
       }
+      const storedAi = window.localStorage.getItem(AI_NAME_KEY);
+      if (storedAi && storedAi.trim()) {
+        setAiName(storedAi.trim());
+      }
     } catch (e) { /* localStorage blocked */ }
+    setGreeting(getTimeGreeting());
   }, []);
 
   // v3.7.0 — Fetch real cards from Supabase when configured + authed
@@ -92,7 +131,7 @@ export default function DashboardPage() {
       if (trimmed) {
         window.localStorage.setItem(ASSISTANT_NAME_KEY, trimmed);
         setSavedName(trimmed);
-        show.success(`Saved · Veri will call you ${trimmed}`);
+        show.success(`Saved · ${aiName} will call you ${trimmed}`);
       } else {
         window.localStorage.removeItem(ASSISTANT_NAME_KEY);
         setSavedName('');
@@ -110,9 +149,44 @@ export default function DashboardPage() {
     show.info('Name cleared');
   };
 
+  // v3.7.11 — Save the user-chosen AI name (e.g. Sarah, 美丽). Empty = revert to default.
+  const saveAiName = () => {
+    const trimmed = aiNameInput.trim();
+    try {
+      if (trimmed) {
+        window.localStorage.setItem(AI_NAME_KEY, trimmed);
+        setAiName(trimmed);
+        show.success(`Renamed · your assistant is now ${trimmed}`);
+      } else {
+        window.localStorage.removeItem(AI_NAME_KEY);
+        setAiName(DEFAULT_AI_NAME);
+        show.info(`Reset · assistant name is ${DEFAULT_AI_NAME}`);
+      }
+    } catch (e) { /* localStorage blocked */ }
+    setAiNameInput('');
+    setShowAiRename(false);
+  };
+
+  // v3.7.11 — Submit chat input from dashboard. Persist the user's name (if
+  // they typed one), persist the question for /chat to consume, then route.
+  const submitChat = () => {
+    const question = chatInput.trim();
+    if (!question) return;
+    try {
+      // Save the user's display name if entered (mirrors openAssistant).
+      const trimmedUser = assistantName.trim();
+      if (trimmedUser) {
+        window.localStorage.setItem(ASSISTANT_NAME_KEY, trimmedUser);
+        setSavedName(trimmedUser);
+      }
+      window.localStorage.setItem(ASSISTANT_PREFILL_KEY, question);
+    } catch (e) { /* localStorage blocked */ }
+    router.push('/chat');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Page header */}
+      {/* Page header — v3.7.11 time-aware greeting */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{
@@ -125,7 +199,7 @@ export default function DashboardPage() {
             margin: 0,
             marginBottom: 6,
           }}>
-            {savedName ? `Welcome back, ${savedName}` : 'Welcome back'}
+            {savedName ? `${greeting}, ${savedName}.` : `${greeting}.`}
           </h1>
           <p style={{ fontSize: 14, color: 'var(--color-slate)', margin: 0 }}>
             Here's what's happening with your Trust Cards today.
@@ -138,10 +212,10 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* ── PERSONAL ASSISTANT — featured card ──────────────────────────── */}
+      {/* ── PERSONAL ASSISTANT — v3.7.11 time-aware greeting + direct chat bar ── */}
       <Card variant="hero" size="lg" radius="2xl">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24, alignItems: 'center' }} className="fa-pa-grid">
-          {/* Left: copy + optional name input */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24, alignItems: 'start' }} className="fa-pa-grid">
+          {/* Left: greeting + direct chat input */}
           <div style={{ minWidth: 0 }}>
             <div
               style={{
@@ -160,38 +234,150 @@ export default function DashboardPage() {
                 marginBottom: 14,
               }}
             >
-              <SparkleIcon /> Personal assistant · Veri
+              <SparkleIcon /> Personal assistant · {aiName}
             </div>
+
             <h2
               style={{
                 fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
                 fontSize: 36,
                 fontWeight: 400,
                 letterSpacing: '-0.015em',
-                lineHeight: 1.05,
-                margin: '0 0 10px',
+                lineHeight: 1.1,
+                margin: '0 0 8px',
                 color: 'var(--color-white)',
               }}
             >
-              {savedName ? `Hi ${savedName}, Veri's ready when you are.` : 'Meet Veri.'}
+              {savedName ? `${greeting}, ${savedName}.` : `${greeting}.`}
             </h2>
             <p
               style={{
-                fontSize: 14,
-                lineHeight: 1.55,
-                color: 'rgba(255,255,255,0.78)',
-                margin: '0 0 18px',
-                maxWidth: 480,
+                fontSize: 16,
+                lineHeight: 1.5,
+                color: 'rgba(255,255,255,0.85)',
+                margin: '0 0 20px',
+                maxWidth: 520,
               }}
             >
-              <strong style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 500 }}>Veri</strong> is your personal Malaysian property assistant — named after the Latin root for <em>truth</em>, the same root as <em>verify</em>. Ask about tenancy law, SDSAS 2026 stamp duty, dispute scenarios, Sabah &amp; Sarawak edge cases, or specific clauses in your draft agreement. Answers in English, BM, and 中文.
+              I'm <strong style={{ color: 'var(--color-white)', fontWeight: 500 }}>{aiName}</strong>. What can I help you with today?
             </p>
 
-            {/* Name input row — optional, with skip */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div>
+            {/* ── Direct chat input bar (the mainboard chat) ─────────────── */}
+            <div style={{ position: 'relative', marginBottom: 14 }}>
+              <textarea
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    submitChat();
+                  }
+                }}
+                placeholder={`Ask ${aiName} anything — tenancy law, stamp duty, a clause you don't understand…`}
+                rows={3}
+                className="fa-pa-input fa-pa-textarea"
+                style={{
+                  width: '100%',
+                  padding: '14px 56px 14px 18px',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  color: 'var(--color-white)',
+                  fontSize: 14.5,
+                  lineHeight: 1.55,
+                  fontFamily: 'inherit',
+                  outline: 'none',
+                  resize: 'vertical',
+                  minHeight: 88,
+                  transition: 'border-color var(--motion-fast), background var(--motion-fast)',
+                }}
+              />
+              <button
+                type="button"
+                onClick={submitChat}
+                disabled={!chatInput.trim()}
+                aria-label={`Send to ${aiName}`}
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  bottom: 10,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 999,
+                  background: chatInput.trim() ? 'var(--color-white)' : 'rgba(255,255,255,0.18)',
+                  color: chatInput.trim() ? 'var(--color-navy)' : 'rgba(255,255,255,0.5)',
+                  border: 'none',
+                  cursor: chatInput.trim() ? 'pointer' : 'not-allowed',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background var(--motion-fast), transform var(--motion-fast)',
+                }}
+              >
+                <SendIcon />
+              </button>
+            </div>
+
+            {/* Secondary actions row: open chat, customize names */}
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>
+              <button
+                type="button"
+                onClick={openAssistant}
+                style={{
+                  height: 36,
+                  padding: '0 16px',
+                  borderRadius: 999,
+                  background: 'rgba(255,255,255,0.08)',
+                  color: 'rgba(255,255,255,0.92)',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  fontSize: 13,
+                  fontFamily: 'inherit',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  transition: 'background var(--motion-fast)',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.14)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+              >
+                <ChatIcon /> Open full chat
+              </button>
+              <button
+                type="button"
+                onClick={() => { setAiNameInput(aiName === DEFAULT_AI_NAME ? '' : aiName); setShowAiRename((v) => !v); }}
+                style={{
+                  height: 36,
+                  padding: '0 14px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: 'rgba(255,255,255,0.62)',
+                  border: '1px solid rgba(255,255,255,0.14)',
+                  fontSize: 12.5,
+                  fontFamily: 'inherit',
+                  cursor: 'pointer',
+                  transition: 'color var(--motion-fast), background var(--motion-fast)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.62)'; e.currentTarget.style.background = 'transparent'; }}
+              >
+                Rename {aiName}
+              </button>
+            </div>
+
+            {/* AI rename inline panel */}
+            {showAiRename && (
+              <div
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.14)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '14px 16px',
+                  marginBottom: 16,
+                }}
+              >
                 <label
-                  htmlFor="fa-pa-name"
+                  htmlFor="fa-ai-name"
                   style={{
                     display: 'block',
                     fontSize: 11,
@@ -199,92 +385,137 @@ export default function DashboardPage() {
                     color: 'rgba(255,255,255,0.62)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.14em',
-                    marginBottom: 6,
+                    marginBottom: 8,
                   }}
                 >
-                  What should Veri call you? <span style={{ textTransform: 'none', letterSpacing: 0, fontStyle: 'italic', fontWeight: 400 }}>· optional</span>
+                  Rename your assistant
                 </label>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <input
+                    id="fa-ai-name"
+                    type="text"
+                    value={aiNameInput}
+                    onChange={(e) => setAiNameInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') saveAiName(); }}
+                    placeholder={`e.g. Sarah, 美丽, or leave blank for ${DEFAULT_AI_NAME}`}
+                    maxLength={32}
+                    className="fa-pa-input"
+                    style={{
+                      flex: '1 1 200px',
+                      height: 40,
+                      padding: '0 14px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.18)',
+                      color: 'var(--color-white)',
+                      fontSize: 13.5,
+                      fontFamily: 'inherit',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={saveAiName}
+                    style={{
+                      height: 40,
+                      padding: '0 18px',
+                      borderRadius: 999,
+                      background: 'var(--color-white)',
+                      color: 'var(--color-navy)',
+                      border: 'none',
+                      fontSize: 13,
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', marginTop: 8 }}>
+                  Brand stays Veri.ai — only the assistant persona changes for your account.
+                </div>
+              </div>
+            )}
+
+            {/* User name row — what should the AI call you */}
+            <div>
+              <label
+                htmlFor="fa-pa-name"
+                style={{
+                  display: 'block',
+                  fontSize: 11,
+                  fontWeight: 500,
+                  color: 'rgba(255,255,255,0.55)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.14em',
+                  marginBottom: 6,
+                }}
+              >
+                What should {aiName} call you? <span style={{ textTransform: 'none', letterSpacing: 0, fontStyle: 'italic', fontWeight: 400 }}>· optional</span>
+              </label>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                 <input
                   id="fa-pa-name"
                   type="text"
                   value={assistantName}
                   onChange={(e) => setAssistantName(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') openAssistant(); }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const trimmed = assistantName.trim();
+                      try {
+                        if (trimmed) {
+                          window.localStorage.setItem(ASSISTANT_NAME_KEY, trimmed);
+                          setSavedName(trimmed);
+                          show.success(`Saved · ${aiName} will call you ${trimmed}`);
+                        }
+                      } catch (e) {}
+                    }
+                  }}
                   placeholder="e.g. Ken, or skip to stay anonymous"
                   maxLength={48}
                   className="fa-pa-input"
                   style={{
-                    width: '100%',
-                    height: 44,
-                    padding: '0 16px',
+                    flex: '1 1 220px',
+                    height: 40,
+                    padding: '0 14px',
                     borderRadius: 'var(--radius-md)',
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.18)',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.14)',
                     color: 'var(--color-white)',
-                    fontSize: 14,
+                    fontSize: 13.5,
                     fontFamily: 'inherit',
                     outline: 'none',
                     transition: 'border-color var(--motion-fast), background var(--motion-fast)',
                   }}
                 />
-              </div>
-
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  onClick={openAssistant}
-                  style={{
-                    height: 44,
-                    padding: '0 22px',
-                    borderRadius: 999,
-                    background: 'var(--color-white)',
-                    color: 'var(--color-navy)',
-                    border: 'none',
-                    fontSize: 14,
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    transition: 'background var(--motion-fast), transform var(--motion-fast)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-tea)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-white)')}
-                >
-                  <ChatIcon /> {savedName ? `Open Veri` : (assistantName.trim() ? 'Save name & open Veri' : 'Open Veri')}
-                </button>
                 {savedName && (
                   <button
                     type="button"
                     onClick={clearName}
                     style={{
-                      height: 44,
-                      padding: '0 16px',
+                      height: 40,
+                      padding: '0 14px',
                       borderRadius: 999,
                       background: 'transparent',
-                      color: 'rgba(255,255,255,0.62)',
-                      border: '1px solid rgba(255,255,255,0.18)',
-                      fontSize: 13,
+                      color: 'rgba(255,255,255,0.55)',
+                      border: '1px solid rgba(255,255,255,0.14)',
+                      fontSize: 12.5,
                       fontFamily: 'inherit',
                       cursor: 'pointer',
-                      transition: 'color var(--motion-fast), background var(--motion-fast)',
                     }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.62)'; e.currentTarget.style.background = 'transparent'; }}
                   >
-                    Clear name
+                    Clear
                   </button>
                 )}
               </div>
-
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontStyle: 'italic' }}>
-                Your name stays on this device — never sent to a database, never visible to landlords or agents.
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontStyle: 'italic', marginTop: 8 }}>
+                Stays on this device — never sent to a database, never shown to landlords or agents.
               </div>
             </div>
           </div>
 
-          {/* Right: assistant visual — quick prompt examples */}
+          {/* Right: quick prompt examples */}
           <div className="fa-pa-prompts">
             <div
               style={{
@@ -310,12 +541,13 @@ export default function DashboardPage() {
         <style jsx>{`
           .fa-pa-input::placeholder { color: rgba(255,255,255,0.4); }
           .fa-pa-input:focus {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.32);
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.34);
           }
+          .fa-pa-textarea { font-family: inherit; }
           @media (min-width: 900px) {
             :global(.fa-pa-grid) {
-              grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) !important;
+              grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr) !important;
               gap: 40px !important;
             }
           }
@@ -1015,6 +1247,16 @@ function ChatIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  );
+}
+
+function SendIcon() {
+  // v3.7.11 — paper-plane send icon for the dashboard chat bar.
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
     </svg>
   );
 }

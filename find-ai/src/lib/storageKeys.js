@@ -28,6 +28,9 @@ export const SKIP_WELCOME_KEY = 'fi_skip_welcome_v1';    // legacy welcome→pic
 // ── Personal Assistant (Veri) ──────────────────────────────────────────────
 export const ASSISTANT_NAME_KEY = 'fa_assistant_name_v1';     // user's display name (Veri calls them by this)
 export const ASSISTANT_PREFILL_KEY = 'fa_assistant_prefill_v1'; // prompt prefill from PromptChip → /chat
+// v3.7.11 — user can name their AI assistant (default 'Veri'). The brand stays
+// Veri.ai but each landlord personalizes the AI persona — Veri / Sarah / 美丽 / etc.
+export const AI_NAME_KEY = 'fa_ai_name_v1';
 
 // ── Trust Card audit log (action row Approve/Request/Decline) ──────────────
 export const AUDIT_LOG_KEY = 'fa_audit_log_v1';          // {reportId, action, mode, ts}[]

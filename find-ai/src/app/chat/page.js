@@ -6,6 +6,10 @@
 // real conversational surface: streaming via /api/chat (Anthropic Haiku 3.5),
 // example prompts, conversation history, lang toggle (EN/BM/中文), Save-as-PDF,
 // graceful degraded mode when credits are out.
+// v3.7.11 — Personalized welcome: reads AI_NAME_KEY (default 'Veri') so the
+// assistant can be renamed to Sarah / 美丽 / etc. per landlord. Welcome line
+// now includes a time-aware greeting (Good morning / afternoon / evening) so
+// it feels human, not robotic.
 //
 // Doctrine (Tool 4 — Veri):
 //   - Same /api/chat backend as the homepage chat dock — single source of truth
@@ -20,23 +24,40 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLang } from '../../lib/useLang';
-import { ASSISTANT_NAME_KEY, CHAT_HISTORY_KEY } from '../../lib/storageKeys';
+import { ASSISTANT_NAME_KEY, CHAT_HISTORY_KEY, AI_NAME_KEY, ASSISTANT_PREFILL_KEY } from '../../lib/storageKeys';
 import { exportReport, buildChatReport, makeCaseRef } from '../../lib/pdfExport';
 import { fmt } from '../../lib/chatFormat';
 
-// Local prefill key (carried over from old route)
-const PREFILL_KEY = 'fa_assistant_prefill_v1';
+// v3.7.11 — Default AI name, overridable per-user via AI_NAME_KEY.
+const DEFAULT_AI_NAME = 'Veri';
+
+// v3.7.11 — Local prefill key (now centralized in storageKeys.js).
+// Kept as alias for back-compat readability inside this file.
+const PREFILL_KEY = ASSISTANT_PREFILL_KEY;
+
+// v3.7.11 — Time-of-day greeting helper. Buckets:
+//   05:00–11:59 = morning · 12:00–17:59 = afternoon · 18:00–04:59 = evening.
+function getGreeting(lang) {
+  const h = new Date().getHours();
+  const idx = (h >= 5 && h < 12) ? 0 : (h >= 12 && h < 18) ? 1 : 2;
+  const map = {
+    en: ['Good morning', 'Good afternoon', 'Good evening'],
+    bm: ['Selamat pagi', 'Selamat tengah hari', 'Selamat petang'],
+    zh: ['早上好', '下午好', '晚上好'],
+  };
+  return (map[lang] || map.en)[idx];
+}
 
 // EN/BM/中文 STR
 const STR = {
   en: {
-    eyebrow: 'VERI · PERSONAL ASSISTANT',
-    titleNew: "Hi, I'm Veri.",
-    titleNamed: 'Hi {name}, Veri here.',
-    sub: 'Ask me anything about Malaysian property compliance — tenancy law, stamp duty, dispute scenarios, Sabah & Sarawak edge cases, or specific clauses in your draft agreement. The name comes from the Latin root for truth — same root as verify.',
-    inputPh: 'Ask Veri anything…',
+    eyebrow: '{ai} · PERSONAL ASSISTANT',
+    titleNew: "{greeting}. I'm {ai}.",
+    titleNamed: "{greeting}, {name}. I'm {ai}.",
+    sub: 'Ask me anything about Malaysian property compliance — tenancy law, stamp duty, dispute scenarios, Sabah & Sarawak edge cases, or specific clauses in your draft agreement. Powered by Veri.ai — the name comes from the Latin root for truth, same root as verify.',
+    inputPh: 'Ask {ai} anything…',
     send: 'Send',
-    thinking: 'Veri is thinking…',
+    thinking: '{ai} is thinking…',
     examplesHead: 'Try one of these',
     example1: 'How do I calculate stamp duty for RM 3,500/month, 2 years?',
     example2: 'My tenant stopped paying — what can I do?',
@@ -48,20 +69,20 @@ const STR = {
     clear: 'Clear conversation',
     savePdf: 'Save as PDF',
     notConfigured: 'AI assistant temporarily unavailable',
-    notConfiguredBody: "We're funding API capacity. The example prompts above show what Veri can answer — every question is routable through Veri.ai's other tools (audit, stamp, screen) which all work right now. The chat will activate once credits are funded.",
+    notConfiguredBody: "We're funding API capacity. The example prompts above show what your assistant can answer — every question is routable through Veri.ai's other tools (audit, stamp, screen) which all work right now. The chat will activate once credits are funded.",
     errorGeneric: 'Something went wrong. Try again or refresh.',
     saved: 'Saved · PDF will open',
     cleared: 'Conversation cleared',
     disclaimer: 'AI advice is for reference only. Final decisions are yours. For high-stakes matters, consult a Malaysian property lawyer.',
   },
   bm: {
-    eyebrow: 'VERI · PEMBANTU PERIBADI',
-    titleNew: 'Hai, saya Veri.',
-    titleNamed: 'Hai {name}, Veri di sini.',
-    sub: 'Tanya saya apa-apa tentang pematuhan hartanah Malaysia — undang-undang penyewaan, duti setem, senario pertikaian, kes khas Sabah & Sarawak, atau klausa tertentu dalam draf perjanjian anda. Nama saya berasal daripada akar Latin untuk kebenaran — akar yang sama dengan "verify".',
-    inputPh: 'Tanya Veri apa-apa…',
+    eyebrow: '{ai} · PEMBANTU PERIBADI',
+    titleNew: 'Hai, saya {ai}. {greeting}.',
+    titleNamed: '{greeting}, {name}. Saya {ai}.',
+    sub: 'Tanya saya apa-apa tentang pematuhan hartanah Malaysia — undang-undang penyewaan, duti setem, senario pertikaian, kes khas Sabah & Sarawak, atau klausa tertentu dalam draf perjanjian anda. Dikuasai oleh Veri.ai — nama berasal daripada akar Latin untuk kebenaran, akar yang sama dengan "verify".',
+    inputPh: 'Tanya {ai} apa-apa…',
     send: 'Hantar',
-    thinking: 'Veri sedang berfikir…',
+    thinking: '{ai} sedang berfikir…',
     examplesHead: 'Cuba salah satu',
     example1: 'Bagaimana saya kira duti setem untuk RM 3,500/bulan, 2 tahun?',
     example2: 'Penyewa saya berhenti bayar — apa boleh saya buat?',
@@ -73,20 +94,20 @@ const STR = {
     clear: 'Padam perbualan',
     savePdf: 'Simpan sebagai PDF',
     notConfigured: 'Pembantu AI tidak tersedia buat masa ini',
-    notConfiguredBody: 'Kami sedang membiayai kapasiti API. Cadangan soalan di atas menunjukkan apa yang Veri boleh jawab — setiap soalan boleh dialihkan melalui alat lain Veri.ai (audit, setem, saringan) yang berfungsi sekarang. Sembang akan aktif sebaik kredit dibiayai.',
+    notConfiguredBody: 'Kami sedang membiayai kapasiti API. Cadangan soalan di atas menunjukkan apa yang pembantu anda boleh jawab — setiap soalan boleh dialihkan melalui alat lain Veri.ai (audit, setem, saringan) yang berfungsi sekarang. Sembang akan aktif sebaik kredit dibiayai.',
     errorGeneric: 'Ada ralat berlaku. Cuba lagi atau muat semula.',
     saved: 'Disimpan · PDF akan dibuka',
     cleared: 'Perbualan dipadam',
     disclaimer: 'Nasihat AI hanya untuk rujukan. Keputusan akhir adalah anda. Untuk hal serius, rujuk peguam hartanah Malaysia.',
   },
   zh: {
-    eyebrow: 'VERI · 个人助理',
-    titleNew: '您好，我是 Veri。',
-    titleNamed: '您好 {name}，我是 Veri。',
-    sub: '关于马来西亚房产合规的任何问题都可以问我——租赁法、印花税、纠纷场景、沙巴和砂拉越的特殊情况，或您草拟协议中的特定条款。我的名字源自拉丁语词根 "truth"——与 "verify" 同根。',
-    inputPh: '随便问 Veri……',
+    eyebrow: '{ai} · 个人助理',
+    titleNew: '{greeting}，我是 {ai}。',
+    titleNamed: '{greeting}，{name}。我是 {ai}。',
+    sub: '关于马来西亚房产合规的任何问题都可以问我——租赁法、印花税、纠纷场景、沙巴和砂拉越的特殊情况，或您草拟协议中的特定条款。由 Veri.ai 提供支持——名字源自拉丁语词根 "truth"，与 "verify" 同根。',
+    inputPh: '随便问 {ai}……',
     send: '发送',
-    thinking: 'Veri 正在思考……',
+    thinking: '{ai} 正在思考……',
     examplesHead: '试试这些',
     example1: '租金 RM 3,500/月、2 年，印花税怎么算？',
     example2: '租客不付租金——我能做什么？',
@@ -98,7 +119,7 @@ const STR = {
     clear: '清除对话',
     savePdf: '保存为 PDF',
     notConfigured: 'AI 助理暂时不可用',
-    notConfiguredBody: '我们正在为 API 容量提供资金。上方示例提示展示了 Veri 能回答的内容——每个问题都可通过 Veri.ai 的其他工具（审计、印花税、审查）解答，这些工具目前可用。资金到位后聊天将立即激活。',
+    notConfiguredBody: '我们正在为 API 容量提供资金。上方示例提示展示了助理能回答的内容——每个问题都可通过 Veri.ai 的其他工具（审计、印花税、审查）解答，这些工具目前可用。资金到位后聊天将立即激活。',
     errorGeneric: '出错了。请重试或刷新。',
     saved: '已保存 · PDF 将打开',
     cleared: '对话已清除',
@@ -126,10 +147,11 @@ function ChatFallback() {
 
 function ChatInner() {
   const { lang, cycle } = useLang();
-  const t = STR[lang] || STR.en;
   const searchParams = useSearchParams();
 
   const [name, setName] = useState('');
+  const [aiName, setAiName] = useState(DEFAULT_AI_NAME); // v3.7.11
+  const [greeting, setGreeting] = useState('Hello');     // v3.7.11
   const [messages, setMessages] = useState([]);   // [{role, content}]
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
@@ -139,11 +161,27 @@ function ChatInner() {
   const inputRef = useRef(null);
   const streamBufferRef = useRef('');
 
-  // Hydrate user name + saved conversation + URL prefill
+  // v3.7.11 — t accessor that interpolates {ai} / {greeting} / {name} placeholders
+  // for the active language. Keeps the STR object declarative.
+  const tRaw = STR[lang] || STR.en;
+  const fill = (s) => String(s || '')
+    .replace(/\{ai\}/g, aiName)
+    .replace(/\{greeting\}/g, greeting)
+    .replace(/\{name\}/g, name);
+  const t = new Proxy(tRaw, {
+    get(target, prop) {
+      const v = target[prop];
+      return typeof v === 'string' ? fill(v) : v;
+    },
+  });
+
+  // Hydrate user name + AI name + saved conversation + URL prefill
   useEffect(() => {
     try {
       const n = window.localStorage.getItem(ASSISTANT_NAME_KEY);
       if (n) setName(n);
+      const ai = window.localStorage.getItem(AI_NAME_KEY);
+      if (ai && ai.trim()) setAiName(ai.trim());
       const stored = window.localStorage.getItem(CHAT_HISTORY_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
@@ -159,6 +197,9 @@ function ChatInner() {
       }
     } catch (e) { /* localStorage blocked */ }
   }, []);
+
+  // v3.7.11 — Recompute greeting when language changes (and on first paint).
+  useEffect(() => { setGreeting(getGreeting(lang)); }, [lang]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -273,7 +314,8 @@ function ChatInner() {
     exportReport(payload);
   };
 
-  const headerTitle = name ? t.titleNamed.replace('{name}', name) : t.titleNew;
+  // v3.7.11 — Proxy already substitutes {name}, {ai}, {greeting}.
+  const headerTitle = name ? t.titleNamed : t.titleNew;
   const isEmpty = messages.length === 0;
 
   return (
