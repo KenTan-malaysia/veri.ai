@@ -615,7 +615,13 @@ export default async function TrustCardPage({ params, searchParams }) {
                 Buttons now write to localStorage `fa_audit_log_v1` per click,
                 show toast feedback, and persist decision state across reloads.
                 v1 will move the audit log to Supabase + auth-gated. */}
-            <ActionRow reportId={card.reportId} mode={card.mode} />
+            <ActionRow
+              reportId={card.reportId}
+              mode={card.mode}
+              anonId={card.anonId}
+              currentTier={card.tier ? `T${card.tier}` : 'T0'}
+              propertyAddress={card.propertyAddress}
+            />
           </section>
         </div>
 

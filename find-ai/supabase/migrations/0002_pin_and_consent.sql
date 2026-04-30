@@ -65,6 +65,7 @@ create table if not exists public.consent_requests (
   -- Who's being asked (tenant)
   target_user_id       uuid references public.users(id) on delete cascade,
   target_anon_id       text not null,                     -- T-XXXX (always present, used pre-auth)
+  target_email         text,                              -- v3.7.14 — landlord-supplied tenant email for inbox routing pre-link-click
 
   -- What's being requested
   trust_card_id        uuid references public.trust_cards(id) on delete cascade,

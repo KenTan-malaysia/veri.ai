@@ -9,6 +9,12 @@
 //   - Logged-in users get cross-device audit sync (Supabase + localStorage)
 //   - Degraded-mode failures (no Supabase / no auth) silently fall back to
 //     localStorage with a friendly toast message
+// v3.7.14 — "Request more info" now fires a real consent_requests row via
+// /api/consent/request (with localStorage fallback via consentStore.localCreate).
+// Returns a WhatsApp deep-link the landlord can paste to the tenant. UOB-pattern
+// completion: landlord starts the transaction → tenant gets the link → tenant
+// PIN-confirms → tier advances. Anonymous T-XXXX stays anonymous in the link
+// itself; only the tenant's PIN can unlock identity.
 //
 // Schema (localStorage `fa_audit_log_v1`):
 //   { reportId, action: 'approve'|'request'|'decline', ts: ISO, mode }
@@ -17,6 +23,7 @@
 import { useEffect, useState } from 'react';
 import { useToast } from '../../../components/ui/Toast';
 import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
+import { localCreate as localCreateConsent, buildWhatsAppShareUrl } from '../../../lib/consentStore';
 
 const AUDIT_LOG_KEY = 'fa_audit_log_v1';
 
@@ -92,10 +99,19 @@ function formatDate(iso) {
   }
 }
 
-export default function ActionRow({ reportId, mode = 'anonymous' }) {
+export default function ActionRow({ reportId, mode = 'anonymous', anonId = null, currentTier = 'T0', propertyAddress = null }) {
   const { show } = useToast();
   const [decision, setDecision] = useState(null); // {action, ts}
   const [hydrated, setHydrated] = useState(false);
+
+  // v3.7.14 — Consent-request dialog state
+  const [requestOpen, setRequestOpen] = useState(false);
+  const [pickedTier, setPickedTier] = useState('T1');
+  const [tenantEmail, setTenantEmail] = useState('');
+  const [tenantPhone, setTenantPhone] = useState('');
+  const [reason, setReason] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [lastSent, setLastSent] = useState(null); // {requestId, consentUrl, whatsappUrl}
 
   // Hydrate decision from localStorage on mount
   useEffect(() => {
@@ -104,6 +120,105 @@ export default function ActionRow({ reportId, mode = 'anonymous' }) {
     if (last) setDecision(last);
     setHydrated(true);
   }, [reportId]);
+
+  // Available tiers to pick are strictly higher than currentTier.
+  const TIER_ORDER = { T0: 0, T1: 1, T2: 2, T3: 3, T4: 4, T5: 5 };
+  const tierChoices = ['T1', 'T2', 'T3', 'T4', 'T5'].filter((t) => TIER_ORDER[t] > (TIER_ORDER[currentTier] ?? 0));
+  // Make sure pickedTier is valid for this card
+  useEffect(() => {
+    if (tierChoices.length > 0 && !tierChoices.includes(pickedTier)) {
+      setPickedTier(tierChoices[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTier]);
+
+  const submitConsentRequest = async () => {
+    if (!anonId) {
+      show.warning('Trust Card missing tenant anonymous ID — cannot create request.');
+      return;
+    }
+    setSubmitting(true);
+
+    let result = null;
+
+    // Try server first
+    if (isSupabaseConfigured()) {
+      try {
+        const client = getBrowserClient();
+        const { data: { session } } = await client.auth.getSession();
+        const token = session?.access_token;
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const res = await fetch('/api/consent/request', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            reportId,
+            targetAnonId: anonId,
+            requestedTier: pickedTier,
+            currentTier,
+            reason: reason || undefined,
+            propertyAddress: propertyAddress || undefined,
+            targetEmail: tenantEmail || undefined,
+          }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          result = { requestId: data.requestId, consentUrl: data.consentUrl, expiresAt: data.expiresAt };
+        }
+      } catch (e) { /* fall through to local */ }
+    }
+
+    // Local fallback
+    if (!result) {
+      const requesterDisplay = mode === 'verified' ? 'Landlord' : 'Anonymous landlord';
+      const local = localCreateConsent({
+        requesterDisplay,
+        targetAnonId: anonId,
+        targetEmail: tenantEmail || null,
+        reportId,
+        requestedTier: pickedTier,
+        currentTier,
+        reason,
+        propertyAddress: propertyAddress || '',
+      });
+      if (!local.ok) {
+        show.warning('Could not create consent request locally.');
+        setSubmitting(false);
+        return;
+      }
+      const consentUrl = (typeof window !== 'undefined' ? window.location.origin : '') + `/consent/${local.request.id}`;
+      result = { requestId: local.request.id, consentUrl, expiresAt: local.request.expires_at };
+    }
+
+    // Build WhatsApp share URL
+    const whatsappUrl = buildWhatsAppShareUrl({
+      requestId: result.requestId,
+      requesterDisplay: 'a landlord',
+      propertyAddress: propertyAddress || '',
+      requestedTier: pickedTier,
+      phone: tenantPhone,
+    });
+
+    // Try copy to clipboard (consent URL by default)
+    try {
+      await navigator.clipboard?.writeText(result.consentUrl);
+      show.success('Request created · consent link copied to clipboard');
+    } catch (e) {
+      show.success('Request created · open WhatsApp link below');
+    }
+
+    setLastSent({ ...result, whatsappUrl });
+    setSubmitting(false);
+
+    // Also log the local audit-log entry per existing pattern
+    const entry = { reportId, action: 'request', mode, ts: new Date().toISOString() };
+    const log = readLog();
+    log.push(entry);
+    writeLog(log);
+    setDecision(entry);
+    persistToSupabase(entry);
+  };
 
   // v3.6.0 — fire-and-forget Supabase write so logged-in users get
   // cross-device audit sync. Anonymous + non-Supabase environments silently
@@ -142,6 +257,14 @@ export default function ActionRow({ reportId, mode = 'anonymous' }) {
   };
 
   const handleClick = (action) => {
+    // v3.7.14 — "request" now opens the tier-picker dialog instead of just
+    // logging. The actual consent_requests row is created when the landlord
+    // submits the dialog (see submitConsentRequest above).
+    if (action === 'request') {
+      setRequestOpen(true);
+      return;
+    }
+
     if (decision && decision.action === action) {
       // Already in this state — no-op with a gentle toast
       show.info(`Already ${ACTIONS[action].pastTense.toLowerCase()} · use Reset to change`);
@@ -289,6 +412,329 @@ export default function ActionRow({ reportId, mode = 'anonymous' }) {
           v0 demo · audit log saved to this device only · Supabase audit log + auth ship next sprint
         </div>
       )}
+
+      {/* v3.7.14 — consent request dialog */}
+      {requestOpen && (
+        <ConsentRequestDialog
+          reportId={reportId}
+          anonId={anonId}
+          currentTier={currentTier}
+          tierChoices={tierChoices}
+          pickedTier={pickedTier}
+          setPickedTier={setPickedTier}
+          tenantEmail={tenantEmail}
+          setTenantEmail={setTenantEmail}
+          tenantPhone={tenantPhone}
+          setTenantPhone={setTenantPhone}
+          reason={reason}
+          setReason={setReason}
+          submitting={submitting}
+          lastSent={lastSent}
+          onSubmit={submitConsentRequest}
+          onClose={() => { setRequestOpen(false); setLastSent(null); }}
+          onSendAnother={() => setLastSent(null)}
+        />
+      )}
     </section>
   );
 }
+
+// ─── Consent request dialog (v3.7.14) ──────────────────────────────────────
+function ConsentRequestDialog({
+  reportId, anonId, currentTier, tierChoices,
+  pickedTier, setPickedTier,
+  tenantEmail, setTenantEmail,
+  tenantPhone, setTenantPhone,
+  reason, setReason,
+  submitting, lastSent,
+  onSubmit, onClose, onSendAnother,
+}) {
+  const TIER_LABELS = {
+    T1: 'Categorical info (age range, citizenship, occupation)',
+    T2: 'First name',
+    T3: 'Last name',
+    T4: 'Phone, email, employer',
+    T5: 'IC (signing-time only)',
+  };
+
+  return (
+    <>
+      <div
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(15,30,63,0.45)', zIndex: 50 }}
+        aria-hidden="true"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="consent-request-title"
+        style={{
+          position: 'fixed',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(94vw, 540px)',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 20px 60px rgba(15,30,63,0.30)',
+          zIndex: 51,
+          padding: '26px 24px 22px',
+        }}
+      >
+        {!lastSent ? (
+          <>
+            <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>
+              Request more info from {anonId || 'tenant'}
+            </div>
+            <h3 id="consent-request-title" style={{ fontSize: 18, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.01em', margin: '0 0 14px' }}>
+              Which tier do you need to advance to?
+            </h3>
+
+            {tierChoices.length === 0 ? (
+              <div style={{ padding: '14px 16px', background: '#FAF8F3', border: '1px solid #E7E1D2', borderRadius: 12, fontSize: 12.5, color: '#5A6780' }}>
+                Already at the highest tier ({currentTier}). No further reveal possible.
+              </div>
+            ) : (
+              <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+                  {tierChoices.map((t) => (
+                    <label
+                      key={t}
+                      style={{
+                        display: 'flex', alignItems: 'flex-start', gap: 10,
+                        padding: '10px 12px', borderRadius: 10,
+                        background: pickedTier === t ? '#FAF8F3' : '#fff',
+                        border: pickedTier === t ? '1.5px solid #0F1E3F' : '1px solid #E7E1D2',
+                        cursor: 'pointer',
+                        transition: 'background 120ms ease, border-color 120ms ease',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="tier"
+                        value={t}
+                        checked={pickedTier === t}
+                        onChange={() => setPickedTier(t)}
+                        style={{ marginTop: 3 }}
+                      />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#0F1E3F', marginBottom: 2 }}>
+                          {t} · {TIER_LABELS[t]?.split('(')[0].trim() || t}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: '#5A6780', lineHeight: 1.45 }}>
+                          {TIER_LABELS[t]}
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                <div style={{ marginBottom: 12 }}>
+                  <label htmlFor="ar-tenant-email" style={fieldLabel}>Tenant email <span style={{ fontWeight: 400, color: '#9A9484' }}>· optional</span></label>
+                  <input
+                    id="ar-tenant-email"
+                    type="email"
+                    value={tenantEmail}
+                    onChange={(e) => setTenantEmail(e.target.value.slice(0, 254))}
+                    placeholder="tenant@example.com"
+                    style={fieldInput}
+                  />
+                  <div style={fieldHint}>
+                    If filled, the request appears in the tenant's /inbox automatically when they sign in.
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: 12 }}>
+                  <label htmlFor="ar-tenant-phone" style={fieldLabel}>Tenant WhatsApp number <span style={{ fontWeight: 400, color: '#9A9484' }}>· optional</span></label>
+                  <input
+                    id="ar-tenant-phone"
+                    type="tel"
+                    value={tenantPhone}
+                    onChange={(e) => setTenantPhone(e.target.value.replace(/[^\d+]/g, '').slice(0, 18))}
+                    placeholder="+60123456789"
+                    style={fieldInput}
+                  />
+                  <div style={fieldHint}>
+                    For a pre-addressed wa.me link. Without this you'll get a generic share link to paste anywhere.
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: 18 }}>
+                  <label htmlFor="ar-reason" style={fieldLabel}>Reason <span style={{ fontWeight: 400, color: '#9A9484' }}>· optional</span></label>
+                  <textarea
+                    id="ar-reason"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value.slice(0, 500))}
+                    rows={2}
+                    placeholder="e.g. Need to confirm name for the agreement"
+                    style={{ ...fieldInput, height: 64, resize: 'vertical' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={onSubmit}
+                    disabled={submitting}
+                    style={{
+                      height: 40,
+                      padding: '0 18px',
+                      borderRadius: 999,
+                      background: '#0F1E3F',
+                      color: '#fff',
+                      border: 'none',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: submitting ? 'not-allowed' : 'pointer',
+                      opacity: submitting ? 0.7 : 1,
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    {submitting ? 'Sending…' : 'Send request'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    style={{
+                      height: 40,
+                      padding: '0 14px',
+                      borderRadius: 999,
+                      background: 'transparent',
+                      color: '#5A6780',
+                      border: '1px solid #E7E1D2',
+                      fontSize: 12.5,
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          // Sent confirmation
+          <>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 10px', borderRadius: 999, background: '#F1F6EF', border: '1px solid #CFE1C7', fontSize: 11, fontWeight: 700, color: '#2F6B3E', marginBottom: 12 }}>
+              ✓ Sent
+            </div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.01em', margin: '0 0 12px' }}>
+              Request created · waiting for tenant PIN
+            </h3>
+            <p style={{ fontSize: 13, color: '#5A6780', lineHeight: 1.55, marginTop: 0, marginBottom: 14 }}>
+              Share the link below via WhatsApp. The tenant opens it, enters their Veri PIN, and the tier on this Trust Card flips automatically.
+            </p>
+            <div style={{ background: '#FAF8F3', borderRadius: 12, padding: '12px 14px', marginBottom: 14, fontSize: 12, fontFamily: 'var(--font-mono, monospace)', color: '#0F1E3F', wordBreak: 'break-all' }}>
+              {lastSent.consentUrl}
+            </div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <a
+                href={lastSent.whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  height: 40, padding: '0 16px', borderRadius: 999,
+                  background: '#25D366', color: '#fff', textDecoration: 'none',
+                  fontSize: 13, fontWeight: 600,
+                }}
+              >
+                📲 Open WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard?.writeText(lastSent.consentUrl);
+                  } catch (e) { /* no-op */ }
+                }}
+                style={{
+                  height: 40,
+                  padding: '0 16px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: '#0F1E3F',
+                  border: '1px solid #E7E1D2',
+                  fontSize: 12.5,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Copy link
+              </button>
+              <button
+                type="button"
+                onClick={onSendAnother}
+                style={{
+                  height: 40,
+                  padding: '0 14px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: '#5A6780',
+                  border: '1px solid #E7E1D2',
+                  fontSize: 12.5,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Send another
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  height: 40,
+                  padding: '0 14px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: '#5A6780',
+                  border: 'none',
+                  fontSize: 12.5,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Done
+              </button>
+            </div>
+            <div style={{ marginTop: 14, fontSize: 11, color: '#9A9484', fontStyle: 'italic' }}>
+              Request expires in 7 days. Track all sent requests at /inbox under "Sent" (Phase B v1).
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+const fieldLabel = {
+  display: 'block',
+  fontSize: 11,
+  fontWeight: 600,
+  color: '#5A6780',
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  marginBottom: 6,
+};
+const fieldInput = {
+  width: '100%',
+  height: 40,
+  padding: '0 12px',
+  borderRadius: 8,
+  background: '#fff',
+  border: '1px solid #E7E1D2',
+  color: '#0F1E3F',
+  fontSize: 13,
+  fontFamily: 'inherit',
+  outline: 'none',
+};
+const fieldHint = {
+  fontSize: 11,
+  color: '#9A9484',
+  marginTop: 6,
+  lineHeight: 1.45,
+  fontStyle: 'italic',
+};
