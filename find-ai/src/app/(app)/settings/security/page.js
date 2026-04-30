@@ -29,6 +29,7 @@ import {
   clientPinStatus,
   clientSetPin,
   clientChangePin,
+  clientResetPinState,
   PIN_LENGTH,
 } from '../../../../lib/pin';
 
@@ -312,7 +313,7 @@ export default function SecuritySettingsPage() {
 
         {/* Idle state — show start buttons */}
         {stage === STAGE.IDLE && !lockedNow && (
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
             {!hasPin ? (
               <button
                 type="button"
@@ -322,13 +323,56 @@ export default function SecuritySettingsPage() {
                 Set up PIN
               </button>
             ) : (
-              <button
-                type="button"
-                onClick={startChange}
-                style={primaryBtn}
-              >
-                Change PIN
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={startChange}
+                  style={primaryBtn}
+                >
+                  Change PIN
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!window.confirm('Reset your PIN? You\'ll be asked to set a new one.')) return;
+                    let serverDone = false;
+                    if (usingServer) {
+                      try {
+                        const client = getBrowserClient();
+                        const { data: { session } } = await client.auth.getSession();
+                        const token = session?.access_token;
+                        if (token) {
+                          const res = await fetch('/api/pin/reset', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                          });
+                          const data = await res.json();
+                          if (data.ok) {
+                            setServerStatus({ ...serverStatus, hasPin: false, setAt: null });
+                            show.info('PIN reset · set a new one');
+                            serverDone = true;
+                          } else if (!data.degradedMode) {
+                            show.warning(data.message || 'Could not reset PIN.');
+                          }
+                        }
+                      } catch (e) { /* fall through */ }
+                    }
+                    if (!serverDone) {
+                      clientResetPinState();
+                      setLocalStatus(clientPinStatus());
+                      show.info('PIN reset · set a new one');
+                    }
+                  }}
+                  style={{
+                    height: 36, padding: '0 14px', borderRadius: 999,
+                    background: 'transparent', color: 'var(--color-slate)',
+                    border: '1px solid var(--color-hairline)',
+                    fontSize: 12.5, cursor: 'pointer', fontFamily: 'inherit',
+                  }}
+                >
+                  Forgot PIN · Reset
+                </button>
+              </>
             )}
           </div>
         )}

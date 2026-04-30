@@ -22,6 +22,7 @@
 import Link from 'next/link';
 import CountUp from '../../../components/ui/CountUp';
 import ActionRow from './ActionRow';
+import TierLiveWatcher from './TierLiveWatcher';
 import { SITE_URL } from '../../../lib/siteUrl';
 
 // ─── data resolver (v0 — URL-encoded) ───────────────────────────────────────
@@ -256,6 +257,12 @@ export default async function TrustCardPage({ params, searchParams }) {
       <style dangerouslySetInnerHTML={{ __html: layoutStyles }} />
 
       <div className="tc-shell">
+        {/* v3.7.15 — live watcher polls for consent approvals + offers reload */}
+        <TierLiveWatcher
+          reportId={card.reportId}
+          currentTier={card.tier ? `T${card.tier}` : 'T0'}
+        />
+
         {/* Demo banner (when no real URL data present) */}
         {card.isDemo && (
           <div

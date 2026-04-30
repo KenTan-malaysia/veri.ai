@@ -22,8 +22,11 @@
 
 import { useEffect, useState } from 'react';
 import { useToast } from '../../../components/ui/Toast';
+import { useLang } from '../../../lib/useLang';
 import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
 import { localCreate as localCreateConsent, buildWhatsAppShareUrl } from '../../../lib/consentStore';
+import { clientPinStatus, clientVerifyPin } from '../../../lib/pin';
+import PinPad from '../../../components/PinPad';
 
 const AUDIT_LOG_KEY = 'fa_audit_log_v1';
 
@@ -101,6 +104,7 @@ function formatDate(iso) {
 
 export default function ActionRow({ reportId, mode = 'anonymous', anonId = null, currentTier = 'T0', propertyAddress = null }) {
   const { show } = useToast();
+  const { lang } = useLang();
   const [decision, setDecision] = useState(null); // {action, ts}
   const [hydrated, setHydrated] = useState(false);
 
@@ -191,13 +195,14 @@ export default function ActionRow({ reportId, mode = 'anonymous', anonId = null,
       result = { requestId: local.request.id, consentUrl, expiresAt: local.request.expires_at };
     }
 
-    // Build WhatsApp share URL
+    // Build WhatsApp share URL — uses landlord's chosen language
     const whatsappUrl = buildWhatsAppShareUrl({
       requestId: result.requestId,
       requesterDisplay: 'a landlord',
       propertyAddress: propertyAddress || '',
       requestedTier: pickedTier,
       phone: tenantPhone,
+      lang,
     });
 
     // Try copy to clipboard (consent URL by default)
@@ -256,20 +261,8 @@ export default function ActionRow({ reportId, mode = 'anonymous', anonId = null,
     }
   };
 
-  const handleClick = (action) => {
-    // v3.7.14 — "request" now opens the tier-picker dialog instead of just
-    // logging. The actual consent_requests row is created when the landlord
-    // submits the dialog (see submitConsentRequest above).
-    if (action === 'request') {
-      setRequestOpen(true);
-      return;
-    }
-
-    if (decision && decision.action === action) {
-      // Already in this state — no-op with a gentle toast
-      show.info(`Already ${ACTIONS[action].pastTense.toLowerCase()} · use Reset to change`);
-      return;
-    }
+  // v3.7.15 — extracted persistence so PIN-gate can call it after verify.
+  const persistDecision = (action) => {
     const entry = {
       reportId,
       action,
@@ -283,9 +276,130 @@ export default function ActionRow({ reportId, mode = 'anonymous', anonId = null,
     const cfg = ACTIONS[action];
     const showFn = show[cfg.toastFn] || show.info;
     showFn(cfg.toastMsg(reportId.slice(-8)));
-
-    // Best-effort cross-device sync
     persistToSupabase(entry);
+  };
+
+  // v3.7.15 — PIN-gate state for Approve/Decline (banking-grade confirm).
+  const [pinGate, setPinGate] = useState(null); // null | { action }
+  const [pinGateInput, setPinGateInput] = useState('');
+  const [pinGateError, setPinGateError] = useState(null);
+  const [pinGateSubmitting, setPinGateSubmitting] = useState(false);
+
+  const closePinGate = () => {
+    setPinGate(null);
+    setPinGateInput('');
+    setPinGateError(null);
+    setPinGateSubmitting(false);
+  };
+
+  const verifyPinAndPersist = async (enteredPin) => {
+    if (!pinGate) return;
+    setPinGateSubmitting(true);
+    setPinGateError(null);
+
+    // Try server first
+    if (isSupabaseConfigured()) {
+      try {
+        const client = getBrowserClient();
+        const { data: { session } } = await client.auth.getSession();
+        const token = session?.access_token;
+        if (token) {
+          const res = await fetch('/api/pin/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+              pin: enteredPin,
+              action: 'trust_card_decision',
+              contextId: reportId,
+            }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            const decisionAction = pinGate.action;
+            closePinGate();
+            persistDecision(decisionAction);
+            return;
+          }
+          if (data.reason === 'wrong_pin') {
+            setPinGateError(`Wrong PIN. ${data.attemptsLeft} attempt(s) left.`);
+            setPinGateInput('');
+            setPinGateSubmitting(false);
+            return;
+          }
+          if (data.reason === 'locked') {
+            setPinGateError(`Locked until ${new Date(data.lockUntil).toLocaleTimeString()}.`);
+            setPinGateInput('');
+            setPinGateSubmitting(false);
+            return;
+          }
+          if (data.reason === 'not_set' || data.reason === 'pin_not_set') {
+            setPinGateError("You haven't set a PIN. Set one at /settings/security to gate decisions.");
+            setPinGateSubmitting(false);
+            return;
+          }
+          if (!data.degradedMode) {
+            setPinGateError(data.message || 'Could not verify PIN.');
+            setPinGateSubmitting(false);
+            return;
+          }
+        }
+      } catch (e) { /* fall through */ }
+    }
+
+    // Local verify
+    try {
+      const verify = await clientVerifyPin(enteredPin);
+      if (verify.ok) {
+        const decisionAction = pinGate.action;
+        closePinGate();
+        persistDecision(decisionAction);
+        return;
+      }
+      if (verify.reason === 'locked') {
+        setPinGateError(`Locked until ${new Date(verify.lockUntil).toLocaleTimeString()}.`);
+        setPinGateInput('');
+        setPinGateSubmitting(false);
+        return;
+      }
+      if (verify.reason === 'notSet') {
+        setPinGateError("You haven't set a PIN. Set one at /settings/security to gate decisions.");
+        setPinGateSubmitting(false);
+        return;
+      }
+      setPinGateError(`Wrong PIN. ${verify.attemptsLeft ?? '?'} attempt(s) left.`);
+      setPinGateInput('');
+      setPinGateSubmitting(false);
+    } catch (e) {
+      setPinGateError('Could not verify PIN.');
+      setPinGateSubmitting(false);
+    }
+  };
+
+  const handleClick = (action) => {
+    // v3.7.14 — "request" opens the tier-picker dialog (existing flow)
+    if (action === 'request') {
+      setRequestOpen(true);
+      return;
+    }
+
+    if (decision && decision.action === action) {
+      // Already in this state — no-op with a gentle toast
+      show.info(`Already ${ACTIONS[action].pastTense.toLowerCase()} · use Reset to change`);
+      return;
+    }
+
+    // v3.7.15 — PIN-gate Approve/Decline if user has a PIN set.
+    // If no PIN set, fall through to direct persist (back-compat for users
+    // who haven't visited /settings/security yet).
+    const status = clientPinStatus();
+    if (status.hasPin) {
+      setPinGate({ action });
+      setPinGateInput('');
+      setPinGateError(null);
+      return;
+    }
+
+    persistDecision(action);
   };
 
   const handleReset = () => {
@@ -435,7 +549,78 @@ export default function ActionRow({ reportId, mode = 'anonymous', anonId = null,
           onSendAnother={() => setLastSent(null)}
         />
       )}
+
+      {/* v3.7.15 — PIN-gate for Approve/Decline (banking-grade confirm) */}
+      {pinGate && (
+        <PinGateDialog
+          action={pinGate.action}
+          pin={pinGateInput}
+          setPin={setPinGateInput}
+          error={pinGateError}
+          submitting={pinGateSubmitting}
+          onComplete={verifyPinAndPersist}
+          onClose={closePinGate}
+        />
+      )}
     </section>
+  );
+}
+
+// ─── PIN-gate dialog (v3.7.15) ─────────────────────────────────────────────
+function PinGateDialog({ action, pin, setPin, error, submitting, onComplete, onClose }) {
+  const verbs = {
+    approve: { title: 'Approve this Trust Card?', sub: 'Enter your Veri PIN to log this approval as authoritatively yours.' },
+    decline: { title: 'Decline this Trust Card?', sub: 'Enter your Veri PIN to log this decline as authoritatively yours.' },
+  };
+  const v = verbs[action] || verbs.approve;
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,30,63,0.45)', zIndex: 50 }} aria-hidden="true" />
+      <div
+        role="dialog"
+        aria-modal="true"
+        style={{
+          position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+          width: 'min(94vw, 420px)',
+          background: '#fff', borderRadius: 18,
+          boxShadow: '0 20px 60px rgba(15,30,63,0.30)', zIndex: 51,
+          padding: '26px 24px 22px',
+        }}
+      >
+        <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>
+          PIN required
+        </div>
+        <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0F1E3F', letterSpacing: '-0.01em', margin: '0 0 8px' }}>
+          {v.title}
+        </h3>
+        <p style={{ fontSize: 12.5, color: '#5A6780', lineHeight: 1.55, margin: '0 0 16px' }}>
+          {v.sub}
+        </p>
+        <PinPad
+          value={pin}
+          onChange={setPin}
+          onComplete={onComplete}
+          error={error}
+          labelHint="ENTER YOUR VERI PIN"
+          disabled={submitting}
+        />
+        <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            style={{
+              height: 36, padding: '0 14px', borderRadius: 999,
+              background: 'transparent', color: '#5A6780', border: '1px solid #E7E1D2',
+              fontSize: 12.5, cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 
