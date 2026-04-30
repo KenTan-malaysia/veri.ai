@@ -44,3 +44,14 @@ export const ACTIVE_CHAT_ID_KEY = 'fi_active_chat_id';   // string
 
 // ── Tenant profile (legacy v3.4.23 returning-tenant) ───────────────────────
 export const TENANT_PROFILE_KEY = 'fi_tenant_profile_v1';
+
+// ── Veri PIN — UOB-style 6-digit auth (v3.7.13) ────────────────────────────
+// Server-of-truth is users.pin_hash (Supabase, bcrypt). These local keys are
+// the degraded-mode fallback so the PIN flow works even before Supabase keys
+// land. On Supabase activation, /api/pin/set should migrate the local hash to
+// the server (one-shot) and clear these keys.
+export const PIN_HASH_KEY = 'fa_pin_hash_v1';            // SHA-256 hex of the 6-digit PIN (client-side fallback only)
+export const PIN_SET_AT_KEY = 'fa_pin_set_at_v1';        // ISO timestamp when PIN was first set
+export const PIN_FAILED_KEY = 'fa_pin_failed_v1';        // integer — consecutive wrong attempts (resets on success)
+export const PIN_LOCKED_UNTIL_KEY = 'fa_pin_locked_until_v1'; // ISO timestamp — locked until this moment
+export const PIN_LAST_VERIFIED_KEY = 'fa_pin_last_verified_v1'; // ISO timestamp — last successful PIN verification (for grace-period UX)

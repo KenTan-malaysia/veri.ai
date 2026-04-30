@@ -19,8 +19,9 @@ const PRIMARY_NAV = [
 ];
 
 const SECONDARY_NAV = [
-  // { href: '/settings', label: 'Settings',     icon: 'gear' },         // Phase 3
-  // { href: '/help',     label: 'Help',         icon: 'help' },         // Phase 3
+  // v3.7.13 — /settings/security shipped (Veri PIN). Other settings still Phase 3.
+  { href: '/settings/security', label: 'Security',     icon: 'gear' },
+  // { href: '/help',           label: 'Help',         icon: 'help' },         // Phase 3
 ];
 
 export default function Sidebar({ collapsed = false, onToggle }) {
