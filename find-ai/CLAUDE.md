@@ -1,6 +1,6 @@
 # Veri.ai — Malaysian Property Compliance Toolkit
 
-> Previously *Unbelievebe* (chatbot v1) → *Find.ai / Cakap 2.0* (toolkit v2-3) → **Veri.ai** (single-name brand, v3.5.0+). Now positioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Brand pivoted to single-name *Veri.ai* on 2026-04-29 (v3.5.0). Last updated: 2026-04-29 (v3.5.0).
+> Previously *Unbelievebe* (chatbot v1) → *Find.ai / Cakap 2.0* (toolkit v2-3) → **Veri.ai** (single-name brand, v3.5.0+). Now positioned as a **compliance toolkit**, not a chatbot. Phase 1 doctrine locked 2026-04-21. Brand pivoted to single-name *Veri.ai* on 2026-04-29 (v3.5.0). Visual brand pivoted to **Civic + Atlas** on 2026-04-30 (v3.8.0–v3.8.2). Last updated: 2026-04-30 (v3.8.2). Active save point: VERIAI_MEMORY.md.
 
 ---
 
@@ -241,15 +241,35 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 
 ---
 
-## Design Direction — "Mature Minimalism" (updated v3.4.38)
+## Design Direction — "Civic + Atlas" (updated v3.8.1, locked)
 
-- NOT startup green vibes. Bank-level trust.
-- Deep navies, gold accent, cream background, crisp white space.
-- **Brand is wordmark-only.** Shield iconography retired v3.4.38 — read as security-app branding, conflicts with web-product positioning. Linear / Stripe / Notion all use wordmark, not badge marks. Treatment: `Find` in navy (700) + `.ai` in gold (500) — no leading mark.
-- "Thumb Zone" framing retired (v3.4.27 web-pattern purge). Web layout, not mobile-app dock.
-- Trust signals via copy + audit trail visibility, not security icons. ("LHDN-verified" / "PDPA-compliant" / "Audit-logged" badges over shield icons).
-- No cartoonish elements. Professional. Serious. Trustworthy.
-- Every PDF export uses the SAME Veri.ai wordmark letterhead + disclaimer footer — consistency = trust.
+> Mature Minimalism (oxford navy + warm cream + oxford gold) **retired** v3.8.0 after the 6-option brand-exploration thread. Civic locked v3.8.0; Atlas tri-hybrid extension shipped v3.8.1 to canonical /trust hero.
+>
+> **Single source of truth: `ARCH_BRAND_CIVIC_v3.8.md`** — read that doc before any new UI work.
+
+**Civic foundation (v3.8.0):**
+- Cool ice-white `#FBFCFD` page background
+- Heritage navy `#002B5C` primary (SingPass / GOV.UK lineage)
+- Royal red `#C8102E` accent — used SPARINGLY, government-style
+- Cool gray neutrals (`#3A4A60` slate / `#5A6B80` stone / `#8B97A8` bone / `#D4DCE5` hairline)
+- Two type weights only: 400 + 500 (no 600/700)
+- Inter for body + headlines; Instrument Serif reserved for one editorial moment per page; JetBrains Mono for data
+- Wordmark via `<Wordmark>` component at `src/components/brand/Wordmark.js` — never inline anymore (tertiary surfaces still use inline JSX pending v3.8.3+ swap)
+
+**Atlas extension (v3.8.1) — applied to /trust/[reportId] canonical:**
+- One Instrument Serif H1 per page (e.g. tenant name)
+- One italic-serif paragraph per page max (under 35 words; honest disclaimer)
+- One sage success state ONLY for positive moments (uses existing `--color-success-*` tokens which are Garden's calm-positive sage `#1F5E3F` / `#EBF4EF`)
+- Drop framed mark from page headers — use `<Wordmark variant="text">`. Mark survives only as favicon and `<MarkOnly />` for app icon
+- Max one chromatic accent visible per surface (sage OR red, never both)
+- Generous whitespace, hairline borders (0.5px), tabular-nums for all numbers
+
+**Operational rules:**
+- Every PDF export uses the same Veri.ai wordmark letterhead + Section 90A footer (consistency = trust)
+- All numbers rounded + formatted before display
+- Trust signals via copy + audit trail visibility, not security icons
+- "Unit's payment record during occupancy" — never "tenant's credit score" (PDPA-defensible reframe locked v3.7.19)
+- No cartoonish elements, no illustrations, no decorative SVG marks
 
 ## Competitive positioning (Phase 1 only)
 
@@ -304,5 +324,21 @@ Phase 1 is the ENTIRE public product for the next 90 days. Phases 2-4 are intern
 - **v3.3.3 (2026-04-23) — UI v9.4 + v9.5 polish pass locked (ship build).** Ran 30-user UX simulation against v9.3 (landlords + agents + SME tenants across EN/BM/ZH). Shipped 11 polish tickets over two iterations. **Aggregate:** 🤔 verdicts dropped 17/30 → 4/30, 👍 verdicts rose 13/30 → 26/30, "understood in ≤5s" rose 19/30 → 28/30. Files: `src/app/landing.js` (381 lines), `src/components/PeekChat.js` (677 lines). See `UX_REVIEW_v9.4.md` + `UX_REVIEW_v9.5.md`.
 
 - **v3.4 (2026-04-25) — TOOL 1 Credit Score spec locked.** Strategic shift: utility data promoted from Phase 2 (post-signing custodian, `ARCH_UTILITY_BRIDGE.md`) to Phase 1 by reframing as a government-anchored credit-scoring engine. LHDN cert as identity gate (zero scoring weight) + utility bills as pure paying-behaviour score. NO bank linking, NO bank statement upload, NO scoring on tenancy length. Identity tiers Gold (MyDigital ID) + Silver (IC photo + selfie liveness). LHDN lookup via Path A (manual screenshot OCR) for MVP; Path C (formal LHDN API partnership) pursued in parallel. Live Bound Verification (LBV) pattern locks score-presentation to live face match (PDF alone never sufficient). 3-signal verification lattice for landlord utility ownership in Phase 2. Spec: `ARCH_CREDIT_SCORE.md`.
+
+- **v3.5 (2026-04-29) — Brand pivot to single-name Veri.ai.** Find.ai retired as company brand; Cakap 2.0 retired as product label. Stripe-pattern collapse — company = product = domain. Mass-renamed across 40 active source files + 13 wordmark JSX files + 26 doctrine .md files.
+
+- **v3.6 (2026-04-29) — Auth + Supabase first-pass.** /login + magic-link + /auth/callback + UserMenu shipped. ActionRow + audit save migrated to Supabase with localStorage fallback. Supabase keys debug parked (legacy "Invalid API key" — needs new sb_publishable_/sb_secret_ keys).
+
+- **v3.7 (2026-04-29 → 2026-04-30) — Push-to-90% iteration era.** Vision OCR (LHDN + utility bills), bill verification, foreign tenant flow, dashboard real pipeline read, PDPA right-of-deletion endpoint, 5 WhatsApp pilot drafts. Then receipt classifier, scoring engine, /admin verification dashboard, KEN_REVIEW_v3.7.19.md.
+
+- **v3.7.7 → v3.7.12 — Veri assistant evolution.** /chat full-featured page (streaming + PDF export + multi-conversation workspace + sidebar). Personalized AI experience on dashboard (time-aware greeting + AI-name personalization + direct chat bar).
+
+- **v3.7.13 → v3.7.18 — UOB-style PIN flow + agent self-insertion.** Phase A foundation (PinPad component + bcrypt + 5-strikes lockout + /settings/security). Phase B consent end-to-end (consent_requests table + /inbox + /consent/[id] deep link + WhatsApp templates). Phase C polish (tabs + i18n + live tier watcher + PIN-gated Approve/Decline). Phase D recovery (forgot-PIN reset + missing-PIN banner). Agent self-insertion flow (claim → landlord PIN-approve → forward token → tenant attribution badge). Anonymous-tenant PIN (Option B from full-flow audit) — anon_pin_hash on trust_cards + access-token auth + /my-card landing. Audit doc `AUDIT_PRESIGNING_FLOW.md` saved.
+
+- **v3.8.0 (2026-04-30) — BRAND PIVOT to Civic.** Mature Minimalism (oxford navy + warm cream + oxford gold) retired after 6-option brand exploration. Civic locked: cool ice-white #FBFCFD foundation + heritage navy #002B5C primary + royal red #C8102E accent (sparing). SingPass / GOV.UK lineage. globals.css token swap, `<Wordmark>` component, `ARCH_BRAND_CIVIC_v3.8.md` brand-system spec.
+
+- **v3.8.1 (2026-04-30) — Atlas tri-hybrid applied to canonical Trust Card hero.** Civic foundation + Garden's sage success state + Mono's whitespace discipline. /trust/[reportId] hero rebuilt: serif tenant-name H1, mono caseRef line with §90A hash, big tabular score, sage Low-risk pill, KV stats grid, italic-serif unit-not-payer disclaimer. Brand doc extended with §12 Atlas section.
+
+- **v3.8.2 (2026-04-30 — CURRENT SAVE POINT) — Atlas surface migration sweep + KEN_REVIEW_v3.8.2.md.** Bulk Atlas pass through 8 high-traffic surfaces (chat, trust, screen/[ref], screen/[ref]/done, consent, my-card, login, landing): hardcoded `#B8893A` → `#002B5C`, hardcoded `#FAF8F3` → `#FBFCFD`. /landing hero color tokens migrated to CSS variables. /dashboard verified Atlas-compliant via globals.css. Permission-required items surfaced in KEN_REVIEW_v3.8.2.md.
 
 - **v3.4.1 (2026-04-25 — CURRENT SAVE POINT) — TOOL 1 v0 mock SHIPPED + timing-tier scoring model.** v0 mock of TOOL 1 wired into production app via existing `landing.js → openScreenDirect → showScreenTool → TenantScreen` path. 4-step modal (intro → identity → LHDN dual-input key-in-or-PDF → per-utility dual-input account-or-upload, TNB + Water + Mobile postpaid replacing IWK → score reveal 94/100). Scoring refined to **timing-tier system** per Ken's call: 5 tiers (Upfront/On-time/Late/Very-late/Default) classified by `payment_date − due_date` from native bill fields (`Tarikh Bayaran Akhir` vs `Bayaran Diterima Pada`). New formula: avg timing 50% + consistency 25% + worst event 15% + disconnections 10%. Score reveal UI shows stacked tier bars per utility + headline "Average payment timing: N days BEFORE/AFTER due date" + Upfront/On-time/Late tenant tag. DEMO_MODE banner makes mock obvious. Files: `src/components/tools/TenantScreen.js` (full rewrite, ~1100 lines, EN/BM/中文 inline), `ARCH_CREDIT_SCORE.md`, `ARCH_UTILITY_BRIDGE.md` (header notes split), `FINDAI_MEMORY.md`, this file.
