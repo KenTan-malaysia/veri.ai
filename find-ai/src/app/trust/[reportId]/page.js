@@ -241,6 +241,27 @@ const layoutStyles = `
   }
 `;
 
+// ─── Atlas helper: tabular-nums KV row used in the Trust Card hero ──────────
+// v3.8.1 — single source for the right-column key/value lines.
+function Row({ k, v }) {
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      padding: '7px 0',
+      fontSize: 13,
+    }}>
+      <span style={{ color: 'var(--color-stone)' }}>{k}</span>
+      <span style={{
+        color: 'var(--on-surface)',
+        fontWeight: 500,
+        fontVariantNumeric: 'tabular-nums',
+      }}>{v}</span>
+    </div>
+  );
+}
+
 // ─── page component (server-rendered) ───────────────────────────────────────
 export default async function TrustCardPage({ params, searchParams }) {
   const { reportId } = await params;
@@ -443,136 +464,131 @@ export default async function TrustCardPage({ params, searchParams }) {
           {/* ── Right column: Trust Card hero + below-the-fold ──────────────── */}
           <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-            {/* Trust Card hero */}
+            {/* Trust Card hero — ATLAS (v3.8.1)
+                Tri-hybrid of Civic (heritage navy + ice-white + framed restraint),
+                Garden (sage success state + serif tenant-name H1), and Mono
+                (whitespace-led, single accent per surface, no decorative
+                ornament). The disclaimer below is the ONE editorial moment.
+                Source: ARCH_BRAND_CIVIC_v3.8.md § Atlas extension. */}
             <article
               style={{
-                background: 'linear-gradient(135deg, #0F1E3F 0%, #1E2D52 100%)',
-                color: 'white',
-                borderRadius: 24,
-                padding: '32px 28px',
-                position: 'relative',
-                overflow: 'hidden',
+                background: 'var(--color-white)',
+                color: 'var(--on-surface)',
+                border: '0.5px solid var(--color-hairline)',
+                borderRadius: 18,
+                padding: '32px 30px',
               }}
             >
-              {/* Mode badge — top-left */}
+              {/* Eyebrow — full context line, replaces standalone mode badge */}
               <div
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '5px 11px',
-                  borderRadius: 999,
-                  fontSize: 10,
-                  fontWeight: 700,
+                  fontSize: 10.5,
+                  fontWeight: 500,
+                  color: 'var(--color-stone)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
-                  background: isAnonymous ? 'rgba(184,137,58,0.18)' : 'rgba(37,211,102,0.18)',
-                  color: isAnonymous ? '#E5B871' : '#7FE0A2',
-                  border: `1px solid ${isAnonymous ? 'rgba(184,137,58,0.3)' : 'rgba(37,211,102,0.3)'}`,
+                  letterSpacing: '0.18em',
+                  marginBottom: 14,
                 }}
               >
-                {isAnonymous ? '🔒 Anonymous mode' : '✓ Verified mode'}
+                Trust Card · LHDN-verified · {isAnonymous ? 'Anonymous' : 'Verified'} mode
               </div>
 
-              {/* Score — the hero element */}
-              <div style={{ marginTop: 28 }}>
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: '#9FB1D6',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.18em',
-                    marginBottom: 8,
-                  }}
-                >
-                  Trust score
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                  <span className="tc-score-num">
-                    <CountUp to={card.trustScore} duration={1400} />
-                  </span>
-                  <span className="tc-score-suffix">/ 100</span>
-                </div>
+              {/* H1 — Instrument Serif tenant name (the ONE serif moment in Atlas) */}
+              <h1
+                style={{
+                  fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+                  fontSize: 38,
+                  fontWeight: 400,
+                  color: 'var(--on-surface)',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.0,
+                  margin: '0 0 8px',
+                }}
+              >
+                {tenantDisplay}
+              </h1>
+
+              {/* Mono caseRef line — audit-grade context */}
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11.5,
+                  color: 'var(--color-stone)',
+                  letterSpacing: '0.01em',
+                }}
+              >
+                {card.reportId} · {card.lhdnMonths} months tenancy · §90A: <span style={{ color: 'var(--color-bone)' }}>{(card.reportId || '').slice(-12).toLowerCase()}</span>
               </div>
 
-              {/* Tenant identity */}
-              <div style={{ marginTop: 18 }}>
-                <div
-                  style={{
-                    fontSize: 17,
-                    fontWeight: 600,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {tenantDisplay}
+              {/* Two-column grid: score + meta on left, KV stats on right */}
+              <div className="atlas-tc-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 28, marginTop: 28, alignItems: 'start' }}>
+                <div>
+                  <div>
+                    <span style={{
+                      fontSize: 64,
+                      fontWeight: 500,
+                      color: 'var(--on-surface)',
+                      letterSpacing: '-0.035em',
+                      lineHeight: 0.92,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      <CountUp to={card.trustScore} duration={1400} />
+                    </span>
+                    <span style={{ fontSize: 24, color: 'var(--color-stone)', fontWeight: 400 }}>/100</span>
+                  </div>
+                  <div style={{ fontSize: 12.5, color: 'var(--color-stone)', lineHeight: 1.55, marginTop: 10, maxWidth: 320 }}>
+                    Behaviour {card.behaviourScore} × Confidence {card.confidencePct}% · Strong on-time payer · 0 disconnections, auto-debit detected.
+                  </div>
+                  <div style={{ marginTop: 18 }}>
+                    {/* Sage success pill — Garden's calm-positive (the ONE chromatic accent) */}
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 5,
+                      padding: '3px 10px',
+                      borderRadius: 999,
+                      fontSize: 11,
+                      fontWeight: 500,
+                      background: 'var(--color-success-bg)',
+                      color: 'var(--color-success-fg)',
+                      border: '0.5px solid var(--color-success-border)',
+                    }}>● Low risk</span>
+                    <span style={{
+                      marginLeft: 6,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      padding: '3px 10px',
+                      borderRadius: 999,
+                      fontSize: 11,
+                      fontWeight: 500,
+                      background: 'var(--color-cream)',
+                      color: 'var(--color-stone)',
+                      border: '0.5px solid var(--color-hairline)',
+                    }}>{card.tier ? `T${card.tier}` : 'T0'} reveal pending</span>
+                  </div>
                 </div>
-                <div style={{ fontSize: 12, color: '#9FB1D6', marginTop: 3 }}>
-                  Last verified {card.lastVerified}
+                <div>
+                  <Row k="LHDN tenancy" v={`${card.lhdnMonths} months`} />
+                  <Row k="Utility months" v={`${card.utilityCount} verified`} />
+                  <Row k="Avg payment" v={card.avgPaymentTimingLabel} />
+                  <Row k="Last verified" v={card.lastVerified} />
                 </div>
               </div>
 
               {/* Hairline divider */}
-              <div
-                style={{
-                  marginTop: 20,
-                  borderTop: '1px solid rgba(255,255,255,0.12)',
-                }}
-              />
+              <div style={{ height: '0.5px', background: 'var(--color-hairline)', margin: '22px 0 18px' }} />
 
-              {/* Verification eyebrow */}
-              <div
-                style={{
-                  marginTop: 16,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: '#9FB1D6',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.18em',
-                  marginBottom: 10,
-                }}
-              >
-                Verification
-              </div>
-
-              {/* Verification chips */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                  <span style={{ color: '#7FE0A2', fontWeight: 700 }}>✓</span>
-                  <span>LHDN-verified previous tenancy ({card.lhdnMonths} months)</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                  <span style={{ color: '#7FE0A2', fontWeight: 700 }}>✓</span>
-                  <span>{card.utilityCount}/3 utility bills · avg {card.avgPaymentTimingLabel}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                  <span style={{ color: '#FFD27A' }}>⊙</span>
-                  <span style={{ color: '#9FB1D6' }}>Live Bound Verification ready</span>
-                </div>
-              </div>
-
-              {/* Math row — small, at the bottom of the card */}
-              <div
-                style={{
-                  marginTop: 18,
-                  paddingTop: 14,
-                  borderTop: '1px solid rgba(255,255,255,0.10)',
-                  fontSize: 11,
-                  color: '#9FB1D6',
-                  fontVariantNumeric: 'tabular-nums',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: 12,
-                  flexWrap: 'wrap',
-                }}
-              >
-                <span>
-                  Behaviour {card.behaviourScore} × Confidence {card.confidencePct}% ({card.confidenceTier}) ={' '}
-                  <span style={{ fontWeight: 700, color: '#FFD27A' }}>{card.trustScore}</span>
-                </span>
-                <span style={{ fontStyle: 'italic' }}>Don't sign blind.</span>
-              </div>
+              {/* The ONE editorial moment — italic serif unit-not-payer disclaimer */}
+              <p style={{
+                fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+                fontStyle: 'italic',
+                fontSize: 13,
+                color: 'var(--color-stone)',
+                lineHeight: 1.6,
+                margin: 0,
+              }}>
+                This score reflects the unit's payment record during the tenant's verified occupancy — not necessarily this individual's personal credit. If utilities were bundled into rent, ask the tenant directly at viewing.
+              </p>
             </article>
 
             {/* Below-the-fold explainer */}
