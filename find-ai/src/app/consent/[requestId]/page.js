@@ -24,6 +24,7 @@ import { useLang } from '../../../lib/useLang';
 import { getBrowserClient, isSupabaseConfigured } from '../../../lib/supabase';
 import { localGetById, localRespond, computeApprovalHash } from '../../../lib/consentStore';
 import { clientVerifyPin } from '../../../lib/pin';
+import { getAccessToken as getAnonAccessToken, setAccessToken as cacheAnonAccessToken, clientAnonVerifyPin } from '../../../lib/anonPin';
 
 const TIER_LABELS_BY_LANG = {
   en: {
@@ -204,11 +205,22 @@ function ConsentInner() {
   const [req, setReq] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [stage, setStage] = useState('review');  // review | enterPin | declining | submitting | done
+  const [stage, setStage] = useState('review');  // review | enterPin | declining | submitting | done | needToken
   const [pin, setPin] = useState('');
   const [error, setError] = useState(null);
   const [declineReason, setDeclineReason] = useState('');
   const [doneStatus, setDoneStatus] = useState(null);
+  // v3.7.18 — anon access token (auto-loaded from localStorage when target is anon)
+  const [anonAccessToken, setAnonAccessToken] = useState('');
+  const [pastedToken, setPastedToken] = useState('');
+
+  // Detect anon target + hydrate cached access token
+  const isAnonTarget = req && !req.target_user_id && req.target_anon_id;
+  useEffect(() => {
+    if (!isAnonTarget) return;
+    const cached = getAnonAccessToken(req.target_anon_id);
+    if (cached) setAnonAccessToken(cached);
+  }, [isAnonTarget, req]);
 
   // Hydrate the request: try server first if signed in, else localStorage
   useEffect(() => {
@@ -253,7 +265,83 @@ function ConsentInner() {
     setStage('submitting');
     setError(null);
 
-    // Server path
+    // v3.7.18 — anon-target consent dispatches via accessToken (no Bearer auth)
+    if (isAnonTarget) {
+      // Need an access token before we can do anything
+      if (!anonAccessToken) {
+        setStage('needToken');
+        return;
+      }
+      try {
+        const res = await fetch('/api/consent/respond', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            requestId,
+            action: 'approve',
+            pin: enteredPin,
+            accessToken: anonAccessToken,
+          }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          setDoneStatus('approved');
+          setStage('done');
+          show.success(t.toastApproved.replace('{tier}', req.requested_tier));
+          return;
+        }
+        if (data.reason === 'wrong_pin') {
+          setError(t.errorWrongPin.replace('{n}', data.attemptsLeft));
+          setPin(''); setStage('enterPin'); return;
+        }
+        if (data.reason === 'locked') {
+          setError(t.errorLocked.replace('{t}', new Date(data.lockUntil).toLocaleTimeString()));
+          setStage('review'); return;
+        }
+        if (data.error === 'invalid_token') {
+          setError('Access token invalid. Re-open the access link sent to you at submission.');
+          setStage('needToken'); return;
+        }
+        if (data.reason === 'pin_not_set') {
+          setError('You haven\'t set a PIN. Open /my-card/' + req.target_anon_id + ' to set one.');
+          setStage('review'); return;
+        }
+        if (data.degradedMode) {
+          // Fall through to local
+        } else {
+          setError(data.message || t.errorGeneric);
+          setStage('review'); return;
+        }
+      } catch (e) { /* fall through to local */ }
+
+      // Local fallback for anon (degraded mode)
+      try {
+        const verify = await clientAnonVerifyPin(req.target_anon_id, enteredPin);
+        if (!verify.ok) {
+          if (verify.reason === 'locked') {
+            setError(t.errorLocked.replace('{t}', new Date(verify.lockUntil).toLocaleTimeString()));
+            setStage('review'); return;
+          }
+          if (verify.reason === 'notSet') {
+            setError('No PIN set. Open /my-card/' + req.target_anon_id + ' to set one.');
+            setStage('review'); return;
+          }
+          setError(t.errorWrongPin.replace('{n}', verify.attemptsLeft ?? '?'));
+          setPin(''); setStage('enterPin'); return;
+        }
+        const approvalHash = await computeApprovalHash(req);
+        const result = localRespond(req.id, { action: 'approve', approvalHash });
+        if (!result.ok) { setError(t.errorExpired); setStage('review'); return; }
+        setDoneStatus('approved'); setStage('done');
+        show.success(t.toastApprovedLocal.replace('{tier}', req.requested_tier));
+      } catch (e) {
+        console.error('local anon approve failed:', e);
+        setError(t.errorGeneric); setStage('review');
+      }
+      return;
+    }
+
+    // Server path (USER flow — original)
     if (configured && user) {
       try {
         const client = getBrowserClient();
@@ -338,6 +426,31 @@ function ConsentInner() {
     setStage('submitting');
     setError(null);
 
+    // v3.7.18 — anon-target decline: server-side token + body, no Bearer
+    if (isAnonTarget) {
+      if (!anonAccessToken) { setStage('needToken'); return; }
+      try {
+        const res = await fetch('/api/consent/respond', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            requestId, action: 'decline',
+            declineReason: declineReason || undefined,
+            accessToken: anonAccessToken,
+          }),
+        });
+        const data = await res.json();
+        if (data.ok) { setDoneStatus('declined'); setStage('done'); show.info(t.toastDeclined); return; }
+        if (data.error === 'invalid_token') { setError('Access token invalid.'); setStage('needToken'); return; }
+        if (!data.degradedMode) { setError(data.message || t.errorGeneric); setStage('review'); return; }
+      } catch (e) { /* fall through */ }
+      // Local fallback
+      const result = localRespond(req.id, { action: 'decline', declineReason });
+      if (!result.ok) { setError(t.errorGeneric); setStage('review'); return; }
+      setDoneStatus('declined'); setStage('done'); show.info(t.toastDeclinedLocal);
+      return;
+    }
+
     if (configured && user) {
       try {
         const client = getBrowserClient();
@@ -370,6 +483,16 @@ function ConsentInner() {
     setDoneStatus('declined');
     setStage('done');
     show.info(t.toastDeclinedLocal);
+  };
+
+  // v3.7.18 — paste-token submit (when needToken stage active)
+  const submitPastedToken = () => {
+    const t = pastedToken.trim();
+    if (!t) return;
+    setAnonAccessToken(t);
+    cacheAnonAccessToken(req.target_anon_id, t);
+    setStage('review');
+    setPastedToken('');
   };
 
   const tierLabel = req ? (TIER_LABELS[req.requested_tier] || req.requested_tier) : '';
@@ -512,13 +635,57 @@ function ConsentInner() {
                   <div>
                     <PinPad value={pin} onChange={setPin} onComplete={submitApprove} error={error} labelHint={t.pinPadLabel} />
                     <div style={{ marginTop: 16, fontSize: 11.5, color: '#9A9484' }}>
-                      {t.noPinHint} <Link href="/settings/security" style={{ color: '#0F1E3F' }}>{t.setOneFirst}</Link>
+                      {t.noPinHint} <Link
+                        href={isAnonTarget ? `/my-card/${req.target_anon_id}` : '/settings/security'}
+                        style={{ color: '#0F1E3F' }}
+                      >{t.setOneFirst}</Link>
                     </div>
                     <div style={{ marginTop: 14 }}>
                       <button type="button" onClick={() => { setStage('review'); setPin(''); setError(null); }} style={ghostBtn}>
                         {t.cancelBtn}
                       </button>
                     </div>
+                  </div>
+                )}
+
+                {/* v3.7.18 — anon-only: token paste flow */}
+                {stage === 'needToken' && (
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#0F1E3F', marginBottom: 6 }}>
+                      We need your access link
+                    </div>
+                    <div style={{ fontSize: 12.5, color: '#5A6780', lineHeight: 1.55, marginBottom: 14 }}>
+                      You weren't redirected with your access token. Open the link we emailed you at submission (or paste the full URL below):
+                    </div>
+                    <input
+                      type="text"
+                      value={pastedToken}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        // Try to extract token from a full URL
+                        const m = v.match(/[?&]token=([^&\s]+)/);
+                        setPastedToken(m ? m[1] : v.trim());
+                      }}
+                      placeholder="https://veri.ai/my-card/T-XXXX?token=…"
+                      style={{
+                        width: '100%', padding: '10px 14px', borderRadius: 12,
+                        background: '#FAF8F3', border: '1px solid #E7E1D2', color: '#0F1E3F',
+                        fontSize: 13, fontFamily: 'inherit', outline: 'none', marginBottom: 14,
+                      }}
+                    />
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                      <button type="button" onClick={submitPastedToken} style={primaryBtn}>
+                        Use this token
+                      </button>
+                      <button type="button" onClick={() => setStage('review')} style={ghostBtn}>
+                        {t.backBtn}
+                      </button>
+                    </div>
+                    {error && (
+                      <div role="alert" style={{ fontSize: 12.5, color: '#C13A3A', marginTop: 12, lineHeight: 1.5 }}>
+                        {error}
+                      </div>
+                    )}
                   </div>
                 )}
 

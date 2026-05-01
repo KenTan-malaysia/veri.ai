@@ -55,3 +55,26 @@ export const PIN_SET_AT_KEY = 'fa_pin_set_at_v1';        // ISO timestamp when P
 export const PIN_FAILED_KEY = 'fa_pin_failed_v1';        // integer — consecutive wrong attempts (resets on success)
 export const PIN_LOCKED_UNTIL_KEY = 'fa_pin_locked_until_v1'; // ISO timestamp — locked until this moment
 export const PIN_LAST_VERIFIED_KEY = 'fa_pin_last_verified_v1'; // ISO timestamp — last successful PIN verification (for grace-period UX)
+
+// ── Anonymous-tenant PIN (v3.7.18) ────────────────────────────────────────
+// Tied to a specific anon_id (T-XXXX), not to a user account. Multiple anon
+// identities may exist on one device (e.g. a tenant who's submitted screening
+// for two different properties), so all anon-PIN keys are SUFFIXED with the
+// anonId at runtime.
+//
+// Server-of-truth is trust_cards.anon_pin_hash. These local keys are the
+// degraded-mode fallback for the same single-device demo path used by the
+// user-PIN flow. Helper functions in src/lib/anonPin.js wrap key construction.
+//
+// Example actual key written to localStorage: 'fa_anon_pin_hash_v1__T-1234'
+export const ANON_PIN_HASH_KEY_PREFIX           = 'fa_anon_pin_hash_v1__';
+export const ANON_PIN_SET_AT_KEY_PREFIX         = 'fa_anon_pin_set_at_v1__';
+export const ANON_PIN_FAILED_KEY_PREFIX         = 'fa_anon_pin_failed_v1__';
+export const ANON_PIN_LOCKED_UNTIL_KEY_PREFIX   = 'fa_anon_pin_locked_until_v1__';
+export const ANON_PIN_LAST_VERIFIED_KEY_PREFIX  = 'fa_anon_pin_last_verified_v1__';
+// The access token issued at submission — combined with PIN to act on the
+// anon_id. Also suffixed with anonId.
+export const ANON_TENANT_TOKEN_KEY_PREFIX       = 'fa_anon_token_v1__';
+// Rolling list of all anon_ids this device has submitted screenings for —
+// lets /my-card landing know which anon identities to surface.
+export const ANON_OWNED_IDS_KEY                 = 'fa_anon_owned_ids_v1';   // JSON array of anonId strings

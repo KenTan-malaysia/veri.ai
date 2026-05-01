@@ -78,6 +78,17 @@ export async function POST(request) {
     if (parts.length > 1) row.tenant_last_name = parts.slice(1).join(' ');
   }
 
+  // v3.7.18 — anon PIN access-token hash + recovery email (Option B from
+  // AUDIT_PRESIGNING_FLOW.md). The plaintext token never touches the server
+  // after issuance — only its SHA-256 hash is stored. Email is for PIN
+  // recovery via magic link (Phase 2).
+  if (body.tenantAccessTokenHash && /^[0-9a-f]{64}$/i.test(String(body.tenantAccessTokenHash))) {
+    row.tenant_access_token_hash = String(body.tenantAccessTokenHash).toLowerCase();
+  }
+  if (body.tenantEmail && /.+@.+\..+/.test(String(body.tenantEmail))) {
+    row.tenant_email = String(body.tenantEmail).trim().toLowerCase().slice(0, 254);
+  }
+
   try {
     const { data, error } = await supabase
       .from('trust_cards')

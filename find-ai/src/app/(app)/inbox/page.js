@@ -25,6 +25,7 @@ import {
   buildAgentToTenantWhatsApp, buildAgentForwardUrl,
 } from '../../../lib/agentClaimStore';
 import { clientVerifyPin, clientPinStatus } from '../../../lib/pin';
+import { getAccessToken as getAnonAccessToken, clientAnonVerifyPin } from '../../../lib/anonPin';
 
 const STR = {
   en: {
@@ -1064,11 +1065,54 @@ function ConsentDialog({ req, onClose, onResponded, degraded, configured, user, 
   const [error, setError] = useState(null);
   const [declineReason, setDeclineReason] = useState('');
 
+  // v3.7.18 — anon-target detection + access token hydration
+  const isAnonTarget = !req.target_user_id && !!req.target_anon_id;
+  const anonAccessToken = isAnonTarget ? getAnonAccessToken(req.target_anon_id) : '';
+
   const tierLabel = (TIER_LABELS[lang] || TIER_LABELS.en)[req.requested_tier] || req.requested_tier;
 
   const submitApprove = async (enteredPin) => {
     setStage('submitting');
     setError(null);
+
+    // v3.7.18 — anon path: server with accessToken (no Bearer), local fallback via clientAnonVerifyPin
+    if (isAnonTarget) {
+      if (!anonAccessToken) {
+        setError('Open this request via the access link in your /my-card email — we need your token to verify.');
+        setStage('review'); return;
+      }
+      if (!degraded) {
+        try {
+          const res = await fetch('/api/consent/respond', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requestId: req.id, action: 'approve', pin: enteredPin, accessToken: anonAccessToken }),
+          });
+          const data = await res.json();
+          if (data.ok) { show.success(t.toastApproved.replace('{tier}', req.requested_tier)); onResponded(); return; }
+          if (data.reason === 'wrong_pin') { setError(t.errorWrongPin.replace('{n}', data.attemptsLeft)); setPin(''); setStage('enterPin'); return; }
+          if (data.reason === 'locked') { setError(t.errorLocked.replace('{t}', new Date(data.lockUntil).toLocaleTimeString())); setStage('review'); return; }
+          if (data.reason === 'pin_not_set') { setError(t.errorPinNotSet); setStage('review'); return; }
+          if (data.error === 'invalid_token') { setError('Access token invalid — open the link from your email.'); setStage('review'); return; }
+          if (!data.degradedMode) { setError(data.message || t.errorGeneric); setStage('review'); return; }
+        } catch (e) { /* fall through to local */ }
+      }
+      // Local fallback
+      try {
+        const verify = await clientAnonVerifyPin(req.target_anon_id, enteredPin);
+        if (!verify.ok) {
+          if (verify.reason === 'locked') { setError(t.errorLocked.replace('{t}', new Date(verify.lockUntil).toLocaleTimeString())); setStage('review'); return; }
+          if (verify.reason === 'notSet') { setError(t.errorPinNotSet); setStage('review'); return; }
+          setError(t.errorWrongPin.replace('{n}', verify.attemptsLeft ?? '?')); setPin(''); setStage('enterPin'); return;
+        }
+        const approvalHash = await computeApprovalHash(req);
+        const result = localRespond(req.id, { action: 'approve', approvalHash });
+        if (!result.ok) { setError(t.errorExpired); setStage('review'); return; }
+        show.success(t.toastApprovedLocal.replace('{tier}', req.requested_tier));
+        onResponded();
+      } catch (e) { console.error('local anon approve failed:', e); setError(t.errorGeneric); setStage('review'); }
+      return;
+    }
 
     if (!degraded && configured && user) {
       try {

@@ -1,13 +1,16 @@
 // v3.7.14 — Tenant approves or declines a consent request.
+// v3.7.18 — Dispatch user-PIN vs anon-PIN flow based on whether the consent
+// request targets a Supabase user (target_user_id) or an anonymous tenant
+// (target_anon_id with no user_id). Anonymous flow uses (anonId, accessToken,
+// pin) instead of Bearer auth + users.pin_hash.
 //
 // POST /api/consent/respond
-// Body: {
-//   requestId:     string
-//   action:        'approve' | 'decline'
-//   pin?:          string      (required for 'approve')
-//   declineReason?: string     (optional for 'decline')
-// }
-// Auth: REQUIRED. Bearer token from Supabase session.
+// Body (user flow):
+//   { requestId, action, pin?, declineReason? }
+//   Auth: REQUIRED — Bearer token from Supabase session.
+// Body (anon flow):
+//   { requestId, action, pin?, accessToken, declineReason? }
+//   Auth: NONE — (anon_id from consent_requests, accessToken) authenticates.
 //
 // Approve flow:
 //   1. Load consent_requests row, verify status = 'pending', not expired,
@@ -50,6 +53,7 @@ export async function POST(request) {
   const action = String(body.action || '').trim();
   const pin = String(body.pin || '');
   const declineReason = String(body.declineReason || '').slice(0, 500);
+  const accessToken = String(body.accessToken || '').trim();   // v3.7.18 — anon flow only
 
   if (!requestId) return jsonResponse({ ok: false, error: 'missing_request_id' }, 400);
   if (!['approve', 'decline'].includes(action)) {
@@ -67,22 +71,7 @@ export async function POST(request) {
     return jsonResponse({ ok: false, degradedMode: true }, 200);
   }
 
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return jsonResponse({ ok: false, error: 'auth_required' }, 401);
-  }
-  const token = authHeader.slice(7);
-
-  let userId = null;
-  let userEmail = null;
-  try {
-    const { data: { user } } = await supabase.auth.getUser(token);
-    userId = user?.id || null;
-    userEmail = user?.email ? user.email.toLowerCase() : null;
-  } catch (e) { /* token invalid */ }
-  if (!userId) return jsonResponse({ ok: false, error: 'auth_invalid' }, 401);
-
-  // Load the request
+  // ── Load consent request first (needed to determine which flow) ────────
   const { data: row, error: readErr } = await supabase
     .from('consent_requests')
     .select('id, status, expires_at, target_user_id, target_email, target_anon_id, trust_card_id, report_id, requested_tier, current_tier, requester_user_id')
@@ -99,11 +88,67 @@ export async function POST(request) {
     return jsonResponse({ ok: false, reason: 'expired' }, 200);
   }
 
-  // Ownership: target_user_id matches OR target_email matches signed-in user's email.
-  const ownsByUserId = row.target_user_id && row.target_user_id === userId;
-  const ownsByEmail = !row.target_user_id && row.target_email && userEmail && row.target_email === userEmail;
-  if (!ownsByUserId && !ownsByEmail) {
-    return jsonResponse({ ok: false, reason: 'not_owner' }, 403);
+  // ── v3.7.18 — Dispatch: user flow (target_user_id) vs anon flow ────────
+  // If target_user_id is set, the consent request was for a Supabase-authed
+  // tenant — require Bearer + use users.pin_hash (existing flow).
+  // Otherwise it's anonymous — require accessToken + use trust_cards.anon_pin_hash.
+  const isAnonFlow = !row.target_user_id;
+
+  let userId = null;
+  let userEmail = null;
+  let actorRole = 'tenant';
+
+  if (!isAnonFlow) {
+    // USER FLOW — keep all existing behaviour
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return jsonResponse({ ok: false, error: 'auth_required' }, 401);
+    }
+    const token = authHeader.slice(7);
+    try {
+      const { data: { user } } = await supabase.auth.getUser(token);
+      userId = user?.id || null;
+      userEmail = user?.email ? user.email.toLowerCase() : null;
+    } catch (e) { /* token invalid */ }
+    if (!userId) return jsonResponse({ ok: false, error: 'auth_invalid' }, 401);
+
+    // Ownership: target_user_id matches OR target_email matches signed-in user's email.
+    const ownsByUserId = row.target_user_id && row.target_user_id === userId;
+    const ownsByEmail = !row.target_user_id && row.target_email && userEmail && row.target_email === userEmail;
+    if (!ownsByUserId && !ownsByEmail) {
+      return jsonResponse({ ok: false, reason: 'not_owner' }, 403);
+    }
+  } else {
+    // ANON FLOW — accessToken authenticates against trust_cards.tenant_access_token_hash
+    if (!accessToken) {
+      return jsonResponse({ ok: false, error: 'missing_access_token' }, 401);
+    }
+    if (!row.target_anon_id || !row.trust_card_id) {
+      return jsonResponse({ ok: false, error: 'consent_missing_anon_link' }, 400);
+    }
+    const { data: tcRow, error: tcErr } = await supabase
+      .from('trust_cards')
+      .select('id, tenant_access_token_hash, anon_pin_hash, anon_pin_failed_attempts, anon_pin_locked_until')
+      .eq('id', row.trust_card_id)
+      .single();
+    if (tcErr || !tcRow) return jsonResponse({ ok: false, error: 'trust_card_not_found' }, 404);
+
+    // Token verify (constant-time SHA-256 compare)
+    const tokenHash = (await import('crypto')).createHash('sha256').update(accessToken).digest('hex');
+    const cryptoNs = await import('crypto');
+    if (!tcRow.tenant_access_token_hash || !cryptoNs.timingSafeEqual(
+      Buffer.from(tcRow.tenant_access_token_hash, 'hex'),
+      Buffer.from(tokenHash, 'hex')
+    )) {
+      return jsonResponse({ ok: false, error: 'invalid_token' }, 401);
+    }
+
+    // Stash anon-side context for the approve/decline branches below
+    row.__anon = {
+      tcRow,
+      anonId: row.target_anon_id,
+    };
+    actorRole = 'tenant';
   }
 
   // ── DECLINE ────────────────────────────────────────────────────────────
@@ -134,41 +179,58 @@ export async function POST(request) {
   }
 
   // ── APPROVE: PIN verify ────────────────────────────────────────────────
-  const { data: userRow, error: uErr } = await supabase
-    .from('users')
-    .select('id, pin_hash, pin_failed_attempts, pin_locked_until')
-    .eq('id', userId)
-    .single();
-  if (uErr) {
-    console.error('=== /api/consent/respond user read error ===', uErr);
-    return jsonResponse({ ok: false, error: 'db_error' }, 500);
-  }
-  if (!userRow?.pin_hash) {
-    return jsonResponse({ ok: false, reason: 'pin_not_set', message: 'Set a PIN at /settings/security first.' }, 400);
-  }
-  // Lockout check
-  const now = Date.now();
-  const lockUntilTs = userRow.pin_locked_until ? new Date(userRow.pin_locked_until).getTime() : 0;
-  if (lockUntilTs > now) {
-    return jsonResponse({ ok: false, reason: 'locked', lockUntil: userRow.pin_locked_until, attemptsLeft: 0 }, 200);
+  // v3.7.18 — branch on user vs anon flow.
+  let pinHash, pinFailedAttempts, pinLockedUntil, pinSubject;
+  if (isAnonFlow) {
+    pinHash = row.__anon.tcRow.anon_pin_hash;
+    pinFailedAttempts = row.__anon.tcRow.anon_pin_failed_attempts;
+    pinLockedUntil = row.__anon.tcRow.anon_pin_locked_until;
+    pinSubject = { table: 'trust_cards', id: row.__anon.tcRow.id, fields: { hashCol: 'anon_pin_hash', failedCol: 'anon_pin_failed_attempts', lockedCol: 'anon_pin_locked_until' } };
+  } else {
+    const { data: userRow, error: uErr } = await supabase
+      .from('users')
+      .select('id, pin_hash, pin_failed_attempts, pin_locked_until')
+      .eq('id', userId)
+      .single();
+    if (uErr) {
+      console.error('=== /api/consent/respond user read error ===', uErr);
+      return jsonResponse({ ok: false, error: 'db_error' }, 500);
+    }
+    pinHash = userRow?.pin_hash;
+    pinFailedAttempts = userRow?.pin_failed_attempts;
+    pinLockedUntil = userRow?.pin_locked_until;
+    pinSubject = { table: 'users', id: userId, fields: { hashCol: 'pin_hash', failedCol: 'pin_failed_attempts', lockedCol: 'pin_locked_until' } };
   }
 
-  const match = await bcrypt.compare(pin, userRow.pin_hash);
+  if (!pinHash) {
+    const setPath = isAnonFlow ? '/my-card' : '/settings/security';
+    return jsonResponse({ ok: false, reason: 'pin_not_set', message: `Set a PIN at ${setPath} first.` }, 400);
+  }
+
+  // Lockout check
+  const now = Date.now();
+  const lockUntilTs = pinLockedUntil ? new Date(pinLockedUntil).getTime() : 0;
+  if (lockUntilTs > now) {
+    return jsonResponse({ ok: false, reason: 'locked', lockUntil: pinLockedUntil, attemptsLeft: 0 }, 200);
+  }
+
+  const match = await bcrypt.compare(pin, pinHash);
   if (!match) {
-    const next = (userRow.pin_failed_attempts || 0) + 1;
+    const next = (pinFailedAttempts || 0) + 1;
     const willLock = next >= LOCKOUT_THRESHOLD;
     const newLockUntil = willLock ? new Date(now + LOCKOUT_MS).toISOString() : null;
     await supabase
-      .from('users')
+      .from(pinSubject.table)
       .update({
-        pin_failed_attempts: willLock ? 0 : next,
-        pin_locked_until: newLockUntil,
+        [pinSubject.fields.failedCol]: willLock ? 0 : next,
+        [pinSubject.fields.lockedCol]: newLockUntil,
       })
-      .eq('id', userId);
+      .eq('id', pinSubject.id);
     try {
       await supabase.from('audit_log').insert({
+        trust_card_id: row.trust_card_id,
         actor_user_id: userId,
-        action: willLock ? 'pin_locked' : 'pin_failed',
+        action: willLock ? (isAnonFlow ? 'anon_pin_locked' : 'pin_locked') : (isAnonFlow ? 'anon_pin_failed' : 'pin_failed'),
         notes: `consent_response:${requestId}`,
       });
     } catch (e) { /* best-effort */ }
@@ -180,9 +242,12 @@ export async function POST(request) {
 
   // PIN OK — reset counters
   await supabase
-    .from('users')
-    .update({ pin_failed_attempts: 0, pin_locked_until: null })
-    .eq('id', userId);
+    .from(pinSubject.table)
+    .update({
+      [pinSubject.fields.failedCol]: 0,
+      [pinSubject.fields.lockedCol]: null,
+    })
+    .eq('id', pinSubject.id);
 
   // Compute Section 90A approval hash
   const approvalTs = new Date().toISOString();
