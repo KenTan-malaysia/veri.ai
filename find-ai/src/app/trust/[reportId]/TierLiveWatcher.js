@@ -18,22 +18,30 @@ import { localSent } from '../../../lib/consentStore';
 const TIER_ORDER = { T0: 0, T1: 1, T2: 2, T3: 3, T4: 4, T5: 5 };
 const POLL_INTERVAL_MS = 5000;
 
+const TIER_DESC = {
+  T1: 'Categorical info (age range, citizenship)',
+  T2: 'First name',
+  T3: 'Last name',
+  T4: 'Phone, email, employer',
+  T5: 'IC (signing-time)',
+};
+
 const COPY = {
   en: {
-    title: 'Tier {tier} just unlocked',
-    body: 'The tenant approved with their Veri PIN. Reload to see the updated identity fields on this Trust Card.',
+    title: 'Tier {tier} just unlocked · {desc}',
+    body: 'The tenant approved with their Veri PIN. Reload to see the updated identity fields on this Trust Card. Section 90A approval hash is logged in the audit trail.',
     cta: 'Reload card',
     dismiss: 'Dismiss',
   },
   bm: {
-    title: 'Tier {tier} baru sahaja dibuka',
-    body: 'Penyewa telah meluluskan dengan PIN Veri mereka. Muat semula untuk melihat medan identiti yang dikemas kini pada Trust Card ini.',
+    title: 'Tier {tier} baru sahaja dibuka · {desc}',
+    body: 'Penyewa telah meluluskan dengan PIN Veri mereka. Muat semula untuk melihat medan identiti yang dikemas kini. Cap kelulusan Seksyen 90A dilog dalam audit trail.',
     cta: 'Muat semula',
     dismiss: 'Tolak',
   },
   zh: {
-    title: '{tier} 级别刚刚解锁',
-    body: '租客用 Veri PIN 批准了。刷新以查看此 Trust Card 上更新的身份字段。',
+    title: '{tier} 级别刚刚解锁 · {desc}',
+    body: '租客用 Veri PIN 批准了。刷新以查看此 Trust Card 上更新的身份字段。《1950 年证据法》第 90A 条批准哈希已记录在审计跟踪中。',
     cta: '刷新卡片',
     dismiss: '关闭',
   },
@@ -145,7 +153,7 @@ export default function TierLiveWatcher({ reportId, currentTier = 'T0', lang = '
     >
       <div style={{ flex: 1, minWidth: 220 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: '#2F6B3E', marginBottom: 2 }}>
-          ✓ {t.title.replace('{tier}', hit.newTier)}
+          ✓ {t.title.replace('{tier}', hit.newTier).replace('{desc}', TIER_DESC[hit.newTier] || '')}
         </div>
         <div style={{ fontSize: 12, color: '#3F4E6B', lineHeight: 1.5 }}>
           {t.body}

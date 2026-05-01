@@ -1,9 +1,13 @@
 // v3.7.0 — TOOL 1 vision OCR backbone.
+// v3.7.19 — Added 'utility_receipt' kind for myTNB / TNG payment receipts
+// (separate from bills; receipts give us multi-month payment-date timing).
 //
 // POST /api/screen/extract
 // Body: ONE of:
-//   { kind: 'lhdn_cert',  imageBase64: string, mediaType?: 'image/jpeg'|'image/png'|'application/pdf', lang?: 'en'|'bm'|'zh' }
-//   { kind: 'utility_bill', imageBase64: string, vendor?: 'tnb'|'syabas'|'iwk'|'maxis'|'celcomdigi'|'umobile'|'yes'|'other', mediaType?, lang? }
+//   { kind: 'lhdn_cert',     imageBase64, mediaType?, lang? }
+//   { kind: 'utility_bill',  imageBase64, vendor?, mediaType?, lang? }
+//   { kind: 'utility_receipt', imageBase64, vendor?, mediaType?, lang? }   ← v3.7.19
+//   { kind: 'auto',          imageBase64, mediaType?, lang? }              ← v3.7.19 — classifier picks
 //
 // Replaces TOOL 1's mock-only flow with real LLM-vision extraction. Same
 // degraded-mode doctrine as /api/audit and /api/chat: when Anthropic credits
@@ -122,6 +126,57 @@ RULES:
 
 Output ONLY the JSON.`;
 
+// v3.7.19 — Receipt prompt (myTNB payment receipts, TNG/FPX/JomPAY confirmations)
+const RECEIPT_SYSTEM_PROMPT = `You are Veri — Veri.ai's Malaysian utility-payment receipt extractor. You will receive an image (or PDF) of a payment receipt for a Malaysian utility bill: typically a myTNB receipt, a Touch 'n Go eWallet bill-payment confirmation, a Maybank2u JomPAY screenshot, or similar.
+
+Extract the following fields and return STRICT JSON. No markdown. No commentary. No code fences.
+
+{
+  "fields": {
+    "vendor":            string or null,    // The UTILITY this paid (TNB / SYABAS / Maxis / etc) — NOT the payment app
+    "accountNumber":     string or null,    // The utility account that was paid TO
+    "accountHolderName": string or null,    // Name on the utility account (often landlord's)
+    "paymentDate":       string (ISO YYYY-MM-DD) or null,
+    "paymentTime":       string (HH:MM) or null,
+    "paymentAmount":     number or null,
+    "paymentMethod":     string or null,    // "TNG" / "FPX" / "Credit Card" / "JomPAY" / etc
+    "transactionId":     string or null,
+    "referenceNumber":   string or null,    // Vendor reference (MYTNXXXXXX etc)
+    "authentic":         "likely" | "uncertain" | "suspicious",
+    "authenticReason":   string
+  }
+}
+
+RULES:
+- vendor: detect the UTILITY paid TO from the receipt (e.g. "TNB"), not the payment channel ("TNG" goes in paymentMethod).
+- referenceNumber: myTNB receipts show "MYTN" + date-encoded sequence (e.g. MYTN251121177922) — extract verbatim.
+- paymentDate: parse defensively (M/D/YYYY vs D/M/YYYY varies). For myTNB receipts, the date encoded in the reference number is authoritative if it conflicts with the displayed date.
+- paymentMethod: standardize to "TNG", "FPX", "JomPAY", "Credit Card", "Debit Card", "Cash", or "Other".
+- authentic: judge by vendor letterhead/logo presence, reference-number format consistency, computed-date-vs-displayed-date sanity, structured layout vs free-form. Lean "uncertain" when in doubt.
+- Use null for any field you cannot confidently extract — never hallucinate.
+
+Output ONLY the JSON.`;
+
+// v3.7.19 — Classifier prompt: when caller doesn't know the doc type
+const CLASSIFIER_SYSTEM_PROMPT = `Classify this Malaysian property/utility document into ONE of three categories.
+
+Return STRICT JSON. No markdown. No commentary.
+
+{
+  "kind": "lhdn_cert" | "utility_bill" | "utility_receipt" | "unknown",
+  "vendor": string or null,
+  "confidence": "high" | "medium" | "low",
+  "reason": string
+}
+
+DEFINITIONS:
+- lhdn_cert: a Malaysian Inland Revenue Board (LHDN) stamp duty certificate or stamped tenancy agreement first page. Visual cues: LHDN STAMPS letterhead, e-Duti Setem QR code, instrument number, executed-on date, stamp-duty amount.
+- utility_bill: a monthly utility bill from TNB / Air Selangor / SYABAS / IWK / Maxis / CelcomDigi / U Mobile / Yes / Unifi / Time. Visual cues: vendor letterhead, bill date, due date ("Tarikh Bayaran Akhir"), current charges, account number, billing period.
+- utility_receipt: a payment confirmation/receipt for a utility bill. Visual cues: words like "Payment Receipt" / "Successful" / "REFERENCE NUMBER" / "TRANSACTION DATE", a single payment amount, a payment method (TNG/FPX/Credit Card), no monthly billing detail.
+- unknown: anything else.
+
+Output ONLY the JSON.`;
+
 export async function POST(request) {
   // v3.7.4 — Rate limit: 8 extractions per minute per IP.
   const rate = checkRateLimit(request, { key: 'extract', max: 8, windowMs: 60_000 });
@@ -145,8 +200,9 @@ export async function POST(request) {
   const mediaType = ALLOWED_MEDIA.includes(body.mediaType) ? body.mediaType : 'image/jpeg';
   const vendor = body.vendor || null;
 
-  if (kind !== 'lhdn_cert' && kind !== 'utility_bill') {
-    return jsonResponse({ ok: false, error: 'invalid_kind', message: 'kind must be lhdn_cert or utility_bill' }, 400);
+  const VALID_KINDS = ['lhdn_cert', 'utility_bill', 'utility_receipt', 'auto'];
+  if (!VALID_KINDS.includes(kind)) {
+    return jsonResponse({ ok: false, error: 'invalid_kind', message: `kind must be one of: ${VALID_KINDS.join(', ')}` }, 400);
   }
 
   if (imageBase64.length === 0) {
@@ -169,10 +225,21 @@ export async function POST(request) {
     }, 200);
   }
 
-  const systemPrompt = kind === 'lhdn_cert' ? LHDN_SYSTEM_PROMPT : UTILITY_SYSTEM_PROMPT;
-  const userText = kind === 'lhdn_cert'
-    ? 'Extract the LHDN cert fields per the schema. Return JSON only.'
-    : `Extract the utility bill fields per the schema.${vendor ? ` Hint: this is a ${vendor} bill.` : ''} Return JSON only.`;
+  // v3.7.19 — pick prompt based on kind
+  let systemPrompt, userText;
+  if (kind === 'lhdn_cert') {
+    systemPrompt = LHDN_SYSTEM_PROMPT;
+    userText = 'Extract the LHDN cert fields per the schema. Return JSON only.';
+  } else if (kind === 'utility_bill') {
+    systemPrompt = UTILITY_SYSTEM_PROMPT;
+    userText = `Extract the utility bill fields per the schema.${vendor ? ` Hint: this is a ${vendor} bill.` : ''} Return JSON only.`;
+  } else if (kind === 'utility_receipt') {
+    systemPrompt = RECEIPT_SYSTEM_PROMPT;
+    userText = `Extract the utility-receipt fields per the schema.${vendor ? ` Hint: this is a ${vendor} payment.` : ''} Return JSON only.`;
+  } else {  // 'auto'
+    systemPrompt = CLASSIFIER_SYSTEM_PROMPT;
+    userText = 'Classify this document per the schema. Return JSON only.';
+  }
 
   // Build content block — image vs document depending on mediaType
   let mediaBlock;

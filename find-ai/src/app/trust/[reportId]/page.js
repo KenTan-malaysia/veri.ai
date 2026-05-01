@@ -598,10 +598,15 @@ export default async function TrustCardPage({ params, searchParams }) {
               <p style={{ fontSize: 13, lineHeight: 1.6, color: '#3F4E6B', marginBottom: 12 }}>
                 This is an{' '}
                 <strong>{isAnonymous ? 'Anonymous' : 'Verified'} Mode</strong> Trust
-                Card from Veri.ai. The tenant submitted their LHDN-verified previous
-                tenancy + utility payment history. The Trust Score combines{' '}
-                <strong>payment behaviour</strong> (how on-time they paid bills) and{' '}
-                <strong>confidence</strong> (how much data we have).
+                Card from Veri.ai. It reflects the <strong>unit's payment record
+                during the tenant's LHDN-verified occupancy period</strong> —
+                how on-time the bills for that unit were paid, not necessarily
+                this individual's personal credit habits. The Trust Score combines{' '}
+                <strong>payment behaviour</strong> and{' '}
+                <strong>confidence</strong> (how much verified data we have).
+              </p>
+              <p style={{ fontSize: 12, lineHeight: 1.55, color: '#5A6780', marginBottom: 12, padding: '10px 12px', background: '#FAF8F3', border: '1px solid #E7E1D2', borderRadius: 8 }}>
+                <strong>Read this honestly:</strong> if the previous landlord bundled utilities into rent, the unit's payment record is clean even if the tenant didn't personally fund each bill. Ask the tenant directly: <em>"Were you paying TNB/water yourself, or was it included in your rent?"</em> Treat the score as one signal, not the whole story.
               </p>
               {isAnonymous && (
                 <p style={{ fontSize: 13, lineHeight: 1.6, color: '#3F4E6B', marginBottom: 12 }}>

@@ -23,6 +23,9 @@ const PRIMARY_NAV = [
 const SECONDARY_NAV = [
   // v3.7.13 — /settings/security shipped (Veri PIN). Other settings still Phase 3.
   { href: '/settings/security', label: 'Security',     icon: 'gear' },
+  // v3.7.19 — Admin verification dashboard (gated by admin role at page level —
+  // non-admins see "Admin role required" error and don't get past the page).
+  { href: '/admin',             label: 'Admin',        icon: 'gear' },
   // { href: '/help',           label: 'Help',         icon: 'help' },         // Phase 3
 ];
 

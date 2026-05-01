@@ -52,7 +52,7 @@ const MOCK = {
     { label: 'Previous rental history', value: 75, weight: 15 },
     { label: 'Debt / legal record', value: 70, weight: 10 },
   ],
-  recommendation: 'This anonymous tenant shows strong payment behavior across 3 utility bills (avg 3 days before due) and LHDN-verified 14-month previous tenancy. You may proceed with standard tenancy terms.',
+  recommendation: 'The unit at the tenant\'s LHDN-verified previous address shows strong payment behaviour across 3 utility bills (avg 3 days before due) during their 14-month occupancy. Worth asking at viewing whether the tenant funded those bills directly or they were bundled into rent. You may proceed with standard tenancy terms.',
   documents: [
     { label: 'TNB Bill', date: 'Apr 2024', kind: 'utility' },
     { label: 'TNB Bill', date: 'May 2024', kind: 'utility' },
@@ -280,7 +280,7 @@ export default function CardDetailPage() {
                 }}
               >
                 <CheckIcon />
-                <span>Strong overall payment behavior on essential bills</span>
+                <span>Strong overall payment record on essential bills (unit-level signal)</span>
               </div>
             </Card>
 
