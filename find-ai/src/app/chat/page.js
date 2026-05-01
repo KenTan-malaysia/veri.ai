@@ -183,7 +183,7 @@ export default function ChatPage() {
 
 function ChatFallback() {
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }} aria-busy="true">
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }} aria-busy="true">
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 16px' }}>
         <div style={{ fontSize: 14, color: '#5A6780' }}>Loading…</div>
       </div>
@@ -466,7 +466,7 @@ function ChatInner() {
   );
 
   return (
-    <main style={{ minHeight: '100vh', height: '100vh', background: '#FAF8F3', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <main style={{ minHeight: '100vh', height: '100vh', background: '#FBFCFD', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ background: '#fff', borderBottom: '1px solid #E7E1D2', flexShrink: 0 }}>
         <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'space-between' }}>
@@ -496,7 +496,7 @@ function ChatInner() {
               aria-label="Veri.ai home"
             >
               <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-              <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+              <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
             </Link>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -638,7 +638,7 @@ function ChatInner() {
                   style={{
                     flex: 1, minHeight: 44, maxHeight: 140, padding: '10px 14px',
                     borderRadius: 12, fontSize: 14, lineHeight: 1.45,
-                    color: '#0F1E3F', background: '#FAF8F3',
+                    color: '#0F1E3F', background: '#FBFCFD',
                     border: '1.5px solid #E7E1D2', outline: 'none',
                     fontFamily: 'inherit', resize: 'none',
                   }}
@@ -763,7 +763,7 @@ function ChatSidebar({ t, conversations, activeId, lang, onNewChat, onSelect, on
                   marginBottom: 2,
                   transition: 'background 120ms ease',
                 }}
-                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = '#FAF8F3'; }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = '#FBFCFD'; }}
                 onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -863,7 +863,7 @@ function WelcomeBlock({ t, headerTitle, send }) {
             onMouseEnter={(e) => { e.currentTarget.style.background = '#F3EFE4'; e.currentTarget.style.borderColor = '#C9C0A8'; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#E7E1D2'; }}
           >
-            <span style={{ color: '#B8893A', flexShrink: 0, marginTop: 1 }}>›</span>
+            <span style={{ color: '#002B5C', flexShrink: 0, marginTop: 1 }}>›</span>
             <span style={{ flex: 1 }}>{q}</span>
           </button>
         ))}

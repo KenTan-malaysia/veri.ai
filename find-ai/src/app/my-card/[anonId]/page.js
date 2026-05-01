@@ -44,7 +44,7 @@ export default function MyCardPage() {
 
 function Loader() {
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 14, color: '#5A6780' }}>Loading…</div>
     </main>
   );
@@ -224,11 +224,11 @@ function Inner() {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }}>
       <header style={{ background: '#fff', borderBottom: '1px solid #E7E1D2', padding: '14px 16px', textAlign: 'center' }}>
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}>
           <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-          <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+          <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
         </Link>
       </header>
 
@@ -362,11 +362,11 @@ function FlowBlock({ title, sub, onCancel, children }) {
 
 function BlankPage({ children }) {
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', flexDirection: 'column' }}>
       <header style={{ background: '#fff', borderBottom: '1px solid #E7E1D2', padding: '14px 16px', textAlign: 'center' }}>
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}>
           <span style={{ fontSize: 18, fontWeight: 700 }}>Veri</span>
-          <span style={{ fontSize: 18, fontWeight: 500, color: '#B8893A' }}>.ai</span>
+          <span style={{ fontSize: 18, fontWeight: 500, color: '#002B5C' }}>.ai</span>
         </Link>
       </header>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>

@@ -186,7 +186,7 @@ export default function ConsentDeepLinkPage() {
 
 function Loader() {
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 14, color: '#5A6780' }}>Loading request…</div>
     </main>
   );
@@ -498,7 +498,7 @@ function ConsentInner() {
   const tierLabel = req ? (TIER_LABELS[req.requested_tier] || req.requested_tier) : '';
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <header
         style={{
@@ -513,7 +513,7 @@ function ConsentInner() {
         <span aria-hidden="true" style={{ width: 60 }} />
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }} aria-label="Veri.ai home">
           <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-          <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+          <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
         </Link>
         <button
           type="button"
@@ -602,7 +602,7 @@ function ConsentInner() {
                   .replace('{what}', tierLabel.toLowerCase())}
               </h1>
               <BodyCard>
-                <div style={{ background: '#FAF8F3', borderRadius: 12, padding: '14px 16px', marginBottom: 18, fontSize: 12.5, lineHeight: 1.6, color: '#5A6780' }}>
+                <div style={{ background: '#FBFCFD', borderRadius: 12, padding: '14px 16px', marginBottom: 18, fontSize: 12.5, lineHeight: 1.6, color: '#5A6780' }}>
                   <Row k={t.cardLabel} v={req.report_id} mono />
                   <Row k={t.tierLabel} v={`${TIER_SHORT[req.current_tier]} → ${TIER_SHORT[req.requested_tier]}`} mono />
                   {req.property_address && <Row k={t.propertyLabel} v={req.property_address} />}
@@ -669,7 +669,7 @@ function ConsentInner() {
                       placeholder="https://veri.ai/my-card/T-XXXX?token=…"
                       style={{
                         width: '100%', padding: '10px 14px', borderRadius: 12,
-                        background: '#FAF8F3', border: '1px solid #E7E1D2', color: '#0F1E3F',
+                        background: '#FBFCFD', border: '1px solid #E7E1D2', color: '#0F1E3F',
                         fontSize: 13, fontFamily: 'inherit', outline: 'none', marginBottom: 14,
                       }}
                     />
@@ -701,7 +701,7 @@ function ConsentInner() {
                       placeholder={t.declinePh}
                       style={{
                         width: '100%', padding: '10px 14px', borderRadius: 12,
-                        background: '#FAF8F3', border: '1px solid #E7E1D2', color: '#0F1E3F',
+                        background: '#FBFCFD', border: '1px solid #E7E1D2', color: '#0F1E3F',
                         fontSize: 13, lineHeight: 1.5, fontFamily: 'inherit', outline: 'none',
                         resize: 'vertical', marginBottom: 16,
                       }}

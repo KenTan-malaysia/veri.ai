@@ -90,7 +90,7 @@ export default function TenantScreenSubmissionPage() {
   }, [agentToken, ref]);
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }}>
       {/* Top context strip — tenant sees who they're submitting for */}
       <div style={{ background: 'white', borderBottom: '1px solid #E7E1D2', padding: '14px 16px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -101,7 +101,7 @@ export default function TenantScreenSubmissionPage() {
           >
             {/* v3.4.38 — Wordmark-only brand. */}
             <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-            <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+            <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
           </Link>
           <div style={{ flex: 1, fontSize: 12, color: '#3F4E6B', minWidth: 0 }}>
             {landlordName && (
@@ -373,7 +373,7 @@ function AgentClaimForm({ ref: reportId, landlordName, landlordEmail, property, 
           <p style={{ fontSize: 13, color: '#5A6780', lineHeight: 1.55, margin: '0 auto 14px', maxWidth: 420 }}>
             {landlordName ? <><strong>{landlordName}</strong> will see this claim in their Veri.ai inbox</> : 'The landlord will see this claim in their Veri.ai inbox'} and PIN-confirm to approve. You'll be notified when approved — then you can forward the screening link to the tenant.
           </p>
-          <div style={{ background: '#FAF8F3', borderRadius: 12, padding: '12px 14px', textAlign: 'left', fontSize: 12, color: '#3F4E6B', lineHeight: 1.6, marginBottom: 14 }}>
+          <div style={{ background: '#FBFCFD', borderRadius: 12, padding: '12px 14px', textAlign: 'left', fontSize: 12, color: '#3F4E6B', lineHeight: 1.6, marginBottom: 14 }}>
             <strong>What happens next:</strong>
             <ol style={{ margin: '6px 0 0', paddingLeft: 18 }}>
               <li>Landlord reviews your claim (BOVAEP, agency, name).</li>

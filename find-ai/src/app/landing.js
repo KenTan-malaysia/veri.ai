@@ -1000,13 +1000,13 @@ const STYLES = `
     font-weight: 400;
     letter-spacing: -0.025em;
     line-height: 0.98;
-    color: #0F1E3F;
+    color: var(--on-surface, #001734);
     margin: 0 0 16px;
   }
   .ap-hero-sub {
     font-size: 17px;
     line-height: 1.5;
-    color: #3F4E6B;
+    color: var(--color-slate, #3A4A60);
     max-width: 580px;
     margin: 0 auto 24px;
     font-weight: 400;

@@ -274,7 +274,7 @@ export default async function TrustCardPage({ params, searchParams }) {
     : (card.tenantName || `Anonymous tenant ${card.anonymousTenantId}`);
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', padding: '24px 16px 48px' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', padding: '24px 16px 48px' }}>
       <style dangerouslySetInnerHTML={{ __html: layoutStyles }} />
 
       <div className="tc-shell">
@@ -350,7 +350,7 @@ export default async function TrustCardPage({ params, searchParams }) {
           >
             {/* v3.4.38 — Wordmark-only brand. */}
             <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-            <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+            <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
           </Link>
           <div
             style={{
@@ -406,7 +406,7 @@ export default async function TrustCardPage({ params, searchParams }) {
                             justifyContent: 'center',
                             fontSize: 10,
                             fontWeight: 700,
-                            background: isCurrent ? '#B8893A' : 'transparent',
+                            background: isCurrent ? '#002B5C' : 'transparent',
                             color: isCurrent ? '#ffffff' : '#5A6780',
                             border: isCurrent ? 'none' : '1.5px solid #9A9484',
                             flexShrink: 0,
@@ -444,7 +444,7 @@ export default async function TrustCardPage({ params, searchParams }) {
                             borderTop: '1px solid rgba(184, 137, 58, 0.32)',
                             fontSize: 9,
                             fontWeight: 700,
-                            color: '#B8893A',
+                            color: '#002B5C',
                             letterSpacing: '0.16em',
                           }}
                         >
@@ -621,7 +621,7 @@ export default async function TrustCardPage({ params, searchParams }) {
                 <strong>payment behaviour</strong> and{' '}
                 <strong>confidence</strong> (how much verified data we have).
               </p>
-              <p style={{ fontSize: 12, lineHeight: 1.55, color: '#5A6780', marginBottom: 12, padding: '10px 12px', background: '#FAF8F3', border: '1px solid #E7E1D2', borderRadius: 8 }}>
+              <p style={{ fontSize: 12, lineHeight: 1.55, color: '#5A6780', marginBottom: 12, padding: '10px 12px', background: '#FBFCFD', border: '1px solid #E7E1D2', borderRadius: 8 }}>
                 <strong>Read this honestly:</strong> if the previous landlord bundled utilities into rent, the unit's payment record is clean even if the tenant didn't personally fund each bill. Ask the tenant directly: <em>"Were you paying TNB/water yourself, or was it included in your rent?"</em> Treat the score as one signal, not the whole story.
               </p>
               {isAnonymous && (

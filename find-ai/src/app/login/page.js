@@ -105,7 +105,7 @@ function LoginFallback() {
   // SSR-safe fallback — uses EN by default; the inner component swaps on mount.
   const t = STR.en;
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }} aria-busy="true">
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }} aria-busy="true">
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '64px 16px' }}>
         <div style={{ fontSize: 11, fontWeight: 500, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 12 }}>
           {t.eyebrow}
@@ -169,7 +169,7 @@ function LoginInner() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }}>
       <div style={{ background: '#fff', borderBottom: '1px solid #E7E1D2' }}>
         <div style={{ maxWidth: 520, margin: '0 auto', padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link
@@ -178,7 +178,7 @@ function LoginInner() {
             aria-label="Veri.ai home"
           >
             <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Veri</span>
-            <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#B8893A' }}>.ai</span>
+            <span style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.02em', color: '#002B5C' }}>.ai</span>
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <button
@@ -293,7 +293,7 @@ function LoginInner() {
                   borderRadius: 10,
                   fontSize: 14,
                   color: '#0F1E3F',
-                  background: '#FAF8F3',
+                  background: '#FBFCFD',
                   border: '1.5px solid #E7E1D2',
                   outline: 'none',
                   fontFamily: 'inherit',

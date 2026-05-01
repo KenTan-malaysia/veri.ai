@@ -104,7 +104,7 @@ export default function ScreenDonePage() {
 
 function Loader() {
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 14, color: '#5A6780' }}>Loading…</div>
     </main>
   );
@@ -184,7 +184,7 @@ function Inner() {
 
   if (!anonId || !token) {
     return (
-      <main style={{ minHeight: '100vh', background: '#FAF8F3', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <main style={{ minHeight: '100vh', background: '#FBFCFD', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <div style={{ maxWidth: 480, textAlign: 'center' }}>
           <div style={{ fontSize: 32, marginBottom: 12 }} aria-hidden="true">⚠</div>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0F1E3F' }}>Missing submission context</h1>
@@ -200,12 +200,12 @@ function Inner() {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: '#FAF8F3' }}>
+    <main style={{ minHeight: '100vh', background: '#FBFCFD' }}>
       <header style={{ background: '#fff', borderBottom: '1px solid #E7E1D2', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span aria-hidden="true" style={{ width: 60 }} />
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none', color: '#0F1E3F' }}>
           <span style={{ fontSize: 18, fontWeight: 700 }}>Veri</span>
-          <span style={{ fontSize: 18, fontWeight: 500, color: '#B8893A' }}>.ai</span>
+          <span style={{ fontSize: 18, fontWeight: 500, color: '#002B5C' }}>.ai</span>
         </Link>
         <button
           type="button"
@@ -244,7 +244,7 @@ function Inner() {
           <div style={{ fontSize: 11, fontWeight: 700, color: '#5A6780', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 8 }}>
             {t.accessLinkLabel}
           </div>
-          <div style={{ background: '#FAF8F3', border: '1px solid #E7E1D2', borderRadius: 10, padding: '12px 14px', fontFamily: 'var(--font-mono, monospace)', fontSize: 12, color: '#0F1E3F', wordBreak: 'break-all', marginBottom: 14 }}>
+          <div style={{ background: '#FBFCFD', border: '1px solid #E7E1D2', borderRadius: 10, padding: '12px 14px', fontFamily: 'var(--font-mono, monospace)', fontSize: 12, color: '#0F1E3F', wordBreak: 'break-all', marginBottom: 14 }}>
             {accessUrl}
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
