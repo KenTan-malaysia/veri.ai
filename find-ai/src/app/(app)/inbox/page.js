@@ -384,7 +384,10 @@ export default function InboxPage() {
     }
   };
 
-  const showList = tab === 'inbox' ? inboxRequests : sentRequests;
+  const showList =
+    tab === 'inbox'  ? inboxRequests :
+    tab === 'sent'   ? sentRequests  :
+    /* agents */       agentClaims;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -409,7 +412,7 @@ export default function InboxPage() {
             {t.title}
           </h1>
           <p style={{ fontSize: 14, color: 'var(--color-slate)', margin: 0, lineHeight: 1.55, maxWidth: 620 }}>
-            {tab === 'inbox' ? t.intro : t.introSent}
+            {tab === 'inbox' ? t.intro : tab === 'sent' ? t.introSent : t.agentClaimsIntro}
           </p>
         </div>
         <button
@@ -427,12 +430,15 @@ export default function InboxPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--color-hairline)', gap: 4 }}>
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--color-hairline)', gap: 4, flexWrap: 'wrap' }}>
         <Tab active={tab === 'inbox'} onClick={() => setTab('inbox')}>
           {t.tabInbox} {inboxRequests.length > 0 && <span style={{ marginLeft: 6, padding: '1px 7px', borderRadius: 999, background: 'var(--color-warning-bg, #FEF3C7)', color: 'var(--color-warning-fg, #92400E)', fontSize: 10, fontWeight: 700 }}>{inboxRequests.length}</span>}
         </Tab>
         <Tab active={tab === 'sent'} onClick={() => setTab('sent')}>
           {t.tabSent} {sentRequests.filter((r) => r.status === 'pending').length > 0 && <span style={{ marginLeft: 6, padding: '1px 7px', borderRadius: 999, background: 'var(--color-tea, #F3EFE4)', color: 'var(--color-stone)', fontSize: 10, fontWeight: 700 }}>{sentRequests.filter((r) => r.status === 'pending').length}</span>}
+        </Tab>
+        <Tab active={tab === 'agents'} onClick={() => setTab('agents')}>
+          {t.tabAgents} {agentClaims.length > 0 && <span style={{ marginLeft: 6, padding: '1px 7px', borderRadius: 999, background: 'var(--color-warning-bg, #FEF3C7)', color: 'var(--color-warning-fg, #92400E)', fontSize: 10, fontWeight: 700 }}>{agentClaims.length}</span>}
         </Tab>
       </div>
 
@@ -499,8 +505,10 @@ export default function InboxPage() {
           {showList.map((r) => (
             tab === 'inbox' ? (
               <InboxRow key={r.id} req={r} t={t} lang={lang} onOpen={() => setActiveReq(r)} />
-            ) : (
+            ) : tab === 'sent' ? (
               <SentRow key={r.id} req={r} t={t} lang={lang} onCancel={() => handleCancel(r.id)} />
+            ) : (
+              <AgentClaimRow key={r.id} claim={r} t={t} lang={lang} onOpen={() => setActiveAgentClaim(r)} />
             )
           ))}
         </div>
@@ -511,6 +519,20 @@ export default function InboxPage() {
           req={activeReq}
           onClose={() => setActiveReq(null)}
           onResponded={() => { setActiveReq(null); reload(); }}
+          degraded={degraded}
+          configured={configured}
+          user={user}
+          show={show}
+          t={t}
+          lang={lang}
+        />
+      )}
+
+      {activeAgentClaim && (
+        <AgentApproveDialog
+          claim={activeAgentClaim}
+          onClose={() => setActiveAgentClaim(null)}
+          onResponded={() => { setActiveAgentClaim(null); reload(); }}
           degraded={degraded}
           configured={configured}
           user={user}
@@ -549,18 +571,381 @@ function Tab({ active, onClick, children }) {
 }
 
 function EmptyState({ t, tab }) {
+  const icon = tab === 'inbox' ? '📭' : tab === 'sent' ? '📤' : '🤝';
+  const title = tab === 'inbox' ? t.emptyInbox : tab === 'sent' ? t.emptySent : t.emptyAgents;
+  const body  = tab === 'inbox' ? t.emptyInboxBody : tab === 'sent' ? t.emptySentBody : t.emptyAgentsBody;
   return (
     <Card variant="surface" size="lg" radius="lg">
       <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--color-slate)' }}>
-        <div style={{ fontSize: 32, marginBottom: 8 }} aria-hidden="true">{tab === 'inbox' ? '📭' : '📤'}</div>
+        <div style={{ fontSize: 32, marginBottom: 8 }} aria-hidden="true">{icon}</div>
         <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-navy)', marginBottom: 4 }}>
-          {tab === 'inbox' ? t.emptyInbox : t.emptySent}
+          {title}
         </div>
         <p style={{ fontSize: 12, color: 'var(--color-slate)', margin: '0 auto', maxWidth: 360, lineHeight: 1.5 }}>
-          {tab === 'inbox' ? t.emptyInboxBody : t.emptySentBody}
+          {body}
         </p>
       </div>
     </Card>
+  );
+}
+
+// ─── Agent claim row ──────────────────────────────────────────────────────
+function AgentClaimRow({ claim, t, lang, onOpen }) {
+  const created = claim.created_at ? new Date(claim.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+  const verified = !!claim.is_verified_agent;
+  return (
+    <Card variant="surface" size="md" radius="lg">
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <div style={{ flex: 1, minWidth: 240 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+            <Badge tone="warning" size="sm" uppercase>{t.pending}</Badge>
+            {verified ? (
+              <span style={{
+                padding: '2px 8px', fontSize: 9.5, fontWeight: 700,
+                background: '#0F1E3F', color: '#fff', borderRadius: 999, letterSpacing: '0.08em',
+              }}>{t.agentVerifiedBadge}</span>
+            ) : (
+              <span style={{
+                padding: '2px 8px', fontSize: 9.5, fontWeight: 600,
+                background: '#F3EFE4', color: '#5A6780', borderRadius: 999, letterSpacing: '0.08em',
+                border: '1px solid #E7E1D2',
+              }}>{t.agentUnverifiedBadge}</span>
+            )}
+            <span style={{ fontSize: 11, color: 'var(--color-stone)', fontFamily: 'var(--font-mono, monospace)' }}>
+              {claim.report_id}
+            </span>
+          </div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-navy)', marginBottom: 4 }}>
+            {claim.agent_name}
+            {claim.agent_agency && <span style={{ color: 'var(--color-slate)', fontWeight: 400 }}> · {claim.agent_agency}</span>}
+          </div>
+          <div style={{ fontSize: 12.5, color: 'var(--color-slate)', marginBottom: 2 }}>
+            {claim.agent_email}
+            {claim.agent_phone && <> · {claim.agent_phone}</>}
+          </div>
+          {claim.agent_bovaep && (
+            <div style={{ fontSize: 12, color: 'var(--color-slate)', marginBottom: 2, fontFamily: 'var(--font-mono, monospace)' }}>
+              BOVAEP: {claim.agent_bovaep}
+            </div>
+          )}
+          {claim.property_address && (
+            <div style={{ fontSize: 12, color: 'var(--color-slate)', marginBottom: 2 }}>
+              {claim.property_address}
+            </div>
+          )}
+          <div style={{ fontSize: 11, color: 'var(--color-stone)' }}>
+            {t.requestedLabel} {created}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onOpen}
+          style={{
+            height: 38, padding: '0 16px', borderRadius: 999,
+            background: 'var(--color-navy)', color: '#fff', border: 'none',
+            fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
+          }}
+        >
+          {t.review}
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+// ─── Agent approve dialog ─────────────────────────────────────────────────
+function AgentApproveDialog({ claim, onClose, onResponded, degraded, configured, user, show, t, lang }) {
+  const [stage, setStage] = useState('review');  // review | enterPin | rejecting | submitting | done
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
+  const [doneResult, setDoneResult] = useState(null); // { forwardToken, forwardUrl, whatsappUrl }
+
+  const submitApprove = async (enteredPin) => {
+    setStage('submitting');
+    setError(null);
+
+    let serverResult = null;
+
+    if (!degraded && configured && user) {
+      try {
+        const client = getBrowserClient();
+        const { data: { session } } = await client.auth.getSession();
+        const token = session?.access_token;
+        if (token) {
+          const res = await fetch('/api/agent/claim/respond', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ claimId: claim.id, action: 'approve', pin: enteredPin }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            serverResult = { forwardToken: data.forwardToken };
+          } else if (data.reason === 'wrong_pin') {
+            setError(t.errorWrongPin.replace('{n}', data.attemptsLeft));
+            setPin(''); setStage('enterPin'); return;
+          } else if (data.reason === 'locked') {
+            setError(t.errorLocked.replace('{t}', new Date(data.lockUntil).toLocaleTimeString()));
+            setStage('review'); return;
+          } else if (data.reason === 'pin_not_set') {
+            setError(t.errorPinNotSet); setStage('review'); return;
+          } else if (!data.degradedMode) {
+            setError(data.message || t.errorGeneric); setStage('review'); return;
+          }
+        }
+      } catch (e) { /* fall through */ }
+    }
+
+    if (!serverResult) {
+      // Local fallback: verify PIN, generate hash, mark approved + write token
+      try {
+        const verify = await clientVerifyPin(enteredPin);
+        if (!verify.ok) {
+          if (verify.reason === 'locked') {
+            setError(t.errorLocked.replace('{t}', new Date(verify.lockUntil).toLocaleTimeString()));
+            setStage('review'); return;
+          }
+          if (verify.reason === 'notSet') {
+            setError(t.errorPinNotSet); setStage('review'); return;
+          }
+          setError(t.errorWrongPin.replace('{n}', verify.attemptsLeft ?? '?'));
+          setPin(''); setStage('enterPin'); return;
+        }
+        const approvalHash = await computeClaimApprovalHash(claim);
+        const result = localRespondClaim(claim.id, { action: 'approve', approvalHash });
+        if (!result.ok) { setError(t.errorGeneric); setStage('review'); return; }
+        serverResult = { forwardToken: result.claim.forward_token };
+      } catch (e) {
+        console.error('local agent approve failed:', e);
+        setError(t.errorGeneric); setStage('review'); return;
+      }
+    }
+
+    const forwardUrl = buildAgentForwardUrl({ reportId: claim.report_id, forwardToken: serverResult.forwardToken });
+    const whatsappUrl = buildAgentToTenantWhatsApp({
+      reportId: claim.report_id,
+      forwardToken: serverResult.forwardToken,
+      propertyAddress: claim.property_address || '',
+      tenantPhone: '',
+      lang,
+    });
+
+    setDoneResult({ forwardToken: serverResult.forwardToken, forwardUrl, whatsappUrl });
+    setStage('done');
+    show.success((degraded ? t.agentToastApprovedLocal : t.agentToastApproved).replace('{agent}', claim.agent_name));
+  };
+
+  const submitReject = async () => {
+    if (!window.confirm(t.agentRejectConfirm)) return;
+    setStage('submitting');
+    setError(null);
+
+    if (!degraded && configured && user) {
+      try {
+        const client = getBrowserClient();
+        const { data: { session } } = await client.auth.getSession();
+        const token = session?.access_token;
+        if (token) {
+          const res = await fetch('/api/agent/claim/respond', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ claimId: claim.id, action: 'reject', rejectReason: rejectReason || undefined }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            show.info(t.agentToastRejected);
+            onResponded();
+            return;
+          }
+          if (!data.degradedMode) {
+            setError(data.message || t.errorGeneric); setStage('review'); return;
+          }
+        }
+      } catch (e) { /* fall through */ }
+    }
+
+    const result = localRespondClaim(claim.id, { action: 'reject', rejectReason });
+    if (!result.ok) { setError(t.errorGeneric); setStage('review'); return; }
+    show.info(t.agentToastRejectedLocal);
+    onResponded();
+  };
+
+  const verified = !!claim.is_verified_agent;
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,30,63,0.45)', zIndex: 50 }} aria-hidden="true" />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="agent-approve-title"
+        style={{
+          position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+          width: 'min(94vw, 540px)', maxHeight: '90vh', overflowY: 'auto',
+          background: '#fff', borderRadius: 'var(--radius-xl, 18px)',
+          boxShadow: '0 20px 60px rgba(15,30,63,0.30)', zIndex: 51,
+          padding: '28px 26px 24px',
+        }}
+      >
+        {stage === 'done' && doneResult ? (
+          <>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 10px', borderRadius: 999, background: '#F1F6EF', border: '1px solid #CFE1C7', fontSize: 11, fontWeight: 700, color: '#2F6B3E', marginBottom: 12 }}>
+              ✓ {t.approved}
+            </div>
+            <h2
+              id="agent-approve-title"
+              style={{
+                fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+                fontSize: 24, fontWeight: 400, color: 'var(--color-navy)',
+                letterSpacing: '-0.015em', lineHeight: 1.18, margin: '0 0 14px',
+              }}
+            >
+              {claim.agent_name} {verified && <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', background: '#0F1E3F', color: '#fff', borderRadius: 999, letterSpacing: '0.08em', verticalAlign: 'middle' }}>{t.agentVerifiedBadge}</span>}
+            </h2>
+            <p style={{ fontSize: 13, color: 'var(--color-slate)', lineHeight: 1.55, marginTop: 0, marginBottom: 14 }}>
+              {t.agentForwardLinkLabel}
+            </p>
+            <div style={{ background: 'var(--color-cream, #FAF8F3)', borderRadius: 12, padding: '12px 14px', marginBottom: 14, fontSize: 12, fontFamily: 'var(--font-mono, monospace)', color: 'var(--color-navy)', wordBreak: 'break-all' }}>
+              {doneResult.forwardUrl}
+            </div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <a
+                href={doneResult.whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  height: 40, padding: '0 16px', borderRadius: 999,
+                  background: '#25D366', color: '#fff', textDecoration: 'none',
+                  fontSize: 13, fontWeight: 600,
+                }}
+              >
+                📲 {t.agentForwardOpenWA}
+              </a>
+              <button
+                type="button"
+                onClick={async () => {
+                  try { await navigator.clipboard?.writeText(doneResult.forwardUrl); } catch (e) {}
+                }}
+                style={ghostBtn}
+              >
+                {t.agentForwardCopyLink}
+              </button>
+              <button type="button" onClick={() => onResponded()} style={{ ...ghostBtn, border: 'none' }}>
+                {t.agentForwardClose}
+              </button>
+            </div>
+            <div style={{ marginTop: 14, fontSize: 11, color: 'var(--color-stone)', fontStyle: 'italic', lineHeight: 1.5 }}>
+              The agent's attribution is now baked into this URL via signed token. Tenant will see "Forwarded by {claim.agent_name}" when they open it.
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-stone)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>
+              {t.tabAgents}
+            </div>
+            <h2
+              id="agent-approve-title"
+              style={{
+                fontFamily: "'Instrument Serif', 'Iowan Old Style', Baskerville, serif",
+                fontSize: 24, fontWeight: 400, color: 'var(--color-navy)',
+                letterSpacing: '-0.015em', lineHeight: 1.2, margin: '0 0 14px',
+              }}
+            >
+              {claim.agent_name} wants to represent {claim.report_id}
+            </h2>
+
+            <div
+              style={{
+                background: 'var(--color-cream, #FAF8F3)', border: '1px solid var(--color-hairline)',
+                borderRadius: 'var(--radius-md)', padding: '14px 16px', marginBottom: 16,
+                fontSize: 12.5, lineHeight: 1.6, color: 'var(--color-slate)',
+              }}
+            >
+              <Row k="Email" v={claim.agent_email} />
+              {claim.agent_phone && <Row k="Phone" v={claim.agent_phone} />}
+              {claim.agent_agency && <Row k="Agency" v={claim.agent_agency} />}
+              {claim.agent_bovaep ? (
+                <Row k="BOVAEP" v={claim.agent_bovaep} mono />
+              ) : (
+                <Row k="BOVAEP" v="— (Unverified Forwarder)" italic />
+              )}
+              {claim.property_address && <Row k={t.propertyLabel} v={claim.property_address} />}
+              <Row k={t.expiresLabel} v={claim.expires_at ? new Date(claim.expires_at).toLocaleString() : '—'} />
+            </div>
+
+            {stage === 'review' && (
+              <>
+                <div style={{ fontSize: 12.5, color: 'var(--color-slate)', marginBottom: 16, lineHeight: 1.55 }}>
+                  {t.pinExplain}
+                </div>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <button type="button" onClick={() => { setStage('enterPin'); setError(null); setPin(''); }} style={primaryBtn}>
+                    {t.agentApprove}
+                  </button>
+                  <button type="button" onClick={() => setStage('rejecting')} style={ghostBtn}>
+                    {t.agentReject}
+                  </button>
+                  <button type="button" onClick={onClose} style={{ ...ghostBtn, border: 'none', color: 'var(--color-stone)' }}>
+                    {t.closeBtn}
+                  </button>
+                </div>
+                {error && (
+                  <div role="alert" style={{ fontSize: 12.5, color: '#C13A3A', marginTop: 12, lineHeight: 1.5 }}>
+                    {error}
+                  </div>
+                )}
+              </>
+            )}
+
+            {stage === 'enterPin' && (
+              <div>
+                <PinPad value={pin} onChange={setPin} onComplete={submitApprove} error={error} labelHint={t.pinPadLabel} />
+                <div style={{ marginTop: 16 }}>
+                  <button type="button" onClick={() => { setStage('review'); setPin(''); setError(null); }} style={ghostBtn}>
+                    {t.backBtn}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {stage === 'rejecting' && (
+              <div>
+                <div style={{ fontSize: 13, color: 'var(--color-slate)', marginBottom: 10, lineHeight: 1.5 }}>
+                  {t.declineExplain}
+                </div>
+                <textarea
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value.slice(0, 500))}
+                  rows={3}
+                  placeholder={t.declinePh}
+                  style={{
+                    width: '100%', padding: '10px 14px', borderRadius: 'var(--radius-md)',
+                    background: 'var(--color-cream, #FAF8F3)', border: '1px solid var(--color-hairline)',
+                    color: 'var(--color-navy)', fontSize: 13, lineHeight: 1.5, fontFamily: 'inherit',
+                    outline: 'none', resize: 'vertical', marginBottom: 16,
+                  }}
+                />
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <button type="button" onClick={submitReject} style={{ ...primaryBtn, background: '#C13A3A' }}>
+                    {t.agentReject}
+                  </button>
+                  <button type="button" onClick={() => setStage('review')} style={ghostBtn}>
+                    {t.backBtn}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {stage === 'submitting' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 0' }}>
+                <Spinner /> <span style={{ fontSize: 13, color: 'var(--color-slate)' }}>{t.submitting}</span>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }
 
