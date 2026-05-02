@@ -1,0 +1,4 @@
+{
+  "type": "module",
+  "_comment": "Scoped ESM hint so `node` treats src/lib/*.js as ES modules. Next.js / Webpack ignore this file. Allows scripts/test-vts.mjs to import vts.js directly without the MODULE_TYPELESS_PACKAGE_JSON warning."
+}
