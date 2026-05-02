@@ -81,7 +81,7 @@ export const PARAMS = Object.freeze({
   IC_REUSE_FLAG_WINDOW_DAYS: 7,
 
   // Engine version (every score is tagged for Section 90A trail)
-  ENGINE_VERSION: "vts-1.3.0",
+  ENGINE_VERSION: "vts-1.3.1",
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,18 +97,20 @@ export const PARAMS = Object.freeze({
 // both the landlord-facing PDF and the Section 90A audit log.
 // ─────────────────────────────────────────────────────────────────────────────
 export function score(caseData) {
-  const { events = [], special = {} } = caseData || {};
+  const { events = [], special } = caseData || {};
+  // v1.3.1: null-safe — default {} only kicks in for undefined; harden against explicit null
+  const sp = special || {};
 
   // ── Anti-gaming gate (Defense 6.1) ──────────────────────────────────────
   if (
-    special.ic_reuse_count != null &&
-    special.ic_reuse_window_days != null &&
-    special.ic_reuse_count >= PARAMS.IC_REUSE_FLAG_COUNT &&
-    special.ic_reuse_window_days <= PARAMS.IC_REUSE_FLAG_WINDOW_DAYS
+    sp.ic_reuse_count != null &&
+    sp.ic_reuse_window_days != null &&
+    sp.ic_reuse_count >= PARAMS.IC_REUSE_FLAG_COUNT &&
+    sp.ic_reuse_window_days <= PARAMS.IC_REUSE_FLAG_WINDOW_DAYS
   ) {
     return {
       blocked: true,
-      block_reason: `IC reuse: ${special.ic_reuse_count} accounts in ${special.ic_reuse_window_days} days (Anti-gaming Defense 6.1)`,
+      block_reason: `IC reuse: ${sp.ic_reuse_count} accounts in ${sp.ic_reuse_window_days} days (Anti-gaming Defense 6.1)`,
       engine_version: PARAMS.ENGINE_VERSION,
     };
   }
@@ -131,6 +133,16 @@ export function score(caseData) {
   const byUtility = {};
   for (const e of events) (byUtility[e.utility] ||= []).push(e);
   const utilities = Object.keys(byUtility);
+
+  // ── M-1-lite (v1.3.1): detect multi-account from event-vs-timespan ─────
+  // A single utility account bills monthly. If we see more events than the
+  // timespan covers in months, that's structurally impossible from one
+  // account → must be multi-account (e.g., factory + residential TNB).
+  const multiAccountUtilities = utilities.filter((u) => {
+    const ages = byUtility[u].map((e) => e.months_ago);
+    const span = Math.max(1, Math.max(...ages) - Math.min(...ages) + 1);
+    return byUtility[u].length > span;
+  });
 
   // ── Recency-weighted per-utility average (Step 2 + Step 4) ─────────────
   const lambda = Math.log(2) / PARAMS.RECENCY_HALF_LIFE_MONTHS;
@@ -233,12 +245,19 @@ export function score(caseData) {
   else if (S_final >= 30) tier = "Watch";
   else tier = "Decline";
 
-  // ── Badge (v1.2 + v1.3 STALE DATA logic) ───────────────────────────────
+  // ── Badge (v1.2 + v1.3 STALE DATA logic + v1.3.1 SNAPSHOT severe-event surfacing) ─
   let badge;
   let display_message = null;
   if (isSnapshot) {
     badge = "SNAPSHOT";
-    display_message = `Insufficient data — please upload more bills (${events.length} event${events.length === 1 ? "" : "s"} so far)`;
+    // M-2 (v1.3.1): scan for any severe event in the few we have, surface it
+    // so it isn't hidden behind generic "insufficient data" message.
+    const severe = events.find((e) => e.tier === "Default" || e.tier === "VeryLate");
+    if (severe) {
+      display_message = `Insufficient data (${events.length} bill${events.length === 1 ? "" : "s"}) — AND we detected a ${severe.tier} event ~${Math.round(severe.months_ago * 30)}d ago. Request more history before proceeding.`;
+    } else {
+      display_message = `Insufficient data — please upload more bills (${events.length} event${events.length === 1 ? "" : "s"} so far)`;
+    }
   } else if (
     freshness < PARAMS.STALE_FRESHNESS_THRESHOLD &&
     density >= PARAMS.STALE_OTHERS_HEALTHY_MIN &&
@@ -315,6 +334,12 @@ export function score(caseData) {
       computed_at: new Date().toISOString(),
       param_snapshot_hash: PARAM_HASH,
     },
+    // M-1-lite (v1.3.1): only present when multi-account detected.
+    // Surfaces the situation; does NOT modify the score. Landlord asks the
+    // tenant which account is relevant and may want a per-account score.
+    multi_account_warning: multiAccountUtilities.length > 0
+      ? `Tenant appears to have multiple ${multiAccountUtilities.join(" + ")} account(s). The score is a combined view across all accounts. Confirm with the tenant which account is relevant to this lease.`
+      : null,
   };
 }
 
@@ -324,6 +349,44 @@ export function score(caseData) {
 // Bridge from the existing src/lib/scoringEngine.js (which works on bill+receipt
 // pairs with day-deltas) to this module's event format. Lets you A/B-test VTS
 // v1.3 against the v0 engine on real bundled-bill data without rewiring.
+//
+// Input: the .paired array out of scoreSource() — array of { pair, score }
+// Output: VTS event array ready to feed into score()
+// ─────────────────────────────────────────────────────────────────────────────
+const TIER_MAP = {
+  upfront:    "Upfront",
+  "on-time":  "OnTime",
+  late:       "Late",
+  "very-late":"VeryLate",
+  default:    "Default",
+  unpaid:     "Default",
+};
+const SOURCE_MAP = { tnb: "TNB", water: "Water", mobile: "Mobile" };
+
+export function adaptFromBillCycle(scoredPairs, anchorDate = new Date()) {
+  const out = [];
+  for (const sp of scoredPairs || []) {
+    const billDate = sp?.pair?.bill?.bill_date;
+    if (!billDate) continue;
+    const ageMs = anchorDate.getTime() - new Date(billDate).getTime();
+    const months_ago = Math.max(0, ageMs / (30 * 24 * 60 * 60 * 1000));
+    const utility = SOURCE_MAP[sp.score?.source ?? "tnb"] || "TNB";
+    const tier = TIER_MAP[sp.score?.tier] || null;
+    if (!tier) continue;
+    out.push({ utility, tier, months_ago });
+  }
+  return out;
+}
+
+// ─── Param snapshot hash (for Section 90A audit reproducibility) ─────────
+function _hash(s) {
+  // tiny non-crypto hash — just a stable fingerprint of the parameter set
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return ("00000000" + (h >>> 0).toString(16)).slice(-8);
+}
+const PARAM_HASH = _hash(JSON.stringify(PARAMS));
+hout rewiring.
 //
 // Input: the .paired array out of scoreSource() — array of { pair, score }
 // Output: VTS event array ready to feed into score()

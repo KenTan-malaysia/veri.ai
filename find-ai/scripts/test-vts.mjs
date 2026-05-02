@@ -226,6 +226,22 @@ async function main() {
       ] },
     { id: "C-30", name: "Empty-Submit Halim", profile: "Tenant submitted nothing",
       events: [] },
+    // ── v1.3.1 cases ────────────────────────────────────────────────────────
+    { id: "C-31", name: "Mr. Lim — multi-account", profile: "1 IC, 2 TNB accounts (factory + residential), 12mo each",
+      events: [
+        ...evenSpread("TNB", ["OnTime","OnTime","OnTime","Late","OnTime","VeryLate","OnTime","Late","OnTime","Late","OnTime","Late"]),  // factory
+        ...evenSpread("TNB", Array(12).fill("Upfront")),                                                                                 // residential
+        ...evenSpread("Water",  Array(12).fill("OnTime")),
+        ...evenSpread("Mobile", Array(12).fill("OnTime")),
+      ] },
+    { id: "C-32", name: "Snapshot+Default", profile: "2 bills uploaded, 1 is a Default — must surface",
+      events: [
+        { utility: "TNB", tier: "OnTime",  months_ago: 0 },
+        { utility: "TNB", tier: "Default", months_ago: 1 },
+      ] },
+    { id: "C-33", name: "Null-special hardening", profile: "Caller passes special: null explicitly — must NOT crash",
+      events: [{ utility: "TNB", tier: "OnTime", months_ago: 0 }],
+      special: null },
   ];
 
   // CLI flags

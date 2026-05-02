@@ -1,4 +1,18 @@
-# VTS v1.3 — integration note
+# VTS v1.3.1 — integration note
+
+> **Updated 2026-05-02:** Engine version bumped to `vts-1.3.1`. Three additive
+> patches landed:
+>
+> - **M-1-lite** — multi-account detection (e.g., factory + residential TNB).
+>   Surfaces `multi_account_warning` on the result object. Score unchanged.
+> - **M-2** — SNAPSHOT mode now surfaces severe events (Default/VeryLate)
+>   in `display_message` so they aren't hidden behind "insufficient data".
+> - **Null-special hardening** — `score({ ..., special: null })` no longer
+>   crashes. Production-safety fix found via 1000-case stress test.
+>
+> All 33 cases in `scripts/test-vts.mjs` PASS. 991/991 cases in the 1000-case
+> stress test produced byte-identical scores under v1.3 → v1.3.1. The patches
+> add information; they do not change any decision.
 
 **TL;DR.** New file `src/lib/vts.js` ships the world-class scoring algorithm
 (v1.0 → v1.3 design cycle). Sits beside the existing `src/lib/scoringEngine.js`
